@@ -1,0 +1,1 @@
+Path Of Modifiers replaces vanilla item prefixes with a prefix/suffix system.
