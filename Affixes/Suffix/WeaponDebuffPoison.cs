@@ -28,12 +28,12 @@ namespace PathOfModifiers.Affixes.Suffixes
             new Tuple<int, double>(5, 0.5),
         };
         static string[] tierNames = new string[] {
-            "Distracting",
-            "Disconcerting",
-            "Confusing",
-            "Perplexing",
-            "Baffling",
-            "Bewildering",
+            "of Infection",
+            "of Septic",
+            "of Maligance",
+            "of Poison",
+            "of Toxicity",
+            "of Miasma",
         };
         static int maxTier => tiers.Length - 2;
 
