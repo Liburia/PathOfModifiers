@@ -21,7 +21,7 @@ namespace PathOfModifiers
         public override bool CloneNewInstances => false;
 
         public override bool InstancePerEntity => true;
-        
+
         public Rarity rarity;
 
         public List<Affix> affixes;
@@ -156,6 +156,8 @@ namespace PathOfModifiers
         {
             if (IsRollable(item))
                 RollItem(item);
+            else
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(None)]];
         }
         public void RollItem(Item item)
         {
@@ -474,14 +476,21 @@ namespace PathOfModifiers
             {
                 TryRollItem(item);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ErrorLogger.Log(e.ToString());
             }
         }
         public override void OnCraft(Item item, Recipe recipe)
         {
-            TryRollItem(item);
+            try
+            {
+                TryRollItem(item);
+            }
+            catch (Exception e)
+            {
+                ErrorLogger.Log(e.ToString());
+            }
         }
 
         public override bool CanRightClick(Item item)
@@ -534,7 +543,32 @@ namespace PathOfModifiers
         }
         public override void PostUpdate(Item item)
         {
+            if (rarity == null || rarity.GetType() == typeof(None))
+            {
+                try
+                {
+                    TryRollItem(item);
+                }
+                catch (Exception e)
+                {
+                    ErrorLogger.Log(e.ToString());
+                }
+            }
             //TODO: Add light/dust?
+        }
+        public override void PostDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            if (rarity == null || rarity.GetType() == typeof(None))
+            {
+                try
+                {
+                    TryRollItem(item);
+                }
+                catch (Exception e)
+                {
+                    ErrorLogger.Log(e.ToString());
+                }
+            }
         }
         public override void MeleeEffects(Item item, Player player, Rectangle hitbox)
         {
