@@ -32,9 +32,6 @@ namespace PathOfModifiers
         public int FreePrefixes => Math.Min(FreeAffixes, rarity.maxPrefixes - prefixes.Count);
         public int FreeSuffixes => Math.Min(FreeAffixes, rarity.maxSuffixes - suffixes.Count);
 
-
-        public Player affectedPlayer;
-
         public PoMItem()
         {
             rarity = ((PoMAffixController.rarities?.Length ?? 0) == 0) ? new None() : PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(None)]];
