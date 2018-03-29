@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Suffixes
 {
-    public class WeaponMidas : Suffix, ITieredStatAffix
+    public class WeaponDebuffMidas : Suffix, ITieredStatAffix
     {
         public override float weight => 0.5f;
 
@@ -54,7 +54,7 @@ namespace PathOfModifiers.Affixes.Suffixes
 
         public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, "WeaponMidas", $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to midas enemies for 3-10 seconds on hit");
+            TooltipLine line = new TooltipLine(mod, "WeaponDebuffMidas", $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to midas enemies for 3-10 seconds on hit");
             line.overrideColor = color;
             tooltips.Add(line);
         }

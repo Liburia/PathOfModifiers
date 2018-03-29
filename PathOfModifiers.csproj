@@ -73,7 +73,7 @@
     <Compile Include="Affixes\Suffix\WeaponDebuffIgnite.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffVenom.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffPoison.cs" />
-    <Compile Include="Affixes\Suffix\WeaponMidas.cs" />
+    <Compile Include="Affixes\Suffix\WeaponDebuffMidas.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffIchor.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffCursedInferno.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffConfuse.cs" />
