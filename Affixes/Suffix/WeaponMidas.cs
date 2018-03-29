@@ -61,30 +61,42 @@ namespace PathOfModifiers.Affixes.Suffixes
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
         {
-            if (Main.rand.NextFloat(0, 1) < multiplier)
+            if (player.HeldItem == item)
             {
-                target.AddBuff(72, Main.rand.Next(90, 330));
+                if (Main.rand.NextFloat(0, 1) < multiplier)
+                {
+                    target.AddBuff(72, Main.rand.Next(90, 330));
+                }
             }
         }
         public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
         {
-            if (Main.rand.NextFloat(0, 1) < multiplier)
+            if (player.HeldItem == item)
             {
-                target.AddBuff(72, Main.rand.Next(90, 330));
+                if (Main.rand.NextFloat(0, 1) < multiplier)
+                {
+                    target.AddBuff(72, Main.rand.Next(90, 330));
+                }
             }
         }
         public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
         {
-            if (Main.rand.NextFloat(0, 1) < multiplier)
+            if (player.HeldItem == item)
             {
-                target.AddBuff(72, Main.rand.Next(90, 330));
+                if (Main.rand.NextFloat(0, 1) < multiplier)
+                {
+                    target.AddBuff(72, Main.rand.Next(90, 330));
+                }
             }
         }
         public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
         {
-            if (Main.rand.NextFloat(0, 1) < multiplier)
+            if (player.HeldItem == item)
             {
-                target.AddBuff(72, Main.rand.Next(90, 330));
+                if (Main.rand.NextFloat(0, 1) < multiplier)
+                {
+                    target.AddBuff(72, Main.rand.Next(90, 330));
+                }
             }
         }
 
