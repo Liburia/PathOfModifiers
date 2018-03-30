@@ -364,7 +364,7 @@ namespace PathOfModifiers
             {
                 suffix.UseItem(item, player);
             }
-            return true;
+            return false;
         }
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {
