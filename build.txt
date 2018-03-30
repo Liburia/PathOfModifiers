@@ -5,3 +5,4 @@ includePDB = true
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
 side = Both
 languageVersion = 6
+homepage = https://forums.terraria.org/index.php?threads/path-of-modifiers-—-prefix-suffix-system-for-items.68114/
