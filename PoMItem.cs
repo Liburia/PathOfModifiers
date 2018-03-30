@@ -48,7 +48,7 @@ namespace PathOfModifiers
 
         public static bool IsWeapon(Item item)
         {
-            return item.damage > -1 && item.maxStack == 1 && item.useStyle != 2 && item.useStyle != 4;
+            return item.damage > 0 && item.maxStack == 1 && item.useStyle != 2 && item.useStyle != 4;
         }
         public static bool CanCrit(Item item)
         {
