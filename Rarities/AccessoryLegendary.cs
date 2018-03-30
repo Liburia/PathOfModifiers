@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.Graphics;
 
 namespace PathOfModifiers.Rarities
