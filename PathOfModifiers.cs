@@ -13,7 +13,7 @@ namespace PathOfModifiers
 	{
         public static bool log = true;
         public static bool disableVanillaModifiersWeapons = true;
-        public static bool disableVanillaModifiersAccessories = false;
+        public static bool disableVanillaModifiersAccessories = true;
 
         public static PathOfModifiers Instance { get; private set; }
 

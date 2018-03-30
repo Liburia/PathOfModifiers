@@ -101,12 +101,23 @@
     <Compile Include="PoMItem.cs" />
     <Compile Include="PoMPlayer.cs" />
     <Compile Include="PoMPrefix.cs" />
-    <Compile Include="Rarities\Epic.cs" />
-    <Compile Include="Rarities\Legendary.cs" />
-    <Compile Include="Rarities\Rare.cs" />
+    <Compile Include="Rarities\AccessoryCommon.cs" />
+    <Compile Include="Rarities\ArmorCommon.cs" />
+    <Compile Include="Rarities\AccessoryEpic.cs" />
+    <Compile Include="Rarities\ArmorEpic.cs" />
+    <Compile Include="Rarities\AccessoryLegendary.cs" />
+    <Compile Include="Rarities\AccessoryRare.cs" />
+    <Compile Include="Rarities\AccessoryUncommon.cs" />
+    <Compile Include="Rarities\RarityHelper.cs" />
+    <Compile Include="Rarities\WeaponEpic.cs" />
+    <Compile Include="Rarities\ArmorLegendary.cs" />
+    <Compile Include="Rarities\WeaponLegendary.cs" />
+    <Compile Include="Rarities\ArmorRare.cs" />
+    <Compile Include="Rarities\WeaponRare.cs" />
     <Compile Include="Rarities\None.cs" />
-    <Compile Include="Rarities\Common.cs" />
-    <Compile Include="Rarities\Uncommon.cs" />
+    <Compile Include="Rarities\WeaponCommon.cs" />
+    <Compile Include="Rarities\ArmorUncommon.cs" />
+    <Compile Include="Rarities\WeaponUncommon.cs" />
     <Compile Include="Rarities\Rarity.cs" />
   </ItemGroup>
   <ItemGroup>

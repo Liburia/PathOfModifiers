@@ -162,7 +162,7 @@ namespace PathOfModifiers
         public void RollItem(Item item)
         {
             ClearAffixes(item);
-            rarity = PoMAffixController.RollRarity(this);
+            rarity = PoMAffixController.RollRarity(item);
             Affix newAffix;
             int freeAffixes = FreeAffixes;
             for (int i = 0; i < freeAffixes; i++)

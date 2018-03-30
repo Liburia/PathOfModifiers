@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace PathOfModifiers.Rarities
@@ -8,7 +9,7 @@ namespace PathOfModifiers.Rarities
     {
         public Mod mod;
 
-        public virtual float weight => 1f;
+        public virtual float weight => 0f;
         public virtual byte maxAffixes => 0;
         public virtual byte maxPrefixes => 0;
         public virtual byte maxSuffixes => 0;
@@ -17,11 +18,10 @@ namespace PathOfModifiers.Rarities
         public virtual string name => string.Empty;
         public virtual float chanceToRollAffix => 0;
         
-        public virtual Rarity Clone()
+
+        public virtual bool CanBeRolled(Item item)
         {
-            Rarity newRarity = (Rarity)Activator.CreateInstance(GetType());
-            newRarity.mod = mod;
-            return newRarity;
+            return false;
         }
     }
 }

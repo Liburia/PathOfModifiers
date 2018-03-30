@@ -163,12 +163,14 @@ namespace PathOfModifiers
         /// <summary>
         /// Returns a valid rarity for the item.
         /// </summary>
-        public static Rarity RollRarity(PoMItem item)
+        public static Rarity RollRarity(Item item)
         {
-            Tuple<Rarity, double>[] tuples = rarities.Select(r => new Tuple<Rarity, double>(r, r.weight)).ToArray();
+            Tuple<Rarity, double>[] tuples = rarities
+                .Where(r => r.weight > 0 && r.CanBeRolled(item))
+                .Select(r => new Tuple<Rarity, double>(r, r.weight))
+                .ToArray();
             WeightedRandom<Rarity> weightedRandom = new WeightedRandom<Rarity>(Main.rand, tuples);
             Rarity rarity = weightedRandom;
-            rarity = rarity.Clone();
             return rarity;
         }
         /// <summary>
