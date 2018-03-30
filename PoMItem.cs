@@ -330,7 +330,14 @@ namespace PathOfModifiers
         }
         public override void UpdateEquip(Item item, Player player)
         {
-            //TODO: affix armor(accesories?)
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.UpdateEquip(item, player);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.UpdateEquip(item, player);
+            }
         }
         public override void UpdateInventory(Item item, Player player)
         {

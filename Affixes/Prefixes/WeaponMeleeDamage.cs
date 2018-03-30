@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Prefixes
 {
-    public class WeaponMeleeDamage : Prefix, ITieredStatAffix
+    public class WeaponMeleeDamage : Prefix, ITieredStatFloatAffix
     {
         public override float weight => 0.4f;
 
@@ -90,7 +90,7 @@ namespace PathOfModifiers.Affixes.Prefixes
         }
         public override Affix Clone()
         {
-            return TieredAffixHelper.Clone(this, (ITieredStatAffix)base.Clone());
+            return TieredAffixHelper.Clone(this, (ITieredStatFloatAffix)base.Clone());
         }
         public override void RollValue()
         {

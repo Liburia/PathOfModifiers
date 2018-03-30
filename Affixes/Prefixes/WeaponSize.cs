@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Prefixes
 {
-    public class WeaponSize : Prefix, ITieredStatAffix
+    public class WeaponSize : Prefix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;
 
@@ -117,7 +117,7 @@ namespace PathOfModifiers.Affixes.Prefixes
         }
         public override Affix Clone()
         {
-            WeaponSize newAffix = (WeaponSize)TieredAffixHelper.Clone(this, (ITieredStatAffix)base.Clone());
+            WeaponSize newAffix = (WeaponSize)TieredAffixHelper.Clone(this, (ITieredStatFloatAffix)base.Clone());
             newAffix.baseScale = baseScale;
             return newAffix;
         }

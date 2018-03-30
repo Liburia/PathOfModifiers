@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace PathOfModifiers.Affixes
 {
-    public interface ITieredStatAffix
+    public interface ITieredStatIntAffix
     {
         float Weight { get; }
         float[] Tiers { get; }
@@ -26,6 +26,6 @@ namespace PathOfModifiers.Affixes
         float AddedTextWeightTiered { get; set; }
 
         float TierMultiplier { get; set; }
-        float Multiplier { get; set; }
+        int Value { get; set; }
     }
 }

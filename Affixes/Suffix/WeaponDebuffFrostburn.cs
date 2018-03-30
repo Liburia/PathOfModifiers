@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Suffixes
 {
-    public class WeaponDebuffFrostburn : Suffix, ITieredStatAffix
+    public class WeaponDebuffFrostburn : Suffix, ITieredStatFloatAffix
     {
         public override float weight => 0.4f;
 
@@ -124,7 +124,7 @@ namespace PathOfModifiers.Affixes.Suffixes
         }
         public override Affix Clone()
         {
-            return TieredAffixHelper.Clone(this, (ITieredStatAffix)base.Clone());
+            return TieredAffixHelper.Clone(this, (ITieredStatFloatAffix)base.Clone());
         }
         public override void RollValue()
         {
