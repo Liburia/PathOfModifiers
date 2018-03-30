@@ -558,7 +558,7 @@ namespace PathOfModifiers
         }
         public override void PostDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            if (rarity == null || rarity.GetType() == typeof(None))
+            if (Main.npcShop == 0 && (rarity == null || rarity.GetType() == typeof(None)))
             {
                 try
                 {
