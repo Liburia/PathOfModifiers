@@ -52,8 +52,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Affixes\ITieredStatIntValueAffix.cs" />
     <Compile Include="Affixes\ITieredStatIntAffix.cs" />
     <Compile Include="Affixes\ITieredStatFloatAffix.cs" />
+    <Compile Include="Affixes\Prefixes\ArmorDefense.cs" />
     <Compile Include="Affixes\Prefixes\ArmorMaxMana.cs" />
     <Compile Include="Affixes\Prefixes\ArmorMaxLife.cs" />
     <Compile Include="Affixes\Prefixes\WeaponDamagePerEnemyBuff.cs" />

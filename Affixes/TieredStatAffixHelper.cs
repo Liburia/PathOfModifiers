@@ -114,5 +114,43 @@ namespace PathOfModifiers.Affixes
             SetTier(affix, reader.ReadInt32());
             SetTierMultiplier(affix, reader.ReadSingle());
         }
+
+        public static void SetTier(ITieredStatIntValueAffix affix, int tier)
+        {
+            affix.Tier = tier;
+            affix.AddedTextTiered = affix.TierNames[tier];
+            affix.AddedTextWeightTiered = affix.Weight / (float)affix.TierWeights[tier].Item2;
+        }
+        public static Affix Clone(ITieredStatIntValueAffix affix, ITieredStatIntValueAffix newAffix)
+        {
+            SetTier(newAffix, affix.Tier);
+
+            return (Affix)newAffix;
+        }
+        public static void RollValue(ITieredStatIntValueAffix affix)
+        {
+            WeightedRandom<int> weightedRandom = new WeightedRandom<int>(Main.rand, affix.TierWeights);
+            SetTier(affix, weightedRandom);
+        }
+        public static void ReforgePrice(ITieredStatIntValueAffix affix, Item item, ref int price)
+        {
+            price += (int)Math.Round(item.value * 0.2f * Math.Sqrt(affix.Tier) / affix.Weight);
+        }
+        public static void Save(ITieredStatIntValueAffix affix, TagCompound tag, Item item)
+        {
+            tag.Set("tier", affix.Tier);
+        }
+        public static void Load(ITieredStatIntValueAffix affix, TagCompound tag, Item item)
+        {
+            SetTier(affix, tag.GetInt("tier"));
+        }
+        public static void NetSend(ITieredStatIntValueAffix affix, Item item, BinaryWriter writer)
+        {
+            writer.Write(affix.Tier);
+        }
+        public static void NetReceive(ITieredStatIntValueAffix affix, Item item, BinaryReader reader)
+        {
+            SetTier(affix, reader.ReadInt32());
+        }
     }
 }
