@@ -151,6 +151,18 @@ namespace PathOfModifiers
         {
             return item.potion;
         }
+
+        public static bool IsAccessoryEquipped(Item item, Player player)
+        {
+            for (int i = 3; i < 8 + player.extraAccessorySlots; k++)
+            {
+                if (player.armor[i] == item)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         #endregion
 
         public string GetBaseName(Item item) => Lang.GetItemNameValue(item.type);
