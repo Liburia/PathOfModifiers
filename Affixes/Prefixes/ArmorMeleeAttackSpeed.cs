@@ -50,7 +50,7 @@ namespace PathOfModifiers.Affixes.Prefixes
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return
-                PoMItem.IsBodyArmor(item);
+                PoMItem.IsLegArmor(item);
         }
 
         public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
@@ -62,10 +62,7 @@ namespace PathOfModifiers.Affixes.Prefixes
 
         public override void UpdateEquip(Item item, Player player)
         {
-            if (player.armor[2] == item)
-            {
-                player.meleeSpeed *= multiplier;
-            }
+            player.meleeSpeed *= multiplier;
         }
 
         #region Interface Properties

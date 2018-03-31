@@ -45,7 +45,7 @@ namespace PathOfModifiers.Affixes.Prefixes
         public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
         {
             int value = tiers[tier];
-            TooltipLine line = new TooltipLine(mod, "ArmorMinionCount", $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max minions");
+            TooltipLine line = new TooltipLine(mod, "EquipMinionCount", $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max minions");
             line.overrideColor = color;
             tooltips.Add(line);
         }

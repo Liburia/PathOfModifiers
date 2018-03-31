@@ -58,8 +58,7 @@ namespace PathOfModifiers.Affixes.Prefixes
 
         public override void UpdateEquip(Item item, Player player)
         {
-            if (PoMItem.IsAccessoryEquipped(item, player))
-                player.pickSpeed *= multiplier;
+            player.pickSpeed *= multiplier;
         }
 
         #region Interface Properties

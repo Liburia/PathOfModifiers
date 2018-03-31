@@ -62,7 +62,9 @@ namespace PathOfModifiers.Affixes.Prefixes
         
         public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
         {
-            return Main.rand.NextFloat(0, 1) > multiplier;
+            if (player.armor[2] == item)
+                return Main.rand.NextFloat(0, 1) > multiplier;
+            return true;
         }
 
         #region Interface Properties

@@ -63,10 +63,13 @@ namespace PathOfModifiers.Affixes.Prefixes
 
         public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
         {
-            int reflectDamage = (int)Math.Round(damage * multiplier);
-            float reflectKnockback = 0;
-            int reflectDirection = 1;
-            npc.StrikeNPC(reflectDamage, reflectKnockback, reflectDirection, crit);
+            if (player.armor[1] == item)
+            {
+                int reflectDamage = (int)Math.Round(damage * multiplier);
+                float reflectKnockback = 0;
+                int reflectDirection = 1;
+                npc.StrikeNPC(reflectDamage, reflectKnockback, reflectDirection, crit);
+            }
         }
 
         #region Interface Properties
