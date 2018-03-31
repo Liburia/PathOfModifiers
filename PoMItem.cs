@@ -12,6 +12,7 @@ using Terraria.Utilities;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Rarities;
+using Terraria.DataStructures;
 
 namespace PathOfModifiers
 {
@@ -144,6 +145,11 @@ namespace PathOfModifiers
         public static bool IsAnyArmor(Item item)
         {
             return IsHeadArmor(item) || IsBodyArmor(item) || IsLegArmor(item);
+        }
+
+        public static bool IsPotion(Item item)
+        {
+            return item.potion;
         }
         #endregion
 
@@ -476,6 +482,74 @@ namespace PathOfModifiers
             }
         }
         #endregion
+        #region Player Hooks
+        public bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                if (!prefix.PlayerConsumeAmmo(player, item, ammo))
+                    return false;
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                if (!suffix.PlayerConsumeAmmo(player, item, ammo))
+                    return false;
+            }
+            return true;
+        }
+        public bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        {
+            float damageMultiplier = 1f;
+            bool hurt = true;
+            foreach (Prefix prefix in prefixes)
+            {
+                if (!prefix.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
+                    hurt = false;
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                if (!suffix.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
+                    hurt = false;
+            }
+            damage = (int)Math.Round(damage * damageMultiplier);
+            return hurt;
+        }
+        public void NaturalLifeRegen(Item item, Player player, ref float regen)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.NaturalLifeRegen(item, player, ref regen);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.NaturalLifeRegen(item, player, ref regen);
+            }
+        }
+        public void ModifyHitByNPC(Item item, Player player, NPC npc, ref int damage, ref bool crit)
+        {
+            float damageMultiplier = 1f;
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
+            }
+            damage = (int)Math.Round(damage * damageMultiplier);
+        }
+        public void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.OnHitByNPC(item, player, npc, damage, crit);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.OnHitByNPC(item, player, npc, damage, crit);
+            }
+        }
+        #endregion
 
         public override void PostReforge(Item item)
         {
@@ -607,10 +681,18 @@ namespace PathOfModifiers
         }
         public override void Load(Item item, TagCompound tag)
         {
-            Type type = ModLoader.GetMod(tag.GetString("rarityMod")).Code.GetType(tag.GetString("rarityFullName"));
+            string rarityModName = tag.GetString("rarityMod");
+            Mod mod = ModLoader.GetMod(rarityModName);
+            if (mod == null)
+            {
+                PathOfModifiers.Log($"PathOfModifiers: Mod not found {rarityModName}");
+                return;
+            }
+            string rarityFullName = tag.GetString("rarityFullName");
+            Type type = mod.Code.GetType(rarityFullName);
             if (type == null)
             {
-                PathOfModifiers.Log("PathOfModifiers: Rarity not found");
+                PathOfModifiers.Log($"PathOfModifiers: Rarity not found {rarityFullName}");
                 return;
             }
             rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[type]];
@@ -620,7 +702,7 @@ namespace PathOfModifiers
             for (int i = 0; i < affixCount; i++)
             {
                 affixTag = tag.GetCompound(i.ToString());
-                Mod mod = ModLoader.GetMod(affixTag.GetString("affixMod"));
+                mod = ModLoader.GetMod(affixTag.GetString("affixMod"));
                 if (mod == null)
                 {
                     PathOfModifiers.Log("PathOfModifiers: Mod not found");

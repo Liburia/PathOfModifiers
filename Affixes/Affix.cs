@@ -8,6 +8,7 @@ using Terraria.ModLoader.IO;
 using Terraria.ID;
 using System.IO;
 using System.Collections.Generic;
+using Terraria.DataStructures;
 
 namespace PathOfModifiers.Affixes
 {
@@ -57,6 +58,13 @@ namespace PathOfModifiers.Affixes
         public virtual void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit) { }
         public virtual void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit) { }
         public virtual void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit) { }
+        #endregion
+        #region Player Hooks
+        public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo) { return true; }
+        public virtual bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource) { return true; }
+        public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }
+        public virtual void ModifyHitByNPC(Item item, Player player, NPC npc, ref int damage, ref bool crit) { }
+        public virtual void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit) { }
         #endregion
         public virtual void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips) { }
 

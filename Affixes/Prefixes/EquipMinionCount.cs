@@ -11,29 +11,21 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Prefixes
 {
-    public class ArmorDefense : Prefix, ITieredStatIntValueAffix
+    public class EquipMinionCount : Prefix, ITieredStatIntValueAffix
     {
-        public override float weight => 0.5f;
+        public override float weight => 0.3f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static int[] tiers = new int[] { -3, -2, -1, 1, 2, 3 };
+        static int[] tiers = new int[] { 1, 2 };
         static Tuple<int, double>[] tierWeights = new Tuple<int, double>[] {
-            new Tuple<int, double>(0, 0.5),
-            new Tuple<int, double>(1, 1.2),
-            new Tuple<int, double>(2, 2),
-            new Tuple<int, double>(3, 2),
-            new Tuple<int, double>(4, 1),
-            new Tuple<int, double>(5, 0.5),
+            new Tuple<int, double>(0, 10),
+            new Tuple<int, double>(1, 0.5),
         };
         static string[] tierNames = new string[] {
-            "Awful",
-            "Shoddy",
-            "Flawed",
-            "Unpleasant",
-            "Deadly",
-            "Godly",
+            "Invoking",
+            "Conjuring",
         };
         static int maxTier => tiers.Length - 2;
 
@@ -47,20 +39,20 @@ namespace PathOfModifiers.Affixes.Prefixes
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return
-                PoMItem.IsAnyArmor(item);
+                PoMItem.IsHeadArmor(item);
         }
 
         public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
         {
             int value = tiers[tier];
-            TooltipLine line = new TooltipLine(mod, "ArmorDefense", $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} defense");
+            TooltipLine line = new TooltipLine(mod, "ArmorMinionCount", $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max minions");
             line.overrideColor = color;
             tooltips.Add(line);
         }
 
         public override void UpdateEquip(Item item, Player player)
         {
-            player.statDefense += tiers[tier];
+            player.maxMinions += tiers[tier];
         }
 
         #region Interface Properties

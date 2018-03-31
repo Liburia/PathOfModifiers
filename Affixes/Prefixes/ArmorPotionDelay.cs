@@ -11,14 +11,14 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Prefixes
 {
-    public class ArmorMaxLife : Prefix, ITieredStatIntAffix
+    public class ArmorPotionDelay : Prefix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers = new float[] { -20f, -12.5f, -5f, 0f, 5f, 12.5f, 20f };
+        static float[] tiers = new float[] { 1.3f, 1.2f, 1.1f, 1f, 0.9f, 0.8f, 0.7f };
         static Tuple<int, double>[] tierWeights = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 0.5),
             new Tuple<int, double>(1, 1.2),
@@ -28,12 +28,12 @@ namespace PathOfModifiers.Affixes.Prefixes
             new Tuple<int, double>(5, 0.5),
         };
         static string[] tierNames = new string[] {
-            "Awful",
-            "Shoddy",
-            "Flawed",
-            "Unpleasant",
-            "Deadly",
-            "Godly",
+            "Quenched",
+            "Moist",
+            "Satisfied",
+            "Arid",
+            "Thirsty",
+            "Droughty",
         };
         static int maxTier => tiers.Length - 2;
 
@@ -44,25 +44,26 @@ namespace PathOfModifiers.Affixes.Prefixes
         float addedTextWeightTiered = 1;
 
         float tierMultiplier = 0;
-        int value = 0;
+        float multiplier = 0;
 
 
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return
-                PoMItem.IsAnyArmor(item);
+                PoMItem.IsBodyArmor(item);
         }
 
         public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, "ArmorMaxLife", $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max life");
+            TooltipLine line = new TooltipLine(mod, "ArmorPotionDelay", $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% potion delay");
             line.overrideColor = color;
             tooltips.Add(line);
         }
 
         public override void UpdateEquip(Item item, Player player)
         {
-            player.statLifeMax2 += value;
+            player.potionDelayTime = (int)Math.Round(player.potionDelayTime * multiplier);
+            player.restorationDelayTime = (int)Math.Round(player.restorationDelayTime * multiplier);
         }
 
         #region Interface Properties
@@ -76,7 +77,7 @@ namespace PathOfModifiers.Affixes.Prefixes
         public string AddedTextTiered { get { return AddedTextTiered; } set { addedTextTiered = value; } }
         public float AddedTextWeightTiered { get { return addedTextWeightTiered; } set { addedTextWeightTiered = value; } }
         public float TierMultiplier { get { return tierMultiplier; } set { tierMultiplier = value; } }
-        public int Value { get { return value; } set { this.value = value; } }
+        public float Multiplier { get { return multiplier; } set { this.multiplier = value; } }
         #endregion
         #region Helped Methods
         void SetTier(int tier)
@@ -89,7 +90,7 @@ namespace PathOfModifiers.Affixes.Prefixes
         }
         public override Affix Clone()
         {
-            return TieredAffixHelper.Clone(this, (ITieredStatIntAffix)base.Clone());
+            return TieredAffixHelper.Clone(this, (ITieredStatFloatAffix)base.Clone());
         }
         public override void RollValue()
         {
