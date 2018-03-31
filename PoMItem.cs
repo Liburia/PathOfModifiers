@@ -154,7 +154,7 @@ namespace PathOfModifiers
 
         public static bool IsAccessoryEquipped(Item item, Player player)
         {
-            for (int i = 3; i < 8 + player.extraAccessorySlots; k++)
+            for (int i = 3; i < 8 + player.extraAccessorySlots; i++)
             {
                 if (player.armor[i] == item)
                 {
