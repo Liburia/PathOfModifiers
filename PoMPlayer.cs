@@ -145,6 +145,52 @@ namespace PathOfModifiers
             }
         }
 
+        public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        {
+            Item affixItem;
+            PoMItem pomItem;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                affixItem = player.inventory[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damage, ref knockback, ref crit);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                affixItem = player.armor[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damage, ref knockback, ref crit);
+            }
+        }
+        public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
+        {
+            Item affixItem;
+            PoMItem pomItem;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                affixItem = player.inventory[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damage, ref crit);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                affixItem = player.armor[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damage, ref crit);
+            }
+        }
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             Item item;
@@ -189,6 +235,52 @@ namespace PathOfModifiers
 
                 pomItem = item.GetGlobalItem<PoMItem>(mod);
                 pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
+            }
+        }
+        public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+        {
+            Item affixItem;
+            PoMItem pomItem;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                affixItem = player.inventory[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                affixItem = player.armor[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
+            }
+        }
+        public override void OnHitPvp(Item item, Player target, int damage, bool crit)
+        {
+            Item affixItem;
+            PoMItem pomItem;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                affixItem = player.inventory[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                affixItem = player.armor[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
         }
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)

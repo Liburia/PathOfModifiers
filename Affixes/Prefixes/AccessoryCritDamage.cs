@@ -56,12 +56,12 @@ namespace PathOfModifiers.Affixes.Prefixes
             tooltips.Add(line);
         }
 
-        public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
+        public override void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
             if (crit && PoMItem.IsAccessoryEquipped(item, player))
                 damageMultiplier += multiplier - 1;
         }
-        public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
+        public override void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
         {
             if (crit && PoMItem.IsAccessoryEquipped(item, player))
                 damageMultiplier += multiplier - 1;

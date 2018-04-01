@@ -561,6 +561,56 @@ namespace PathOfModifiers
                 suffix.OnHitByNPC(item, player, npc, damage, crit);
             }
         }
+        public void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        {
+            float damageMultiplier = 1f;
+            float knockbackMultiplier = 1f;
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+            }
+            damage = (int)Math.Round(damage * damageMultiplier);
+            knockback *= knockbackMultiplier;
+        }
+        public void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref int damage, ref bool crit)
+        {
+            float damageMultiplier = 1f;
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
+            }
+            damage = (int)Math.Round(damage * damageMultiplier);
+        }
+        public void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, int damage, float knockback, bool crit)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
+            }
+        }
+        public void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, int damage, bool crit)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
+            }
+        }
         #endregion
 
         public override void PostReforge(Item item)
