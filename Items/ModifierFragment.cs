@@ -9,7 +9,7 @@ namespace PathOfModifiers.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Modifier Fragment");
-			Tooltip.SetDefault("This is a modded sword.");
+			Tooltip.SetDefault("Used to modify modifiers at a modifier forge.");
 		}
 		public override void SetDefaults()
 		{
