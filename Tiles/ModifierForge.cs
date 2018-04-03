@@ -20,7 +20,6 @@ namespace PathOfModifiers.Tiles
         public override void SetDefaults()
         {
             Main.tileSpelunker[Type] = true;
-			Main.tileContainer[Type] = true;
 			Main.tileShine2[Type] = true;
 			Main.tileShine[Type] = 1200;
 			Main.tileFrameImportant[Type] = true;
@@ -41,20 +40,13 @@ namespace PathOfModifiers.Tiles
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Modifier Forge");
 			AddMapEntry(new Color(200, 200, 200), name);
-			dustType = mod.DustType("Sparkle");
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Containers };
-			drop = mod.ItemType("ModifierForge");
+			disableSmartCursor = false;
+			drop = 0;
 		}
 
 		public override bool HasSmartInteract()
 		{
 			return true;
-		}
-
-		public override void NumDust(int i, int j, bool fail, ref int num)
-		{
-			num = 1;
 		}
 
         public override void PlaceInWorld(int i, int j, Item item)
@@ -63,16 +55,23 @@ namespace PathOfModifiers.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i * 16, j * 16, 32, 32, drop);
-            TEModifierForge tileEntity = mod.GetTileEntity<TEModifierForge>();
-            if (!tileEntity.ModifiedItem.IsAir)
-                Item.NewItem(i * 16, j * 16, 32, 32, tileEntity.ModifiedItem.type);
-            if (!tileEntity.ModifierItem.IsAir)
-                Item.NewItem(i * 16, j * 16, 32, 32, tileEntity.ModifierItem.type);
-            tileEntity.Kill(i, j);
+            try
+            {
+                if (Main.netMode != 2)
+                    HideUI();
+
+                Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("ModifierForge"));
+
+                TEModifierForge tileEntity = (TEModifierForge)TileEntity.ByID[mod.GetTileEntity<TEModifierForge>().Find(i, j)];
+                tileEntity.Kill(i, j);
+            }
+            catch(Exception e)
+            {
+                ErrorLogger.Log(e.ToString());
+            }
         }
 
-		public override void RightClick(int i, int j)
+        public override void RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];
@@ -104,43 +103,6 @@ namespace PathOfModifiers.Tiles
                 ShowUI(clickedForge, left, top);
             }
             return;
-			if (Main.netMode == 1)
-			{
-				if (left == player.chestX && top == player.chestY && player.chest >= 0)
-				{
-					player.chest = -1;
-					Recipe.FindRecipes();
-					Main.PlaySound(SoundID.MenuClose);
-				}
-				else
-				{
-					NetMessage.SendData(31, -1, -1, null, left, (float)top, 0f, 0f, 0, 0, 0);
-					Main.stackSplit = 600;
-				}
-			}
-			else
-			{
-				int chest = Chest.FindChest(left, top);
-				if (chest >= 0)
-				{
-					Main.stackSplit = 600;
-					if (chest == player.chest)
-					{
-						player.chest = -1;
-						Main.PlaySound(SoundID.MenuClose);
-					}
-					else
-					{
-						player.chest = chest;
-						Main.playerInventory = true;
-						Main.recBigList = false;
-						player.chestX = left;
-						player.chestY = top;
-						Main.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
-					}
-					Recipe.FindRecipes();
-				}
-			}
 		}
 
         public static void ShowUI(TEModifierForge forge, int tileX, int tileY)
@@ -156,7 +118,7 @@ namespace PathOfModifiers.Tiles
         public static void HideUI()
         {
             if (activeForge != null)
-                Main.PlaySound(SoundID.MenuOpen);
+                Main.PlaySound(SoundID.MenuClose);
             activeForge = null;
             ModifierForgeUI.Instance.Visible = false;
         }
@@ -310,6 +272,21 @@ namespace PathOfModifiers.Tiles
                 return -1;
             }
             return Place(i, j);
+        }
+
+        public override void OnKill()
+        {
+            if (Main.netMode != 1)
+            {
+                if (!ModifiedItem.IsAir)
+                {
+                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), ModifiedItem, 2);
+                }
+                if (!ModifierItem.IsAir)
+                {
+                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), ModifierItem, 2);
+                }
+            }
         }
     }
 }

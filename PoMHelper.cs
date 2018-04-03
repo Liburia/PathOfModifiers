@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using PathOfModifiers.Affixes;
 using PathOfModifiers.Rarities;
+using Terraria.ID;
 
 namespace PathOfModifiers
 {
@@ -27,6 +28,14 @@ namespace PathOfModifiers
                 }
             }
             return buffCount;
+        }
+
+        public static void DropItem(Vector2 pos, Item item, int syncWhenNetMode, bool noBroadcast = false, bool noGrabDelay = false)
+        {
+            int index = Item.NewItem(pos, item.type, item.stack, noBroadcast, item.prefix, noGrabDelay, false);
+            Main.item[index] = item.Clone();
+            if (Main.netMode == syncWhenNetMode)
+                NetMessage.SendData(MessageID.SyncItem, -1, -1, null, index, 1f);
         }
 	}
 }
