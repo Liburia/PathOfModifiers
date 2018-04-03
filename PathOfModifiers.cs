@@ -6,16 +6,25 @@ using Terraria.UI.Chat;
 using Terraria;
 using System.IO;
 using PathOfModifiers.Rarities;
+using Terraria.UI;
+using System.Collections.Generic;
+using PathOfModifiers.UI;
+using PathOfModifiers.Tiles;
+using Terraria.DataStructures;
 
 namespace PathOfModifiers
 {
 	class PathOfModifiers : Mod
-	{
+    {
         public static bool log = true;
+        public static bool logLoad = false;
+        public static bool logNetwork = false;
         public static bool disableVanillaModifiersWeapons = true;
         public static bool disableVanillaModifiersAccessories = true;
 
         public static PathOfModifiers Instance { get; private set; }
+        
+        public UserInterface modifierForgeUI;
 
         public static void Log(string message)
         {
@@ -32,7 +41,7 @@ namespace PathOfModifiers
 				AutoloadSounds = true
 			};
 		}
-
+        
         public override void Load()
         {
             Instance = this;
@@ -40,6 +49,13 @@ namespace PathOfModifiers
             AddPrefix("", new PoMPrefix());
 
             PoMAffixController.RegisterMod(this);
+
+            if (Main.netMode != 2)
+            {
+                new ModifierForgeUI().Initialize();
+                modifierForgeUI = new UserInterface();
+                modifierForgeUI.SetState(ModifierForgeUI.Instance);
+            }
         }
         public override void PostSetupContent()
         {
@@ -54,7 +70,8 @@ namespace PathOfModifiers
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             MsgType msg = (MsgType)reader.ReadByte();
-            Log($"Msg Received: {Main.netMode.ToString()}/{msg.ToString()}");
+            if (logNetwork)
+                Log($"Msg Received: {Main.netMode.ToString()}/{msg.ToString()}");
 
             if (msg == MsgType.SyncMaps)
             {
@@ -68,6 +85,46 @@ namespace PathOfModifiers
                 PoMAffixController.SendMaps(packet);
                 packet.Send(player);
             }
+            else if (msg == MsgType.SyncTEModifierForge)
+            {
+                int id = reader.ReadInt32();
+                if (TileEntity.ByID.ContainsKey(id))
+                {
+                    TEModifierForge tileEntity = (TEModifierForge)TileEntity.Read(reader, true);
+                    TileEntity.ByID[tileEntity.ID] = tileEntity;
+                    TileEntity.ByPosition[tileEntity.Position] = tileEntity;
+                    tileEntity.Sync(tileEntity.ID, whoAmI);
+                }
+            }
+        }
+
+        public override void UpdateUI(GameTime gameTime)
+        {
+            modifierForgeUI?.Update(gameTime);
+        }
+        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+        {
+            int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+            if (inventoryIndex != -1)
+            {
+                layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
+                    "PathOfModifiers: Modifier Forge",
+                    delegate
+                    {
+                        if (ModifierForgeUI.Instance.Visible)
+                        {
+                            ModifierForgeUI.Instance.Draw(Main.spriteBatch);
+                        }
+                        return true;
+                    },
+                    InterfaceScaleType.UI)
+                );
+            }
+        }
+
+        public override void PreSaveAndQuit()
+        {
+            ModifierForgeUI.Instance.Visible = false;
         }
     }
 
@@ -75,5 +132,6 @@ namespace PathOfModifiers
     {
         SyncMaps,
         PlayerConnected,
+        SyncTEModifierForge
     }
 }

@@ -13,6 +13,7 @@ using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Rarities;
 using Terraria.DataStructures;
+using PathOfModifiers.Items;
 
 namespace PathOfModifiers
 {
@@ -170,12 +171,18 @@ namespace PathOfModifiers
         /// <summary>
         /// Roll item if it's rollable.
         /// </summary>
-        public void TryRollItem(Item item)
+        public bool TryRollItem(Item item)
         {
             if (IsRollable(item))
+            {
                 RollItem(item);
+                return true;
+            }
             else
+            {
                 rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(None)]];
+                return false;
+            }
         }
         public void RollItem(Item item)
         {
@@ -634,16 +641,6 @@ namespace PathOfModifiers
             {
                 ErrorLogger.Log(e.ToString());
             }
-        }
-
-        public override bool CanRightClick(Item item)
-        {
-            //TODO: Orb application
-            return base.CanRightClick(item);
-        }
-        public override void RightClick(Item item, Player player)
-        {
-            //TODO: Orb application
         }
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
