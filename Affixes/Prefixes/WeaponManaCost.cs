@@ -18,7 +18,7 @@ namespace PathOfModifiers.Affixes.Prefixes
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers = new float[] { 0.5f, 0.675f, 0.85f, 1f, 1.2f, 1.375f, 1.5f };
+        static float[] tiers = new float[] { 1.5f, 1.375f, 1.2f, 1f, 0.8f, 0.675f, 0.5f };
         static Tuple<int, double>[] tierWeights = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 0.5),
             new Tuple<int, double>(1, 1.2),
