@@ -214,14 +214,20 @@ namespace PathOfModifiers
                 foreach (Prefix prefix in prefixes)
                 {
                     if (prefix.addedTextWeight > addedPrefixWeight && prefix.addedText != string.Empty)
+                    {
                         addedPrefix = prefix.addedText;
+                        addedPrefixWeight = prefix.addedTextWeight;
+                    }
                 }
                 string addedSuffix = string.Empty;
                 float addedSuffixWeight = 0f;
                 foreach (Suffix suffix in suffixes)
                 {
                     if (suffix.addedTextWeight > addedSuffixWeight && suffix.addedText != string.Empty)
+                    {
                         addedSuffix = suffix.addedText;
+                        addedPrefixWeight = suffix.addedTextWeight;
+                    }
                 }
                 item.SetNameOverride($"{rarity.name} {addedPrefix}{(addedPrefix != string.Empty ? " " : string.Empty)}{GetBaseName(item)}{(addedSuffix != string.Empty ? " " : string.Empty)}{addedSuffix} [{FreeAffixes}] [{FreePrefixes}] [{FreeSuffixes}]");
                 item.rare = rarity.vanillaRarity;
