@@ -31,8 +31,7 @@ namespace PathOfModifiers.UI
                 {
                     if (ModifierForge.activeForge != null)
                     {
-                        TEModifierForge forge = (TEModifierForge)TileEntity.ByPosition[ModifierForge.activeForgePos];
-                        SetItemSlots(forge.ModifiedItem.Clone(), forge.ModifierItem.Clone());
+                        SetItemSlots(ModifierForge.activeForge.ModifiedItem.Clone(), ModifierForge.activeForge.ModifierItem.Clone());
                         //Main.PlaySound(SoundID.MenuOpen);
                     }
                 }
@@ -98,23 +97,16 @@ namespace PathOfModifiers.UI
         }
         void ModifiedItemChange(Item oldItem, Item newItem)
         {
-            //TEModifierForge forge = (TEModifierForge)TileEntity.ByID[PathOfModifiers.Instance.GetTileEntity<TEModifierForge>().Find(ModifierForge.activeForgePos.X, ModifierForge.activeForgePos.Y)];
-            TEModifierForge forge = (TEModifierForge)TileEntity.ByPosition[ModifierForge.activeForgePos];
-            forge.ModifiedItem = newItem.Clone();
+            ModifierForge.activeForge.ModifiedItem = newItem.Clone();
         }
         void ModifierItemChange(Item oldItem, Item newItem)
         {
-            //TEModifierForge te = PathOfModifiers.Instance.GetTileEntity<TEModifierForge>();
-            //int index = te.Find(ModifierForge.activeForgePos.X, ModifierForge.activeForgePos.Y);
-            //PathOfModifiers.Log(index.ToString());
-            //TEModifierForge forge = (TEModifierForge)TileEntity.ByID[index];
-            TEModifierForge forge = (TEModifierForge)TileEntity.ByPosition[ModifierForge.activeForgePos];
-            forge.ModifierItem = newItem.Clone();
+            ModifierForge.activeForge.ModifierItem = newItem.Clone();
         }
 
         void ReforgeButtonClicked(UIMouseEvent evt, UIElement listeningElement)
 		{
-            ((TEModifierForge)TileEntity.ByPosition[ModifierForge.activeForgePos]).Reforge();
+            ModifierForge.activeForge.Reforge();
 		}
 
 		Vector2 offset;
@@ -163,8 +155,8 @@ namespace PathOfModifiers.UI
             {
                 Player player = Main.LocalPlayer;
                 Point playerPos = new Point((int)(player.MountedCenter.X / 16), (int)(player.MountedCenter.Y / 16));
-                if (playerPos.X < ModifierForge.activeForgePos.X - Player.tileRangeX || playerPos.X > ModifierForge.activeForgePos.X + Player.tileRangeX + 1 ||
-                    playerPos.Y < ModifierForge.activeForgePos.Y - Player.tileRangeY || playerPos.Y > ModifierForge.activeForgePos.Y + Player.tileRangeY + 1)
+                if (playerPos.X < ModifierForge.activeForge.Position.X - Player.tileRangeX || playerPos.X > ModifierForge.activeForge.Position.X + Player.tileRangeX + 1 ||
+                    playerPos.Y < ModifierForge.activeForge.Position.Y - Player.tileRangeY || playerPos.Y > ModifierForge.activeForge.Position.Y + Player.tileRangeY + 1)
                 {
                     ModifierForge.HideUI();
                 }

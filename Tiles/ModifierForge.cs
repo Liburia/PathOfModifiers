@@ -16,7 +16,6 @@ namespace PathOfModifiers.Tiles
     public class ModifierForge : ModTile
     {
         public static TEModifierForge activeForge;
-        public static Point16 activeForgePos;
 
         public override void SetDefaults()
         {
@@ -146,13 +145,18 @@ namespace PathOfModifiers.Tiles
 
         public static void ShowUI(TEModifierForge forge, int tileX, int tileY)
         {
+            if (activeForge != null)
+                Main.PlaySound(SoundID.MenuTick);
+            else
+                Main.PlaySound(SoundID.MenuOpen);
             activeForge = forge;
-            activeForgePos = new Point16(tileX, tileY);
             Main.playerInventory = true;
             ModifierForgeUI.Instance.Visible = true;
         }
         public static void HideUI()
         {
+            if (activeForge != null)
+                Main.PlaySound(SoundID.MenuOpen);
             activeForge = null;
             ModifierForgeUI.Instance.Visible = false;
         }
