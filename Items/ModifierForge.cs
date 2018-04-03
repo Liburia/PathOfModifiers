@@ -15,7 +15,7 @@ namespace PathOfModifiers.Items
         {
             item.width = 26;
             item.height = 22;
-			item.value = 1000000;
+			item.value = 500000;
 			item.rare = 2;
             item.maxStack = 99;
             item.useTurn = true;
@@ -30,7 +30,7 @@ namespace PathOfModifiers.Items
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod, "ModifierFragment", 100);
+			recipe.AddIngredient(mod, "ModifierFragment", 50);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}
