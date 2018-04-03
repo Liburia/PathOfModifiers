@@ -96,7 +96,6 @@ namespace PathOfModifiers.Tiles
 				Main.npcChatText = "";
             }
             TEModifierForge clickedForge = (TEModifierForge)TileEntity.ByPosition[new Point16(left, top)];
-            Main.NewText($"{ModifierForgeUI.Instance.Visible}/{activeForge == clickedForge}");
             if (ModifierForgeUI.Instance.Visible && activeForge == clickedForge)
             {
                 HideUI();
