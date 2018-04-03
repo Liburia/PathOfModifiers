@@ -51,7 +51,7 @@ namespace PathOfModifiers.UI
 			modifierForgePanel.SetPadding(0);
 			modifierForgePanel.Left.Set(position.X, 0f);
 			modifierForgePanel.Top.Set(position.Y, 0f);
-			modifierForgePanel.Width.Set(170f, 0f);
+			modifierForgePanel.Width.Set(200f, 0f);
 			modifierForgePanel.Height.Set(70f, 0f);
 			modifierForgePanel.BackgroundColor = new Color(73, 94, 171);
 
@@ -75,7 +75,7 @@ namespace PathOfModifiers.UI
             Texture2D buttonDeleteTexture = ModLoader.GetTexture("Terraria/UI/Reforge_0");
 			UIImageButton reforgeButton = new UIImageButton(buttonDeleteTexture);
             reforgeButton.Left.Set(140, 0f);
-            reforgeButton.Top.Set(10, 0f);
+            reforgeButton.Top.Set(10 + (UIItemSlot.defaultBackgroundTexture.Height / 2 - buttonDeleteTexture.Height / 2), 0f);
             reforgeButton.Width.Set(50, 0f);
             reforgeButton.Height.Set(50, 0f);
             reforgeButton.OnClick += new MouseEvent(ReforgeButtonClicked);
