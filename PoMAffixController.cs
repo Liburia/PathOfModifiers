@@ -61,7 +61,7 @@ namespace PathOfModifiers
                         affixMap.Add(t, affixIndex);
                         affixIndex++;
                         if (PathOfModifiers.logLoad)
-                            PathOfModifiers.Log($"Path of Modifiers: Added affix {t.FullName} with index {affixIndex} from mod {mod.Name}");
+                            PathOfModifiers.Log($"PathOfModifiers: Added affix {t.FullName} with index {affixIndex} from mod {mod.Name}");
                     }
                     else if(t.IsSubclassOf(typeof(Rarity)) && t != typeof(Rarity))
                     {
@@ -71,7 +71,7 @@ namespace PathOfModifiers
                         rarityMap.Add(t, rarityIndex);
                         rarityIndex++;
                         if (PathOfModifiers.logLoad)
-                            PathOfModifiers.Log($"Path of Modifiers: Added rarity {t.FullName} with index {rarityIndex} from mod {mod.Name}");
+                            PathOfModifiers.Log($"PathOfModifiers: Added rarity {t.FullName} with index {rarityIndex} from mod {mod.Name}");
                     }
                 }
             }
