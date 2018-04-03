@@ -88,12 +88,24 @@ namespace PathOfModifiers
             else if (msg == MsgType.SyncTEModifierForge)
             {
                 int id = reader.ReadInt32();
-                if (TileEntity.ByID.ContainsKey(id))
+                bool contains = reader.ReadBoolean();
+                if (contains)
                 {
-                    TEModifierForge tileEntity = (TEModifierForge)TileEntity.Read(reader, true);
+                    TEModifierForge tileEntity;
+                    tileEntity = (TEModifierForge)TileEntity.Read(reader, true);
+                    tileEntity.ID = id;
                     TileEntity.ByID[tileEntity.ID] = tileEntity;
                     TileEntity.ByPosition[tileEntity.Position] = tileEntity;
                     tileEntity.Sync(tileEntity.ID, whoAmI);
+                }
+                else
+                {
+                    TileEntity tileEntity;
+                    if (TileEntity.ByID.TryGetValue(id, out tileEntity) && tileEntity is ModTileEntity)
+                    {
+                        TileEntity.ByID.Remove(id);
+                        TileEntity.ByPosition.Remove(tileEntity.Position);
+                    }
                 }
             }
         }

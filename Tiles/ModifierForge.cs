@@ -49,26 +49,17 @@ namespace PathOfModifiers.Tiles
 			return true;
 		}
 
-        public override void PlaceInWorld(int i, int j, Item item)
-        {
-        }
-
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            try
-            {
-                if (Main.netMode != 2)
-                    HideUI();
-
+            if (Main.netMode != 1)
                 Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("ModifierForge"));
 
-                TEModifierForge tileEntity = (TEModifierForge)TileEntity.ByID[mod.GetTileEntity<TEModifierForge>().Find(i, j)];
-                tileEntity.Kill(i, j);
-            }
-            catch(Exception e)
-            {
-                ErrorLogger.Log(e.ToString());
-            }
+            TEModifierForge tileEntity = (TEModifierForge)TileEntity.ByID[mod.GetTileEntity<TEModifierForge>().Find(i, j)];
+
+            if (Main.netMode != 2 && activeForge == tileEntity)
+                HideUI();
+
+            tileEntity.Kill(i, j);
         }
 
         public override void RightClick(int i, int j)
@@ -100,12 +91,12 @@ namespace PathOfModifiers.Tiles
             }
             else
             {
-                ShowUI(clickedForge, left, top);
+                ShowUI(clickedForge);
             }
             return;
 		}
 
-        public static void ShowUI(TEModifierForge forge, int tileX, int tileY)
+        public static void ShowUI(TEModifierForge forge)
         {
             if (activeForge != null)
                 Main.PlaySound(SoundID.MenuTick);
@@ -161,51 +152,34 @@ namespace PathOfModifiers.Tiles
 
     public class TEModifierForge : ModTileEntity
     {
-        Item modifiedItem = new Item();
-        Item modifierItem = new Item();
-        public Item ModifiedItem
-        {
-            get { return modifiedItem; }
-            set
-            {
-                modifiedItem = value;
-                Sync(ID);
-            }
-        }
-        public Item ModifierItem
-        {
-            get { return modifierItem; }
-            set
-            {
-                modifierItem = value;
-                Sync(ID);
-            }
-        }
+        public Item modifiedItem = new Item();
+        public Item modifierItem = new Item();
 
         public void Reforge()
         {
             Main.player[Main.myPlayer].mouseInterface = true;
-            if (ModifierItem.stack >= 5 && ItemLoader.PreReforge(ModifiedItem))
+            if (!modifiedItem.IsAir && modifierItem.stack >= 5 && ItemLoader.PreReforge(modifiedItem))
             {
-                ModifierItem.stack -= 5;
+                modifierItem.stack -= 5;
 
-                bool favorited = ModifiedItem.favorited;
-                int stack = ModifiedItem.stack;
+                bool favorited = modifiedItem.favorited;
+                int stack = modifiedItem.stack;
 
                 Item reforgedItem = new Item();
-                reforgedItem.netDefaults(ModifiedItem.netID);
-                reforgedItem = reforgedItem.CloneWithModdedDataFrom(ModifiedItem);
+                reforgedItem.netDefaults(modifiedItem.netID);
+                reforgedItem = reforgedItem.CloneWithModdedDataFrom(modifiedItem);
                 reforgedItem.Prefix(-2);
-                modifiedItem = reforgedItem.Clone();
+
+                modifiedItem = reforgedItem;
                 modifiedItem.position.X = Main.player[Main.myPlayer].position.X + (float)(Main.player[Main.myPlayer].width / 2) - (float)(modifiedItem.width / 2);
                 modifiedItem.position.Y = Main.player[Main.myPlayer].position.Y + (float)(Main.player[Main.myPlayer].height / 2) - (float)(modifiedItem.height / 2);
                 modifiedItem.favorited = favorited;
                 modifiedItem.stack = stack;
+
                 ItemLoader.PostReforge(modifiedItem);
-                ItemText.NewText(ModifiedItem, ModifiedItem.stack, true, false);
+                ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
-                if (Main.netMode != 2)
-                    ModifierForgeUI.Instance.SetItemSlots(ModifiedItem.Clone(), ModifierItem.Clone());
+                ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
                 Sync(ID);
             }
         }
@@ -217,6 +191,7 @@ namespace PathOfModifiers.Tiles
                 ModPacket packet = mod.GetPacket();
                 packet.Write((byte)MsgType.SyncTEModifierForge);
                 packet.Write(ID);
+                packet.Write(ByID.ContainsKey(ID));
                 Write(packet, this, true);
                 packet.Send();
             }
@@ -226,32 +201,37 @@ namespace PathOfModifiers.Tiles
             }
         }
 
+        public override void NetSend(BinaryWriter writer, bool lightSend)
+        {
+            //PathOfModifiers.Log($"NetSend{Main.netMode}");
+            ItemIO.Send(modifiedItem, writer, true);
+            ItemIO.Send(modifierItem, writer, true);
+        }
         public override void NetReceive(BinaryReader reader, bool lightReceive)
         {
-            PathOfModifiers.Log($"NetReceive{Main.netMode}");
+            //PathOfModifiers.Log($"NetReceive{Main.netMode}");
             modifiedItem = ItemIO.Receive(reader, true);
             modifierItem = ItemIO.Receive(reader, true);
             if (Main.netMode != 2)
-                ModifierForgeUI.Instance.SetItemSlots(ModifiedItem.Clone(), ModifierItem.Clone());
-        }
-        public override void NetSend(BinaryWriter writer, bool lightSend)
-        {
-            PathOfModifiers.Log($"NetSend{Main.netMode}");
-            ItemIO.Send(ModifiedItem, writer, true);
-            ItemIO.Send(ModifierItem, writer, true);
+            {
+                if (ModifierForge.activeForge != null && ModifierForge.activeForge.Position == Position)
+                    ModifierForge.ShowUI(this);
+                else if (ModifierForge.activeForge == this)
+                    ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+            }
         }
 
         public override TagCompound Save()
         {
-            PathOfModifiers.Log($"Save{Main.netMode}");
+            //PathOfModifiers.Log($"Save{Main.netMode}");
             TagCompound tag = new TagCompound();
-            tag.Set("modifiedItem", ItemIO.Save(ModifiedItem));
-            tag.Set("modifierItem", ItemIO.Save(ModifierItem));
+            tag.Set("modifiedItem", ItemIO.Save(modifiedItem));
+            tag.Set("modifierItem", ItemIO.Save(modifierItem));
             return tag;
         }
         public override void Load(TagCompound tag)
         {
-            PathOfModifiers.Log($"Load{Main.netMode}");
+            //PathOfModifiers.Log($"Load{Main.netMode}");
             modifiedItem = ItemIO.Load(tag.GetCompound("modifiedItem"));
             modifierItem = ItemIO.Load(tag.GetCompound("modifierItem"));
         }
@@ -278,13 +258,13 @@ namespace PathOfModifiers.Tiles
         {
             if (Main.netMode != 1)
             {
-                if (!ModifiedItem.IsAir)
+                if (!modifiedItem.IsAir)
                 {
-                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), ModifiedItem, 2);
+                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifiedItem, 2);
                 }
-                if (!ModifierItem.IsAir)
+                if (!modifierItem.IsAir)
                 {
-                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), ModifierItem, 2);
+                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifierItem, 2);
                 }
             }
         }

@@ -31,14 +31,12 @@ namespace PathOfModifiers.UI
                 {
                     if (ModifierForge.activeForge != null)
                     {
-                        SetItemSlots(ModifierForge.activeForge.ModifiedItem.Clone(), ModifierForge.activeForge.ModifierItem.Clone());
-                        //Main.PlaySound(SoundID.MenuOpen);
+                        SetItemSlots(ModifierForge.activeForge.modifiedItem.Clone(), ModifierForge.activeForge.modifierItem.Clone());
                     }
                 }
                 else
                 {
                     SetItemSlots(new Item(), new Item());
-                    //Main.PlaySound(SoundID.MenuClose);
                 }
             }
         }
@@ -97,11 +95,13 @@ namespace PathOfModifiers.UI
         }
         void ModifiedItemChange(Item oldItem, Item newItem)
         {
-            ModifierForge.activeForge.ModifiedItem = newItem.Clone();
+            ModifierForge.activeForge.modifiedItem = newItem.Clone();
+            ModifierForge.activeForge.Sync(ModifierForge.activeForge.ID);
         }
         void ModifierItemChange(Item oldItem, Item newItem)
         {
-            ModifierForge.activeForge.ModifierItem = newItem.Clone();
+            ModifierForge.activeForge.modifierItem = newItem.Clone();
+            ModifierForge.activeForge.Sync(ModifierForge.activeForge.ID);
         }
 
         void ReforgeButtonClicked(UIMouseEvent evt, UIElement listeningElement)

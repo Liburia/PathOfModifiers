@@ -34,6 +34,7 @@ namespace PathOfModifiers
         {
             int index = Item.NewItem(pos, item.type, item.stack, noBroadcast, item.prefix, noGrabDelay, false);
             Main.item[index] = item.Clone();
+            Main.item[index].position = pos;
             if (Main.netMode == syncWhenNetMode)
                 NetMessage.SendData(MessageID.SyncItem, -1, -1, null, index, 1f);
         }
