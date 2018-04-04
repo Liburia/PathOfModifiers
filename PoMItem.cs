@@ -295,11 +295,11 @@ namespace PathOfModifiers
             float multiplier = 1f;
             foreach (Prefix prefix in prefixes)
             {
-                prefix.GetWeaponDamage(item, player, ref multiplier);
+                prefix.GetWeaponCrit(item, player, ref multiplier);
             }
             foreach (Suffix suffix in suffixes)
             {
-                suffix.GetWeaponDamage(item, player, ref multiplier);
+                suffix.GetWeaponCrit(item, player, ref multiplier);
             }
             crit = (int)Math.Round(crit * multiplier);
         }
