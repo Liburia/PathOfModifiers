@@ -33,10 +33,12 @@ namespace PathOfModifiers.UI
                     {
                         SetItemSlots(ModifierForge.activeForge.modifiedItem.Clone(), ModifierForge.activeForge.modifierItem.Clone());
                     }
+                    PathOfModifiers.modifierForgeUI.SetState(this);
                 }
                 else
                 {
                     SetItemSlots(new Item(), new Item());
+                    PathOfModifiers.modifierForgeUI.SetState(null);
                 }
             }
         }
@@ -105,7 +107,7 @@ namespace PathOfModifiers.UI
         }
 
         void ReforgeButtonClicked(UIMouseEvent evt, UIElement listeningElement)
-		{
+        {
             ModifierForge.activeForge.Reforge();
 		}
 

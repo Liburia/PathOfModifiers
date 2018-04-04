@@ -7,6 +7,7 @@ using Terraria;
 using System.IO;
 using PathOfModifiers.Rarities;
 using Terraria.UI;
+using Terraria.ID;
 using System.Collections.Generic;
 using PathOfModifiers.UI;
 using PathOfModifiers.Tiles;
@@ -24,7 +25,7 @@ namespace PathOfModifiers
 
         public static PathOfModifiers Instance { get; private set; }
         
-        public UserInterface modifierForgeUI;
+        public static UserInterface modifierForgeUI;
 
         public static void Log(string message)
         {
@@ -54,7 +55,7 @@ namespace PathOfModifiers
             {
                 new ModifierForgeUI().Initialize();
                 modifierForgeUI = new UserInterface();
-                modifierForgeUI.SetState(ModifierForgeUI.Instance);
+                ModifierForgeUI.Instance.Visible = false;
             }
         }
         public override void PostSetupContent()
