@@ -361,24 +361,26 @@ namespace PathOfModifiers
         }
         public override void UpdateEquip(Item item, Player player)
         {
+            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
             foreach (Prefix prefix in prefixes)
             {
-                prefix.UpdateEquip(item, player);
+                prefix.UpdateEquip(item, pomPlayer);
             }
             foreach (Suffix suffix in suffixes)
             {
-                suffix.UpdateEquip(item, player);
+                suffix.UpdateEquip(item, pomPlayer);
             }
         }
         public override void UpdateInventory(Item item, Player player)
         {
+            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
             foreach (Prefix prefix in prefixes)
             {
-                prefix.UpdateInventory(item, player);
+                prefix.UpdateInventory(item, pomPlayer);
             }
             foreach (Suffix suffix in suffixes)
             {
-                suffix.UpdateInventory(item, player);
+                suffix.UpdateInventory(item, pomPlayer);
             }
         }
         public override void HoldItem(Item item, Player player)
@@ -522,9 +524,8 @@ namespace PathOfModifiers
             }
             return true;
         }
-        public bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            float damageMultiplier = 1f;
             bool hurt = true;
             foreach (Prefix prefix in prefixes)
             {
@@ -536,18 +537,17 @@ namespace PathOfModifiers
                 if (!suffix.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
             return hurt;
         }
-        public void NaturalLifeRegen(Item item, Player player, ref float regen)
+        public void NaturalLifeRegen(Item item, Player player, ref float regenMultiplier)
         {
             foreach (Prefix prefix in prefixes)
             {
-                prefix.NaturalLifeRegen(item, player, ref regen);
+                prefix.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
             foreach (Suffix suffix in suffixes)
             {
-                suffix.NaturalLifeRegen(item, player, ref regen);
+                suffix.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
         }
         public void ModifyHitByNPC(Item item, Player player, NPC npc, ref int damage, ref bool crit)
@@ -574,10 +574,8 @@ namespace PathOfModifiers
                 suffix.OnHitByNPC(item, player, npc, damage, crit);
             }
         }
-        public void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        public void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
-            float damageMultiplier = 1f;
-            float knockbackMultiplier = 1f;
             foreach (Prefix prefix in prefixes)
             {
                 prefix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
@@ -586,12 +584,9 @@ namespace PathOfModifiers
             {
                 suffix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
-            knockback *= knockbackMultiplier;
         }
-        public void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref int damage, ref bool crit)
+        public void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
         {
-            float damageMultiplier = 1f;
             foreach (Prefix prefix in prefixes)
             {
                 prefix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
@@ -600,7 +595,6 @@ namespace PathOfModifiers
             {
                 suffix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
         }
         public void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, int damage, float knockback, bool crit)
         {

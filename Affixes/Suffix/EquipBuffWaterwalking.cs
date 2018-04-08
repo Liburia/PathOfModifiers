@@ -32,9 +32,9 @@ namespace PathOfModifiers.Affixes.Suffixes
             tooltips.Add(line);
         }
 
-        public override void UpdateEquip(Item item, Player player)
+        public override void UpdateEquip(Item item, PoMPlayer player)
         {
-            player.AddBuff(BuffID.WaterWalking, 2);
+            player.player.AddBuff(BuffID.WaterWalking, 2);
         }
 
         public override void ReforgePrice(Item item, ref int price)

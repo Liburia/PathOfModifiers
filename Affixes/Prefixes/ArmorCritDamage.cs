@@ -62,22 +62,22 @@ namespace PathOfModifiers.Affixes.Prefixes
 
         public override void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
-            if (crit && PoMItem.IsAccessoryEquipped(item, player))
+            if (crit && player.armor[0] == item)
                 damageMultiplier += multiplier - 1;
         }
         public override void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (crit && PoMItem.IsAccessoryEquipped(item, player))
+            if (crit && player.armor[0] == item)
                 damageMultiplier += multiplier - 1;
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
-            if (crit && player.armor[2] == item)
+            if (crit && player.armor[0] == item)
                 damageMultiplier += multiplier - 1;
         }
         public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (crit && player.armor[2] == item)
+            if (crit && player.armor[0] == item)
                 damageMultiplier += multiplier - 1;
         }
 

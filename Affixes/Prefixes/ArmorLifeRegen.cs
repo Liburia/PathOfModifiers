@@ -60,11 +60,11 @@ namespace PathOfModifiers.Affixes.Prefixes
             tooltips.Add(line);
         }
 
-        public override void NaturalLifeRegen(Item item, Player player, ref float regen)
+        public override void NaturalLifeRegen(Item item, Player player, ref float regenMultiplier)
         {
             if (player.armor[1] == item)
             {
-                regen = (regen * multiplier) + (player.lifeRegen * multiplier) - player.lifeRegen;
+                regenMultiplier += multiplier - 1;
             }
         }
 

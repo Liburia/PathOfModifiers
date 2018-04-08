@@ -56,9 +56,9 @@ namespace PathOfModifiers.Affixes.Prefixes
             tooltips.Add(line);
         }
 
-        public override void UpdateEquip(Item item, Player player)
+        public override void UpdateEquip(Item item, PoMPlayer player)
         {
-            player.meleeDamage *= multiplier;
+            player.meleeDamage += multiplier - 1;
         }
 
         #region Interface Properties

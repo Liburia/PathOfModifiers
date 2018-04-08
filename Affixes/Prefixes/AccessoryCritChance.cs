@@ -56,12 +56,12 @@ namespace PathOfModifiers.Affixes.Prefixes
             tooltips.Add(line);
         }
 
-        public override void UpdateEquip(Item item, Player player)
+        public override void UpdateEquip(Item item, PoMPlayer player)
         {
-            player.magicCrit = (int)Math.Round(player.magicCrit * multiplier);
-            player.meleeCrit = (int)Math.Round(player.magicCrit * multiplier);
-            player.rangedCrit = (int)Math.Round(player.magicCrit * multiplier);
-            player.thrownCrit = (int)Math.Round(player.magicCrit * multiplier);
+            player.meleeCrit += multiplier - 1;
+            player.rangedCrit += multiplier - 1;
+            player.magicCrit += multiplier - 1;
+            player.thrownCrit += multiplier - 1;
         }
 
         #region Interface Properties

@@ -61,9 +61,9 @@ namespace PathOfModifiers.Affixes.Prefixes
             tooltips.Add(line);
         }
 
-        public override void UpdateEquip(Item item, Player player)
+        public override void UpdateEquip(Item item, PoMPlayer player)
         {
-            player.statLifeMax2 += value;
+            player.player.statLifeMax2 += value;
         }
 
         #region Interface Properties

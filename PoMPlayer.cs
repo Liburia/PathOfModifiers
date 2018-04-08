@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using PathOfModifiers.Affixes;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,6 +11,25 @@ namespace PathOfModifiers
 {
     public class PoMPlayer : ModPlayer
     {
+        public float meleeCrit;
+        public float magicCrit;
+        public float rangedCrit;
+        public float thrownCrit;
+
+        public float meleeDamage;
+        public float magicDamage;
+        public float rangedDamage;
+        public float throwingDamage;
+        public float minionDamage;
+
+        public float meleeSpeed;
+        public float pickSpeed;
+
+        public float moveSpeed;
+
+        public float potionDelayTime;
+        public float restorationDelayTime;
+
         public override void OnEnterWorld(Player player)
         {
             if (Main.netMode == 1)
@@ -51,6 +71,7 @@ namespace PathOfModifiers
         {
             Item item;
             PoMItem pomItem;
+            float damageMultiplier = 1f;
             bool hurt = true;
             for (int i = 0; i < player.inventory.Length; i++)
             {
@@ -59,7 +80,7 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = item.GetGlobalItem<PoMItem>(mod);
-                if (!pomItem.PreHurt(item, player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
+                if (!pomItem.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -69,15 +90,17 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = item.GetGlobalItem<PoMItem>(mod);
-                if (!pomItem.PreHurt(item, player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
+                if (!pomItem.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
             }
+            damage = (int)Math.Round(damage * damageMultiplier);
             return hurt;
         }
         public override void NaturalLifeRegen(ref float regen)
         {
             Item item;
             PoMItem pomItem;
+            float regenMultiplier = 1;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 item = player.inventory[i];
@@ -85,7 +108,7 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = item.GetGlobalItem<PoMItem>(mod);
-                pomItem.NaturalLifeRegen(item, player, ref regen);
+                pomItem.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
             for (int i = 0; i < player.armor.Length; i++)
             {
@@ -94,8 +117,9 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = item.GetGlobalItem<PoMItem>(mod);
-                pomItem.NaturalLifeRegen(item, player, ref regen);
+                pomItem.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
+            regen = (regen * regenMultiplier) + (player.lifeRegen * regenMultiplier) - player.lifeRegen;
         }
 
         public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
@@ -149,6 +173,8 @@ namespace PathOfModifiers
         {
             Item affixItem;
             PoMItem pomItem;
+            float damageMultiplier = 1f;
+            float knockbackMultiplier = 1f;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 affixItem = player.inventory[i];
@@ -156,7 +182,7 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
-                pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damage, ref knockback, ref crit);
+                pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
             {
@@ -165,13 +191,16 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
-                pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damage, ref knockback, ref crit);
+                pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
+            damage = (int)Math.Round(damage * damageMultiplier);
+            knockback *= knockbackMultiplier;
         }
         public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
         {
             Item affixItem;
             PoMItem pomItem;
+            float damageMultiplier = 1f;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 affixItem = player.inventory[i];
@@ -179,7 +208,7 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
-                pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damage, ref crit);
+                pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
             {
@@ -188,8 +217,9 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
-                pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damage, ref crit);
+                pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
+            damage = (int)Math.Round(damage * damageMultiplier);
         }
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
@@ -328,6 +358,49 @@ namespace PathOfModifiers
                 pomItem = item.GetGlobalItem<PoMItem>(mod);
                 pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
             }
+        }
+
+        public override void PreUpdate()
+        {
+            meleeCrit = 1;
+            magicCrit = 1;
+            rangedCrit = 1;
+            thrownCrit = 1;
+
+            meleeDamage = 1;
+            magicDamage = 1;
+            rangedDamage = 1;
+            throwingDamage = 1;
+            minionDamage = 1;
+
+            meleeSpeed = 1;
+            pickSpeed = 1;
+
+            moveSpeed = 1;
+
+            potionDelayTime = 1;
+            restorationDelayTime = 1;
+        }
+        public override void PostUpdateEquips()
+        {
+            player.meleeCrit = (int)Math.Round(player.meleeCrit * meleeCrit);
+            player.magicCrit = (int)Math.Round(player.magicCrit * magicCrit);
+            player.rangedCrit = (int)Math.Round(player.rangedCrit * rangedCrit);
+            player.thrownCrit = (int)Math.Round(player.thrownCrit * thrownCrit);
+
+            player.meleeDamage *= meleeDamage;
+            player.magicDamage *= magicDamage;
+            player.rangedDamage *= rangedDamage;
+            player.thrownDamage *= throwingDamage;
+            player.minionDamage = minionDamage;
+            
+            player.meleeSpeed *= meleeSpeed;
+            player.pickSpeed *= pickSpeed;
+
+            player.moveSpeed *= moveSpeed;
+
+            player.potionDelayTime = (int)Math.Round(player.potionDelayTime * potionDelayTime);
+            player.restorationDelayTime = (int)Math.Round(player.restorationDelayTime * restorationDelayTime);
         }
     }
 }

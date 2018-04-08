@@ -43,8 +43,8 @@ namespace PathOfModifiers.Affixes
         public virtual void GetWeaponDamage(Item item, Player player, ref float multiplier) { }
         public virtual void GetWeaponKnockback(Item item, Player player, ref float multiplier) { }
         public virtual void UseTimeMultiplier(Item item, Player player, ref float multiplier) { }
-        public virtual void UpdateInventory(Item item, Player player) { }
-        public virtual void UpdateEquip(Item item, Player player) { }
+        public virtual void UpdateInventory(Item item, PoMPlayer player) { }
+        public virtual void UpdateEquip(Item item, PoMPlayer player) { }
         public virtual bool ConsumeAmmo(Item item, Player player) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
         public virtual void UseItem(Item item, Player player) { }

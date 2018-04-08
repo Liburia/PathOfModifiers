@@ -60,10 +60,10 @@ namespace PathOfModifiers.Affixes.Prefixes
             tooltips.Add(line);
         }
 
-        public override void UpdateEquip(Item item, Player player)
+        public override void UpdateEquip(Item item, PoMPlayer player)
         {
-            player.potionDelayTime = (int)Math.Round(player.potionDelayTime * multiplier);
-            player.restorationDelayTime = (int)Math.Round(player.restorationDelayTime * multiplier);
+            player.potionDelayTime += multiplier - 1;
+            player.restorationDelayTime += multiplier - 1;
         }
 
         #region Interface Properties
