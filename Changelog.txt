@@ -1,3 +1,4 @@
 v0.3.0
+Added a minimum amount of affixes that can roll for each rarity.
 Changed the way crit chance affix text is displayed for clarity.
 All stat affixes are now applied simultaneously per player.

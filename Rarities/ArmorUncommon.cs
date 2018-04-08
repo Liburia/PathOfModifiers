@@ -7,6 +7,7 @@ namespace PathOfModifiers.Rarities
     public class ArmorUncommon : Rarity
     {
         public override float weight => 1f;
+        public override byte minAffixes => 1;
         public override byte maxAffixes => 1;
         public override byte maxPrefixes => 1;
         public override byte maxSuffixes => 1;

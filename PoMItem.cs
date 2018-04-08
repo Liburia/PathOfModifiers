@@ -192,7 +192,7 @@ namespace PathOfModifiers
             int freeAffixes = FreeAffixes;
             for (int i = 0; i < freeAffixes; i++)
             {
-                if (i != 0 && Main.rand.NextFloat(0, 1) > rarity.chanceToRollAffix)
+                if (i >= rarity.minAffixes && Main.rand.NextFloat(0, 1) > rarity.chanceToRollAffix)
                     break;
 
                 newAffix = PoMAffixController.RollNewAffix(this, item);

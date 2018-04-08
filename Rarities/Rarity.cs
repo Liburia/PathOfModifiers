@@ -10,6 +10,7 @@ namespace PathOfModifiers.Rarities
         public Mod mod;
 
         public virtual float weight => 0f;
+        public virtual byte minAffixes => 0;
         public virtual byte maxAffixes => 0;
         public virtual byte maxPrefixes => 0;
         public virtual byte maxSuffixes => 0;

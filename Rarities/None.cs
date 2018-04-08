@@ -6,6 +6,7 @@ namespace PathOfModifiers.Rarities
     public class None : Rarity
     {
         public override float weight => 0f;
+        public override byte minAffixes => 0;
         public override byte maxAffixes => 0;
         public override byte maxPrefixes => 0;
         public override byte maxSuffixes => 0;

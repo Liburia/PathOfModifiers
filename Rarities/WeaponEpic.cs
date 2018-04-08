@@ -7,6 +7,7 @@ namespace PathOfModifiers.Rarities
     public class WeaponEpic : Rarity
     {
         public override float weight => 0.2f;
+        public override byte minAffixes => 3;
         public override byte maxAffixes => 6;
         public override byte maxPrefixes => 4;
         public override byte maxSuffixes => 3;
