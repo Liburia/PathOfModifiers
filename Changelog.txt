@@ -1,0 +1,3 @@
+v0.3.0
+Changed the way crit chance affix text is displayed for clarity.
+All stat affixes are now applied simultaneously per player.
