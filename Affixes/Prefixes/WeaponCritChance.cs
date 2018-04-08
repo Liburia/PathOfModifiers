@@ -56,7 +56,7 @@ namespace PathOfModifiers.Affixes.Prefixes
 
         public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, "WeaponCritChance", $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% critical strike chance");
+            TooltipLine line = new TooltipLine(mod, "WeaponCritChance", $"[T{tierText}] x{Math.Round(multiplier, 2)} critical strike chance");
             line.overrideColor = color;
             tooltips.Add(line);
         }
