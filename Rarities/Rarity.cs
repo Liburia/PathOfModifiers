@@ -18,6 +18,7 @@ namespace PathOfModifiers.Rarities
         public virtual int vanillaRarity => 0;
         public virtual string name => string.Empty;
         public virtual float chanceToRollAffix => 0;
+        public virtual int forgeCost => 0;
         
 
         public virtual bool CanBeRolled(Item item)

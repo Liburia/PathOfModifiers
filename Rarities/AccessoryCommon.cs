@@ -15,6 +15,7 @@ namespace PathOfModifiers.Rarities
         public override Color color => new Color(1f, 1f, 1f, 1f);
         public override int vanillaRarity => 0;
         public override string name => "Common";
+        public override int forgeCost => 1;
 
         public override bool CanBeRolled(Item item)
         {
