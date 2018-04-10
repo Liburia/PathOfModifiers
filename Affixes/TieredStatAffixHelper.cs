@@ -36,8 +36,16 @@ namespace PathOfModifiers.Affixes
         }
         public static void RollValue(ITieredStatFloatAffix affix)
         {
+            RollTier(affix);
+            RollTierMultiplier(affix);
+        }
+        public static void RollTier(ITieredStatFloatAffix affix)
+        {
             WeightedRandom<int> weightedRandom = new WeightedRandom<int>(Main.rand, affix.TierWeights);
             SetTier(affix, weightedRandom);
+        }
+        public static void RollTierMultiplier(ITieredStatFloatAffix affix)
+        {
             SetTierMultiplier(affix, Main.rand.NextFloat(0, 1));
         }
         public static void ReforgePrice(ITieredStatFloatAffix affix, Item item, ref int price)
@@ -86,8 +94,16 @@ namespace PathOfModifiers.Affixes
         }
         public static void RollValue(ITieredStatIntAffix affix)
         {
+            RollTier(affix);
+            RollTierMultiplier(affix);
+        }
+        public static void RollTier(ITieredStatIntAffix affix)
+        {
             WeightedRandom<int> weightedRandom = new WeightedRandom<int>(Main.rand, affix.TierWeights);
             SetTier(affix, weightedRandom);
+        }
+        public static void RollTierMultiplier(ITieredStatIntAffix affix)
+        {
             SetTierMultiplier(affix, Main.rand.NextFloat(0, 1));
         }
         public static void ReforgePrice(ITieredStatIntAffix affix, Item item, ref int price)
