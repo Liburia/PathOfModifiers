@@ -170,6 +170,8 @@
     <Compile Include="Rarities\Rarity.cs" />
     <Compile Include="Tiles\ModifierForge.cs" />
     <Compile Include="UI\ModifierForgeUI.cs" />
+    <Compile Include="UI\UITextButton.cs" />
+    <Compile Include="UI\UIPanelButton.cs" />
     <Compile Include="UI\UIItemSlot.cs" />
   </ItemGroup>
   <ItemGroup>
