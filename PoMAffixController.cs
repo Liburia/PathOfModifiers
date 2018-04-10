@@ -167,7 +167,6 @@ namespace PathOfModifiers
             }
         }
         
-
         /// <summary>
         /// Returns a valid rarity for the item.
         /// </summary>
@@ -207,5 +206,53 @@ namespace PathOfModifiers
             affix.InitializeItem(pomItem);
             return affix;
         }
-	}
+        public static Prefix RollNewPrefix(PoMItem pomItem, Item item)
+        {
+            if (pomItem.FreePrefixes <= 0)
+            {
+                return null;
+            }
+            Tuple<Affix, double>[] tuples = affixes
+                .Where(a => a.AffixSpaceAvailable(pomItem) &&
+                    a.weight > 0 &&
+                    a.CanBeRolled(pomItem, item) &&
+                    a is Prefix &&
+                    !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()))
+                .Select(a => new Tuple<Affix, double>(a, a.weight))
+                .ToArray();
+            if (tuples.Length == 0)
+            {
+                return null;
+            }
+            WeightedRandom<Affix> weightedRandom = new WeightedRandom<Affix>(Main.rand, tuples);
+            Affix prefix = weightedRandom;
+            prefix = prefix.Clone();
+            prefix.InitializeItem(pomItem);
+            return (Prefix)prefix;
+        }
+        public static Suffix RollNewSuffix(PoMItem pomItem, Item item)
+        {
+            if (pomItem.FreeSuffixes <= 0)
+            {
+                return null;
+            }
+            Tuple<Affix, double>[] tuples = affixes
+                .Where(a => a.AffixSpaceAvailable(pomItem) &&
+                    a.weight > 0 &&
+                    a.CanBeRolled(pomItem, item) &&
+                    a is Suffix &&
+                    !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()))
+                .Select(a => new Tuple<Affix, double>(a, a.weight))
+                .ToArray();
+            if (tuples.Length == 0)
+            {
+                return null;
+            }
+            WeightedRandom<Affix> weightedRandom = new WeightedRandom<Affix>(Main.rand, tuples);
+            Affix suffix = weightedRandom;
+            suffix = suffix.Clone();
+            suffix.InitializeItem(pomItem);
+            return (Suffix)suffix;
+        }
+    }
 }

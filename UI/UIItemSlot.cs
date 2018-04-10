@@ -9,7 +9,7 @@ using Terraria.UI.Chat;
 
 namespace PathOfModifiers.UI
 {
-    internal class UIItemSlot : UIElement
+    class UIItemSlot : UIElement
     {
         public static Texture2D defaultBackgroundTexture = Main.inventoryBack9Texture;
         public Texture2D backgroundTexture = defaultBackgroundTexture;

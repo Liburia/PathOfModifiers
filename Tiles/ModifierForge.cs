@@ -152,16 +152,51 @@ namespace PathOfModifiers.Tiles
 
     public class TEModifierForge : ModTileEntity
     {
+        public enum ForgeAction
+        {
+            Reforge = 0,
+            Rarify = 1,
+            AddAffix = 2,
+            AddPrefix = 3,
+            AddSuffix = 4,
+            RemoveAll = 5,
+            RemovePrefixes = 6,
+            RemoveSuffixes = 7,
+            RollAffixes = 8,
+            RollPrefixes = 9,
+            RollSuffixes = 10,
+        }
+
         public Item modifiedItem = new Item();
         public Item modifierItem = new Item();
+        
+        int[] forgeActionCostMultipliers = { 1, 5, 10, 15, 15, 5, 15, 15, 5, 15, 15 };
 
+        /// <summary>
+        /// Sets <see cref="cost"/>.
+        /// </summary>
+        /// <param name="action"></param>
+        public int CalculateCost(ForgeAction action)
+        {
+            if (modifiedItem == null || modifierItem == null || modifiedItem.IsAir || modifierItem.IsAir)
+                return 0;
+            PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+            return pomItem.rarity.forgeCost * forgeActionCostMultipliers[(int)action];
+        }
+
+        public bool CanForge(int cost)
+        {
+            return !modifiedItem.IsAir && modifierItem.stack >= cost && ItemLoader.PreReforge(modifiedItem);
+        }
+        
+        /// <summary>
+        /// Vanilla reforge
+        /// </summary>
         public void Reforge()
         {
-            Main.player[Main.myPlayer].mouseInterface = true;
-            if (!modifiedItem.IsAir && modifierItem.stack >= 5 && ItemLoader.PreReforge(modifiedItem))
+            int cost = CalculateCost(ForgeAction.Reforge);
+            if (CanForge(cost))
             {
-                modifierItem.stack -= 5;
-
                 bool favorited = modifiedItem.favorited;
                 int stack = modifiedItem.stack;
 
@@ -176,7 +211,182 @@ namespace PathOfModifiers.Tiles
                 modifiedItem.favorited = favorited;
                 modifiedItem.stack = stack;
 
+                modifierItem.stack -= cost;
+
                 ItemLoader.PostReforge(modifiedItem);
+                ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                Main.PlaySound(SoundID.Item37, -1, -1);
+                ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                Sync(ID);
+            }
+        }
+        public void RerollAffixes()
+        {
+            int cost = CalculateCost(ForgeAction.Reforge);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                pomItem.RerollAffixes(modifiedItem);
+                modifierItem.stack -= cost;
+
+                ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                Main.PlaySound(SoundID.Item37, -1, -1);
+                ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                Sync(ID);
+            }
+        }
+        public void Rarify()
+        {
+            int cost = CalculateCost(ForgeAction.Rarify);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                if (pomItem.RaiseRarity(modifiedItem))
+                {
+                    modifierItem.stack -= cost;
+
+                    ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                    Main.PlaySound(SoundID.Item37, -1, -1);
+                    ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                    Sync(ID);
+                }
+            }
+        }
+        public void AddAffix()
+        {
+            int cost = CalculateCost(ForgeAction.AddAffix);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                if (pomItem.AddRandomAffix(modifiedItem))
+                {
+                    modifierItem.stack -= cost;
+
+                    ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                    Main.PlaySound(SoundID.Item37, -1, -1);
+                    ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                    Sync(ID);
+                }
+            }
+        }
+        public void AddPrefix()
+        {
+            int cost = CalculateCost(ForgeAction.AddPrefix);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                if (pomItem.AddRandomPrefix(modifiedItem))
+                {
+                    modifierItem.stack -= cost;
+
+                    ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                    Main.PlaySound(SoundID.Item37, -1, -1);
+                    ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                    Sync(ID);
+                }
+            }
+        }
+        public void AddSuffix()
+        {
+            int cost = CalculateCost(ForgeAction.AddSuffix);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                if (pomItem.AddRandomSuffix(modifiedItem))
+                {
+                    modifierItem.stack -= cost;
+
+                    ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                    Main.PlaySound(SoundID.Item37, -1, -1);
+                    ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                    Sync(ID);
+                }
+            }
+        }
+        public void RemoveAll()
+        {
+            int cost = CalculateCost(ForgeAction.RemoveAll);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                pomItem.RemoveAll(modifiedItem);
+                modifierItem.stack -= cost;
+
+                ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                Main.PlaySound(SoundID.Item37, -1, -1);
+                ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                Sync(ID);
+            }
+        }
+        public void RemovePrefixes()
+        {
+            int cost = CalculateCost(ForgeAction.RemovePrefixes);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                pomItem.RemovePrefixes(modifiedItem);
+                modifierItem.stack -= cost;
+
+                ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                Main.PlaySound(SoundID.Item37, -1, -1);
+                ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                Sync(ID);
+            }
+        }
+        public void RemoveSuffixes()
+        {
+            int cost = CalculateCost(ForgeAction.RemoveSuffixes);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                pomItem.RemoveSuffixes(modifiedItem);
+                modifierItem.stack -= cost;
+
+                ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                Main.PlaySound(SoundID.Item37, -1, -1);
+                ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                Sync(ID);
+            }
+        }
+        public void RollAffixes()
+        {
+            int cost = CalculateCost(ForgeAction.RollAffixes);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                pomItem.RollAffixTierMultipliers(modifiedItem);
+                modifierItem.stack -= cost;
+
+                ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                Main.PlaySound(SoundID.Item37, -1, -1);
+                ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                Sync(ID);
+            }
+        }
+        public void RollPrefixes()
+        {
+            int cost = CalculateCost(ForgeAction.RollPrefixes);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                pomItem.RollPrefixTierMultipliers(modifiedItem);
+                modifierItem.stack -= cost;
+
+                ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
+                Main.PlaySound(SoundID.Item37, -1, -1);
+                ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                Sync(ID);
+            }
+        }
+        public void RollSuffixes()
+        {
+            int cost = CalculateCost(ForgeAction.RollSuffixes);
+            if (CanForge(cost))
+            {
+                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                pomItem.RollSuffixTierMultipliers(modifiedItem);
+                modifierItem.stack -= cost;
+
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());

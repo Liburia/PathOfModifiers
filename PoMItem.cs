@@ -168,41 +168,6 @@ namespace PathOfModifiers
 
         public string GetBaseName(Item item) => Lang.GetItemNameValue(item.type);
 
-        /// <summary>
-        /// Roll item if it's rollable.
-        /// </summary>
-        public bool TryRollItem(Item item)
-        {
-            if (IsRollable(item))
-            {
-                RollItem(item);
-                return true;
-            }
-            else
-            {
-                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(None)]];
-                return false;
-            }
-        }
-        public void RollItem(Item item)
-        {
-            ClearAffixes(item);
-            rarity = PoMAffixController.RollRarity(item);
-            Affix newAffix;
-            int freeAffixes = FreeAffixes;
-            for (int i = 0; i < freeAffixes; i++)
-            {
-                if (i >= rarity.minAffixes && Main.rand.NextFloat(0, 1) > rarity.chanceToRollAffix)
-                    break;
-
-                newAffix = PoMAffixController.RollNewAffix(this, item);
-                if (newAffix == null)
-                    break;
-
-                AddAffix(newAffix, item);
-            }
-            UpdateName(item);
-        }
         public void UpdateName(Item item)
         {
             if (rarity == null || rarity.GetType() == typeof(None))
@@ -233,6 +198,260 @@ namespace PathOfModifiers
                 item.rare = rarity.vanillaRarity;
             }
         }
+        /// <summary>
+        /// Roll item if it's rollable.
+        /// </summary>
+        public bool TryRollItem(Item item)
+        {
+            if (IsRollable(item))
+            {
+                RollItem(item);
+                return true;
+            }
+            else
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(None)]];
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Completely rerolls rarity and affixes.
+        /// </summary>
+        /// <param name="item"></param>
+        public void RollItem(Item item)
+        {
+            ClearAffixes(item);
+            rarity = PoMAffixController.RollRarity(item);
+            RollAffixes(item);
+            UpdateName(item);
+        }
+        /// <summary>
+        /// Completely rerolls affixes.
+        /// </summary>
+        /// <param name="item"></param>
+        public void RerollAffixes(Item item)
+        {
+            ClearAffixes(item);
+            RollAffixes(item);
+            UpdateName(item);
+        }
+        /// <summary>
+        /// Validly adds affixes to the item.
+        /// </summary>
+        /// <param name="item"></param>
+        public void RollAffixes(Item item)
+        {
+            Affix newAffix;
+            int freeAffixes = FreeAffixes;
+            for (int i = 0; i < freeAffixes; i++)
+            {
+                if (i >= rarity.minAffixes && Main.rand.NextFloat(0, 1) > rarity.chanceToRollAffix)
+                    break;
+
+                newAffix = PoMAffixController.RollNewAffix(this, item);
+                if (newAffix == null)
+                    break;
+
+                AddAffix(newAffix, item);
+            }
+        }
+        public bool RaiseRarity(Item item)
+        {
+            Type rarityType = rarity.GetType();
+            bool raised = false;
+            if (rarityType == typeof(WeaponCommon))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(WeaponUncommon)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(WeaponUncommon))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(WeaponRare)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(WeaponRare))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(WeaponEpic)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(WeaponEpic))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(WeaponLegendary)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(ArmorCommon))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(ArmorUncommon)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(ArmorUncommon))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(ArmorRare)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(ArmorRare))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(ArmorEpic)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(ArmorEpic))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(ArmorLegendary)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(AccessoryCommon))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(AccessoryUncommon)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(AccessoryUncommon))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(AccessoryRare)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(AccessoryRare))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(AccessoryEpic)]];
+                raised = true;
+            }
+            else if (rarityType == typeof(AccessoryEpic))
+            {
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(AccessoryLegendary)]];
+                raised = true;
+            }
+            if (raised)
+                UpdateName(item);
+            return raised;
+        }
+        /// <summary>
+        /// Validly adds an affix to the item.
+        /// </summary>
+        /// <param name="item"></param>
+        public bool AddRandomAffix(Item item)
+        {
+            Affix newAffix = PoMAffixController.RollNewAffix(this, item);
+            if (newAffix == null)
+                return false;
+
+            AddAffix(newAffix, item);
+
+            UpdateName(item);
+            return true;
+        }
+        /// <summary>
+        /// Validly adds a prefix to the item.
+        /// </summary>
+        /// <param name="item"></param>
+        public bool AddRandomPrefix(Item item)
+        {
+            Prefix newPrefix = PoMAffixController.RollNewPrefix(this, item);
+            if (newPrefix == null)
+                return false;
+
+            AddAffix(newPrefix, item);
+
+            UpdateName(item);
+            return true;
+        }
+        /// <summary>
+        /// Validly adds a suffix to the item.
+        /// </summary>
+        /// <param name="item"></param>
+        public bool AddRandomSuffix(Item item)
+        {
+            Affix newSuffix = PoMAffixController.RollNewSuffix(this, item);
+            if (newSuffix == null)
+                return false;
+
+            AddAffix(newSuffix, item);
+
+            UpdateName(item);
+            return true;
+        }
+        public void RemoveAll(Item item)
+        {
+            ClearAffixes(item);
+
+            Type rarityType = rarity.GetType();
+            if (rarityType == typeof(WeaponUncommon) || rarityType == typeof(WeaponRare) || rarityType == typeof(WeaponEpic) || rarityType == typeof(WeaponLegendary))
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(WeaponCommon)]];
+            else if (rarityType == typeof(ArmorUncommon) || rarityType == typeof(ArmorRare) || rarityType == typeof(ArmorEpic) || rarityType == typeof(ArmorLegendary))
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(ArmorCommon)]];
+            else if (rarityType == typeof(AccessoryUncommon) || rarityType == typeof(AccessoryRare) || rarityType == typeof(AccessoryEpic) || rarityType == typeof(AccessoryLegendary))
+                rarity = PoMAffixController.rarities[PoMAffixController.rarityMap[typeof(AccessoryCommon)]];
+
+            UpdateName(item);
+        }
+        public void RemovePrefixes(Item item)
+        {
+            ClearPrefixes(item);
+            UpdateName(item);
+        }
+        public void RemoveSuffixes(Item item)
+        {
+            ClearSuffixes(item);
+            UpdateName(item);
+        }
+        public void RollAffixTierMultipliers(Item item)
+        {
+            ITieredStatFloatAffix tieredStatFloatAffix;
+            ITieredStatIntAffix tieredStatIntAffix;
+            foreach (Affix affix in affixes)
+            {
+                tieredStatFloatAffix = affix as ITieredStatFloatAffix;
+                tieredStatIntAffix = affix as ITieredStatIntAffix;
+                if (tieredStatFloatAffix != null)
+                {
+                    TieredAffixHelper.RollTierMultiplier(tieredStatFloatAffix);
+                }
+                if (tieredStatIntAffix != null)
+                {
+                    TieredAffixHelper.RollTierMultiplier(tieredStatIntAffix);
+                }
+            }
+            UpdateName(item);
+        }
+        public void RollPrefixTierMultipliers(Item item)
+        {
+            ITieredStatFloatAffix tieredStatFloatAffix;
+            ITieredStatIntAffix tieredStatIntAffix;
+            UpdateName(item);
+            foreach (Prefix prefix in prefixes)
+            {
+                tieredStatFloatAffix = prefix as ITieredStatFloatAffix;
+                tieredStatIntAffix = prefix as ITieredStatIntAffix;
+                if (tieredStatFloatAffix != null)
+                {
+                    TieredAffixHelper.RollTierMultiplier(tieredStatFloatAffix);
+                }
+                if (tieredStatIntAffix != null)
+                {
+                    TieredAffixHelper.RollTierMultiplier(tieredStatIntAffix);
+                }
+            }
+            UpdateName(item);
+        }
+        public void RollSuffixTierMultipliers(Item item)
+        {
+            ITieredStatFloatAffix tieredStatFloatAffix;
+            ITieredStatIntAffix tieredStatIntAffix;
+            UpdateName(item);
+            foreach (Suffix suffix in suffixes)
+            {
+                tieredStatFloatAffix = suffix as ITieredStatFloatAffix;
+                tieredStatIntAffix = suffix as ITieredStatIntAffix;
+                if (tieredStatFloatAffix != null)
+                {
+                    TieredAffixHelper.RollTierMultiplier(tieredStatFloatAffix);
+                }
+                if (tieredStatIntAffix != null)
+                {
+                    TieredAffixHelper.RollTierMultiplier(tieredStatIntAffix);
+                }
+            }
+            UpdateName(item);
+        }
 
         public void AddAffix(Affix affix, Item item, bool clone = false)
         {
@@ -251,6 +470,20 @@ namespace PathOfModifiers
             if (suffix != null)
                 suffixes.Add(suffix);
         }
+        public void RemoveAffix(Affix affix, Item item)
+        {
+            affix.RemoveAffix(item);
+            affixes.Remove(affix);
+            Prefix prefix = affix as Prefix;
+            if (prefix != null)
+                prefixes.Remove(prefix);
+            else
+            {
+                Suffix suffix = affix as Suffix;
+                if (suffix != null)
+                    suffixes.Remove(suffix);
+            }
+        }
         public void ClearAffixes(Item item)
         {
             foreach (Affix affix in affixes)
@@ -259,6 +492,24 @@ namespace PathOfModifiers
             }
             affixes.Clear();
             prefixes.Clear();
+            suffixes.Clear();
+        }
+        public void ClearPrefixes(Item item)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.RemoveAffix(item);
+                affixes.Remove(prefix);
+            }
+            prefixes.Clear();
+        }
+        public void ClearSuffixes(Item item)
+        {
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.RemoveAffix(item);
+                affixes.Remove(suffix);
+            }
             suffixes.Clear();
         }
 
@@ -345,6 +596,7 @@ namespace PathOfModifiers
         public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             //TODO: affix projectile count/speed/damage?/knockback?
+            //DONT AFFECT SUMMONS LOL
             return base.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
         }
         public override void HorizontalWingSpeeds(Item item, Player player, ref float speed, ref float acceleration)
