@@ -1,4 +1,10 @@
 v0.3.0
+Added functions to the forge:
+	Reforge without changing rarity.
+	Raise Rarity.
+	Add a random Affix/Prefix/Suffix.
+	Remove all Affixes+Rarity/Suffix/Prefixes.
+	Roll affix values without changing the tier.
 Added a minimum amount of affixes that can roll for each rarity.
 Changed the way crit chance affix text is displayed for clarity.
 All stat affixes are now applied simultaneously per player.
