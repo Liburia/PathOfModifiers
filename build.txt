@@ -1,5 +1,5 @@
 author = Liburia
-version = 0.2.2
+version = 0.3.0
 displayName = Path Of Modifiers
 includePDB = true
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
