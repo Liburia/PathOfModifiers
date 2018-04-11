@@ -127,8 +127,5 @@ namespace PathOfModifiers.UI
                 OnItemChange?.Invoke(Main.mouseItem, item);
             }
         }
-        public override void Click(UIMouseEvent evt)
-        {
-        }
     }
 }
