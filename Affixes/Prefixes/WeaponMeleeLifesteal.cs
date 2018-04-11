@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Prefixes
 {
-    public class WeaponLifesteal : Prefix, ITieredStatFloatAffix
+    public class WeaponMeleeLifesteal : Prefix, ITieredStatFloatAffix
     {
         public override float weight => 0.4f;
 
@@ -50,12 +50,12 @@ namespace PathOfModifiers.Affixes.Prefixes
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                PoMItem.IsWeapon(item) && PoMItem.IsMelee(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% lifesteal";
+            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% lifesteal on melee hits";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
@@ -68,24 +68,6 @@ namespace PathOfModifiers.Affixes.Prefixes
             }
         }
         public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
-        {
-            if (player.HeldItem == item)
-            {
-                int heal = (int)Math.Round(damage * multiplier);
-                player.statLife += heal;
-                player.HealEffect(heal);
-            }
-        }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
-        {
-            if (player.HeldItem == item)
-            {
-                int heal = (int)Math.Round(damage * multiplier);
-                player.statLife += heal;
-                player.HealEffect(heal);
-            }
-        }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
         {
             if (player.HeldItem == item)
             {

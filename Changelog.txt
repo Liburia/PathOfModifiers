@@ -8,3 +8,6 @@ Added functions to the forge:
 Added a minimum amount of affixes that can roll for each rarity.
 Changed the way crit chance affix text is displayed for clarity.
 All stat affixes are now applied simultaneously per player.
+Reduced chance for lifesteal to roll.
+Reduced max lifesteal value from 20% to 10%.
+Added melee lifesteal prefix.

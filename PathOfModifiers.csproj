@@ -87,6 +87,7 @@
     <Compile Include="Affixes\Prefixes\EquipMaxLife.cs" />
     <Compile Include="Affixes\Prefixes\ArmorConsumeAmmo.cs" />
     <Compile Include="Affixes\Prefixes\WeaponDamagePerEnemyBuff.cs" />
+    <Compile Include="Affixes\Prefixes\WeaponMeleeLifesteal.cs" />
     <Compile Include="Affixes\Prefixes\WeaponManasteal.cs" />
     <Compile Include="Affixes\Prefixes\WeaponLifesteal.cs" />
     <Compile Include="Affixes\Prefixes\WeaponKnockbackPerLife.cs" />
