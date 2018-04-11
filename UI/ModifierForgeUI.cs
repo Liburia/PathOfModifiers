@@ -11,6 +11,7 @@ using PathOfModifiers.Tiles;
 using Terraria.DataStructures;
 using Terraria.Graphics;
 using System.Collections.Generic;
+using PathOfModifiers.Affixes;
 
 namespace PathOfModifiers.UI
 {
@@ -67,10 +68,13 @@ namespace PathOfModifiers.UI
         SelectedAction selectedAction = SelectedAction.None;
         UIPanelButton[] toggleElements;
 
+        UIText[] itemInfoText;
+
 		public override void OnInitialize()
 		{
             Instance = this;
             toggleElements = new UIPanelButton[11];
+            itemInfoText = new UIText[9];
 
             modifierForgePanel = new UIPanel();
 			modifierForgePanel.SetPadding(0);
@@ -98,7 +102,19 @@ namespace PathOfModifiers.UI
             modifierItemSlot.OnItemChange += ModifierItemChange;
             modifierItemSlot.OnItemChange += OnSlotItemChange;
             modifierForgePanel.Append(modifierItemSlot);
-            
+
+
+            #region Item info
+            for(int i = 0; i < itemInfoText.Length; i++)
+            {
+                UIText iItext = new UIText("TEST123", 0.75f);
+                iItext.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
+                iItext.Top.Set(10 + (i * 16), 0f);
+                modifierForgePanel.Append(iItext);
+                itemInfoText[i] = iItext;
+            }
+            #endregion
+            #region Affix scope text
             UIText addText = new UIText("Add", 0.65f, true);
             addText.Left.Set(10, 0);
             addText.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 2) + (10 * 4), 0f);
@@ -111,7 +127,7 @@ namespace PathOfModifiers.UI
             rollText.Left.Set(10, 0);
             rollText.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 4) + (10 * 6), 0f);
             modifierForgePanel.Append(rollText);
-
+            #endregion
             #region Reforge/Enchance
             UITextButton reforgeToggle = new UITextButton("Reforge", Color.White);
             reforgeToggle.isToggle = true;
@@ -294,7 +310,7 @@ namespace PathOfModifiers.UI
                     {
                         selectedAction = (SelectedAction)i;
                     }
-                    UpdateCost();
+                    UpdateText();
                 }
                 else
                     element.toggleState = false;
@@ -338,11 +354,11 @@ namespace PathOfModifiers.UI
                     ModifierForge.activeForge.RollSuffixes();
                     break;
             }
-            UpdateCost();
+            UpdateText();
         }
         void OnSlotItemChange(Item oldItem, Item newItem)
         {
-            UpdateCost();
+            UpdateText();
         }
 
         Vector2 offset;
@@ -403,14 +419,52 @@ namespace PathOfModifiers.UI
         {
             modifiedItemSlot.item = modifiedItem;
             modifierItemSlot.item = modifierItem;
-            UpdateCost();
+            UpdateText();
         }
-        public void UpdateCost()
+        /// <summary>
+        /// Update any text that depends on the item stats
+        /// </summary>
+        public void UpdateText()
         {
+            if (!Visible)
+                return;
+
             if (selectedAction == SelectedAction.None)
                 modifierCostText.SetText("0");
             else
                 modifierCostText.SetText(ModifierForge.activeForge.CalculateCost((TEModifierForge.ForgeAction)selectedAction).ToString());
+            modifierCostText.Recalculate();
+
+            int i = 0;
+            if (!modifiedItemSlot.item.IsAir)
+            {
+                PoMItem pomItem = modifiedItemSlot.item.GetGlobalItem<PoMItem>();
+                foreach (Prefix prefix in pomItem.prefixes)
+                {
+                    if (i >= itemInfoText.Length)
+                        break;
+                    UIText iiText = itemInfoText[i];
+                    iiText.SetText(prefix.GetTolltipText(modifiedItemSlot.item));
+                    iiText.TextColor = prefix.color;
+                    iiText.Recalculate();
+                    i++;
+                }
+                foreach (Suffix suffix in pomItem.suffixes)
+                {
+                    if (i >= itemInfoText.Length)
+                        break;
+                    UIText iiText = itemInfoText[i];
+                    iiText.SetText(suffix.GetTolltipText(modifiedItemSlot.item));
+                    iiText.TextColor = suffix.color;
+                    iiText.Recalculate();
+                    i++;
+                }
+            }
+            for (; i < itemInfoText.Length; i++)
+            {
+                itemInfoText[i].SetText(string.Empty);
+                itemInfoText[i].Recalculate();
+            }
         }
     }
 }
