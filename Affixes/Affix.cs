@@ -71,7 +71,13 @@ namespace PathOfModifiers.Affixes
         public virtual void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, int damage, float knockback, bool crit) { }
         public virtual void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, int damage, bool crit) { }
         #endregion
-        public virtual void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips) { }
+        public virtual void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        {
+            TooltipLine line = new TooltipLine(mod, GetType().Name, GetTolltipText(item));
+            line.overrideColor = color;
+            tooltips.Add(line);
+        }
+        public virtual string GetTolltipText(Item item) { return string.Empty; }
 
         public virtual void Save(TagCompound tag, Item item)
         {

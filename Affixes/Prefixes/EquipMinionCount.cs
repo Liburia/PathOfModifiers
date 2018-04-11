@@ -42,12 +42,10 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsHeadArmor(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
             int value = tiers[tier];
-            TooltipLine line = new TooltipLine(mod, "EquipMinionCount", $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max minions");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max minions";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

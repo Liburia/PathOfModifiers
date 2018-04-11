@@ -53,12 +53,10 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsAccessory(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
             int value = tiers[tier];
-            TooltipLine line = new TooltipLine(mod, "EquipDefense", $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} defense");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} defense";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

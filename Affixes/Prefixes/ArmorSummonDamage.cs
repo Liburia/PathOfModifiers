@@ -53,11 +53,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsHeadArmor(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "ArmorSummonDamage", $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% summon damage");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% summon damage";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

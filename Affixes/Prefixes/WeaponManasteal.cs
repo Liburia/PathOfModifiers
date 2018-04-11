@@ -53,11 +53,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsWeapon(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "WeaponManasteal", $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% manasteal");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% manasteal";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

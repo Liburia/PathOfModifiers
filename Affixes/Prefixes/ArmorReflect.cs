@@ -54,11 +54,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsBodyArmor(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "ArmorReflect", $"[T{tierText}] {(int)Math.Round(Math.Abs(multiplier * 100))}% melee damage reflected");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(int)Math.Round(Math.Abs(multiplier * 100))}% melee damage reflected";
         }
 
         public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)

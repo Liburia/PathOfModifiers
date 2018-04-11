@@ -59,11 +59,9 @@ namespace PathOfModifiers.Affixes.Prefixes
             multiplier += this.multiplier - 1;
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "WeaponAttackSpeed", $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% attack speed");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% attack speed";
         }
 
         #region Interface Properties

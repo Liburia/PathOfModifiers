@@ -49,11 +49,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsAccessory(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "AccessoryCritChance", $"[T{tierText}] x{Math.Round(multiplier, 2)} critical strike chance");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] x{Math.Round(multiplier, 2)} critical strike chance";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

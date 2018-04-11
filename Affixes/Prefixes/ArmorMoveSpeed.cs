@@ -53,11 +53,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsLegArmor(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "ArmorMoveSpeed", $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% movement speed");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% movement speed";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

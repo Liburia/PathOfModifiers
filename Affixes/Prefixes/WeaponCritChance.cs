@@ -54,11 +54,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.CanCrit(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "WeaponCritChance", $"[T{tierText}] x{Math.Round(multiplier, 2)} critical strike chance");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] x{Math.Round(multiplier, 2)} critical strike chance";
         }
 
         public override void GetWeaponCrit(Item item, Player player, ref float multiplier)

@@ -25,11 +25,9 @@ namespace PathOfModifiers.Affixes.Suffixes
                 PoMItem.IsAccessory(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "EquipBuffObsidianSkin", "Player is lava-proof");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return "Player is lava-proof";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

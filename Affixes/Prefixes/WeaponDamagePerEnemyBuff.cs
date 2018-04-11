@@ -53,11 +53,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsWeapon(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "WeaponDamagePerEnemyBuff", $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% damage per enemy buff/debuff");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% damage per enemy buff/debuff";
         }
 
         #region Item Hooks

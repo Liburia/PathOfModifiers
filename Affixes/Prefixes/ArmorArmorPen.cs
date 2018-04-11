@@ -53,11 +53,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsHeadArmor(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "ArmorArmorPen", $"[T{tierText}] {(value < 0 ? '-' : '+')}{value} armor penetration");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(value < 0 ? '-' : '+')}{value} armor penetration";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

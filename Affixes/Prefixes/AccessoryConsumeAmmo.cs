@@ -47,11 +47,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsAccessory(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "AccessoryConsumeAmmo", $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to not consume ammo");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to not consume ammo";
         }
         
         public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo)

@@ -52,11 +52,9 @@ namespace PathOfModifiers.Affixes.Suffixes
                 PoMItem.IsWeapon(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "WeaponDebuffFrostburn", $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to frostburn enemies for 3-10 seconds on hit");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to frostburn enemies for 3-10 seconds on hit";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

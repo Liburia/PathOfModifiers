@@ -25,11 +25,9 @@ namespace PathOfModifiers.Affixes.Suffixes
                 PoMItem.IsAccessory(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "EquipBuffShine", "Player is shiny");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return "Player is shiny";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

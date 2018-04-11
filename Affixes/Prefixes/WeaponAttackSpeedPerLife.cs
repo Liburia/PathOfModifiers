@@ -59,12 +59,10 @@ namespace PathOfModifiers.Affixes.Prefixes
             multiplier += (this.multiplier - 1) * ((((float)player.statLife / player.statLifeMax2) * 100) - 50);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
             float percent = (int)Math.Round(Math.Abs((multiplier - 1) * 5000));
-            TooltipLine line = new TooltipLine(mod, "WeaponAttackSpeedPerLife", $"[T{tierText}] Up to {(multiplier < 1 ? '-' : '+')}{percent}% attack speed above 50% life and up to {(multiplier < 1 ? '+' : '-')}{percent}% below");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] Up to {(multiplier < 1 ? '-' : '+')}{percent}% attack speed above 50% life and up to {(multiplier < 1 ? '+' : '-')}{percent}% below";
         }
 
         #region Interface Properties

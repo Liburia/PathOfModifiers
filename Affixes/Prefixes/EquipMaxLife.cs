@@ -54,11 +54,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 PoMItem.IsAccessory(item);
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            TooltipLine line = new TooltipLine(mod, "EquipMaxLife", $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max life");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max life";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

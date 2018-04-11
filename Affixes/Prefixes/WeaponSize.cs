@@ -56,12 +56,9 @@ namespace PathOfModifiers.Affixes.Prefixes
                 (PoMItem.IsSwinging(item) || PoMItem.IsStabbing(item));
         }
 
-        public override void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
+        public override string GetTolltipText(Item item)
         {
-            tooltips.RemoveAll(l => l.mod == "Terraria" && l.Name == "PrefixSize");
-            TooltipLine line = new TooltipLine(mod, "WeaponSize", $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% size");
-            line.overrideColor = color;
-            tooltips.Add(line);
+            return $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% size";
         }
         
         public override void UseItem(Item item, Player player)
