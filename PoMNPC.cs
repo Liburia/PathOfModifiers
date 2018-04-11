@@ -14,9 +14,9 @@ namespace PathOfModifiers
         {
             if (npc.lifeMax > 5 && npc.value > 0f && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.NextFloat(0, 1) < 0.15f)
+                if (npc.boss || Main.rand.NextFloat(0, 1) < 0.15f)
                 {
-                    int stack = Main.rand.Next(1, 5);
+                    int stack = Main.rand.Next(1, 5) * (npc.boss ? 10 : 1);
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ModifierFragment"), stack);
                 }
             }
