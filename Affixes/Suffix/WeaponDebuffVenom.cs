@@ -63,7 +63,7 @@ namespace PathOfModifiers.Affixes.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.AddBuff(70, Main.rand.Next(90, 330));
+                    target.AddBuff(70, Main.rand.Next(90, 330), false);
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace PathOfModifiers.Affixes.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.AddBuff(70, Main.rand.Next(90, 330));
+                    target.AddBuff(70, Main.rand.Next(90, 330), false);
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace PathOfModifiers.Affixes.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.AddBuff(70, Main.rand.Next(90, 330));
+                    target.AddBuff(70, Main.rand.Next(90, 330), false);
                 }
             }
         }
@@ -93,7 +93,7 @@ namespace PathOfModifiers.Affixes.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.AddBuff(70, Main.rand.Next(90, 330));
+                    target.AddBuff(70, Main.rand.Next(90, 330), false);
                 }
             }
         }

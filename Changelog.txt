@@ -1,3 +1,5 @@
+Fixed PVP debuffs not applying correctly.
+
 v0.3.0
 Added functions to the forge:
 	Reforge without changing rarity.
