@@ -186,7 +186,7 @@ namespace PathOfModifiers.Tiles
 
         public bool CanForge(int cost)
         {
-            return !modifiedItem.IsAir && modifierItem.stack >= cost && ItemLoader.PreReforge(modifiedItem);
+            return !modifiedItem.IsAir && !modifierItem.IsAir && modifierItem.stack >= cost && ItemLoader.PreReforge(modifiedItem);
         }
         
         /// <summary>
