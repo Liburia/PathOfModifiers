@@ -360,7 +360,7 @@ namespace PathOfModifiers
             }
         }
 
-        public override void PreUpdate()
+        public override void ResetEffects()
         {
             meleeCrit = 1;
             magicCrit = 1;
