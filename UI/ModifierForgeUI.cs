@@ -87,6 +87,12 @@ namespace PathOfModifiers.UI
 			modifierForgePanel.OnMouseDown += new MouseEvent(DragStart);
 			modifierForgePanel.OnMouseUp += new MouseEvent(DragEnd);
 
+
+            UIImageButton closeButton = new UIImageButton(ModLoader.GetTexture("PathOfModifiers/UI/CloseButton"));
+            closeButton.Left.Set(474, 0);
+            closeButton.Top.Set(10, 0);
+            closeButton.OnClick += OnCloseButtonClicked;
+            modifierForgePanel.Append(closeButton);
             modifiedItemSlot = new UIItemSlot(new Item(), null, 1);
             modifiedItemSlot.Left.Set(10, 0f);
             modifiedItemSlot.Top.Set(10, 0f);
@@ -270,7 +276,6 @@ namespace PathOfModifiers.UI
             modifierCostText.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 5) + (10 * 9), 0f);
             modifierForgePanel.Append(modifierCostText);
 
-
             Append(modifierForgePanel);
 		}
 
@@ -359,6 +364,10 @@ namespace PathOfModifiers.UI
         void OnSlotItemChange(Item oldItem, Item newItem)
         {
             UpdateText();
+        }
+        void OnCloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
+        {
+            ModifierForge.HideUI();
         }
 
         Vector2 offset;
