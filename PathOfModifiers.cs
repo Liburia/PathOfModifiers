@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using PathOfModifiers.UI;
 using PathOfModifiers.Tiles;
 using Terraria.DataStructures;
+using PathOfModifiers.Buffs;
 
 namespace PathOfModifiers
 {
@@ -109,6 +110,64 @@ namespace PathOfModifiers
                     }
                 }
             }
+            else if (msg == MsgType.AddDamageDoTDebuffNPC)
+            {
+                int npcID = reader.ReadInt32();
+                int buffType = reader.ReadInt32();
+                int damage = reader.ReadInt32();
+                int time = reader.ReadInt32();
+
+                DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
+                if (debuff == null)
+                {
+                    Log($"PathOfModifiers: Invalid buff packet received {buffType}");
+                    goto SkipMsgIf;
+                }
+                NPC npc = Main.npc[npcID];
+                PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
+                pomNPC.AddDamageDoTBuff(npc, debuff, damage, time, false);
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    ModPacket packet = GetPacket();
+                    packet.Write((byte)MsgType.AddDamageDoTDebuffNPC);
+                    packet.Write(npcID);
+                    packet.Write(buffType);
+                    packet.Write(damage);
+                    packet.Write(time);
+                    packet.Send(-1, whoAmI);
+                }
+            }
+            else if (msg == MsgType.AddDamageDoTDebuffPlayer)
+            {
+                int playerID = reader.ReadInt32();
+                int buffType = reader.ReadInt32();
+                int damage = reader.ReadInt32();
+                int time = reader.ReadInt32();
+
+                DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
+                if (debuff == null)
+                {
+                    Log($"PathOfModifiers: Invalid buff packet received {buffType}");
+                    goto SkipMsgIf;
+                }
+                Player player = Main.player[playerID];
+                PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
+                pomPlayer.AddDamageDoTBuff(player, debuff, damage, time, false);
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    ModPacket packet = GetPacket();
+                    packet.Write((byte)MsgType.AddDamageDoTDebuffPlayer);
+                    packet.Write(playerID);
+                    packet.Write(buffType);
+                    packet.Write(damage);
+                    packet.Write(time);
+                    packet.Send(-1, whoAmI);
+                }
+            }
+
+            SkipMsgIf:;
         }
 
         public override void UpdateUI(GameTime gameTime)
@@ -145,6 +204,8 @@ namespace PathOfModifiers
     {
         SyncMaps,
         PlayerConnected,
-        SyncTEModifierForge
+        SyncTEModifierForge,
+        AddDamageDoTDebuffNPC,
+        AddDamageDoTDebuffPlayer,
     }
 }

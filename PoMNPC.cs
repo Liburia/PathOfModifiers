@@ -5,11 +5,63 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using System;
+using PathOfModifiers.Buffs;
+using Terraria.ID;
 
 namespace PathOfModifiers
 {
     public class PoMNPC : GlobalNPC
     {
+        public override bool InstancePerEntity => true;
+
+        /// <summary>
+        /// Stores the damage of the hit that procced the debuff.
+        /// </summary>
+        Dictionary<Type, int> damageDotDebuffDamages = new Dictionary<Type, int>();
+
+        public bool dddDamageDotDebuff = false;
+
+        public void AddDamageDoTBuff(NPC npc, DamageDoTDebuff buff, int damage, int time, bool syncMP = true, int ignoreClient = -1)
+        {
+            int dddDamage = 0;
+            Type buffType = buff.GetType();
+            if (damageDotDebuffDamages.TryGetValue(buffType, out dddDamage))
+            {
+                if (damage > dddDamage)
+                    damageDotDebuffDamages[buffType] = damage;
+            }
+            else
+            {
+                damageDotDebuffDamages.Add(buffType, damage);
+            }
+            npc.AddBuff(buff.Type, time, true);
+
+            if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
+            {
+                ModPacket packet = mod.GetPacket();
+                packet.Write((byte)MsgType.AddDamageDoTDebuffNPC);
+                packet.Write(npc.whoAmI);
+                packet.Write(buff.Type);
+                packet.Write(damage);
+                packet.Write(time);
+                packet.Send();
+            }
+        }
+
+        public override void ResetEffects(NPC npc)
+        {
+            dddDamageDotDebuff = false;
+        }
+        public override void UpdateLifeRegen(NPC npc, ref int damage)
+        {
+            int debuffDamage;
+            if (dddDamageDotDebuff)
+            {
+                debuffDamage = (int)Math.Round(damageDotDebuffDamages[typeof(DamageDoTDebuff)] * DamageDoTDebuff.damageMultiplierHalfSecond);
+                npc.lifeRegen -= debuffDamage;
+            }
+        }
+
         public override void NPCLoot(NPC npc)
         {
             if (npc.lifeMax > 5 && npc.value > 0f && !npc.SpawnedFromStatue)

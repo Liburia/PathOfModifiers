@@ -118,6 +118,7 @@
     <Compile Include="Affixes\Suffix\WeaponDebuffShadowflame.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffFrostburn.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffIgnite.cs" />
+    <Compile Include="Affixes\Suffix\WeaponDebuffDDD.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffVenom.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffPoison.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffMidas.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Affixes\Affix.cs" />
     <Compile Include="Affixes\Prefixes\WeaponAttackSpeed.cs" />
     <Compile Include="Affixes\Prefixes\WeaponMeleeDamage.cs" />
+    <Compile Include="Buffs\DamageDoTDebuff.cs" />
     <Compile Include="Items\ModifierForge.cs" />
     <Compile Include="Items\ModifierFragment.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using PathOfModifiers.Affixes;
+using PathOfModifiers.Buffs;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Net;
 
@@ -11,6 +13,7 @@ namespace PathOfModifiers
 {
     public class PoMPlayer : ModPlayer
     {
+        #region Stats
         public float meleeCrit;
         public float magicCrit;
         public float rangedCrit;
@@ -29,6 +32,46 @@ namespace PathOfModifiers
 
         public float potionDelayTime;
         public float restorationDelayTime;
+        #endregion
+
+        /// <summary>
+        /// Stores the damage of the hit that procced the debuff.
+        /// </summary>
+        Dictionary<Type, int> damageDotDebuffDamages = new Dictionary<Type, int>();
+
+        public bool dddDamageDotDebuff = false;
+
+        public void AddDamageDoTBuff(Player player, DamageDoTDebuff buff, int damage, int time, bool syncMP = true, int ignoreClient = -1)
+        {
+            int dddDamage = 0;
+            Type buffType = buff.GetType();
+            if (damageDotDebuffDamages.TryGetValue(buffType, out dddDamage))
+            {
+                if (damage > dddDamage)
+                    damageDotDebuffDamages[buffType] = damage;
+            }
+            else
+            {
+                damageDotDebuffDamages.Add(buffType, damage);
+            }
+            player.AddBuff(buff.Type, time, true);
+
+            if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
+            {
+                ModPacket packet = mod.GetPacket();
+                packet.Write((byte)MsgType.AddDamageDoTDebuffPlayer);
+                packet.Write(player.whoAmI);
+                packet.Write(buff.Type);
+                packet.Write(damage);
+                packet.Write(time);
+                packet.Send();
+            }
+        }
+
+        public override void Initialize()
+        {
+            damageDotDebuffDamages = new Dictionary<Type, int>();
+        }
 
         public override void OnEnterWorld(Player player)
         {
@@ -380,6 +423,9 @@ namespace PathOfModifiers
 
             potionDelayTime = 1;
             restorationDelayTime = 1;
+
+
+            dddDamageDotDebuff = false;
         }
         public override void PostUpdateEquips()
         {
@@ -401,6 +447,15 @@ namespace PathOfModifiers
 
             player.potionDelayTime = (int)Math.Round(player.potionDelayTime * potionDelayTime);
             player.restorationDelayTime = (int)Math.Round(player.restorationDelayTime * restorationDelayTime);
+        }
+        public override void UpdateBadLifeRegen()
+        {
+            int debuffDamage;
+            if (dddDamageDotDebuff)
+            {
+                debuffDamage = (int)Math.Round(damageDotDebuffDamages[typeof(DamageDoTDebuff)] * DamageDoTDebuff.damageMultiplierHalfSecond);
+                player.lifeRegen -= debuffDamage;
+            }
         }
     }
 }
