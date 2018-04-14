@@ -1,3 +1,5 @@
+Forge UI can now be moved by dragging anywhere except the buttons.
+
 v0.3.2
 Fixed a crash when rolling T3 Accessory Consume Ammo affix.
 

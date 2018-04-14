@@ -365,7 +365,7 @@ namespace PathOfModifiers.UI
 		public bool dragging = false;
 		void DragStart(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (evt.Target == modifierForgePanel)
+            if (!(evt.Target is UIImageButton) && !(evt.Target is UIPanelButton) && !(evt.Target is UIItemSlot))
             {
                 offset = new Vector2(evt.MousePosition.X - modifierForgePanel.Left.Pixels, evt.MousePosition.Y - modifierForgePanel.Top.Pixels);
                 dragging = true;
@@ -373,7 +373,7 @@ namespace PathOfModifiers.UI
 		}
 		void DragEnd(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (evt.Target == modifierForgePanel)
+            if (!(evt.Target is UIImageButton) && !(evt.Target is UIPanelButton) && !(evt.Target is UIItemSlot))
             {
                 Vector2 end = evt.MousePosition;
                 dragging = false;
