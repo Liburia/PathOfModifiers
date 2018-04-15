@@ -86,13 +86,8 @@ namespace PathOfModifiers.UI
 
 			modifierForgePanel.OnMouseDown += new MouseEvent(DragStart);
 			modifierForgePanel.OnMouseUp += new MouseEvent(DragEnd);
+            
 
-
-            UIImageButton closeButton = new UIImageButton(ModLoader.GetTexture("PathOfModifiers/UI/CloseButton"));
-            closeButton.Left.Set(474, 0);
-            closeButton.Top.Set(10, 0);
-            closeButton.OnClick += OnCloseButtonClicked;
-            modifierForgePanel.Append(closeButton);
             modifiedItemSlot = new UIItemSlot(new Item(), null, 1);
             modifiedItemSlot.Left.Set(10, 0f);
             modifiedItemSlot.Top.Set(10, 0f);
@@ -109,9 +104,14 @@ namespace PathOfModifiers.UI
             modifierItemSlot.OnItemChange += OnSlotItemChange;
             modifierForgePanel.Append(modifierItemSlot);
 
+            UIImageButton closeButton = new UIImageButton(ModLoader.GetTexture("PathOfModifiers/UI/CloseButton"));
+            closeButton.Left.Set(474, 0);
+            closeButton.Top.Set(10, 0);
+            closeButton.OnClick += OnCloseButtonClicked;
+            modifierForgePanel.Append(closeButton);
 
             #region Item info
-            for(int i = 0; i < itemInfoText.Length; i++)
+            for (int i = 0; i < itemInfoText.Length; i++)
             {
                 UIText iItext = new UIText("TEST123", 0.75f);
                 iItext.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
@@ -152,6 +152,7 @@ namespace PathOfModifiers.UI
             rarifyToggle.Width.Set(UIItemSlot.defaultBackgroundTexture.Width * 2 + 10, 0f);
             rarifyToggle.Height.Set(32, 0f);
             rarifyToggle.OnClick += new MouseEvent(ButtonToggled);
+            rarifyToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.Rarify); };
             modifierForgePanel.Append(rarifyToggle);
             toggleElements[1] = rarifyToggle;
             #endregion
@@ -163,6 +164,7 @@ namespace PathOfModifiers.UI
             addAffixToggle.Width.Set(110, 0f);
             addAffixToggle.Height.Set(32, 0f);
             addAffixToggle.OnClick += new MouseEvent(ButtonToggled);
+            addAffixToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.AddAffix); };
             modifierForgePanel.Append(addAffixToggle);
             toggleElements[2] = addAffixToggle;
 
@@ -173,6 +175,7 @@ namespace PathOfModifiers.UI
             addPrefixToggle.Width.Set(110, 0f);
             addPrefixToggle.Height.Set(32, 0f);
             addPrefixToggle.OnClick += new MouseEvent(ButtonToggled);
+            addPrefixToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.AddPrefix); };
             modifierForgePanel.Append(addPrefixToggle);
             toggleElements[3] = addPrefixToggle;
 
@@ -183,6 +186,7 @@ namespace PathOfModifiers.UI
             addSuffixToggle.Width.Set(110, 0f);
             addSuffixToggle.Height.Set(32, 0f);
             addSuffixToggle.OnClick += new MouseEvent(ButtonToggled);
+            addSuffixToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.AddSuffix); };
             modifierForgePanel.Append(addSuffixToggle);
             toggleElements[4] = addSuffixToggle;
 
@@ -194,6 +198,7 @@ namespace PathOfModifiers.UI
             removeAllToggle.Width.Set(110, 0f);
             removeAllToggle.Height.Set(32, 0f);
             removeAllToggle.OnClick += new MouseEvent(ButtonToggled);
+            removeAllToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.RemoveAll); };
             modifierForgePanel.Append(removeAllToggle);
             toggleElements[5] = removeAllToggle;
 
@@ -204,6 +209,7 @@ namespace PathOfModifiers.UI
             removePrefixToggle.Width.Set(110, 0f);
             removePrefixToggle.Height.Set(32, 0f);
             removePrefixToggle.OnClick += new MouseEvent(ButtonToggled);
+            removePrefixToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.RemovePrefixes); };
             modifierForgePanel.Append(removePrefixToggle);
             toggleElements[6] = removePrefixToggle;
 
@@ -214,6 +220,7 @@ namespace PathOfModifiers.UI
             removeSuffixToggle.Width.Set(110, 0f);
             removeSuffixToggle.Height.Set(32, 0f);
             removeSuffixToggle.OnClick += new MouseEvent(ButtonToggled);
+            removeSuffixToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.RemoveSuffixes); };
             modifierForgePanel.Append(removeSuffixToggle);
             toggleElements[7] = removeSuffixToggle;
 
@@ -225,6 +232,7 @@ namespace PathOfModifiers.UI
             rollAffixToggle.Width.Set(110, 0f);
             rollAffixToggle.Height.Set(32, 0f);
             rollAffixToggle.OnClick += new MouseEvent(ButtonToggled);
+            rollAffixToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.RollAffixes); };
             modifierForgePanel.Append(rollAffixToggle);
             toggleElements[8] = rollAffixToggle;
 
@@ -235,6 +243,7 @@ namespace PathOfModifiers.UI
             rollPrefixToggle.Width.Set(110, 0f);
             rollPrefixToggle.Height.Set(32, 0f);
             rollPrefixToggle.OnClick += new MouseEvent(ButtonToggled);
+            rollPrefixToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.RollPrefixes); };
             modifierForgePanel.Append(rollPrefixToggle);
             toggleElements[9] = rollPrefixToggle;
 
@@ -245,8 +254,135 @@ namespace PathOfModifiers.UI
             rollSuffixToggle.Width.Set(110, 0f);
             rollSuffixToggle.Height.Set(32, 0f);
             rollSuffixToggle.OnClick += new MouseEvent(ButtonToggled);
+            rollSuffixToggle.interactiveCondition = delegate () { return ActionCondition(SelectedAction.RollSuffixes); };
             modifierForgePanel.Append(rollSuffixToggle);
             toggleElements[10] = rollSuffixToggle;
+            #endregion
+            #region Button Unlock Conditions
+            #region Main Actions
+            UIPanelConditioned rarifyConditionPanel = new UIPanelConditioned();
+            rarifyConditionPanel.Left.Set(10, 0f);
+            rarifyConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + 32 + 30, 0f);
+            rarifyConditionPanel.Width.Set(UIItemSlot.defaultBackgroundTexture.Width * 2 + 10, 0f);
+            rarifyConditionPanel.Height.Set(32, 0f);
+            rarifyConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.Rarify); };
+            UIImage rarifyCondition = new UIImage(ActionConditionImage(SelectedAction.Rarify));
+            rarifyCondition.Left.Set(-12 + UIItemSlot.defaultBackgroundTexture.Width + 5 - 13, 0);
+            rarifyCondition.Top.Set(-12 + 16 - 15, 0);
+            rarifyConditionPanel.Append(rarifyCondition);
+            modifierForgePanel.Append(rarifyConditionPanel);
+            #endregion
+            #region Add
+            UIPanelConditioned addAffixConditionPanel = new UIPanelConditioned();
+            addAffixConditionPanel.Left.Set(140, 0f);
+            addAffixConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 2) + (10 * 4), 0f);
+            addAffixConditionPanel.Width.Set(110, 0f);
+            addAffixConditionPanel.Height.Set(32, 0f);
+            addAffixConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.AddAffix); };
+            UIImage addAffixCondition = new UIImage(ActionConditionImage(SelectedAction.AddAffix));
+            addAffixCondition.Left.Set(-12 + 42, 0);
+            addAffixCondition.Top.Set(-12 + 2, 0);
+            addAffixConditionPanel.Append(addAffixCondition);
+            modifierForgePanel.Append(addAffixConditionPanel);
+
+            UIPanelConditioned addPrefixConditionPanel = new UIPanelConditioned();
+            addPrefixConditionPanel.Left.Set(140 + ((110 + 10) * 1), 0f);
+            addPrefixConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 2) + (10 * 4), 0f);
+            addPrefixConditionPanel.Width.Set(110, 0f);
+            addPrefixConditionPanel.Height.Set(32, 0f);
+            addPrefixConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.AddPrefix); };
+            UIImage addPrefixCondition = new UIImage(ActionConditionImage(SelectedAction.AddPrefix));
+            addPrefixCondition.Left.Set(-12 + 55 - 15, 0);
+            addPrefixCondition.Top.Set(-12 + 16 - 15, 0);
+            addPrefixConditionPanel.Append(addPrefixCondition);
+            modifierForgePanel.Append(addPrefixConditionPanel);
+
+            UIPanelConditioned addSuffixConditionPanel = new UIPanelConditioned();
+            addSuffixConditionPanel.Left.Set(140 + ((110 + 10) * 2), 0f);
+            addSuffixConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 2) + (10 * 4), 0f);
+            addSuffixConditionPanel.Width.Set(110, 0f);
+            addSuffixConditionPanel.Height.Set(32, 0f);
+            addSuffixConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.AddSuffix); };
+            UIImage addSuffixCondition = new UIImage(ActionConditionImage(SelectedAction.AddSuffix));
+            addSuffixCondition.Left.Set(-12 + 55 - 15, 0);
+            addSuffixCondition.Top.Set(-12 + 16 - 15, 0);
+            addSuffixConditionPanel.Append(addSuffixCondition);
+            modifierForgePanel.Append(addSuffixConditionPanel);
+            #endregion
+            #region Remove
+            UIPanelConditioned removeAllConditionPanel = new UIPanelConditioned();
+            removeAllConditionPanel.Left.Set(140, 0f);
+            removeAllConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 3) + (10 * 5), 0f);
+            removeAllConditionPanel.Width.Set(110, 0f);
+            removeAllConditionPanel.Height.Set(32, 0f);
+            removeAllConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.RemoveAll); };
+            UIImage removeAllCondition = new UIImage(ActionConditionImage(SelectedAction.RemoveAll));
+            removeAllCondition.Left.Set(-12 + 55 - 13, 0);
+            removeAllCondition.Top.Set(-12 + 16 - 15, 0);
+            removeAllConditionPanel.Append(removeAllCondition);
+            modifierForgePanel.Append(removeAllConditionPanel);
+
+            UIPanelConditioned removePrefixesConditionPanel = new UIPanelConditioned();
+            removePrefixesConditionPanel.Left.Set(140 + ((110 + 10) * 1), 0f);
+            removePrefixesConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 3) + (10 * 5), 0f);
+            removePrefixesConditionPanel.Width.Set(110, 0f);
+            removePrefixesConditionPanel.Height.Set(32, 0f);
+            removePrefixesConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.RemovePrefixes); };
+            UIImage removePrefixesCondition = new UIImage(ActionConditionImage(SelectedAction.RemovePrefixes));
+            removePrefixesCondition.Left.Set(-12 + 55 - 15, 0);
+            removePrefixesCondition.Top.Set(-12 + 16 - 15, 0);
+            removePrefixesConditionPanel.Append(removePrefixesCondition);
+            modifierForgePanel.Append(removePrefixesConditionPanel);
+
+            UIPanelConditioned removeSuffixesConditionPanel = new UIPanelConditioned();
+            removeSuffixesConditionPanel.Left.Set(140 + ((110 + 10) * 2), 0f);
+            removeSuffixesConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 3) + (10 * 5), 0f);
+            removeSuffixesConditionPanel.Width.Set(110, 0f);
+            removeSuffixesConditionPanel.Height.Set(32, 0f);
+            removeSuffixesConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.RemoveSuffixes); };
+            UIImage removeSuffixesCondition = new UIImage(ActionConditionImage(SelectedAction.RemoveSuffixes));
+            removeSuffixesCondition.Left.Set(-12 + 55 - 15, 0);
+            removeSuffixesCondition.Top.Set(-12 + 16 - 15, 0);
+            removeSuffixesConditionPanel.Append(removeSuffixesCondition);
+            modifierForgePanel.Append(removeSuffixesConditionPanel);
+            #endregion
+            #region Roll
+            UIPanelConditioned rollAffixesConditionPanel = new UIPanelConditioned();
+            rollAffixesConditionPanel.Left.Set(140, 0f);
+            rollAffixesConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 4) + (10 * 6), 0f);
+            rollAffixesConditionPanel.Width.Set(110, 0f);
+            rollAffixesConditionPanel.Height.Set(32, 0f);
+            rollAffixesConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.RollAffixes); };
+            UIImage rollAffixesCondition = new UIImage(ActionConditionImage(SelectedAction.RollAffixes));
+            rollAffixesCondition.Left.Set(-12 + 55 - 15, 0);
+            rollAffixesCondition.Top.Set(-12 + 16 - 15, 0);
+            rollAffixesConditionPanel.Append(rollAffixesCondition);
+            modifierForgePanel.Append(rollAffixesConditionPanel);
+
+            UIPanelConditioned rollPrefixesConditionPanel = new UIPanelConditioned();
+            rollPrefixesConditionPanel.Left.Set(140 + ((110 + 10) * 1), 0f);
+            rollPrefixesConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 4) + (10 * 6), 0f);
+            rollPrefixesConditionPanel.Width.Set(110, 0f);
+            rollPrefixesConditionPanel.Height.Set(32, 0f);
+            rollPrefixesConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.RollPrefixes); };
+            UIImage rollPrefixesCondition = new UIImage(ActionConditionImage(SelectedAction.RollPrefixes));
+            rollPrefixesCondition.Left.Set(-12 + 55 - 15, 0);
+            rollPrefixesCondition.Top.Set(-12 + 16 - 15, 0);
+            rollPrefixesConditionPanel.Append(rollPrefixesCondition);
+            modifierForgePanel.Append(rollPrefixesConditionPanel);
+
+            UIPanelConditioned rollSuffixesConditionPanel = new UIPanelConditioned();
+            rollSuffixesConditionPanel.Left.Set(140 + ((110 + 10) * 2), 0f);
+            rollSuffixesConditionPanel.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 4) + (10 * 6), 0f);
+            rollSuffixesConditionPanel.Width.Set(110, 0f);
+            rollSuffixesConditionPanel.Height.Set(32, 0f);
+            rollSuffixesConditionPanel.drawableCondition = delegate () { return !ActionCondition(SelectedAction.RollSuffixes); };
+            UIImage rollSuffixesCondition = new UIImage(ActionConditionImage(SelectedAction.RollSuffixes));
+            rollSuffixesCondition.Left.Set(-12 + 55 - 15, 0);
+            rollSuffixesCondition.Top.Set(-12 + 16 - 15, 0);
+            rollSuffixesConditionPanel.Append(rollSuffixesCondition);
+            modifierForgePanel.Append(rollSuffixesConditionPanel);
+            #endregion
             #endregion
             UITextButton forgeButton = new UITextButton("Forge", Color.White);
             forgeButton.Left.Set(280, 0f);
@@ -320,6 +456,32 @@ namespace PathOfModifiers.UI
                 else
                     element.toggleState = false;
             }
+        }
+        bool ActionCondition(SelectedAction action)
+        {
+            if (action == SelectedAction.AddAffix)
+                return NPC.downedBoss1;
+            else if (action == SelectedAction.Rarify || action == SelectedAction.RemoveAll)
+                return NPC.downedBoss3;
+            else if (action == SelectedAction.AddPrefix || action == SelectedAction.AddSuffix || action == SelectedAction.RemovePrefixes || action == SelectedAction.RemoveSuffixes || action == SelectedAction.RollAffixes)
+                return NPC.downedMechBossAny;
+            else if (action == SelectedAction.RollPrefixes || action == SelectedAction.RollSuffixes)
+                return NPC.downedPlantBoss;
+
+            return true;
+        }
+        Texture2D ActionConditionImage(SelectedAction action)
+        {
+            if (action == SelectedAction.AddAffix)
+                return TextureManager.Load("Images/NPC_Head_Boss_0");
+            else if (action == SelectedAction.Rarify || action == SelectedAction.RemoveAll)
+                return TextureManager.Load("Images/NPC_Head_Boss_19");
+            else if (action == SelectedAction.AddPrefix || action == SelectedAction.AddSuffix || action == SelectedAction.RemovePrefixes || action == SelectedAction.RemoveSuffixes || action == SelectedAction.RollAffixes)
+                return ModLoader.GetTexture("PathOfModifiers/UI/ActionConditionMechAny");
+            else if (action == SelectedAction.RollPrefixes || action == SelectedAction.RollSuffixes)
+                return TextureManager.Load("Images/NPC_Head_Boss_11");
+
+            return ModLoader.GetTexture("PathOfModifiers/UI/ActionConditionUnknown");
         }
         void ForgeButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {

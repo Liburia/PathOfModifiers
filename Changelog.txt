@@ -1,3 +1,4 @@
+Certain forge actions are now gated behind boss kills.
 Added a close button to the forge UI.
 Forge UI can now be moved by dragging anywhere except the buttons.
 

@@ -16,6 +16,8 @@ namespace PathOfModifiers.UI
         static int CORNER_SIZE = 12;
         static int BAR_SIZE = 4;
 
+        public Func<bool> interactiveCondition = delegate () { return true; };
+
         public bool isToggle = false;
         public bool toggleState = false;
 
@@ -69,9 +71,12 @@ namespace PathOfModifiers.UI
         }
 
         public override void Click(UIMouseEvent evt)
-        {
-            base.Click(evt);
-            toggleState = !toggleState;
+    {
+            if (interactiveCondition())
+            {
+                base.Click(evt);
+                toggleState = !toggleState;
+            }
         }
     }
 }
