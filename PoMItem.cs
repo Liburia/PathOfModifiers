@@ -595,17 +595,18 @@ namespace PathOfModifiers
         }
         public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            //TODO: affix projectile count/speed/damage?/knockback?
-            //DONT AFFECT SUMMONS LOL
-            return base.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
-        }
-        public override void HorizontalWingSpeeds(Item item, Player player, ref float speed, ref float acceleration)
-        {
-            //TODO: affix wings
-        }
-        public override void VerticalWingSpeeds(Item item, Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
-        {
-            //TODO: affix wings
+            bool shoot = true;
+            foreach (Prefix prefix in prefixes)
+            {
+                if (!prefix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+                    shoot = false;
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                if (!suffix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+                    shoot = false;
+            }
+            return shoot;
         }
         public override void UpdateAccessory(Item item, Player player, bool hideVisual)
         {

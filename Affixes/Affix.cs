@@ -52,6 +52,7 @@ namespace PathOfModifiers.Affixes
         public virtual void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit) { }
         public virtual void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit) { }
         public virtual void OnHitPvp(Item item, Player player, Player target, int damage, bool crit) { }
+        public virtual bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack) { return true; }
         #endregion
         #region Projectile Hooks
         public virtual void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection) { }
