@@ -115,6 +115,7 @@
     <Compile Include="Affixes\Suffix\EquipBuffFlipper.cs" />
     <Compile Include="Affixes\Suffix\EquipBuffFeatherfalling.cs" />
     <Compile Include="Affixes\Suffix\EquipBuffDangersense.cs" />
+    <Compile Include="Affixes\Suffix\WeaponFireballRelease.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffShadowflame.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffFrostburn.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffIgnite.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Affixes\Prefixes\WeaponAttackSpeed.cs" />
     <Compile Include="Affixes\Prefixes\WeaponMeleeDamage.cs" />
     <Compile Include="Buffs\DamageDoTDebuff.cs" />
+    <Compile Include="Projectiles\Fireball.cs" />
     <Compile Include="Items\ModifierForge.cs" />
     <Compile Include="Items\ModifierFragment.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />

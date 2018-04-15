@@ -1,6 +1,7 @@
 Certain forge actions are now gated behind boss kills.
 Added a close button to the forge UI.
 Forge UI can now be moved by dragging anywhere except the buttons.
+Added weapon suffix that has a chance to fire fireballs on hit.
 
 v0.3.2
 Fixed a crash when rolling T3 Accessory Consume Ammo affix.
