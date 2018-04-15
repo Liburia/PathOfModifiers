@@ -65,6 +65,7 @@ namespace PathOfModifiers.Affixes
         public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }
         public virtual void ModifyHitByNPC(Item item, Player player, NPC npc, ref int damage, ref bool crit) { }
         public virtual void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit) { }
+        public virtual bool PlayerShoot(Item affixItem, Player player, Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack) { return true; }
 
         public virtual void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit) { }
         public virtual void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit) { }

@@ -119,6 +119,7 @@
     <Compile Include="Affixes\Suffix\WeaponDebuffFrostburn.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffIgnite.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffDDD.cs" />
+    <Compile Include="Affixes\Suffix\WeaponMultipleProjectiles.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffVenom.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffPoison.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffMidas.cs" />

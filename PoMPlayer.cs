@@ -402,6 +402,33 @@ namespace PathOfModifiers
                 pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
             }
         }
+        public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            Item affixItem;
+            PoMItem pomItem;
+            bool shoot = true;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                affixItem = player.inventory[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                if (!pomItem.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+                    shoot = false;
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                affixItem = player.armor[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                if (!pomItem.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+                    shoot = false;
+            }
+            return shoot;
+        }
 
         public override void ResetEffects()
         {

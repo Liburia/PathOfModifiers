@@ -870,6 +870,21 @@ namespace PathOfModifiers
                 suffix.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
         }
+        public bool PlayerShoot(Item affixItem, Player player, Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            bool shoot = true;
+            foreach (Prefix prefix in prefixes)
+            {
+                if (!prefix.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+                    shoot = false;
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                if (!suffix.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+                    shoot = false;
+            }
+            return shoot;
+        }
         #endregion
 
         public override void PostReforge(Item item)
