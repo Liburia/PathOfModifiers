@@ -52,7 +52,8 @@ namespace PathOfModifiers.Affixes.Suffixes
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                PoMItem.IsWeapon(item) &&
+                PoMItem.CanMelee(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -69,26 +70,6 @@ namespace PathOfModifiers.Affixes.Suffixes
         {
             if (item == player.HeldItem && Main.rand.NextFloat(0, 1) < multiplier)
                 SpawnFireballs(player, target, target.Center, target.Center - player.Center, damage);
-        }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
-        {
-            if (item == player.HeldItem && projectile.type != mod.ProjectileType<Fireball>())
-            {
-                if (Main.rand.NextFloat(0, 1) < multiplier)
-                {
-                    SpawnFireballs(player, target, projectile.position, projectile.velocity, damage);
-                }
-            }
-        }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
-        {
-            if (item == player.HeldItem && projectile.type != mod.ProjectileType<Fireball>())
-            {
-                if (Main.rand.NextFloat(0, 1) < multiplier)
-                {
-                    SpawnFireballs(player, target, projectile.position, projectile.velocity, damage);
-                }
-            }
         }
 
         void SpawnFireballs(Player player, Entity target, Vector2 position, Vector2 direction, int damage)

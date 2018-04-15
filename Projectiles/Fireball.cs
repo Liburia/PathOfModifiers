@@ -32,7 +32,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void AI()
         {
-            Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.FlameBurst);
+            Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Fire);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -79,7 +79,7 @@ namespace PathOfModifiers.Projectiles
         public override void Kill(int timeLeft)
         {
             for (int i = 0; i < 10; i++)
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.FlameBurst);
+                Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Fire);
         }
     }
 }
