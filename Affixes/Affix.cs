@@ -37,7 +37,7 @@ namespace PathOfModifiers.Affixes
         public virtual bool CanBeRolled(PoMItem pomItem, Item item) { return true; }
         public virtual bool AffixSpaceAvailable(PoMItem item) { return item.FreeAffixes > 0; }
 
-        public virtual void RollValue() { }
+        public virtual void RollValue(bool rollTier = true) { }
         #region Item Hooks
         public virtual void GetWeaponCrit(Item item, Player player, ref float multiplier) { }
         public virtual void GetWeaponDamage(Item item, Player player, ref float multiplier) { }

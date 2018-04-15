@@ -104,9 +104,9 @@ namespace PathOfModifiers.Affixes.Prefixes
         {
             TieredAffixHelper.SetTierMultiplier(this, tierMultiplier);
         }
-        public override void RollValue()
+        public override void RollValue(bool rollTier = true)
         {
-            TieredAffixHelper.RollValue(this);
+            TieredAffixHelper.RollValue(this, rollTier);
         }
         public override void ReforgePrice(Item item, ref int price)
         {

@@ -395,60 +395,25 @@ namespace PathOfModifiers
         }
         public void RollAffixTierMultipliers(Item item)
         {
-            ITieredStatFloatAffix tieredStatFloatAffix;
-            ITieredStatIntAffix tieredStatIntAffix;
             foreach (Affix affix in affixes)
             {
-                tieredStatFloatAffix = affix as ITieredStatFloatAffix;
-                tieredStatIntAffix = affix as ITieredStatIntAffix;
-                if (tieredStatFloatAffix != null)
-                {
-                    TieredAffixHelper.RollTierMultiplier(tieredStatFloatAffix);
-                }
-                if (tieredStatIntAffix != null)
-                {
-                    TieredAffixHelper.RollTierMultiplier(tieredStatIntAffix);
-                }
+                affix.RollValue(false);
             }
             UpdateName(item);
         }
         public void RollPrefixTierMultipliers(Item item)
         {
-            ITieredStatFloatAffix tieredStatFloatAffix;
-            ITieredStatIntAffix tieredStatIntAffix;
-            UpdateName(item);
             foreach (Prefix prefix in prefixes)
             {
-                tieredStatFloatAffix = prefix as ITieredStatFloatAffix;
-                tieredStatIntAffix = prefix as ITieredStatIntAffix;
-                if (tieredStatFloatAffix != null)
-                {
-                    TieredAffixHelper.RollTierMultiplier(tieredStatFloatAffix);
-                }
-                if (tieredStatIntAffix != null)
-                {
-                    TieredAffixHelper.RollTierMultiplier(tieredStatIntAffix);
-                }
+                prefix.RollValue(false);
             }
             UpdateName(item);
         }
         public void RollSuffixTierMultipliers(Item item)
         {
-            ITieredStatFloatAffix tieredStatFloatAffix;
-            ITieredStatIntAffix tieredStatIntAffix;
-            UpdateName(item);
             foreach (Suffix suffix in suffixes)
             {
-                tieredStatFloatAffix = suffix as ITieredStatFloatAffix;
-                tieredStatIntAffix = suffix as ITieredStatIntAffix;
-                if (tieredStatFloatAffix != null)
-                {
-                    TieredAffixHelper.RollTierMultiplier(tieredStatFloatAffix);
-                }
-                if (tieredStatIntAffix != null)
-                {
-                    TieredAffixHelper.RollTierMultiplier(tieredStatIntAffix);
-                }
+                suffix.RollValue(false);
             }
             UpdateName(item);
         }

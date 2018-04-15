@@ -125,9 +125,9 @@ namespace PathOfModifiers.Affixes.Suffixes
         {
             return TieredAffixHelper.Clone(this, (ITieredStatFloatAffix)base.Clone());
         }
-        public override void RollValue()
+        public override void RollValue(bool rollTier = true)
         {
-            TieredAffixHelper.RollValue(this);
+            TieredAffixHelper.RollValue(this, rollTier);
         }
         public override void ReforgePrice(Item item, ref int price)
         {
