@@ -1,3 +1,6 @@
+
+Fragments are now sold by the Wizard instead of crafted. The price is unchanged.
+
 v0.4.1
 Internal bugfix update for example mod extension.
 

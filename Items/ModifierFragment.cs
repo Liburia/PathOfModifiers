@@ -20,13 +20,5 @@ namespace PathOfModifiers.Items
 			item.rare = 2;
             item.maxStack = 9999;
 		}
-
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.GoldCoin, 1);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
     }
 }

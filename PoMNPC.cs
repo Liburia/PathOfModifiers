@@ -73,5 +73,14 @@ namespace PathOfModifiers
                 }
             }
         }
+
+        public override void SetupShop(int type, Chest shop, ref int nextSlot)
+        {
+            if (type == NPCID.Wizard)
+            {
+                shop.item[nextSlot].SetDefaults(mod.ItemType<Items.ModifierFragment>());
+                nextSlot++;
+            }
+        }
     }
 }
