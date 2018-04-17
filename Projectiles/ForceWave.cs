@@ -56,8 +56,8 @@ namespace PathOfModifiers.Projectiles
                 projectile.position -= new Vector2(texture.Width, frameHeight) * collisionScale * scaleIncrease / 2;
             }
             
-            for (int i = 0; i < 5; i++)
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Fire);
+            //for (int i = 0; i < 5; i++)
+            //    Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
