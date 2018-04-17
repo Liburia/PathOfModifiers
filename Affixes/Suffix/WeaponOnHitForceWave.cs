@@ -12,15 +12,14 @@ using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.Affixes.Suffixes
 {
-    //TODO: Remove, this can't roll and is replaces with WeaponOnHitFireball
-    public class WeaponFireballRelease : Suffix, ITieredStatFloatAffix
+    public class WeaponOnHitForceWave : Suffix, ITieredStatFloatAffix
     {
-        public override float weight => 0f;
+        public override float weight => 0.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float damageMultiplier = 0.2f;
+        static float damageMultiplier = 0.05f;
 
         static float[] tiers = new float[] { 0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f };
         static Tuple<int, double>[] tierWeights = new Tuple<int, double>[] {
@@ -59,32 +58,27 @@ namespace PathOfModifiers.Affixes.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to fire fireballs on hit";
+            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to release a force nova on melee hit";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
         {
             if (item == player.HeldItem && Main.rand.NextFloat(0, 1) < multiplier)
-                SpawnFireballs(player, target, target.Center, target.Center - player.Center, damage);
+                SpawnForceNova(player, target, player.Center, target.Center - player.Center, damage);
         }
         public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
         {
             if (item == player.HeldItem && Main.rand.NextFloat(0, 1) < multiplier)
-                SpawnFireballs(player, target, target.Center, target.Center - player.Center, damage);
+                SpawnForceNova(player, target, player.Center, target.Center - player.Center, damage);
         }
 
-        void SpawnFireballs(Player player, Entity target, Vector2 position, Vector2 direction, int damage)
+        void SpawnForceNova(Player player, Entity target, Vector2 position, Vector2 direction, int damage)
         {
-            float angleMin = direction.ToRotation() - 0.4f;
-            float angleMax = angleMin + 0.8f;
-
-            for (int i = 0; i < 3; i++)
-            {
-                Vector2 velocity = Main.rand.NextFloat(angleMin, angleMax).ToRotationVector2() * 8;
-                int bladeID = Projectile.NewProjectile(position, velocity, mod.ProjectileType<Fireball>(), (int)Math.Round(damage * damageMultiplier), 0, player.whoAmI);
-                Fireball fireball = (Fireball)Main.projectile[bladeID].modProjectile;
-                fireball.ignoreTarget = target;
-            }
+            float angle = direction.ToRotation();
+            
+            Vector2 velocity = direction.SafeNormalize(Vector2.Zero) * 8;
+            int projectileID = Projectile.NewProjectile(position, velocity, mod.ProjectileType<ForceWave>(), (int)Math.Round(damage * damageMultiplier), (int)Math.Round(Math.Sqrt(damage)), player.whoAmI);
+            ForceWave projectile = (ForceWave)Main.projectile[projectileID].modProjectile;
         }
 
         #region Interface Properties

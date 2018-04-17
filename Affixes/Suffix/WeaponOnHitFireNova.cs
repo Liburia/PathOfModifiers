@@ -12,7 +12,7 @@ using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.Affixes.Suffixes
 {
-    public class WeaponFireNovaRelease : Suffix, ITieredStatFloatAffix
+    public class WeaponOnHitFireNova : Suffix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;
 
