@@ -18,6 +18,8 @@ namespace PathOfModifiers.Projectiles
             DisplayName.SetDefault("Fireball");
         }
 
+        public override string Texture => "Terraria/Projectile_376";
+
         public override void SetDefaults()
         {
             projectile.damage = 10;

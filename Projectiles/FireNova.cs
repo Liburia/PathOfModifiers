@@ -22,6 +22,8 @@ namespace PathOfModifiers.Projectiles
             Main.projFrames[projectile.type] = 3;
         }
 
+        public override string Texture => "Terraria/FlameRing";
+
         public override void SetDefaults()
         {
             projectile.damage = 10;
