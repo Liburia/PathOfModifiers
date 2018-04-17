@@ -14,7 +14,7 @@ namespace PathOfModifiers.Affixes.Suffixes
 {
     public class WeaponFireNovaRelease : Suffix, ITieredStatFloatAffix
     {
-        public override float weight => 9990.5f;
+        public override float weight => 0.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
