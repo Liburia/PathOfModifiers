@@ -36,7 +36,7 @@ namespace PathOfModifiers.Projectiles
 
             projectile.penetrate = -1;
             projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 10;
+            projectile.localNPCHitCooldown = 20;
         }
 
         public override void AI()
