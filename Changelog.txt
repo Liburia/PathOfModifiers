@@ -1,5 +1,7 @@
 Fragments are now sold by the Wizard instead of crafted. The price is unchanged.
-Added Fire Nova Release affix.
+Added weapon Fire Nova on hit suffix.
+Added weapon Force Wave on hit suffix.
+Added weapon Frost Spikes on kill suffix.
 Both lifesteal prefixes reduced to 0-2%
 
 v0.4.1

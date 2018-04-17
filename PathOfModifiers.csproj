@@ -116,6 +116,7 @@
     <Compile Include="Affixes\Suffix\EquipBuffFeatherfalling.cs" />
     <Compile Include="Affixes\Suffix\EquipBuffDangersense.cs" />
     <Compile Include="Affixes\Suffix\WeaponOnHitFireball.cs" />
+    <Compile Include="Affixes\Suffix\WeaponOnKillFrostSpikes.cs" />
     <Compile Include="Affixes\Suffix\WeaponOnHitForceWave.cs" />
     <Compile Include="Affixes\Suffix\WeaponOnHitFireNova.cs" />
     <Compile Include="Affixes\Suffix\WeaponFireballRelease.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Affixes\Prefixes\WeaponAttackSpeed.cs" />
     <Compile Include="Affixes\Prefixes\WeaponMeleeDamage.cs" />
     <Compile Include="Buffs\DamageDoTDebuff.cs" />
+    <Compile Include="Projectiles\FrostSpike.cs" />
     <Compile Include="Projectiles\ForceWave.cs" />
     <Compile Include="Projectiles\FireNova.cs" />
     <Compile Include="Projectiles\Fireball.cs" />
