@@ -27,13 +27,16 @@ namespace PathOfModifiers.Projectiles
         public override void SetDefaults()
         {
             projectile.damage = 10;
-            projectile.penetrate = -1;
             projectile.scale = startScale;
             projectile.Size = size * collisionScale * startScale;
             projectile.timeLeft = timeLeft;
             projectile.friendly = true;
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
+
+            projectile.penetrate = -1;
+            projectile.usesLocalNPCImmunity = true;
+            projectile.localNPCHitCooldown = 10;
         }
 
         public override void AI()
