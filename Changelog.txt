@@ -1,5 +1,6 @@
-
 Fragments are now sold by the Wizard instead of crafted. The price is unchanged.
+Added Fire Nova Release affix.
+Both lifesteal prefixes reduced to 0-2%
 
 v0.4.1
 Internal bugfix update for example mod extension.
