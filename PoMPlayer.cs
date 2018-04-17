@@ -33,6 +33,8 @@ namespace PathOfModifiers
         public float potionDelayTime;
         public float restorationDelayTime;
         #endregion
+        
+        public Entity lastDamageDealer;
 
         /// <summary>
         /// Stores the damage of the hit that procced the debuff.
@@ -212,6 +214,52 @@ namespace PathOfModifiers
             }
         }
 
+        public void OnKillNPC(NPC target)
+        {
+            Item affixItem;
+            PoMItem pomItem;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                affixItem = player.inventory[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerOnKillNPC(affixItem, player, target);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                affixItem = player.armor[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerOnKillNPC(affixItem, player, target);
+            }
+        }
+        public void OnKillPvp(Player target)
+        {
+            Item affixItem;
+            PoMItem pomItem;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                affixItem = player.inventory[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerOnKillPvp(affixItem, player, target);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                affixItem = player.armor[i];
+                if (affixItem.type == 0 || affixItem.stack == 0)
+                    continue;
+
+                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem.PlayerOnKillPvp(affixItem, player, target);
+            }
+        }
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
             Item affixItem;
@@ -312,6 +360,8 @@ namespace PathOfModifiers
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
+            target.GetGlobalNPC<PoMNPC>().lastDamageDealer = player;
+
             Item affixItem;
             PoMItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -335,6 +385,8 @@ namespace PathOfModifiers
         }
         public override void OnHitPvp(Item item, Player target, int damage, bool crit)
         {
+            target.GetModPlayer<PoMPlayer>().lastDamageDealer = player;
+
             Item affixItem;
             PoMItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -358,6 +410,8 @@ namespace PathOfModifiers
         }
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
+            target.GetGlobalNPC<PoMNPC>().lastDamageDealer = player;
+
             Item item;
             PoMItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -381,6 +435,8 @@ namespace PathOfModifiers
         }
         public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
         {
+            target.GetModPlayer<PoMPlayer>().lastDamageDealer = player;
+
             Item item;
             PoMItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -428,6 +484,15 @@ namespace PathOfModifiers
                     shoot = false;
             }
             return shoot;
+        }
+
+        public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
+        {
+            Player lastDamageDealerPlayer = lastDamageDealer as Player;
+            if (lastDamageDealerPlayer != null)
+            {
+                lastDamageDealerPlayer.GetModPlayer<PoMPlayer>().OnKillPvp(player);
+            }
         }
 
         public override void ResetEffects()

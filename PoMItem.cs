@@ -836,6 +836,30 @@ namespace PathOfModifiers
                 suffix.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
         }
+
+        public void PlayerOnKillNPC(Item item, Player player, NPC target)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.PlayerOnKillNPC(item, player, target);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.PlayerOnKillNPC(item, player, target);
+            }
+        }
+        public void PlayerOnKillPvp(Item item, Player player, Player target)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.PlayerOnKillPvp(item, player, target);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.PlayerOnKillPvp(item, player, target);
+            }
+        }
+
         public bool PlayerShoot(Item affixItem, Player player, Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             bool shoot = true;

@@ -14,6 +14,8 @@ namespace PathOfModifiers
     {
         public override bool InstancePerEntity => true;
 
+        public Entity lastDamageDealer;
+
         /// <summary>
         /// Stores the damage of the hit that procced the debuff.
         /// </summary>
@@ -48,6 +50,11 @@ namespace PathOfModifiers
             }
         }
 
+        public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit)
+        {
+            target.GetGlobalNPC<PoMNPC>().lastDamageDealer = npc;
+        }
+
         public override void ResetEffects(NPC npc)
         {
             dddDamageDotDebuff = false;
@@ -64,6 +71,14 @@ namespace PathOfModifiers
 
         public override void NPCLoot(NPC npc)
         {
+            Player lastDamageDealerPlayer = lastDamageDealer as Player;
+            if (lastDamageDealerPlayer != null)
+            {
+                lastDamageDealerPlayer.GetModPlayer<PoMPlayer>().OnKillNPC(npc);
+            }
+
+            NPC lastDamageDealerNPC = lastDamageDealer as NPC;
+
             if (npc.lifeMax > 5 && npc.value > 0f && !npc.SpawnedFromStatue)
             {
                 if (npc.boss || Main.rand.NextFloat(0, 1) < 0.15f)
