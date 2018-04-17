@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace PathOfModifiers.Projectiles
 {
-    public class Fireball : ModProjectile
+    public class Fireball : ModProjectile, INonTriggerringProjectile
     {
         static int timeLeft = 600;
         static int ignoreTime = 10;
@@ -21,7 +21,7 @@ namespace PathOfModifiers.Projectiles
         public override void SetDefaults()
         {
             projectile.damage = 10;
-            projectile.penetrate = 1;
+            projectile.penetrate = -1;
             projectile.width = 16;
             projectile.height = 16;
             projectile.timeLeft = timeLeft;

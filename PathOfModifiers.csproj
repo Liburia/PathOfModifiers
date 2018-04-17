@@ -115,6 +115,7 @@
     <Compile Include="Affixes\Suffix\EquipBuffFlipper.cs" />
     <Compile Include="Affixes\Suffix\EquipBuffFeatherfalling.cs" />
     <Compile Include="Affixes\Suffix\EquipBuffDangersense.cs" />
+    <Compile Include="Affixes\Suffix\WeaponFireNovaRelease.cs" />
     <Compile Include="Affixes\Suffix\WeaponFireballRelease.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffShadowflame.cs" />
     <Compile Include="Affixes\Suffix\WeaponDebuffFrostburn.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Affixes\Prefixes\WeaponAttackSpeed.cs" />
     <Compile Include="Affixes\Prefixes\WeaponMeleeDamage.cs" />
     <Compile Include="Buffs\DamageDoTDebuff.cs" />
+    <Compile Include="Projectiles\FireNova.cs" />
     <Compile Include="Projectiles\Fireball.cs" />
     <Compile Include="Items\ModifierForge.cs" />
     <Compile Include="Items\ModifierFragment.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="PoMItem.cs" />
     <Compile Include="PoMPlayer.cs" />
     <Compile Include="PoMPrefix.cs" />
+    <Compile Include="Projectiles\INonTriggerringProjectile.cs" />
     <Compile Include="Rarities\AccessoryCommon.cs" />
     <Compile Include="Rarities\ArmorCommon.cs" />
     <Compile Include="Rarities\AccessoryEpic.cs" />
