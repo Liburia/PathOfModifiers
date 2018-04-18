@@ -16,7 +16,7 @@ namespace PathOfModifiers.Affixes
     {
         public Mod mod;
 
-        public virtual float weight => 1;
+        public virtual float weight => 0;
         public virtual Color color => new Color(1, 1, 1, 1);
 
         public virtual string addedText => string.Empty;
@@ -34,7 +34,7 @@ namespace PathOfModifiers.Affixes
             return newAffix;
         }
 
-        public virtual bool CanBeRolled(PoMItem pomItem, Item item) { return true; }
+        public virtual bool CanBeRolled(PoMItem pomItem, Item item) { return false; }
         public virtual bool AffixSpaceAvailable(PoMItem item) { return item.FreeAffixes > 0; }
 
         public virtual void RollValue(bool rollTier = true) { }

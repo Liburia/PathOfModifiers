@@ -53,7 +53,7 @@ namespace PathOfModifiers
 
                 foreach(Type t in types)
                 {
-                    if (t.IsSubclassOf(typeof(Affix)) && t != typeof(Affix) && t != typeof(Prefix) && t != typeof(Suffix))
+                    if (t.IsSubclassOf(typeof(Affix)) || t == typeof(Affix))
                     {
                         affix = (Affix)Activator.CreateInstance(t);
                         affix.mod = mod;
