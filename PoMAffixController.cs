@@ -23,6 +23,9 @@ namespace PathOfModifiers
         public static Dictionary<Type, int> rarityMap;
         public static Rarity[] rarities;
 
+        public static Dictionary<Type, int> affixNPCMap;
+        public static AffixesNPC.Affix[] affixesNPC;
+
         public static void Initialize()
         {
             LoadData();
@@ -43,10 +46,16 @@ namespace PathOfModifiers
             rarityMap = new Dictionary<Type, int>();
             List<Rarity> rarityList = new List<Rarity>();
 
+
+            affixNPCMap = new Dictionary<Type, int>();
+            List<AffixesNPC.Affix> affixNPCList = new List<AffixesNPC.Affix>();
+
             int affixIndex = 0;
             int rarityIndex = 0;
+            int affixNPCIndex = 0;
             Affix affix;
             Rarity rarity;
+            AffixesNPC.Affix affixNPC;
             foreach (Mod mod in mods)
             {
                 var types = mod.Code.GetTypes().Where(t => t.IsClass && !t.IsAbstract);
@@ -63,7 +72,7 @@ namespace PathOfModifiers
                         if (PathOfModifiers.logLoad)
                             PathOfModifiers.Log($"PathOfModifiers: Added affix {t.FullName} with index {affixIndex} from mod {mod.Name}");
                     }
-                    else if(t.IsSubclassOf(typeof(Rarity)) && t != typeof(Rarity))
+                    else if (t.IsSubclassOf(typeof(Rarity)) && t != typeof(Rarity))
                     {
                         rarity = (Rarity)Activator.CreateInstance(t);
                         rarity.mod = mod;
@@ -73,10 +82,21 @@ namespace PathOfModifiers
                         if (PathOfModifiers.logLoad)
                             PathOfModifiers.Log($"PathOfModifiers: Added rarity {t.FullName} with index {rarityIndex} from mod {mod.Name}");
                     }
+                    else if (t.IsSubclassOf(typeof(AffixesNPC.Affix)) && t != typeof(AffixesNPC.Affix) && t != typeof(AffixesNPC.Prefix) && t != typeof(AffixesNPC.Suffix))
+                    {
+                        affixNPC = (AffixesNPC.Affix)Activator.CreateInstance(t);
+                        affixNPC.mod = mod;
+                        affixNPCList.Add(affixNPC);
+                        affixNPCMap.Add(t, affixNPCIndex);
+                        affixNPCIndex++;
+                        if (PathOfModifiers.logLoad)
+                            PathOfModifiers.Log($"PathOfModifiers: Added NPCAffix {t.FullName} with index {affixNPCIndex} from mod {mod.Name}");
+                    }
                 }
             }
             affixes = affixList.ToArray();
             rarities = rarityList.ToArray();
+            affixesNPC = affixNPCList.ToArray();
         }
         public static void Unload()
         {
@@ -87,6 +107,9 @@ namespace PathOfModifiers
 
             rarityMap = new Dictionary<Type, int>();
             rarities = new Rarity[0];
+
+            affixNPCMap = new Dictionary<Type, int>();
+            affixesNPC = new AffixesNPC.Affix[0];
         }
 
         public static void SendMaps(ModPacket packet)
@@ -111,6 +134,15 @@ namespace PathOfModifiers
                 rarity = rarities[i];
                 packet.Write(rarity.mod.Name);
                 packet.Write(rarity.GetType().FullName);
+            }
+
+            packet.Write(affixesNPC.Length);
+            AffixesNPC.Affix affixNPC;
+            for (int i = 0; i < affixesNPC.Length; i++)
+            {
+                affixNPC = affixesNPC[i];
+                packet.Write(affixNPC.mod.Name);
+                packet.Write(affixNPC.GetType().FullName);
             }
         }
         public static void ReceiveMaps(BinaryReader reader)
@@ -160,6 +192,23 @@ namespace PathOfModifiers
 
                 rarityMap = newRarityMap;
                 rarities = newRarities;
+
+                length = reader.ReadInt32();
+
+                Dictionary<Type, int> newAffixNPCMap = new Dictionary<Type, int>(length);
+                AffixesNPC.Affix[] newAffixesNPC = new AffixesNPC.Affix[length];
+
+                for (int i = 0; i < length; i++)
+                {
+                    mod = ModLoader.GetMod(reader.ReadString());
+                    type = mod.Code.GetType(reader.ReadString(), true);
+
+                    newAffixesNPC[i] = affixesNPC[affixNPCMap[type]];
+                    newAffixNPCMap.Add(type, i);
+                }
+
+                affixNPCMap = newAffixNPCMap;
+                affixesNPC = newAffixesNPC;
             }
             catch(Exception e)
             {
@@ -253,6 +302,69 @@ namespace PathOfModifiers
             suffix = suffix.Clone();
             suffix.InitializeItem(pomItem);
             return (Suffix)suffix;
+        }
+
+        /// <summary>
+        /// Returns a valid affix for the NPC or null.
+        /// </summary>
+        public static AffixesNPC.Affix RollNewAffix(PoMNPC pomNPC, NPC npc)
+        {
+            Tuple<AffixesNPC.Affix, double>[] tuples = affixesNPC
+                .Where(a => 
+                    a.weight > 0 &&
+                    a.CanBeRolled(pomNPC, npc) &&
+                    !pomNPC.affixes.Exists(ia => ia.GetType() == a.GetType()))
+                .Select(a => new Tuple<AffixesNPC.Affix, double>(a, a.weight))
+                .ToArray();
+            if (tuples.Length == 0)
+            {
+                return null;
+            }
+            WeightedRandom<AffixesNPC.Affix> weightedRandom = new WeightedRandom<AffixesNPC.Affix>(Main.rand, tuples);
+            AffixesNPC.Affix affix = weightedRandom;
+            affix = affix.Clone();
+            affix.InitializeNPC(pomNPC);
+            return affix;
+        }
+        public static AffixesNPC.Prefix RollNewPrefix(PoMNPC pomNPC, NPC npc)
+        {
+            Tuple<AffixesNPC.Affix, double>[] tuples = affixesNPC
+                .Where(a =>
+                    a.weight > 0 &&
+                    a.CanBeRolled(pomNPC, npc) &&
+                    a is AffixesNPC.Prefix &&
+                    !pomNPC.affixes.Exists(ia => ia.GetType() == a.GetType()))
+                .Select(a => new Tuple<AffixesNPC.Affix, double>(a, a.weight))
+                .ToArray();
+            if (tuples.Length == 0)
+            {
+                return null;
+            }
+            WeightedRandom<AffixesNPC.Affix> weightedRandom = new WeightedRandom<AffixesNPC.Affix>(Main.rand, tuples);
+            AffixesNPC.Affix prefix = weightedRandom;
+            prefix = prefix.Clone();
+            prefix.InitializeNPC(pomNPC);
+            return (AffixesNPC.Prefix)prefix;
+        }
+        public static AffixesNPC.Suffix RollNewSuffix(PoMNPC pomNPC, NPC npc)
+        {
+            Tuple<AffixesNPC.Affix, double>[] tuples = affixesNPC
+                .Where(a =>
+                    a.weight > 0 &&
+                    a.CanBeRolled(pomNPC, npc) &&
+                    a is AffixesNPC.Suffix &&
+                    !pomNPC.affixes.Exists(ia => ia.GetType() == a.GetType()))
+                .Select(a => new Tuple<AffixesNPC.Affix, double>(a, a.weight))
+                .ToArray();
+            if (tuples.Length == 0)
+            {
+                return null;
+            }
+            WeightedRandom<AffixesNPC.Affix> weightedRandom = new WeightedRandom<AffixesNPC.Affix>(Main.rand, tuples);
+            AffixesNPC.Affix suffix = weightedRandom;
+            suffix = suffix.Clone();
+            suffix.InitializeNPC(pomNPC);
+            return (AffixesNPC.Suffix)suffix;
         }
     }
 }

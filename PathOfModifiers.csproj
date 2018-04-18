@@ -52,6 +52,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AffixesNPC\Affix.cs" />
+    <Compile Include="AffixesNPC\Prefixes\AccessoryConsumeAmmo.cs" />
     <Compile Include="Affixes\ITieredStatIntValueAffix.cs" />
     <Compile Include="Affixes\ITieredStatIntAffix.cs" />
     <Compile Include="Affixes\ITieredStatFloatAffix.cs" />
@@ -218,6 +220,9 @@
   <ItemGroup>
     <Content Include="build.txt" />
     <Content Include="Changelog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AffixesNPC\Suffix\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
