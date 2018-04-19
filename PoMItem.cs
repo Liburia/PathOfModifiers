@@ -194,7 +194,7 @@ namespace PathOfModifiers
                         addedPrefixWeight = suffix.addedTextWeight;
                     }
                 }
-                item.SetNameOverride($"{rarity.name} {addedPrefix}{(addedPrefix != string.Empty ? " " : string.Empty)}{GetBaseName(item)}{(addedSuffix != string.Empty ? " " : string.Empty)}{addedSuffix} [{FreeAffixes}] [{FreePrefixes}] [{FreeSuffixes}]");
+                item.SetNameOverride($"{rarity.name} {addedPrefix}{(addedPrefix != string.Empty ? " " : string.Empty)}{GetBaseName(item)}{(addedSuffix != string.Empty ? " " : string.Empty)}{addedSuffix}");
                 item.rare = rarity.vanillaRarity;
             }
         }
