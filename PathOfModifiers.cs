@@ -51,6 +51,10 @@ namespace PathOfModifiers
             AddPrefix("", new PoMPrefix());
 
             PoMAffixController.RegisterMod(this);
+        }
+        public override void PostSetupContent()
+        {
+            PoMAffixController.Initialize();
 
             if (Main.netMode != 2)
             {
@@ -58,10 +62,6 @@ namespace PathOfModifiers
                 modifierForgeUI = new UserInterface();
                 ModifierForgeUI.Instance.Visible = false;
             }
-        }
-        public override void PostSetupContent()
-        {
-            PoMAffixController.Initialize();
         }
         public override void Unload()
         {

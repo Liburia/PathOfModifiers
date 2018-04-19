@@ -68,6 +68,9 @@ namespace PathOfModifiers.UI
         SelectedAction selectedAction = SelectedAction.None;
         UIPanelButton[] toggleElements;
 
+        UIText freeAffixCount;
+        UIText freePrefixCount;
+        UIText freeSuffixCount;
         UIText[] itemInfoText;
 
 		public override void OnInitialize()
@@ -76,6 +79,7 @@ namespace PathOfModifiers.UI
             toggleElements = new UIPanelButton[11];
             itemInfoText = new UIText[9];
 
+            #region Panel definition
             modifierForgePanel = new UIPanel();
 			modifierForgePanel.SetPadding(0);
 			modifierForgePanel.Left.Set(position.X, 0f);
@@ -86,8 +90,8 @@ namespace PathOfModifiers.UI
 
 			modifierForgePanel.OnMouseDown += new MouseEvent(DragStart);
 			modifierForgePanel.OnMouseUp += new MouseEvent(DragEnd);
-            
-
+            #endregion
+            #region Item slots
             modifiedItemSlot = new UIItemSlot(new Item(), null, 1);
             modifiedItemSlot.Left.Set(10, 0f);
             modifiedItemSlot.Top.Set(10, 0f);
@@ -103,18 +107,37 @@ namespace PathOfModifiers.UI
             modifierItemSlot.OnItemChange += ModifierItemChange;
             modifierItemSlot.OnItemChange += OnSlotItemChange;
             modifierForgePanel.Append(modifierItemSlot);
-
+            #endregion
+            #region Close button
             UIImageButton closeButton = new UIImageButton(ModLoader.GetTexture("PathOfModifiers/UI/CloseButton"));
             closeButton.Left.Set(474, 0);
             closeButton.Top.Set(10, 0);
             closeButton.OnClick += OnCloseButtonClicked;
             modifierForgePanel.Append(closeButton);
-
+            #endregion
             #region Item info
+            freeAffixCount = new UIText("[-]", 0.75f);
+            freeAffixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
+            freeAffixCount.Top.Set(10, 0f);
+            freeAffixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Affix)]].color;
+            modifierForgePanel.Append(freeAffixCount);
+
+            freePrefixCount = new UIText("[-]", 0.75f);
+            freePrefixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
+            freePrefixCount.Top.Set(UIItemSlot.defaultBackgroundTexture.Height / 2 + 3, 0f);
+            freePrefixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Prefix)]].color;
+            modifierForgePanel.Append(freePrefixCount);
+
+            freeSuffixCount = new UIText("[-]", 0.75f);
+            freeSuffixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
+            freeSuffixCount.Top.Set(UIItemSlot.defaultBackgroundTexture.Height / 2 + 22, 0f);
+            freeSuffixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Suffix)]].color;
+            modifierForgePanel.Append(freeSuffixCount);
+
             for (int i = 0; i < itemInfoText.Length; i++)
             {
                 UIText iItext = new UIText("TEST123", 0.75f);
-                iItext.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
+                iItext.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 55, 0);
                 iItext.Top.Set(10 + (i * 16), 0f);
                 modifierForgePanel.Append(iItext);
                 itemInfoText[i] = iItext;
@@ -610,6 +633,11 @@ namespace PathOfModifiers.UI
             if (!modifiedItemSlot.item.IsAir)
             {
                 PoMItem pomItem = modifiedItemSlot.item.GetGlobalItem<PoMItem>();
+
+                freeAffixCount.SetText($"[{pomItem.FreeAffixes}]");
+                freePrefixCount.SetText($"[{pomItem.FreePrefixes}]");
+                freeSuffixCount.SetText($"[{pomItem.FreeSuffixes}]");
+
                 foreach (Prefix prefix in pomItem.prefixes)
                 {
                     if (i >= itemInfoText.Length)
@@ -630,6 +658,12 @@ namespace PathOfModifiers.UI
                     iiText.Recalculate();
                     i++;
                 }
+            }
+            else
+            {
+                freeAffixCount.SetText($"[-]");
+                freePrefixCount.SetText($"[-]");
+                freeSuffixCount.SetText($"[-]");
             }
             for (; i < itemInfoText.Length; i++)
             {

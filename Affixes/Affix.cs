@@ -17,7 +17,7 @@ namespace PathOfModifiers.Affixes
         public Mod mod;
 
         public virtual float weight => 0;
-        public virtual Color color => new Color(1, 1, 1, 1);
+        public virtual Color color => new Color(0.99f, 0.99f, 0.99f, 1);
 
         public virtual string addedText => string.Empty;
         public virtual float addedTextWeight => 1;
