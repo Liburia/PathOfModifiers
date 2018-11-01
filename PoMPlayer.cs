@@ -85,7 +85,7 @@ namespace PathOfModifiers
                 packet.Send();
             }
         }
-
+        
         public override bool ConsumeAmmo(Item weapon, Item ammo)
         {
             Item item;
@@ -213,7 +213,7 @@ namespace PathOfModifiers
                 pomItem.OnHitByNPC(item, player, npc, damage, crit);
             }
         }
-
+        
         public void OnKillNPC(NPC target)
         {
             Item affixItem;
@@ -494,7 +494,7 @@ namespace PathOfModifiers
                 lastDamageDealerPlayer.GetModPlayer<PoMPlayer>().OnKillPvp(player);
             }
         }
-
+        
         public override void ResetEffects()
         {
             meleeCrit = 1;
@@ -530,7 +530,7 @@ namespace PathOfModifiers
             player.magicDamage *= magicDamage;
             player.rangedDamage *= rangedDamage;
             player.thrownDamage *= throwingDamage;
-            player.minionDamage = minionDamage;
+            player.minionDamage *= minionDamage;
             
             player.meleeSpeed *= meleeSpeed;
             player.pickSpeed *= pickSpeed;
