@@ -1,3 +1,6 @@
+v0.5.1
+Fixed minion damage multipliers not applying.
+
 v0.5.0
 Fragments are now sold by the Wizard instead of crafted. The price is unchanged.
 Added weapon Fire Nova on hit suffix.
