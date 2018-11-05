@@ -143,11 +143,11 @@
     <Compile Include="Affixes\Prefixes\WeaponMeleeDamage.cs" />
     <Compile Include="Buffs\DamageDoTDebuff.cs" />
     <Compile Include="Items\Map.cs" />
-    <Compile Include="Maps\Generators\Test.cs" />
+    <Compile Include="Maps\Generators\SinWaves.cs" />
     <Compile Include="Maps\Generators\Generator.cs" />
-    <Compile Include="Maps\Generators\Empty.cs" />
     <Compile Include="Maps\Test.cs" />
     <Compile Include="Maps\Map.cs" />
+    <Compile Include="Utils\Noise.cs" />
     <Compile Include="PoMDataLoader.cs" />
     <Compile Include="PoMMapController.cs" />
     <Compile Include="Projectiles\FrostSpike.cs" />

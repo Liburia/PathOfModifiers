@@ -23,7 +23,7 @@ namespace PathOfModifiers.Maps
         public virtual Type generatorType => typeof(Generator);
 
         Generator _generator;
-        public Generator generator
+        public virtual Generator generator
         {
             get
             {

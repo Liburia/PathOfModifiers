@@ -25,6 +25,8 @@ namespace PathOfModifiers.Maps.Generators
 
         protected void TilePlace(Point pos, int type, bool mute = true, bool force = true, int player = -1, int style = 0)
         {
+            if (type == TileID.Grass)
+                WorldGen.PlaceTile(pos.X, pos.Y, TileID.Dirt, mute, force, player, style);
             WorldGen.PlaceTile(pos.X, pos.Y, type, mute, force, player, style);
         }
         protected void TileRemove(Point pos, bool isMined = false, bool noItem = true, bool effectOnly = false)

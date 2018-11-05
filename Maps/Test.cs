@@ -19,11 +19,12 @@ namespace PathOfModifiers.Maps
 {
     public class Test : Map
     {
-        public override Type generatorType => typeof(Generators.Test);
+        public override Type generatorType => typeof(Generators.SinWaves);
 
         public override void Generate(Point pos)
         {
             size = new Point(100, 50);
+            ((Generators.SinWaves)generator).Setup(0.5f, 10, 0.25f, 0, 0.5f);
             base.Generate(pos);
         }
     }
