@@ -33,5 +33,13 @@ namespace PathOfModifiers.Maps.Generators
         {
             WorldGen.KillTile(pos.X, pos.Y, isMined, effectOnly, noItem);
         }
+        protected void WallPlace(Point pos, int type, bool mute = true)
+        {
+            WorldGen.PlaceWall(pos.X, pos.Y, type, mute);
+        }
+        protected void WallRemove(Point pos, bool isMined = false)
+        {
+            WorldGen.KillWall(pos.X, pos.Y, isMined);
+        }
     }
 }

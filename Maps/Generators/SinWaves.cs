@@ -53,41 +53,73 @@ namespace PathOfModifiers.Maps.Generators
         }
 
         public override void Generate(Rectangle dimensions)
-        {
-            int tileTypeToPlace = 0;
-            bool removeTile = false;
-            Point tilePos;
-
-            float waveValue;
-            int surfaceHeight;
+        {            
             for (int x = 0; x < dimensions.Width; x++)
             {
-                waveValue = GetWaveValue(x);
-                waveValue = waveValue * dimensions.Height;
-                surfaceHeight = (int)Math.Round(waveValue + dimensions.Height * yOffset);
+                float waveValue = GetWaveValue(x) * dimensions.Height;
+                int surfaceHeight = (int)Math.Round(waveValue + dimensions.Height * yOffset);
+
+                waveValue = GetWaveValue(x + dimensions.Width) * dimensions.Height;
+                int stoneHeight = (int)Math.Round(waveValue + dimensions.Height * yOffset);
+                stoneHeight -= 10;
                 //PathOfModifiers.Log(
                 //    $"{GetWaveValue((float)x / dimensions.Width * (float)Math.PI * 2)}/" +
                 //    $"{waveValue}/" +
                 //    $"{surfaceHeight}/" +
                 //    $"{x}/" +
                 //    $"{x}");
+
                 for (int y = 0; y < dimensions.Height; y++)
                 {
-                    removeTile = false;
-                    tilePos = new Point(dimensions.X + x, dimensions.Y + y);
+                    int wallToPlace = 0;
+                    bool removeWall = false;
+
+                    int tileToPlace = 0;
+                    bool removeTile = false;
+
+                    Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
+
                     if (y <= dimensions.Height - surfaceHeight)
+                    {
+                        removeWall = true;
                         removeTile = true;
+                    }
                     else if (y == dimensions.Height - (surfaceHeight - 1))
-                        tileTypeToPlace = TileID.Grass;
-                    else if (y > dimensions.Height - (surfaceHeight - 1) && y < dimensions.Height - (surfaceHeight - 10))
-                        tileTypeToPlace = TileID.Dirt;
-                    else if (y > dimensions.Height - (surfaceHeight - 10))
-                        tileTypeToPlace = TileID.Stone;
+                    {
+                        removeWall = true;
+                        tileToPlace = TileID.Grass;
+                    }
+                    else if (y > dimensions.Height - (surfaceHeight - 1) && y <= dimensions.Height - stoneHeight)
+                    {
+                        wallToPlace = WallID.Dirt;
+                        tileToPlace = TileID.Dirt;
+                    }
+                    else if (y > dimensions.Height - stoneHeight)
+                    {
+                        wallToPlace = WallID.Stone;
+                        tileToPlace = TileID.Stone;
+                    }
+
+                    if (removeWall)
+                        WallRemove(tilePos);
+                    else
+                        WallPlace(tilePos, wallToPlace);
 
                     if (removeTile)
                         TileRemove(tilePos);
                     else
-                        TilePlace(tilePos, tileTypeToPlace);
+                        TilePlace(tilePos, tileToPlace);
+                }
+            }
+
+            ///CAVES GO HERE
+
+            for (int x = 0; x < dimensions.Width; x++)
+            {
+                for (int y = 0; y < dimensions.Height; y++)
+                {
+                    Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
+                    WorldGen.GrowTree(tilePos.X, tilePos.Y);
                 }
             }
         }
