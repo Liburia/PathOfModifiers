@@ -50,11 +50,11 @@ namespace PathOfModifiers
 
             AddPrefix("", new PoMPrefix());
 
-            PoMAffixController.RegisterMod(this);
+            PoMDataLoader.RegisterMod(this);
         }
         public override void PostSetupContent()
         {
-            PoMAffixController.Initialize();
+            PoMDataLoader.Initialize();
 
             if (Main.netMode != 2)
             {
@@ -66,7 +66,7 @@ namespace PathOfModifiers
         public override void Unload()
         {
             Instance = null;
-            PoMAffixController.Unload();
+            PoMDataLoader.Unload();
         }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -77,14 +77,14 @@ namespace PathOfModifiers
 
             if (msg == MsgType.SyncMaps)
             {
-                PoMAffixController.ReceiveMaps(reader);
+                PoMDataLoader.ReceiveMaps(reader);
             }
             else if (msg == MsgType.PlayerConnected)
             {
                 int player = reader.ReadByte();
                 ModPacket packet = GetPacket();
                 packet.Write((byte)MsgType.SyncMaps);
-                PoMAffixController.SendMaps(packet);
+                PoMDataLoader.SendMaps(packet);
                 packet.Send(player);
             }
             else if (msg == MsgType.SyncTEModifierForge)

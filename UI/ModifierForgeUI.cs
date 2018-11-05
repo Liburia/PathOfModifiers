@@ -119,19 +119,19 @@ namespace PathOfModifiers.UI
             freeAffixCount = new UIText("[-]", 0.75f);
             freeAffixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freeAffixCount.Top.Set(10, 0f);
-            freeAffixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Affix)]].color;
+            freeAffixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Affix)]].color;
             modifierForgePanel.Append(freeAffixCount);
 
             freePrefixCount = new UIText("[-]", 0.75f);
             freePrefixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freePrefixCount.Top.Set(UIItemSlot.defaultBackgroundTexture.Height / 2 + 3, 0f);
-            freePrefixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Prefix)]].color;
+            freePrefixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Prefix)]].color;
             modifierForgePanel.Append(freePrefixCount);
 
             freeSuffixCount = new UIText("[-]", 0.75f);
             freeSuffixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freeSuffixCount.Top.Set(UIItemSlot.defaultBackgroundTexture.Height / 2 + 22, 0f);
-            freeSuffixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Suffix)]].color;
+            freeSuffixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Suffix)]].color;
             modifierForgePanel.Append(freeSuffixCount);
 
             for (int i = 0; i < itemInfoText.Length; i++)

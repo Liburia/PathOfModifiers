@@ -142,6 +142,14 @@
     <Compile Include="Affixes\Prefixes\WeaponAttackSpeed.cs" />
     <Compile Include="Affixes\Prefixes\WeaponMeleeDamage.cs" />
     <Compile Include="Buffs\DamageDoTDebuff.cs" />
+    <Compile Include="Items\Map.cs" />
+    <Compile Include="Maps\Generators\Test.cs" />
+    <Compile Include="Maps\Generators\Generator.cs" />
+    <Compile Include="Maps\Generators\Empty.cs" />
+    <Compile Include="Maps\Test.cs" />
+    <Compile Include="Maps\Map.cs" />
+    <Compile Include="PoMDataLoader.cs" />
+    <Compile Include="PoMMapController.cs" />
     <Compile Include="Projectiles\FrostSpike.cs" />
     <Compile Include="Projectiles\ForceWave.cs" />
     <Compile Include="Projectiles\FireNova.cs" />
@@ -177,6 +185,7 @@
     <Compile Include="Rarities\AccessoryRare.cs" />
     <Compile Include="Rarities\AccessoryUncommon.cs" />
     <Compile Include="Rarities\RarityHelper.cs" />
+    <Compile Include="Rarities\MapCommon.cs" />
     <Compile Include="Rarities\WeaponEpic.cs" />
     <Compile Include="Rarities\ArmorLegendary.cs" />
     <Compile Include="Rarities\WeaponLegendary.cs" />
@@ -227,6 +236,7 @@
       <Name>Terraria</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"F:\Steam\steamapps\common\Terraria\tModLoaderServer.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>

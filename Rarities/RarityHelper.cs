@@ -19,5 +19,9 @@ namespace PathOfModifiers.Rarities
         {
             return PoMItem.IsAccessory(item);
         }
+        public static bool CanRollMap(Item item)
+        {
+            return PoMItem.IsMap(item);
+        }
     }
 }
