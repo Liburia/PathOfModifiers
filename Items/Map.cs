@@ -35,7 +35,7 @@ namespace PathOfModifiers.Items
         void MapNullCheck()
         {
             if (map == null)
-                map = PoMDataLoader.maps[PoMDataLoader.mapMap[typeof(Maps.Test)]].Clone();
+                map = PoMDataLoader.maps[PoMDataLoader.mapMap[typeof(Maps.Plains)]].Clone();
         }
 
         public override bool UseItem(Player player)

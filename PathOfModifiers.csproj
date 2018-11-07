@@ -145,7 +145,7 @@
     <Compile Include="Items\Map.cs" />
     <Compile Include="Maps\Generators\LayeredSurfaceCaves.cs" />
     <Compile Include="Maps\Generators\Generator.cs" />
-    <Compile Include="Maps\Test.cs" />
+    <Compile Include="Maps\Plains.cs" />
     <Compile Include="Maps\Map.cs" />
     <Compile Include="Utilities\Bezier.cs" />
     <Compile Include="Utilities\Noise.cs" />

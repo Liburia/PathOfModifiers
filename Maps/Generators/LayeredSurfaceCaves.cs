@@ -29,6 +29,7 @@ namespace PathOfModifiers.Maps.Generators
         #region Noise settings
         bool noiseSetup = false;
         float noiseScale;
+        int noiseOctaves;
         float noiseThreshold;
         #endregion
         #region Bezier settings
@@ -45,7 +46,7 @@ namespace PathOfModifiers.Maps.Generators
         bool tilesGrowTrees;
         #endregion
 
-        public void SetupSineWaves(float yOffset = 0.5f, int nWaves = 10, float totalAmpMult = 0.25f, float maxFreq = 0.5f, float maxPhase = 6.283f)
+        public void SetupSineWaves(float yOffset = 0.5f, int nWaves = 10, float totalAmpMult = 25f, float maxFreq = 0.5f, float maxPhase = 6.283f)
         {
             sineYOffset = yOffset;
             sineTotalAmpMult = totalAmpMult;
@@ -58,9 +59,10 @@ namespace PathOfModifiers.Maps.Generators
             }
             sineSetup = true;
         }
-        public void SetupNoise(float scale = 10, float threshold = 0.35f)
+        public void SetupNoise(float scale = 10, int octaves = 3, float threshold = 0.35f)
         {
             noiseScale = scale;
+            noiseOctaves = octaves;
             noiseThreshold = threshold;
             noiseSetup = true;
         }
@@ -107,10 +109,10 @@ namespace PathOfModifiers.Maps.Generators
             {
                 for (int x = 0; x < dimensions.Width; x++)
                 {
-                    float waveValue = GetWaveValue(x) * dimensions.Height;
+                    float waveValue = GetWaveValue(x);
                     int surfaceHeight = (int)Math.Round(waveValue + dimensions.Height * sineYOffset);
 
-                    waveValue = GetWaveValue(x + dimensions.Width) * dimensions.Height;
+                    waveValue = GetWaveValue(x + dimensions.Width);
                     int stoneHeight = (int)Math.Round(waveValue + dimensions.Height * sineYOffset);
                     stoneHeight -= 10;
                     //PathOfModifiers.Log(
@@ -171,10 +173,11 @@ namespace PathOfModifiers.Maps.Generators
                     for (int y = 0; y < dimensions.Height; y++)
                     {
                         Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
-                        if (Noise.GetNoise(x / noiseScale, y / noiseScale, noiseSeed) < noiseThreshold)
+                        if (Noise.GetOctaveNoise(x / noiseScale, y / noiseScale, noiseSeed, noiseOctaves) < noiseThreshold)
                             KillTile(tilePos);
                     }
                 }
+
                 //((PathOfModifiers)mod).test = new List<Point>();
                 Vector2[][] beziers = new Vector2[nBeziers][];
                 for (int i = 0; i < beziers.Length; i++)
