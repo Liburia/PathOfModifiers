@@ -23,21 +23,23 @@ namespace PathOfModifiers.Maps.Generators
         {
         }
 
-        protected void TilePlace(Point pos, int type, bool mute = true, bool force = true, int player = -1, int style = 0)
+        protected void PlaceTile(Point pos, int type, bool mute = true, bool force = true, int player = -1, int style = 0)
         {
             if (type == TileID.Grass)
                 WorldGen.PlaceTile(pos.X, pos.Y, TileID.Dirt, mute, force, player, style);
             WorldGen.PlaceTile(pos.X, pos.Y, type, mute, force, player, style);
         }
-        protected void TileRemove(Point pos, bool isMined = false, bool noItem = true, bool effectOnly = false)
+        protected void KillTile(Point pos, bool isMined = false, bool noItem = true, bool effectOnly = false)
         {
             WorldGen.KillTile(pos.X, pos.Y, isMined, effectOnly, noItem);
         }
-        protected void WallPlace(Point pos, int type, bool mute = true)
+        protected void PlaceWall(Point pos, int type, bool mute = true, bool force = true)
         {
+            if (force)
+                KillWall(pos);
             WorldGen.PlaceWall(pos.X, pos.Y, type, mute);
         }
-        protected void WallRemove(Point pos, bool isMined = false)
+        protected void KillWall(Point pos, bool isMined = false)
         {
             WorldGen.KillWall(pos.X, pos.Y, isMined);
         }

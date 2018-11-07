@@ -19,12 +19,16 @@ namespace PathOfModifiers.Maps
 {
     public class Test : Map
     {
-        public override Type generatorType => typeof(Generators.SinWaves);
+        public override Type generatorType => typeof(Generators.LayeredSurfaceCaves);
 
         public override void Generate(Point pos)
         {
-            size = new Point(100, 50);
-            ((Generators.SinWaves)generator).Setup(0.5f, 10, 0.25f, 0, 0.5f);
+            size = new Point(200, 300);
+            LayeredSurfaceCaves gen = (LayeredSurfaceCaves)generator;
+            gen.SetupSineWaves(0.5f, 10, 0.25f);
+            gen.SetupNoise(10, 0.35f);
+            gen.SetupBezier(1, 4, 1, 10, 4);
+            gen.SetupTiles();
             base.Generate(pos);
         }
     }
