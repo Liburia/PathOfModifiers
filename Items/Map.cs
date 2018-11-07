@@ -27,8 +27,8 @@ namespace PathOfModifiers.Items
             item.maxStack = 1;
             item.autoReuse = false;
             item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = 1;
+            item.useTime = 15;
+            item.useStyle = 3;
             item.consumable = false;
         }
 
