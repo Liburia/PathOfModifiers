@@ -21,6 +21,31 @@ namespace PathOfModifiers.Maps
     {
         public override Type generatorType => typeof(Generators.LayeredSurfaceCaves);
 
+        public override int baseNNPCs => 20;
+
+        public override Pack[] packs => new Pack[]
+        {
+            new Pack(new Tuple<int, int>[]{
+                new Tuple<int, int>(NPCID.Zombie, 3),
+                new Tuple<int, int>(NPCID.FemaleZombie, 2),
+                new Tuple<int, int>(NPCID.SmallZombie, 1),
+            }),
+            new Pack(new Tuple<int, int>[]{
+                new Tuple<int, int>(NPCID.PurpleSlime, 3),
+                new Tuple<int, int>(NPCID.RedSlime, 2),
+                new Tuple<int, int>(NPCID.YellowSlime, 1),
+            }),
+            new Pack(new Tuple<int, int>[]{
+                new Tuple<int, int>(NPCID.Skeleton, 3),
+            }, 0.1f),
+        };
+        public override Pack[] bossPacks => new Pack[]
+        {
+            new Pack(new Tuple<int, int>[]{
+                new Tuple<int, int>(NPCID.ArmedZombie, 2),
+            }),
+        };
+
         public override void Generate(Point pos)
         {
             size = new Point(50, 50);
@@ -28,7 +53,7 @@ namespace PathOfModifiers.Maps
             gen.SetupSineWaves(0.5f, 10, 25f);
             gen.SetupNoise(10, 3, 0.35f);
             gen.SetupBezier(1, 4, 1, 10, 4);
-            gen.SetupTiles();
+            gen.SetupTiles(true, false, true);
             base.Generate(pos);
         }
     }

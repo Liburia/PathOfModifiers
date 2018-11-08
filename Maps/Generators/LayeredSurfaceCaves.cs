@@ -45,6 +45,10 @@ namespace PathOfModifiers.Maps.Generators
         bool tilesCarveCaves;
         bool tilesGrowTrees;
         #endregion
+        #region Pack settings
+        int nPacks;
+        bool packsSetup = false;
+        #endregion
 
         public void SetupSineWaves(float yOffset = 0.5f, int nWaves = 10, float totalAmpMult = 25f, float maxFreq = 0.5f, float maxPhase = 6.283f)
         {
@@ -68,7 +72,7 @@ namespace PathOfModifiers.Maps.Generators
         }
         public void SetupBezier(int minBeziers = 0, int maxBeziers = 4, int minPoints = 1, int maxPoints = 10, int width = 5)
         {
-            nBeziers = Main.rand.Next(minBeziers, maxBeziers);
+            nBeziers = Main.rand.Next(minBeziers, maxBeziers + 1);
             bezierMinPoints = minPoints;
             bezierMaxPoints = maxPoints;
             bezierWidth = width;
@@ -76,10 +80,22 @@ namespace PathOfModifiers.Maps.Generators
         }
         public void SetupTiles(bool createTerrain = true, bool carveCaves = true, bool growTrees = true)
         {
+            //TODO: Setup custom tile layers
             tilesCreateTerrain = createTerrain;
             tilesCarveCaves = carveCaves;
             tilesGrowTrees = growTrees;
             tilesSetup = true;
+        }
+        public void SetupPacks()
+        {
+            packsSetup = true;
+        }
+        void ResetSetup()
+        {
+            sineSetup = false;
+            noiseSetup = false;
+            bezierSetup = false;
+            tilesSetup = false;
         }
 
         float GetWaveValue(float x)
@@ -94,7 +110,7 @@ namespace PathOfModifiers.Maps.Generators
             return (value / sineFrequencies.Length / 2 + 0.5f) * sineTotalAmpMult;
         }
 
-        public override void Generate(Rectangle dimensions)
+        public override void GenerateTerrain(Rectangle dimensions)
         {
             if (!sineSetup)
                 SetupSineWaves();
@@ -104,6 +120,8 @@ namespace PathOfModifiers.Maps.Generators
                 SetupBezier();
             if (!tilesSetup)
                 SetupTiles();
+
+            GenerateBorders(dimensions);
 
             if (tilesCreateTerrain)
             {
@@ -182,7 +200,7 @@ namespace PathOfModifiers.Maps.Generators
                 Vector2[][] beziers = new Vector2[nBeziers][];
                 for (int i = 0; i < beziers.Length; i++)
                 {
-                    beziers[i] = new Vector2[Main.rand.Next(bezierMinPoints, bezierMaxPoints)];
+                    beziers[i] = new Vector2[Main.rand.Next(bezierMinPoints, bezierMaxPoints + 1)];
                     Vector2[] bezier = beziers[i];
                     for (int j = 0; j < bezier.Length; j++)
                         bezier[j] = new Vector2(Main.rand.NextFloat(0, dimensions.Width), Main.rand.NextFloat(0, dimensions.Height));
@@ -216,6 +234,19 @@ namespace PathOfModifiers.Maps.Generators
 
             ResetSetup();
         }
+        public override void SpawnPacks(Rectangle dimensions, int nNPCs, Pack[] packs)
+        {
+            Vector2 mapPos = new Vector2(dimensions.X * 16, dimensions.Y * 16);
+            Vector2 mapSize = new Vector2(dimensions.Width * 16, dimensions.Height * 16);
+            for (int i = 0; i < packs.Length; i++)
+            {
+                Pack p = packs[i];
+                Vector2 packPos = new Vector2(
+                    Main.rand.NextFloat(mapPos.X + p.radius, mapPos.X + mapSize.X - p.radius),
+                    Main.rand.NextFloat(mapPos.Y + p.radius, mapPos.Y + mapSize.Y - p.radius));
+                SpawnPack(p, packPos, p.radius, p.clearSpace);
+            }
+        }
 
         void KillTilesLine(Vector2 startPos, Vector2 endPos, int width, Rectangle dimensions)
         {
@@ -238,14 +269,6 @@ namespace PathOfModifiers.Maps.Generators
                 }
             }
 
-        }
-
-        void ResetSetup()
-        {
-            sineSetup = false;
-            noiseSetup = false;
-            bezierSetup = false;
-            tilesSetup = false;
         }
     }
 }

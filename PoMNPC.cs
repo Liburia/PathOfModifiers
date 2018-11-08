@@ -14,6 +14,8 @@ namespace PathOfModifiers
     {
         public override bool InstancePerEntity => true;
 
+        public bool mapNpc = false;
+
         public Entity lastDamageDealer;
 
         /// <summary>
@@ -96,6 +98,11 @@ namespace PathOfModifiers
                 shop.item[nextSlot].SetDefaults(mod.ItemType<Items.ModifierFragment>());
                 nextSlot++;
             }
+        }
+
+        public override bool CheckActive(NPC npc)
+        {
+            return !mapNpc;
         }
     }
 }
