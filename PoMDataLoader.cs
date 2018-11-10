@@ -250,7 +250,7 @@ namespace PathOfModifiers
                     mod = ModLoader.GetMod(reader.ReadString());
                     type = mod.Code.GetType(reader.ReadString(), true);
 
-                    newMaps[i] = maps[newMapMap[type]];
+                    newMaps[i] = maps[mapMap[type]];
                     newMapMap.Add(type, i);
                 }
 
