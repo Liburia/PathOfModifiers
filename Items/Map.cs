@@ -32,6 +32,7 @@ namespace PathOfModifiers.Items
             item.consumable = false;
         }
 
+        //TODO: Remove? Should never be null; just crash.
         void MapNullCheck()
         {
             if (map == null)
@@ -40,11 +41,12 @@ namespace PathOfModifiers.Items
 
         public override bool UseItem(Player player)
         {
-            //PathOfModifiers.Log("1");
             MapNullCheck();
-            map.Generate(new Point(Player.tileTargetX, Player.tileTargetY));
-
-            //PathOfModifiers.Log("2");
+            //if (player.whoAmI == Main.myPlayer)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                map.Generate(new Rectangle((int)player.position.X / 16 + 4, (int)player.position.Y / 16 + 4, 50, 50));
+            }
             return true;
         }
 

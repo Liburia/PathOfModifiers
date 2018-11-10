@@ -13,6 +13,7 @@ using PathOfModifiers.Affixes;
 using PathOfModifiers.Rarities;
 using PathOfModifiers.Maps.Generators;
 using Terraria.ModLoader.IO;
+using Terraria.ID;
 
 namespace PathOfModifiers.Maps
 {
@@ -53,21 +54,13 @@ namespace PathOfModifiers.Maps
             }
         }
 
-        public Point size;
-
-        public virtual Map Clone()
+        public virtual void Generate(Rectangle dimensions)
         {
-            Map newMap = (Map)Activator.CreateInstance(GetType());
-            newMap.mod = mod;
-            newMap._generator = generator;
-            return newMap;
-        }
-
-        public virtual void Generate(Point pos)
-        {
-            Rectangle dimensions = new Rectangle(pos.X, pos.Y, size.X, size.Y);
             generator.GenerateTerrain(dimensions);
             generator.SpawnPacks(dimensions, baseNNPCs, MakePackArray());
+
+            if (Main.netMode == NetmodeID.Server)
+                PoMNetMessage.SyncGeneratedMap(dimensions, this);
         }
 
         public virtual Pack[] MakePackArray()
@@ -112,9 +105,19 @@ namespace PathOfModifiers.Maps
 
         public virtual void Save(TagCompound tag)
         {
+
         }
         public virtual void Load(TagCompound tag)
         {
+
+        }
+
+        public virtual Map Clone()
+        {
+            Map newMap = (Map)Activator.CreateInstance(GetType());
+            newMap.mod = mod;
+            newMap._generator = generator;
+            return newMap;
         }
 
         public virtual void NetSend(BinaryWriter writer)

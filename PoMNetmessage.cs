@@ -119,21 +119,6 @@ namespace PathOfModifiers
                     packet.Send(-1, whoAmI);
                 }
             }
-            else if (msg == MsgType.SyncTiles)
-            {
-                if (Main.netMode == NetmodeID.Server)
-                {
-
-
-                    //NetMessage.CompressTileBlock();
-                    //NetMessage.SendData(MessageID.TileSection, -1, whoAmI, null, )
-                    //NetMessage.SendTileRange(-1, pos.X - 1, pos.Y - 1, size.X + 2, size.Y + 2);
-                }
-                else if (Main.netMode == NetmodeID.MultiplayerClient)
-                {
-
-                }
-            }
 
         SkipMsgIf:;
         }
@@ -174,6 +159,22 @@ namespace PathOfModifiers
             TileEntity.Write(packet, te, true);
             packet.Send();
         }
+        public static void SyncGeneratedMap(Rectangle dimensions, Maps.Map map)
+        {
+
+            NetMessage.SendTileRange(-1, dimensions.X - 1, dimensions.Y - 1, dimensions.Width + 2, dimensions.Height + 2);
+            for (int i = 0; i < 200; i++)
+            {
+                NPC npc = Main.npc[i];
+                if (npc.active && new Rectangle(dimensions.X * 16, dimensions.Y * 16, dimensions.Width * 16, dimensions.Height * 16).Intersects(npc.Hitbox))
+                {
+                    NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, i);
+                }
+            }
+            //NetMessage.CompressTileBlock();
+            //NetMessage.SendData(MessageID.TileSection, -1, whoAmI, null, )
+            //NetMessage.SendTileRange(-1, pos.X - 1, pos.Y - 1, size.X + 2, size.Y + 2);
+        }
     }
 
     enum MsgType
@@ -183,6 +184,5 @@ namespace PathOfModifiers
         SyncTEModifierForge,
         AddDamageDoTDebuffNPC,
         AddDamageDoTDebuffPlayer,
-        SyncTiles,
     }
 }

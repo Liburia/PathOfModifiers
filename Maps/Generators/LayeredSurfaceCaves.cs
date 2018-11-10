@@ -120,9 +120,9 @@ namespace PathOfModifiers.Maps.Generators
                 SetupBezier();
             if (!tilesSetup)
                 SetupTiles();
-
+            
             GenerateBorders(dimensions);
-
+            
             if (tilesCreateTerrain)
             {
                 for (int x = 0; x < dimensions.Width; x++)
