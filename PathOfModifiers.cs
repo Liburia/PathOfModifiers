@@ -103,14 +103,4 @@ namespace PathOfModifiers
             ModifierForgeUI.Instance.Visible = false;
         }
     }
-
-    enum MsgType
-    {
-        SyncMaps,
-        PlayerConnected,
-        SyncTEModifierForge,
-        AddDamageDoTDebuffNPC,
-        AddDamageDoTDebuffPlayer,
-        SyncTiles,
-    }
 }

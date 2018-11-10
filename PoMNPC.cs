@@ -42,13 +42,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
-                ModPacket packet = mod.GetPacket();
-                packet.Write((byte)MsgType.AddDamageDoTDebuffNPC);
-                packet.Write(npc.whoAmI);
-                packet.Write(buff.Type);
-                packet.Write(damage);
-                packet.Write(time);
-                packet.Send();
+                PoMNetMessage.AddDamageDoTDebuffNPC(npc.whoAmI, buff.Type, damage, time);
             }
         }
 

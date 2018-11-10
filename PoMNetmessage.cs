@@ -109,7 +109,8 @@ namespace PathOfModifiers
 
                 if (Main.netMode == NetmodeID.Server)
                 {
-                    ModPacket packet = PathOfModifiers.Instance.GetPacket();
+                    ModPacket packet = PathOfModifiers.Instance.GetPacket
+();
                     packet.Write((byte)MsgType.AddDamageDoTDebuffPlayer);
                     packet.Write(playerID);
                     packet.Write(buffType);
@@ -136,5 +137,52 @@ namespace PathOfModifiers
 
         SkipMsgIf:;
         }
+
+        public static void PlayerConnected(int whoAmI)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.PlayerConnected);
+            packet.Write((byte)whoAmI);
+            packet.Send();
+        }
+        public static void AddDamageDoTDebuffPlayer(int whoAmI, int buffType, int damage, int time)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.AddDamageDoTDebuffPlayer);
+            packet.Write(whoAmI);
+            packet.Write(buffType);
+            packet.Write(damage);
+            packet.Write(time);
+            packet.Send();
+        }
+        public static void AddDamageDoTDebuffNPC(int whoAmI, int buffType, int damage, int time)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.AddDamageDoTDebuffNPC);
+            packet.Write(whoAmI);
+            packet.Write(buffType);
+            packet.Write(damage);
+            packet.Write(time);
+            packet.Send();
+        }
+        public static void SyncTEModifierForge(int id, bool byID, TileEntity te)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.SyncTEModifierForge);
+            packet.Write(id);
+            packet.Write(byID);
+            TileEntity.Write(packet, te, true);
+            packet.Send();
+        }
+    }
+
+    enum MsgType
+    {
+        SyncMaps,
+        PlayerConnected,
+        SyncTEModifierForge,
+        AddDamageDoTDebuffNPC,
+        AddDamageDoTDebuffPlayer,
+        SyncTiles,
     }
 }

@@ -398,12 +398,7 @@ namespace PathOfModifiers.Tiles
         {
             if (Main.netMode == 1)
             {
-                ModPacket packet = mod.GetPacket();
-                packet.Write((byte)MsgType.SyncTEModifierForge);
-                packet.Write(ID);
-                packet.Write(ByID.ContainsKey(ID));
-                Write(packet, this, true);
-                packet.Send();
+                PoMNetMessage.SyncTEModifierForge(ID, ByID.ContainsKey(ID), this);
             }
             else if (Main.netMode == 2)
             {
