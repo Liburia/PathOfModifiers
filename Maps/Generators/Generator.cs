@@ -88,6 +88,9 @@ namespace PathOfModifiers.Maps.Generators
                     Vector2 spawnPos = pos + spawnPosRand;
                     NPC npc = SpawnNPC(spawnPos, pack.npcCounts[i].Item1);
 
+                    if (npc == null)
+                        return;
+
                     float diff = Math.Abs(spawnPosRand.X) - (radius - ((npc.width + 16) / 2f));
                     if (diff > 0)
                         npc.position.X += Math.Sign(spawnPosRand.X) * -diff;
@@ -102,7 +105,10 @@ namespace PathOfModifiers.Maps.Generators
         }
         protected NPC SpawnNPC(Vector2 pos, int type)
         {
-            NPC newNPC = Main.npc[NPC.NewNPC((int)pos.X, (int)pos.Y, type)];
+            int newNpcIndex = NPC.NewNPC((int)pos.X, (int)pos.Y, type);
+            if (newNpcIndex == 200)
+                return null;
+            NPC newNPC = Main.npc[newNpcIndex];
             PoMNPC pomNPC = newNPC.GetGlobalNPC<PoMNPC>();
             pomNPC.mapNpc = true;
             return newNPC;
