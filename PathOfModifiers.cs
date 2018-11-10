@@ -71,103 +71,7 @@ namespace PathOfModifiers
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
-            MsgType msg = (MsgType)reader.ReadByte();
-            if (logNetwork)
-                Log($"Msg Received: {Main.netMode.ToString()}/{msg.ToString()}");
-
-            if (msg == MsgType.SyncMaps)
-            {
-                PoMDataLoader.ReceiveMaps(reader);
-            }
-            else if (msg == MsgType.PlayerConnected)
-            {
-                int player = reader.ReadByte();
-                ModPacket packet = GetPacket();
-                packet.Write((byte)MsgType.SyncMaps);
-                PoMDataLoader.SendMaps(packet);
-                packet.Send(player);
-            }
-            else if (msg == MsgType.SyncTEModifierForge)
-            {
-                int id = reader.ReadInt32();
-                bool contains = reader.ReadBoolean();
-                if (contains)
-                {
-                    TEModifierForge tileEntity;
-                    tileEntity = (TEModifierForge)TileEntity.Read(reader, true);
-                    tileEntity.ID = id;
-                    TileEntity.ByID[tileEntity.ID] = tileEntity;
-                    TileEntity.ByPosition[tileEntity.Position] = tileEntity;
-                    tileEntity.Sync(tileEntity.ID, whoAmI);
-                }
-                else
-                {
-                    TileEntity tileEntity;
-                    if (TileEntity.ByID.TryGetValue(id, out tileEntity) && tileEntity is ModTileEntity)
-                    {
-                        TileEntity.ByID.Remove(id);
-                        TileEntity.ByPosition.Remove(tileEntity.Position);
-                    }
-                }
-            }
-            else if (msg == MsgType.AddDamageDoTDebuffNPC)
-            {
-                int npcID = reader.ReadInt32();
-                int buffType = reader.ReadInt32();
-                int damage = reader.ReadInt32();
-                int time = reader.ReadInt32();
-
-                DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
-                if (debuff == null)
-                {
-                    Log($"PathOfModifiers: Invalid buff packet received {buffType}");
-                    goto SkipMsgIf;
-                }
-                NPC npc = Main.npc[npcID];
-                PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-                pomNPC.AddDamageDoTBuff(npc, debuff, damage, time, false);
-
-                if (Main.netMode == NetmodeID.Server)
-                {
-                    ModPacket packet = GetPacket();
-                    packet.Write((byte)MsgType.AddDamageDoTDebuffNPC);
-                    packet.Write(npcID);
-                    packet.Write(buffType);
-                    packet.Write(damage);
-                    packet.Write(time);
-                    packet.Send(-1, whoAmI);
-                }
-            }
-            else if (msg == MsgType.AddDamageDoTDebuffPlayer)
-            {
-                int playerID = reader.ReadInt32();
-                int buffType = reader.ReadInt32();
-                int damage = reader.ReadInt32();
-                int time = reader.ReadInt32();
-
-                DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
-                if (debuff == null)
-                {
-                    Log($"PathOfModifiers: Invalid buff packet received {buffType}");
-                    goto SkipMsgIf;
-                }
-                Player player = Main.player[playerID];
-                PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-                pomPlayer.AddDamageDoTBuff(player, debuff, damage, time, false);
-
-                if (Main.netMode == NetmodeID.Server)
-                {
-                    ModPacket packet = GetPacket();
-                    packet.Write((byte)MsgType.AddDamageDoTDebuffPlayer);
-                    packet.Write(playerID);
-                    packet.Write(buffType);
-                    packet.Write(damage);
-                    packet.Write(time);
-                    packet.Send(-1, whoAmI);
-                }
-            }
-
-            SkipMsgIf:;
+            PoMNetMessage.HandlePacket(reader, whoAmI);
         }
 
         public override void UpdateUI(GameTime gameTime)
@@ -207,5 +111,6 @@ namespace PathOfModifiers
         SyncTEModifierForge,
         AddDamageDoTDebuffNPC,
         AddDamageDoTDebuffPlayer,
+        SyncTiles,
     }
 }

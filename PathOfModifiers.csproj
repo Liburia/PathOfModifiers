@@ -147,6 +147,7 @@
     <Compile Include="Maps\Generators\Generator.cs" />
     <Compile Include="Maps\Plains.cs" />
     <Compile Include="Maps\Map.cs" />
+    <Compile Include="PoMNetMessage.cs" />
     <Compile Include="Utilities\Bezier.cs" />
     <Compile Include="Utilities\Noise.cs" />
     <Compile Include="PoMDataLoader.cs" />
