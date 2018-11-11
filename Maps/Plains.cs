@@ -52,7 +52,18 @@ namespace PathOfModifiers.Maps
             gen.SetupSineWaves(0.5f, 10, 25f);
             gen.SetupNoise(10, 3, 0.35f);
             gen.SetupBezier(1, 4, 1, 10, 4);
-            gen.SetupTiles(true, true, true);
+            LayerSetings[] tileLayers = new LayerSetings[3]
+            {
+                new LayerSetings(TileID.Grass, 0),
+                new LayerSetings(TileID.Dirt, 1, true),
+                new LayerSetings(TileID.Stone, 11, false),
+            };
+            LayerSetings[] wallLayers = new LayerSetings[2]
+            {
+                new LayerSetings(WallID.Dirt, 1),
+                new LayerSetings(WallID.Stone, 11),
+            };
+            gen.SetupTiles(tileLayers, wallLayers, true, true, true);
             base.Generate(dimensions);
         }
     }

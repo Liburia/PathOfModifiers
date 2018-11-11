@@ -17,22 +17,43 @@ using PathOfModifiers.Utilities.Noise;
 
 namespace PathOfModifiers.Maps.Generators
 {
+    public class LayerSetings
+    {
+        public int type;
+        public int absoluteOffset;
+        public bool useLastLayerWave;
+        public bool useAbsoluteOffset;
+        public float relativeOffset;
+
+        public LayerSetings(int type, int absoluteOffset, bool useLastLayerWave = false, bool useAbsoluteOffset = true, float relativeOffset = 0)
+        {
+            this.type = type;
+            this.absoluteOffset = absoluteOffset;
+            this.useLastLayerWave = useLastLayerWave;
+            this.useAbsoluteOffset = useAbsoluteOffset;
+            this.relativeOffset = relativeOffset;
+        }
+
+        public int GetOffset(int mapHeight = 0)
+        {
+            return useAbsoluteOffset ? absoluteOffset : (int)Math.Round(relativeOffset * mapHeight);
+        }
+    }
+
     public class LayeredSurfaceCaves : Generator
     {
-        #region Sine settings
+        #region Terrain settings
         bool sineSetup = false;
         float sineTotalAmpMult;
         float[] sineFrequencies;
         float[] sinePhases;
         float sineYOffset;
         #endregion
-        #region Noise settings
+        #region Cave settings
         bool noiseSetup = false;
         float noiseScale;
         int noiseOctaves;
         float noiseThreshold;
-        #endregion
-        #region Bezier settings
         bool bezierSetup = false;
         int nBeziers;
         int bezierMinPoints;
@@ -41,9 +62,11 @@ namespace PathOfModifiers.Maps.Generators
         #endregion
         #region Tile settings
         bool tilesSetup = false;
-        bool tilesCreateTerrain;
-        bool tilesCarveCaves;
-        bool tilesGrowTrees;
+        LayerSetings[] tileLayers;
+        LayerSetings[] wallLayers;
+        bool tilesMakeTerrain;
+        bool tilesMakeCaves;
+        bool tilesMakeTrees;
         #endregion
         #region Pack settings
         int nPacks;
@@ -78,12 +101,14 @@ namespace PathOfModifiers.Maps.Generators
             bezierWidth = width;
             bezierSetup = true;
         }
-        public void SetupTiles(bool createTerrain = true, bool carveCaves = true, bool growTrees = true)
+        public void SetupTiles(LayerSetings[] tileLayers, LayerSetings[] wallLayers, bool createTerrain = true, bool carveCaves = true, bool growTrees = true)
         {
-            //TODO: Setup custom tile layers
-            tilesCreateTerrain = createTerrain;
-            tilesCarveCaves = carveCaves;
-            tilesGrowTrees = growTrees;
+            this.tileLayers = tileLayers;
+            this.wallLayers = wallLayers;
+
+            tilesMakeTerrain = createTerrain;
+            tilesMakeCaves = carveCaves;
+            tilesMakeTrees = growTrees;
             tilesSetup = true;
         }
         public void SetupPacks()
@@ -119,20 +144,31 @@ namespace PathOfModifiers.Maps.Generators
             if (!bezierSetup)
                 SetupBezier();
             if (!tilesSetup)
-                SetupTiles();
+                SetupTiles(new LayerSetings[0], new LayerSetings[0]);
             
             GenerateBorders(dimensions);
             
-            if (tilesCreateTerrain)
+            if (tilesMakeTerrain)
             {
                 for (int x = 0; x < dimensions.Width; x++)
                 {
-                    float waveValue = GetWaveValue(x);
-                    int surfaceHeight = (int)Math.Round(waveValue + dimensions.Height * sineYOffset);
+                    int[] tileLayerSineOffsets = new int[tileLayers.Length];
+                    float waveValue = 0;
+                    for(int i = 0; i < tileLayerSineOffsets.Length; i++)
+                    {
+                        if (!tileLayers[i].useLastLayerWave)
+                            waveValue = GetWaveValue(x + dimensions.Width * i);
+                        tileLayerSineOffsets[i] = (int)Math.Ceiling(waveValue + dimensions.Height * sineYOffset - tileLayers[i].GetOffset(dimensions.Height));
+                    }
 
-                    waveValue = GetWaveValue(x + dimensions.Width);
-                    int stoneHeight = (int)Math.Round(waveValue + dimensions.Height * sineYOffset);
-                    stoneHeight -= 10;
+                    int[] wallLayerSineOffsets = new int[wallLayers.Length];
+                    waveValue = 0;
+                    for (int i = 0; i < wallLayerSineOffsets.Length; i++)
+                    {
+                        if (!wallLayers[i].useLastLayerWave)
+                            waveValue = GetWaveValue(x - dimensions.Width * (i + 1));
+                        wallLayerSineOffsets[i] = (int)Math.Ceiling(waveValue + dimensions.Height * sineYOffset - wallLayers[i].GetOffset(dimensions.Height));
+                    }
                     //PathOfModifiers.Log(
                     //    $"{GetWaveValue((float)x / dimensions.Width * (float)Math.PI * 2)}/" +
                     //    $"{waveValue}/" +
@@ -150,25 +186,34 @@ namespace PathOfModifiers.Maps.Generators
 
                         Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
 
-                        if (y <= dimensions.Height - surfaceHeight)
+                        if (y <= dimensions.Height - tileLayerSineOffsets[0])
                         {
-                            removeWall = true;
                             removeTile = true;
                         }
-                        else if (y == dimensions.Height - (surfaceHeight - 1))
+                        else
+                        {
+                            for (int i = 0; i < tileLayerSineOffsets.Length; i++)
+                            {
+                                if (y > dimensions.Height - tileLayerSineOffsets[i])
+                                {
+                                    tileToPlace = tileLayers[i].type;
+                                }
+                            }
+                        }
+
+                        if (y <= dimensions.Height - wallLayerSineOffsets[0])
                         {
                             removeWall = true;
-                            tileToPlace = TileID.Grass;
                         }
-                        else if (y > dimensions.Height - (surfaceHeight - 1) && y <= dimensions.Height - stoneHeight)
+                        else
                         {
-                            wallToPlace = WallID.Dirt;
-                            tileToPlace = TileID.Dirt;
-                        }
-                        else if (y > dimensions.Height - stoneHeight)
-                        {
-                            wallToPlace = WallID.Stone;
-                            tileToPlace = TileID.Stone;
+                            for (int i = 0; i < wallLayerSineOffsets.Length; i++)
+                            {
+                                if (y > dimensions.Height - wallLayerSineOffsets[i])
+                                {
+                                    wallToPlace = wallLayers[i].type;
+                                }
+                            }
                         }
 
                         if (removeWall)
@@ -183,7 +228,7 @@ namespace PathOfModifiers.Maps.Generators
                     }
                 }
             }
-            if (tilesCarveCaves)
+            if (tilesMakeCaves)
             {
                 float noiseSeed = Main.rand.NextFloat(0, 255);
                 for (int x = 0; x < dimensions.Width; x++)
@@ -220,7 +265,7 @@ namespace PathOfModifiers.Maps.Generators
                     }
                 }
             }
-            if (tilesGrowTrees)
+            if (tilesMakeTrees)
             {
                 for (int x = 0; x < dimensions.Width; x++)
                 {
