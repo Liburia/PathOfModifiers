@@ -39,6 +39,21 @@ namespace PathOfModifiers.Maps.Generators
             return useAbsoluteOffset ? absoluteOffset : (int)Math.Round(relativeOffset * mapHeight);
         }
     }
+    public class OreSetting
+    {
+        public int type;    
+        public float frequency;
+        public float strength;
+        public int steps;
+
+        public OreSetting(int type, float frequency, float strength, int steps)
+        {
+            this.type = type;
+            this.frequency = frequency;
+            this.strength = strength;
+            this.steps = steps;
+        }
+    }
 
     public class LayeredSurfaceCaves : Generator
     {
@@ -50,23 +65,27 @@ namespace PathOfModifiers.Maps.Generators
         float sineYOffset;
         #endregion
         #region Cave settings
-        bool noiseSetup = false;
-        float noiseScale;
-        int noiseOctaves;
-        float noiseThreshold;
-        bool bezierSetup = false;
-        int nBeziers;
-        int bezierMinPoints;
-        int bezierMaxPoints;
-        int bezierWidth;
+        bool caveSetup = false;
+        float caveNoiseScale;
+        int caveNoiseOctaves;
+        float caveNoiseThreshold;
+        int caveNBeziers;
+        int caveBezierMinPoints;
+        int caveBezierMaxPoints;
+        int caveBezierWidth;
         #endregion
         #region Tile settings
-        bool tilesSetup = false;
+        bool tileSetup = false;
         LayerSetings[] tileLayers;
         LayerSetings[] wallLayers;
         bool tilesMakeTerrain;
         bool tilesMakeCaves;
+        bool tilesMakeOres;
         bool tilesMakeTrees;
+        #endregion
+        #region Ore settings
+        bool oreSetup = false;
+        OreSetting[] ores;
         #endregion
         #region Pack settings
         int nPacks;
@@ -86,20 +105,19 @@ namespace PathOfModifiers.Maps.Generators
             }
             sineSetup = true;
         }
-        public void SetupNoise(float scale = 10, int octaves = 3, float threshold = 0.35f)
+        public void SetupCaves(float scale = 10, int octaves = 3, float threshold = 0.35f, int minBeziers = 0, int maxBeziers = 4, int minPoints = 1, int maxPoints = 10, int width = 5)
         {
-            noiseScale = scale;
-            noiseOctaves = octaves;
-            noiseThreshold = threshold;
-            noiseSetup = true;
-        }
-        public void SetupBezier(int minBeziers = 0, int maxBeziers = 4, int minPoints = 1, int maxPoints = 10, int width = 5)
-        {
-            nBeziers = Main.rand.Next(minBeziers, maxBeziers + 1);
-            bezierMinPoints = minPoints;
-            bezierMaxPoints = maxPoints;
-            bezierWidth = width;
-            bezierSetup = true;
+            caveNoiseScale = scale;
+            caveNoiseOctaves = octaves;
+            caveNoiseThreshold = threshold;
+
+            caveNBeziers = Main.rand.Next(minBeziers, maxBeziers + 1);
+            caveBezierMinPoints = minPoints;
+            caveBezierMaxPoints = maxPoints;
+            caveBezierWidth = width;
+
+            caveSetup = true;
+                
         }
         public void SetupTiles(LayerSetings[] tileLayers, LayerSetings[] wallLayers, bool createTerrain = true, bool carveCaves = true, bool growTrees = true)
         {
@@ -109,7 +127,12 @@ namespace PathOfModifiers.Maps.Generators
             tilesMakeTerrain = createTerrain;
             tilesMakeCaves = carveCaves;
             tilesMakeTrees = growTrees;
-            tilesSetup = true;
+            tileSetup = true;
+        }
+        public void SetupOres(OreSetting[] ores)
+        {
+            this.ores = ores;
+            oreSetup = true;
         }
         public void SetupPacks()
         {
@@ -118,9 +141,9 @@ namespace PathOfModifiers.Maps.Generators
         void ResetSetup()
         {
             sineSetup = false;
-            noiseSetup = false;
-            bezierSetup = false;
-            tilesSetup = false;
+            caveSetup = false;
+            tileSetup = false;
+            oreSetup = false;
         }
 
         float GetWaveValue(float x)
@@ -139,13 +162,13 @@ namespace PathOfModifiers.Maps.Generators
         {
             if (!sineSetup)
                 SetupSineWaves();
-            if (!noiseSetup)
-                SetupNoise();
-            if (!bezierSetup)
-                SetupBezier();
-            if (!tilesSetup)
+            if (!caveSetup)
+                SetupCaves();
+            if (!tileSetup)
                 SetupTiles(new LayerSetings[0], new LayerSetings[0]);
-            
+            if (!oreSetup)
+                SetupOres(new OreSetting[0]);
+
             GenerateBorders(dimensions);
             
             if (tilesMakeTerrain)
@@ -236,16 +259,16 @@ namespace PathOfModifiers.Maps.Generators
                     for (int y = 0; y < dimensions.Height; y++)
                     {
                         Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
-                        if (Noise.GetOctaveNoise(x / noiseScale, y / noiseScale, noiseSeed, noiseOctaves) < noiseThreshold)
+                        if (Noise.GetOctaveNoise(x / caveNoiseScale, y / caveNoiseScale, noiseSeed, caveNoiseOctaves) < caveNoiseThreshold)
                             KillTile(tilePos);
                     }
                 }
 
                 //((PathOfModifiers)mod).test = new List<Point>();
-                Vector2[][] beziers = new Vector2[nBeziers][];
+                Vector2[][] beziers = new Vector2[caveNBeziers][];
                 for (int i = 0; i < beziers.Length; i++)
                 {
-                    beziers[i] = new Vector2[Main.rand.Next(bezierMinPoints, bezierMaxPoints + 1)];
+                    beziers[i] = new Vector2[Main.rand.Next(caveBezierMinPoints, caveBezierMaxPoints + 1)];
                     Vector2[] bezier = beziers[i];
                     for (int j = 0; j < bezier.Length; j++)
                         bezier[j] = new Vector2(Main.rand.NextFloat(0, dimensions.Width), Main.rand.NextFloat(0, dimensions.Height));
@@ -253,7 +276,7 @@ namespace PathOfModifiers.Maps.Generators
                     float increment = 1f / (Math.Max(dimensions.Width, dimensions.Height) * 5);
                     Vector2 vTilePos = Bezier.Bezier2D(bezier, 0);
                     Vector2 newVTilePos = Bezier.Bezier2D(bezier, increment);
-                    KillTilesLine(vTilePos, newVTilePos, bezierWidth, dimensions);
+                    KillTilesLine(vTilePos, newVTilePos, caveBezierWidth, dimensions);
                     for (float t = increment; t < 1; t += increment)
                     {
                         vTilePos = newVTilePos;
@@ -261,7 +284,20 @@ namespace PathOfModifiers.Maps.Generators
                         if (newT > 1)
                             newT = 1;
                         newVTilePos = Bezier.Bezier2D(bezier, newT);
-                        KillTilesLine(vTilePos, newVTilePos, bezierWidth, dimensions);
+                        KillTilesLine(vTilePos, newVTilePos, caveBezierWidth, dimensions);
+                    }
+                }
+            }
+            if (tilesMakeOres)
+            {
+                for (int i = 0; i < ores.Length; i++)
+                {
+                    int nPatches = (int)Math.Round(ores[i].frequency * (dimensions.X * dimensions.Y / 10000));
+                    for(int j = 0; j < nPatches; j++)
+                    {
+                        int x = Main.rand.Next(dimensions.X, dimensions.X + dimensions.Width);
+                        int y = Main.rand.Next(dimensions.Y, dimensions.Y + dimensions.Height);
+                        WorldGen.OreRunner(x, y, ores[i].strength, ores[i].steps, TileID.Iron);
                     }
                 }
             }

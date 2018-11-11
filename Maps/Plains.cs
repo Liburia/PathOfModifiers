@@ -50,20 +50,25 @@ namespace PathOfModifiers.Maps
         {
             LayeredSurfaceCaves gen = (LayeredSurfaceCaves)generator;
             gen.SetupSineWaves(0.5f, 10, 25f);
-            gen.SetupNoise(10, 3, 0.35f);
-            gen.SetupBezier(1, 4, 1, 10, 4);
-            LayerSetings[] tileLayers = new LayerSetings[3]
+            gen.SetupCaves(10, 3, 0.35f, 1, 4, 1, 10, 4);
+            LayerSetings[] tileLayers = new LayerSetings[]
             {
                 new LayerSetings(TileID.Grass, 0),
                 new LayerSetings(TileID.Dirt, 1, true),
                 new LayerSetings(TileID.Stone, 11, false),
             };
-            LayerSetings[] wallLayers = new LayerSetings[2]
+            LayerSetings[] wallLayers = new LayerSetings[]
             {
                 new LayerSetings(WallID.Dirt, 1),
                 new LayerSetings(WallID.Stone, 11),
             };
             gen.SetupTiles(tileLayers, wallLayers, true, true, true);
+            OreSetting[] ores = new OreSetting[]
+            {
+                new OreSetting(TileID.Copper, 8, 1, 10),
+                new OreSetting(TileID.Tin, 8, 10, 1),
+            };
+            gen.SetupOres(ores);
             base.Generate(dimensions);
         }
     }
