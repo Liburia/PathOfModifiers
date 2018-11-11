@@ -90,6 +90,7 @@ namespace PathOfModifiers
         {
             Item item;
             PoMItem pomItem;
+            //TODO: Does this mean the affix will apply when in the inventory unless it has logic itself? Check and fix.
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 item = player.inventory[i];
