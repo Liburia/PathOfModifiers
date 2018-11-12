@@ -15,8 +15,35 @@ using Terraria.ID;
 
 namespace PathOfModifiers.Maps.Generators
 {
+
     public class Generator
     {
+        public class PatchSettings
+        {
+            public int type;
+            public int nBranches;
+            public float minBranchLength;
+            public float maxBranchLength;
+            public float minBranchWidth;
+            public float maxBranchWidth;
+            public float branchWidthMultiplier;
+            public float branchWidthLimitAdd;
+            public int[] replaceTiles;
+
+            public PatchSettings(int type, int nBranches, float minBranchLength, float maxBranchLength, float minBranchWidth, float maxBranchWidth, float branchWidthMultiplier, float branchWidthLimitAdd, int[] replaceTiles = null)
+            {
+                this.type = type;
+                this.nBranches = nBranches;
+                this.minBranchLength = minBranchLength;
+                this.maxBranchLength = maxBranchLength;
+                this.minBranchWidth = minBranchWidth;
+                this.maxBranchWidth = maxBranchWidth;
+                this.branchWidthMultiplier = branchWidthMultiplier;
+                this.branchWidthLimitAdd = branchWidthLimitAdd;
+                this.replaceTiles = replaceTiles;
+            }
+        }
+
         public Mod mod;
 
         public virtual void GenerateTerrain(Rectangle dimensions) { }
@@ -34,6 +61,37 @@ namespace PathOfModifiers.Maps.Generators
             {
                 PlaceTile(new Point(dimensions.X - 1, dimensions.Y - 1 + i), TileID.IceBrick);
                 PlaceTile(new Point(dimensions.X + dimensions.Height, dimensions.Y - 1 + i), TileID.IceBrick);
+            }
+        }
+
+        protected void GeneratePatch(Rectangle dimensions, Point pos, PatchSettings patchSettings)
+        {
+            bool replace = patchSettings.replaceTiles != null;
+            for (int i = 0; i < patchSettings.nBranches; i++)
+            {
+                Vector2 direction = Main.rand.NextVector2Unit();
+                Vector2 direction90 = new Vector2(direction.Y, -direction.X);
+                float length = Main.rand.NextFloat(patchSettings.minBranchLength, patchSettings.maxBranchLength);
+                float width = Main.rand.NextFloat(patchSettings.minBranchWidth, patchSettings.maxBranchWidth);
+                float widthLimit = width + patchSettings.branchWidthLimitAdd;
+                bool decreaseWidth = patchSettings.branchWidthLimitAdd < 0;
+
+                for (int j = 0; j < length; j++)
+                {
+                    float halfWidth = width / 2;
+                    for (float k = -halfWidth; k < -halfWidth + width; k++)
+                    {
+                        Vector2 vTilePos = (direction * j) + (direction90 * k);
+                        Point tilePos = new Point(dimensions.X + (int)Math.Round(pos.X + vTilePos.X), dimensions.Y + (int)Math.Round(pos.Y + vTilePos.Y));
+                        if (dimensions.Contains(tilePos) && (!replace || patchSettings.replaceTiles.Contains(Main.tile[tilePos.X, tilePos.Y].type)))
+                        {
+                            PlaceTile(tilePos, patchSettings.type);
+                        }
+                    }
+                    width *= patchSettings.branchWidthMultiplier;
+                    if ((decreaseWidth && width <= widthLimit) || (!decreaseWidth && width >= widthLimit))
+                        break;
+                }
             }
         }
 

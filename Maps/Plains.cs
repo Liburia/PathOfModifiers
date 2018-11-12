@@ -62,11 +62,11 @@ namespace PathOfModifiers.Maps
                 new LayerSetings(WallID.Dirt, 1),
                 new LayerSetings(WallID.Stone, 11),
             };
-            gen.SetupTiles(tileLayers, wallLayers, true, true, true);
+            gen.SetupTiles(tileLayers, wallLayers, true, true, true, true);
             OreSetting[] ores = new OreSetting[]
             {
-                new OreSetting(TileID.Copper, 8, 1, 10),
-                new OreSetting(TileID.Tin, 8, 10, 1),
+                new OreSetting(6, new Generator.PatchSettings(TileID.Copper, Main.rand.Next(1, 4), 4, 10, 4, 8, Main.rand.NextFloat(0.3f, 0.9f), -20)),
+                new OreSetting(6, new Generator.PatchSettings(TileID.Tin, Main.rand.Next(1, 4), 4, 10, 4, 8, Main.rand.NextFloat(0.3f, 0.9f), -20)),
             };
             gen.SetupOres(ores);
             base.Generate(dimensions);

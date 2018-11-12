@@ -41,17 +41,13 @@ namespace PathOfModifiers.Maps.Generators
     }
     public class OreSetting
     {
-        public int type;    
         public float frequency;
-        public float strength;
-        public int steps;
+        public Generator.PatchSettings patchSettings;
 
-        public OreSetting(int type, float frequency, float strength, int steps)
+        public OreSetting(float frequency, Generator.PatchSettings patchSettings)
         {
-            this.type = type;
             this.frequency = frequency;
-            this.strength = strength;
-            this.steps = steps;
+            this.patchSettings = patchSettings;
         }
     }
 
@@ -119,12 +115,13 @@ namespace PathOfModifiers.Maps.Generators
             caveSetup = true;
                 
         }
-        public void SetupTiles(LayerSetings[] tileLayers, LayerSetings[] wallLayers, bool createTerrain = true, bool carveCaves = true, bool growTrees = true)
+        public void SetupTiles(LayerSetings[] tileLayers, LayerSetings[] wallLayers, bool createTerrain = true, bool makeOres = true, bool carveCaves = true, bool growTrees = true)
         {
             this.tileLayers = tileLayers;
             this.wallLayers = wallLayers;
 
             tilesMakeTerrain = createTerrain;
+            tilesMakeOres = makeOres;
             tilesMakeCaves = carveCaves;
             tilesMakeTrees = growTrees;
             tileSetup = true;
@@ -292,12 +289,11 @@ namespace PathOfModifiers.Maps.Generators
             {
                 for (int i = 0; i < ores.Length; i++)
                 {
-                    int nPatches = (int)Math.Round(ores[i].frequency * (dimensions.X * dimensions.Y / 10000));
-                    for(int j = 0; j < nPatches; j++)
+                    int nPatches = Main.rand.Next((int)Math.Round(ores[i].frequency * (dimensions.Width * dimensions.Height / 10000f)) + 1);
+                    for (int j = 0; j < nPatches; j++)
                     {
-                        int x = Main.rand.Next(dimensions.X, dimensions.X + dimensions.Width);
-                        int y = Main.rand.Next(dimensions.Y, dimensions.Y + dimensions.Height);
-                        WorldGen.OreRunner(x, y, ores[i].strength, ores[i].steps, TileID.Iron);
+                        Point tilePos = new Point(Main.rand.Next(dimensions.Width), Main.rand.Next(dimensions.Height));
+                        GeneratePatch(dimensions, tilePos, ores[i].patchSettings);
                     }
                 }
             }
@@ -349,7 +345,6 @@ namespace PathOfModifiers.Maps.Generators
                         KillTile(tilePos);
                 }
             }
-
         }
     }
 }
