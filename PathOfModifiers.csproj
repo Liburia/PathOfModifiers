@@ -143,11 +143,15 @@
     <Compile Include="Affixes\Prefixes\WeaponMeleeDamage.cs" />
     <Compile Include="Buffs\DamageDoTDebuff.cs" />
     <Compile Include="Items\Map.cs" />
+    <Compile Include="Items\MapDevice.cs" />
     <Compile Include="Maps\Generators\LayeredSurfaceCaves.cs" />
     <Compile Include="Maps\Generators\Generator.cs" />
     <Compile Include="Maps\Plains.cs" />
     <Compile Include="Maps\Map.cs" />
     <Compile Include="PoMNetMessage.cs" />
+    <Compile Include="Tiles\MapDevice.cs" />
+    <Compile Include="Tiles\PoMTileEntity.cs" />
+    <Compile Include="UI\MapDeviceUI.cs" />
     <Compile Include="Utilities\Bezier.cs" />
     <Compile Include="Utilities\Noise.cs" />
     <Compile Include="PoMDataLoader.cs" />

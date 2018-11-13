@@ -39,14 +39,14 @@ namespace PathOfModifiers
                 PoMDataLoader.SendMaps(packet);
                 packet.Send(player);
             }
-            else if (msg == MsgType.SyncTEModifierForge)
+            else if (msg == MsgType.SyncTileEntity)
             {
                 int id = reader.ReadInt32();
                 bool contains = reader.ReadBoolean();
                 if (contains)
                 {
-                    TEModifierForge tileEntity;
-                    tileEntity = (TEModifierForge)TileEntity.Read(reader, true);
+                    PoMTileEntity tileEntity;
+                    tileEntity = (PoMTileEntity)TileEntity.Read(reader, true);
                     tileEntity.ID = id;
                     TileEntity.ByID[tileEntity.ID] = tileEntity;
                     TileEntity.ByPosition[tileEntity.Position] = tileEntity;
@@ -150,10 +150,10 @@ namespace PathOfModifiers
             packet.Write(time);
             packet.Send();
         }
-        public static void SyncTEModifierForge(int id, bool byID, TileEntity te)
+        public static void SyncTileEntity(int id, bool byID, TileEntity te)
         {
             ModPacket packet = PathOfModifiers.Instance.GetPacket();
-            packet.Write((byte)MsgType.SyncTEModifierForge);
+            packet.Write((byte)MsgType.SyncTileEntity);
             packet.Write(id);
             packet.Write(byID);
             TileEntity.Write(packet, te, true);
@@ -181,7 +181,7 @@ namespace PathOfModifiers
     {
         SyncMaps,
         PlayerConnected,
-        SyncTEModifierForge,
+        SyncTileEntity,
         AddDamageDoTDebuffNPC,
         AddDamageDoTDebuffPlayer,
     }

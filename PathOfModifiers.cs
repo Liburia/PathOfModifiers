@@ -25,8 +25,9 @@ namespace PathOfModifiers
         public static bool disableVanillaModifiersAccessories = true;
 
         public static PathOfModifiers Instance { get; private set; }
-        
+
         public static UserInterface modifierForgeUI;
+        public static UserInterface mapDeviceUI;
 
         public static void Log(string message)
         {
@@ -61,6 +62,10 @@ namespace PathOfModifiers
                 new ModifierForgeUI().Initialize();
                 modifierForgeUI = new UserInterface();
                 ModifierForgeUI.Instance.Visible = false;
+
+                new MapDeviceUI().Initialize();
+                mapDeviceUI = new UserInterface();
+                MapDeviceUI.Instance.Visible = false;
             }
         }
         public override void Unload()
@@ -77,6 +82,7 @@ namespace PathOfModifiers
         public override void UpdateUI(GameTime gameTime)
         {
             modifierForgeUI?.Update(gameTime);
+            mapDeviceUI?.Update(gameTime);
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
@@ -95,12 +101,25 @@ namespace PathOfModifiers
                     },
                     InterfaceScaleType.UI)
                 );
+                layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
+                    "PathOfModifiers: Map Device",
+                    delegate
+                    {
+                        if (MapDeviceUI.Instance.Visible)
+                        {
+                            MapDeviceUI.Instance.Draw(Main.spriteBatch);
+                        }
+                        return true;
+                    },
+                    InterfaceScaleType.UI)
+                );
             }
         }
 
         public override void PreSaveAndQuit()
         {
             ModifierForgeUI.Instance.Visible = false;
+            MapDeviceUI.Instance.Visible = false;
         }
     }
 }

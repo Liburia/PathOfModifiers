@@ -150,7 +150,7 @@ namespace PathOfModifiers.Tiles
 		}
 	}
 
-    public class TEModifierForge : ModTileEntity
+    public class TEModifierForge : PoMTileEntity
     {
         public enum ForgeAction
         {
@@ -391,18 +391,6 @@ namespace PathOfModifiers.Tiles
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
                 Sync(ID);
-            }
-        }
-
-        public void Sync(int id, int ignoreClient = -1)
-        {
-            if (Main.netMode == 1)
-            {
-                PoMNetMessage.SyncTEModifierForge(ID, ByID.ContainsKey(ID), this);
-            }
-            else if (Main.netMode == 2)
-            {
-                NetMessage.SendData(MessageID.TileEntitySharing, -1, ignoreClient, null, id, Position.X, Position.Y);
             }
         }
 
