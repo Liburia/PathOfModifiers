@@ -119,6 +119,19 @@ namespace PathOfModifiers
                     packet.Send(-1, whoAmI);
                 }
             }
+            else if (msg == MsgType.GenerateMap)
+            {
+                int x = reader.ReadInt32();
+                int y = reader.ReadInt32();
+                int width = reader.ReadInt32();
+                int height = reader.ReadInt32();
+                Maps.Map map = PoMDataLoader.maps[reader.ReadInt32()];
+                map.NetReceive(reader);
+
+                Rectangle dimensions = new Rectangle(x, y, width, height);
+
+                map.Generate(dimensions);
+            }
 
         SkipMsgIf:;
         }
@@ -159,7 +172,12 @@ namespace PathOfModifiers
             TileEntity.Write(packet, te, true);
             packet.Send();
         }
-        public static void SyncGeneratedMap(Rectangle dimensions, Maps.Map map)
+        /// <summary>
+        /// Syncs all generated map tiles and walls to the clients.
+        /// </summary>
+        /// <param name="dimensions"></param>
+        /// <param name="map"></param>
+        public static void SyncGeneratedMap(Rectangle dimensions)
         {
 
             NetMessage.SendTileRange(-1, dimensions.X - 1, dimensions.Y - 1, dimensions.Width + 2, dimensions.Height + 2);
@@ -175,6 +193,24 @@ namespace PathOfModifiers
             //NetMessage.SendData(MessageID.TileSection, -1, whoAmI, null, )
             //NetMessage.SendTileRange(-1, pos.X - 1, pos.Y - 1, size.X + 2, size.Y + 2);
         }
+        /// <summary>
+        /// Asks the server to generate the map with given diemnsions.
+        /// </summary>
+        /// <param name="dimensions"></param>
+        /// <param name="map"></param>
+        public static void GenerateMap(Rectangle dimensions, Maps.Map map)
+        {
+            //TODO: Sync map affixes here
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.GenerateMap);
+            packet.Write(dimensions.X);
+            packet.Write(dimensions.Y);
+            packet.Write(dimensions.Width);
+            packet.Write(dimensions.Height);
+            packet.Write(PoMDataLoader.mapMap[map.GetType()]);
+            map.NetSend(packet);
+            packet.Send();
+        }
     }
 
     enum MsgType
@@ -184,5 +220,6 @@ namespace PathOfModifiers
         SyncTileEntity,
         AddDamageDoTDebuffNPC,
         AddDamageDoTDebuffPlayer,
+        GenerateMap,
     }
 }

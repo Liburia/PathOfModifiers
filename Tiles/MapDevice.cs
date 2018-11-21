@@ -11,6 +11,8 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ObjectData;
 using PathOfModifiers.Maps;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PathOfModifiers.Tiles
 {
@@ -163,13 +165,93 @@ namespace PathOfModifiers.Tiles
 
         public int timeLeft = 0;
 
+        public Rectangle? bounds = null;
+
+        public bool DetectBounds()
+        {
+            List<Rectangle> boundss = new List<Rectangle>();
+            List<Tuple<Point, bool, bool>> adjacentTiles = new List<Tuple<Point, bool, bool>>();
+            
+            Point size = new Point(2, 2);
+            int length = size.X * 2 + size.Y * 2 + 4;
+            int x = 0;
+            int y = 0;
+            bool lastTileOfType = false;
+            for (int i = 0; i < length; i++)
+            {
+                bool scanHoriz = true;
+                bool scanVert = true;
+                if (i == 0) { }
+                else if (i > 0 && i < size.X + 2)
+                {
+                    x++;
+                    scanHoriz = !lastTileOfType;
+                }
+                else if (i < size.X + 2 + size.Y + 1)
+                {
+                    y++;
+                    scanVert = !lastTileOfType;
+                }
+                else if (i < size.X + 2 + size.Y + 1 + size.X + 1)
+                {
+                    x--;
+                    scanHoriz = !lastTileOfType;
+                }
+                else
+                {
+                    y--;
+                    scanVert = !lastTileOfType;
+                }
+
+                Point tilePos = new Point(Position.X - 1 + x, Position.Y - 1 + y);
+                Tile tile = Main.tile[tilePos.X, tilePos.Y];
+                int? tileType = PoMHelper.GetTileType(tile);
+                if (tileType.HasValue && tileType == TileID.IceBrick)
+                {
+                    adjacentTiles.Add(new Tuple<Point, bool, bool>(tilePos, scanHoriz, scanVert));
+                    lastTileOfType = true;
+                }
+                else
+                {
+                    lastTileOfType = false;
+                }
+            }
+
+            foreach (var tilePos in adjacentTiles)
+            {
+                PoMHelper.FindAdjacentBounds(tilePos.Item1, boundss, tilePos.Item2, tilePos.Item3);
+            }
+
+            Rectangle tileBounds = new Rectangle(Position.X, Position.Y, size.X - 1, size.Y - 1);
+            Rectangle tileBoundsInflated = tileBounds;
+            tileBoundsInflated.Inflate(2, 2);
+            for (int i = boundss.Count - 1; i >= 0; i--)
+            {
+                Rectangle bound = boundss[i];
+                bool intersecnt = tileBoundsInflated.X < bound.X + bound.Width && bound.X < tileBoundsInflated.X + tileBoundsInflated.Width && tileBoundsInflated.Y < bound.Y + bound.Height && bound.Y < tileBoundsInflated.Y + tileBoundsInflated.Height;
+                if (!bound.Intersects(tileBoundsInflated) || bound.Contains(tileBounds))
+                    boundss.RemoveAt(i);
+            }
+
+            if (boundss.Count > 0)
+            {
+                bounds = boundss.Aggregate((b1, b2) => b1.Width * b1.Height > b2.Width * b2.Height ? b1 : b2);
+                return true;
+            }
+            else
+            {
+                bounds = null;
+                return false;
+            }
+        }
+
         public bool CanBegin()
         {
-            return !map.IsAir && map.modItem is Items.Map;
+            return !map.IsAir && map.modItem is Items.Map && timeLeft == 0 && DetectBounds();
         }
         public bool CanEnd()
         {
-            return !map.IsAir && map.modItem is Items.Map;
+            return timeLeft > 0;
         }
 
         public void BeginMap()
@@ -178,6 +260,17 @@ namespace PathOfModifiers.Tiles
                 return;
 
             timeLeft = 10 * 60 * 60;
+
+            Items.Map mapItem = ((Items.Map)map.modItem);
+            Rectangle dimensions = new Rectangle(bounds.Value.X + 1, bounds.Value.Y + 1, bounds.Value.Width - 2, bounds.Value.Height - 2);
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                mapItem.map.Generate(dimensions);
+            }
+            else if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                PoMNetMessage.GenerateMap(dimensions, mapItem.map);
+            }
 
             Sync(ID, Main.myPlayer);
         }
@@ -188,7 +281,29 @@ namespace PathOfModifiers.Tiles
 
             timeLeft = 0;
 
+
+
             Sync(ID, Main.myPlayer);
+        }
+
+        public override void Update()
+        {
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                if (timeLeft > 0)
+                {
+                    timeLeft--;
+                    if (timeLeft == 0)
+                    {
+                        EndMap();
+                    }
+                    else if (timeLeft % 60 == 0)
+                    {
+                        Sync(ID);
+                        MapDeviceUI.Instance.UpdateText();
+                    }
+                }
+            }
         }
 
         public override void NetSend(BinaryWriter writer, bool lightSend)

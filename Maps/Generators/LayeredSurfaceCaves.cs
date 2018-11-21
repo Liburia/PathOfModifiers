@@ -166,7 +166,7 @@ namespace PathOfModifiers.Maps.Generators
             if (!oreSetup)
                 SetupOres(new OreSetting[0]);
 
-            GenerateBorders(dimensions);
+            //GenerateBorders(dimensions);
             
             if (tilesMakeTerrain)
             {

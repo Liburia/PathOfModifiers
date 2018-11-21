@@ -148,6 +148,7 @@
     <Compile Include="Maps\Generators\Generator.cs" />
     <Compile Include="Maps\Plains.cs" />
     <Compile Include="Maps\Map.cs" />
+    <Compile Include="PoMDebug.cs" />
     <Compile Include="PoMNetMessage.cs" />
     <Compile Include="Tiles\MapDevice.cs" />
     <Compile Include="Tiles\PoMTileEntity.cs" />

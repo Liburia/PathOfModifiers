@@ -121,5 +121,12 @@ namespace PathOfModifiers
             ModifierForgeUI.Instance.Visible = false;
             MapDeviceUI.Instance.Visible = false;
         }
+
+        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        {
+#if DEBUG
+            PoMDebug.Draw(spriteBatch);
+#endif
+        }
     }
 }

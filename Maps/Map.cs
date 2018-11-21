@@ -60,7 +60,7 @@ namespace PathOfModifiers.Maps
             generator.SpawnPacks(dimensions, baseNNPCs, MakePackArray());
 
             if (Main.netMode == NetmodeID.Server)
-                PoMNetMessage.SyncGeneratedMap(dimensions, this);
+                PoMNetMessage.SyncGeneratedMap(dimensions);
         }
 
         public virtual Pack[] MakePackArray()
