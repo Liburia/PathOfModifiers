@@ -267,7 +267,7 @@ namespace PathOfModifiers.Tiles
             {
                 mapItem.map.Generate(dimensions);
             }
-            else if (Main.netMode == NetmodeID.SinglePlayer)
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 PoMNetMessage.GenerateMap(dimensions, mapItem.map);
             }
