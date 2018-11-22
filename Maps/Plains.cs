@@ -63,6 +63,7 @@ namespace PathOfModifiers.Maps
                 new LayerSetings(WallID.Stone, 11),
             };
             gen.SetupTiles(tileLayers, wallLayers, true, true, true, true);
+
             OreSetting[] ores = new OreSetting[]
             {
                 new OreSetting(6, new Generator.PatchSettings(TileID.Copper, Main.rand.Next(1, 4), 4, 10, 4, 8, Main.rand.NextFloat(0.3f, 0.9f), -20)),

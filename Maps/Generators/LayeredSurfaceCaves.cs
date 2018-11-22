@@ -84,7 +84,6 @@ namespace PathOfModifiers.Maps.Generators
         OreSetting[] ores;
         #endregion
         #region Pack settings
-        int nPacks;
         bool packsSetup = false;
         #endregion
 
@@ -157,6 +156,7 @@ namespace PathOfModifiers.Maps.Generators
 
         public override void GenerateTerrain(Rectangle dimensions)
         {
+            Point mapSize = new Point(dimensions.Width + 1, dimensions.Height + 1);
             if (!sineSetup)
                 SetupSineWaves();
             if (!caveSetup)
@@ -170,15 +170,15 @@ namespace PathOfModifiers.Maps.Generators
             
             if (tilesMakeTerrain)
             {
-                for (int x = 0; x < dimensions.Width; x++)
+                for (int x = 0; x < mapSize.X; x++)
                 {
                     int[] tileLayerSineOffsets = new int[tileLayers.Length];
                     float waveValue = 0;
                     for(int i = 0; i < tileLayerSineOffsets.Length; i++)
                     {
                         if (!tileLayers[i].useLastLayerWave)
-                            waveValue = GetWaveValue(x + dimensions.Width * i);
-                        tileLayerSineOffsets[i] = (int)Math.Ceiling(waveValue + dimensions.Height * sineYOffset - tileLayers[i].GetOffset(dimensions.Height));
+                            waveValue = GetWaveValue(x + mapSize.X * i);
+                        tileLayerSineOffsets[i] = (int)Math.Ceiling(waveValue + mapSize.Y * sineYOffset - tileLayers[i].GetOffset(mapSize.Y));
                     }
 
                     int[] wallLayerSineOffsets = new int[wallLayers.Length];
@@ -186,8 +186,8 @@ namespace PathOfModifiers.Maps.Generators
                     for (int i = 0; i < wallLayerSineOffsets.Length; i++)
                     {
                         if (!wallLayers[i].useLastLayerWave)
-                            waveValue = GetWaveValue(x - dimensions.Width * (i + 1));
-                        wallLayerSineOffsets[i] = (int)Math.Ceiling(waveValue + dimensions.Height * sineYOffset - wallLayers[i].GetOffset(dimensions.Height));
+                            waveValue = GetWaveValue(x - mapSize.X * (i + 1));
+                        wallLayerSineOffsets[i] = (int)Math.Ceiling(waveValue + mapSize.Y * sineYOffset - wallLayers[i].GetOffset(mapSize.Y));
                     }
                     //PathOfModifiers.Log(
                     //    $"{GetWaveValue((float)x / dimensions.Width * (float)Math.PI * 2)}/" +
@@ -196,7 +196,7 @@ namespace PathOfModifiers.Maps.Generators
                     //    $"{x}/" +
                     //    $"{x}");
 
-                    for (int y = 0; y < dimensions.Height; y++)
+                    for (int y = 0; y < mapSize.Y; y++)
                     {
                         int wallToPlace = 0;
                         bool removeWall = false;
@@ -206,7 +206,7 @@ namespace PathOfModifiers.Maps.Generators
 
                         Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
 
-                        if (y <= dimensions.Height - tileLayerSineOffsets[0])
+                        if (y <= mapSize.Y - tileLayerSineOffsets[0])
                         {
                             removeTile = true;
                         }
@@ -214,14 +214,14 @@ namespace PathOfModifiers.Maps.Generators
                         {
                             for (int i = 0; i < tileLayerSineOffsets.Length; i++)
                             {
-                                if (y > dimensions.Height - tileLayerSineOffsets[i])
+                                if (y > mapSize.Y - tileLayerSineOffsets[i])
                                 {
                                     tileToPlace = tileLayers[i].type;
                                 }
                             }
                         }
 
-                        if (y <= dimensions.Height - wallLayerSineOffsets[0])
+                        if (y <= mapSize.Y - wallLayerSineOffsets[0])
                         {
                             removeWall = true;
                         }
@@ -229,7 +229,7 @@ namespace PathOfModifiers.Maps.Generators
                         {
                             for (int i = 0; i < wallLayerSineOffsets.Length; i++)
                             {
-                                if (y > dimensions.Height - wallLayerSineOffsets[i])
+                                if (y > mapSize.Y - wallLayerSineOffsets[i])
                                 {
                                     wallToPlace = wallLayers[i].type;
                                 }
@@ -251,9 +251,9 @@ namespace PathOfModifiers.Maps.Generators
             if (tilesMakeCaves)
             {
                 float noiseSeed = Main.rand.NextFloat(0, 255);
-                for (int x = 0; x < dimensions.Width; x++)
+                for (int x = 0; x < mapSize.X; x++)
                 {
-                    for (int y = 0; y < dimensions.Height; y++)
+                    for (int y = 0; y < mapSize.Y; y++)
                     {
                         Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
                         if (Noise.GetOctaveNoise(x / caveNoiseScale, y / caveNoiseScale, noiseSeed, caveNoiseOctaves) < caveNoiseThreshold)
@@ -268,9 +268,9 @@ namespace PathOfModifiers.Maps.Generators
                     beziers[i] = new Vector2[Main.rand.Next(caveBezierMinPoints, caveBezierMaxPoints + 1)];
                     Vector2[] bezier = beziers[i];
                     for (int j = 0; j < bezier.Length; j++)
-                        bezier[j] = new Vector2(Main.rand.NextFloat(0, dimensions.Width), Main.rand.NextFloat(0, dimensions.Height));
+                        bezier[j] = new Vector2(Main.rand.NextFloat(0, mapSize.X), Main.rand.NextFloat(0, mapSize.Y));
 
-                    float increment = 1f / (Math.Max(dimensions.Width, dimensions.Height) * 5);
+                    float increment = 1f / (Math.Max(mapSize.X, mapSize.Y) * 5);
                     Vector2 vTilePos = Bezier.Bezier2D(bezier, 0);
                     Vector2 newVTilePos = Bezier.Bezier2D(bezier, increment);
                     KillTilesLine(vTilePos, newVTilePos, caveBezierWidth, dimensions);
@@ -289,19 +289,19 @@ namespace PathOfModifiers.Maps.Generators
             {
                 for (int i = 0; i < ores.Length; i++)
                 {
-                    int nPatches = Main.rand.Next((int)Math.Round(ores[i].frequency * (dimensions.Width * dimensions.Height / 10000f)) + 1);
+                    int nPatches = Main.rand.Next((int)Math.Round(ores[i].frequency * (mapSize.X * mapSize.Y / 10000f)) + 1);
                     for (int j = 0; j < nPatches; j++)
                     {
-                        Point tilePos = new Point(Main.rand.Next(dimensions.Width), Main.rand.Next(dimensions.Height));
+                        Point tilePos = new Point(Main.rand.Next(mapSize.X), Main.rand.Next(mapSize.Y));
                         GeneratePatch(dimensions, tilePos, ores[i].patchSettings);
                     }
                 }
             }
             if (tilesMakeTrees)
             {
-                for (int x = 0; x < dimensions.Width; x++)
+                for (int x = 0; x < mapSize.X; x++)
                 {
-                    for (int y = 0; y < dimensions.Height; y++)
+                    for (int y = 0; y < mapSize.Y; y++)
                     {
                         Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
                         WorldGen.GrowTree(tilePos.X, tilePos.Y);
@@ -315,12 +315,18 @@ namespace PathOfModifiers.Maps.Generators
         {
             Vector2 mapPos = new Vector2(dimensions.X * 16, dimensions.Y * 16);
             Vector2 mapSize = new Vector2(dimensions.Width * 16, dimensions.Height * 16);
+            //PoMDebug.recs = new List<Rectangle>();
             for (int i = 0; i < packs.Length; i++)
             {
                 Pack p = packs[i];
+                if (mapSize.X < p.radius * 2 || mapSize.Y < p.radius * 2)
+                    continue;
                 Vector2 packPos = new Vector2(
-                    Main.rand.NextFloat(mapPos.X + p.radius, mapPos.X + mapSize.X - p.radius),
-                    Main.rand.NextFloat(mapPos.Y + p.radius, mapPos.Y + mapSize.Y - p.radius));
+                    Main.rand.NextFloat(mapPos.X + p.radius + 1, mapPos.X + mapSize.X - p.radius + 15),
+                    Main.rand.NextFloat(mapPos.Y + p.radius + 1, mapPos.Y + mapSize.Y - p.radius + 15));
+                //packPos = new Vector2(mapPos.X + p.radius + 1, mapPos.Y + mapSize.Y - p.radius + 15);
+                //packPos = new Vector2(mapPos.X + mapSize.X - p.radius + 15, mapPos.Y + p.radius + 1);
+                //PoMDebug.recs.Add(new Rectangle((int)(packPos.X - p.radius), (int)(packPos.Y - p.radius), (int)(p.radius * 2), (int)(p.radius * 2)));
                 SpawnPack(p, packPos, p.radius, p.clearSpace);
             }
         }

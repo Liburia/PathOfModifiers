@@ -20,15 +20,17 @@ namespace PathOfModifiers
     public static class PoMDebug
     {
         public static List<Point> tiles = new List<Point>();
+        public static List<Rectangle> tileBounds = new List<Rectangle>();
+
         public static List<Rectangle> recs = new List<Rectangle>();
 
         public static void Draw(SpriteBatch sb)
         {
-            if (recs.Count == 0)
+            if (tileBounds.Count == 0)
             {
                 List<Point> tiles = new List<Point>();
                 UnifiedRandom rand = new UnifiedRandom(52222222);
-                foreach (Rectangle rec in recs)
+                foreach (Rectangle rec in tileBounds)
                 {
                     Color color = new Color(rand.Next(256), rand.Next(256), rand.Next(256));
                     for (int x = 0; x <= rec.Width; x++)
@@ -84,6 +86,12 @@ namespace PathOfModifiers
                         sb.Draw(Main.magicPixel, new Rectangle(p2.X, p2.Y, size2, size2), color);
                     }
                 }
+            }
+
+            foreach(Rectangle rect in recs)
+            {
+                Rectangle screenRect = new Rectangle(rect.X - (int)Main.screenPosition.X, rect.Y - (int)Main.screenPosition.Y, rect.Width, rect.Height);
+                sb.Draw(Main.magicPixel, screenRect, Color.Red);
             }
         }
     }

@@ -143,19 +143,30 @@ namespace PathOfModifiers.Maps.Generators
                 for(int j = 0; j < pack.npcCounts[i].Item2; j++)
                 {
                     Vector2 spawnPosRand = new Vector2(Main.rand.NextFloat(-radius, radius), Main.rand.NextFloat(-radius, radius));
+                    //spawnPosRand = new Vector2(-radius, radius);
+                    //spawnPosRand = new Vector2(radius, -radius);
                     Vector2 spawnPos = pos + spawnPosRand;
                     NPC npc = SpawnNPC(spawnPos, pack.npcCounts[i].Item1);
-
+                    //Main.NewText($"{spawnPos - pos}/{npc.position - pos}");
                     if (npc == null)
                         return;
 
-                    float diff = Math.Abs(spawnPosRand.X) - (radius - ((npc.width + 16) / 2f));
+                    Vector2 npcHalfSize = new Vector2(npc.width / 2f, npc.height / 2f);
+                    Vector2 npcPosOffset = new Vector2(npc.width / 2, npc.height);
+                    npc.position += npcPosOffset;
+                    //Main.NewText($"{npc.position - pos}");
+                    float diff = Math.Abs(spawnPosRand.X + npcHalfSize.X) - (radius - (npcHalfSize.X + 16));
                     if (diff > 0)
+                    {
                         npc.position.X += Math.Sign(spawnPosRand.X) * -diff;
-                    diff = Math.Abs(spawnPosRand.Y) - (radius - ((npc.height + 16) / 2f));
+                    }
+                    diff = Math.Abs(spawnPosRand.Y + npcHalfSize.Y) - (radius - (npcHalfSize.Y + 16));
                     if (diff > 0)
+                    {
                         npc.position.Y += Math.Sign(spawnPosRand.Y) * -diff;
-
+                    }
+                    //Main.NewText($"{npc.position - pos}");
+                    //PoMDebug.recs.Add(new Rectangle((int)(npc.position.X), (int)(npc.position.Y), npc.width, npc.height));
                     if (clearSpace)
                         ClearSpace(npc);
                 }
