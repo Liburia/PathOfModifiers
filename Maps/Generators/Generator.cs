@@ -123,7 +123,9 @@ namespace PathOfModifiers.Maps.Generators
         }
         protected void KillTile(Point pos, bool isMined = false, bool noItem = true, bool effectOnly = false)
         {
-            WorldGen.KillTile(pos.X, pos.Y, isMined, effectOnly, noItem);
+            Tile tile = Main.tile[pos.X, pos.Y];
+            tile.type = 0;
+            //WorldGen.KillTile(pos.X, pos.Y, isMined, effectOnly, noItem);
         }
         protected void PlaceWall(Point pos, int type, bool mute = true, bool force = true)
         {
@@ -133,7 +135,9 @@ namespace PathOfModifiers.Maps.Generators
         }
         protected void KillWall(Point pos, bool isMined = false)
         {
-            WorldGen.KillWall(pos.X, pos.Y, isMined);
+            Tile tile = Main.tile[pos.X, pos.Y];
+            tile.wall = 0;
+            //WorldGen.KillWall(pos.X, pos.Y, isMined);     //shit is for minig walls, fucking vanilla kys
         }
 
         protected void SpawnPack(Pack pack, Vector2 pos, float radius, bool clearSpace)
