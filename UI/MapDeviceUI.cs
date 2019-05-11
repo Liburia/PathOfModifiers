@@ -65,7 +65,7 @@ namespace PathOfModifiers.UI
             mapDevicePanel.OnMouseUp += new MouseEvent(DragEnd);
             #endregion
             #region Close button
-            UIImageButton closeButton = new UIImageButton(ModLoader.GetTexture("PathOfModifiers/UI/CloseButton"));
+            UIImageButton closeButton = new UIImageButton(ModContent.GetTexture("PathOfModifiers/UI/CloseButton"));
             closeButton.Left.Set(mapDevicePanel.Width.Pixels - 26, 0);
             closeButton.Top.Set(10, 0);
             closeButton.OnClick += OnCloseButtonClicked;

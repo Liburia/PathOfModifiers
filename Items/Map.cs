@@ -68,16 +68,18 @@ namespace PathOfModifiers.Items
         {
             //PathOfModifiers.Log("5");
             TagCompound mapTag = tag.GetCompound("mapTag");
-            Mod mod = ModLoader.GetMod(mapTag.GetString("mapMod"));
+            var mapMod = mapTag.GetString("mapMod");
+            Mod mod = ModLoader.GetMod(mapMod);
             if (mod == null)
             {
-                PathOfModifiers.Log("PathOfModifiers: Mod not found");
+                mod.Logger.WarnFormat("Map mod \"{0}\" not found", mapMod);
                 return;
             }
-            Type type = mod.Code.GetType(mapTag.GetString("mapFullName"));
+            var mapFullName = mapTag.GetString("mapFullName");
+            Type type = mod.Code.GetType(mapFullName);
             if (type == null)
             {
-                PathOfModifiers.Log("PathOfModifiers: Map not found");
+                mod.Logger.WarnFormat("Map \"{0}\" not found", mapFullName);
                 return;
             }
             map = PoMDataLoader.maps[PoMDataLoader.mapMap[type]].Clone();
@@ -107,7 +109,7 @@ namespace PathOfModifiers.Items
             }
             catch (Exception e)
             {
-                ErrorLogger.Log(e.ToString());
+                mod.Logger.Error(e.ToString());
             }
             //PathOfModifiers.Log("10");
         }
@@ -121,7 +123,7 @@ namespace PathOfModifiers.Items
             }
             catch (Exception e)
             {
-                ErrorLogger.Log(e.ToString());
+                mod.Logger.Error(e.ToString());
             }
             //PathOfModifiers.Log("12");
         }

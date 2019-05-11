@@ -24,8 +24,7 @@ namespace PathOfModifiers
         public static void HandlePacket(BinaryReader reader, int whoAmI)
         {
             MsgType msg = (MsgType)reader.ReadByte();
-            if (PathOfModifiers.logNetwork)
-                PathOfModifiers.Log($"Msg Received: {Main.netMode.ToString()}/{msg.ToString()}");
+            PathOfModifiers.Instance.Logger.Debug($"Msg Received: {Main.netMode.ToString()}/{msg.ToString()}");
 
             //TODO: Make into switch
             if (msg == MsgType.cSyncDataMaps)
@@ -55,8 +54,7 @@ namespace PathOfModifiers
                 }
                 else
                 {
-                    TileEntity tileEntity;
-                    if (TileEntity.ByID.TryGetValue(id, out tileEntity) && tileEntity is ModTileEntity)
+                    if (TileEntity.ByID.TryGetValue(id, out TileEntity tileEntity) && tileEntity is ModTileEntity)
                     {
                         TileEntity.ByID.Remove(id);
                         TileEntity.ByPosition.Remove(tileEntity.Position);
@@ -73,7 +71,7 @@ namespace PathOfModifiers
                 DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
                 if (debuff == null)
                 {
-                    PathOfModifiers.Log($"PathOfModifiers: Invalid buff packet received {buffType}");
+                    PathOfModifiers.Instance.Logger.Warn($"Invalid buff packet received {buffType}");
                     goto SkipMsgIf;
                 }
                 NPC npc = Main.npc[npcID];
@@ -101,7 +99,7 @@ namespace PathOfModifiers
                 DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
                 if (debuff == null)
                 {
-                    PathOfModifiers.Log($"PathOfModifiers: Invalid buff packet received {buffType}");
+                    PathOfModifiers.Instance.Logger.Warn($"Invalid buff packet received {buffType}");
                     goto SkipMsgIf;
                 }
                 Player player = Main.player[playerID];

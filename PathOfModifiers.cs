@@ -18,9 +18,6 @@ namespace PathOfModifiers
 {
 	class PathOfModifiers : Mod
     {
-        public static bool log = true;
-        public static bool logLoad = false;
-        public static bool logNetwork = false;
         public static bool disableVanillaModifiersWeapons = true;
         public static bool disableVanillaModifiersAccessories = true;
 
@@ -28,12 +25,6 @@ namespace PathOfModifiers
 
         public static UserInterface modifierForgeUI;
         public static UserInterface mapDeviceUI;
-
-        public static void Log(string message)
-        {
-            if (log)
-                ErrorLogger.Log(message);
-        }
 
         public PathOfModifiers()
 		{

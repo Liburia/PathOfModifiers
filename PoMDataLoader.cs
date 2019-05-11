@@ -75,8 +75,7 @@ namespace PathOfModifiers
                         affix.mod = mod;
                         affixList.Add(affix);
                         affixMap.Add(t, affixIndex);
-                        if (PathOfModifiers.logLoad)
-                            PathOfModifiers.Log($"PathOfModifiers: Added affix {t.FullName} with index {affixIndex} from mod {mod.Name}");
+                        mod.Logger.Debug($"Added affix {t.FullName} with index {affixIndex} from mod {mod.Name}");
                         affixIndex++;
                     }
                     else if(t.IsSubclassOf(typeof(Rarity)) && t != typeof(Rarity))
@@ -85,8 +84,7 @@ namespace PathOfModifiers
                         rarity.mod = mod;
                         rarityList.Add(rarity);
                         rarityMap.Add(t, rarityIndex);
-                        if (PathOfModifiers.logLoad)
-                            PathOfModifiers.Log($"PathOfModifiers: Added rarity {t.FullName} with index {rarityIndex} from mod {mod.Name}");
+                        mod.Logger.Debug($"Added rarity {t.FullName} with index {rarityIndex} from mod {mod.Name}");
                         rarityIndex++;
                     }
                     else if (t.IsSubclassOf(typeof(Generator)) && t != typeof(Generator))
@@ -95,8 +93,7 @@ namespace PathOfModifiers
                         generator.mod = mod;
                         generatorList.Add(generator);
                         generatorMap.Add(t, generatorIndex);
-                        if (PathOfModifiers.logLoad)
-                            PathOfModifiers.Log($"PathOfModifiers: Added generator {t.FullName} with index {generatorIndex} from mod {mod.Name}");
+                        mod.Logger.Debug($"Added generator {t.FullName} with index {generatorIndex} from mod {mod.Name}");
                         generatorIndex++;
                     }
                     else if (t.IsSubclassOf(typeof(Map)) && t != typeof(Map))
@@ -105,8 +102,7 @@ namespace PathOfModifiers
                         map.mod = mod;
                         mapList.Add(map);
                         mapMap.Add(t, mapIndex);
-                        if (PathOfModifiers.logLoad)
-                            PathOfModifiers.Log($"PathOfModifiers: Added map {t.FullName} with index {mapIndex} from mod {mod.Name}");
+                        mod.Logger.Debug($"Added map {t.FullName} with index {mapIndex} from mod {mod.Name}");
                         mapIndex++;
                     }
                 }
@@ -136,14 +132,12 @@ namespace PathOfModifiers
         public static void SendMaps(ModPacket packet)
         {
             packet.Write(affixes.Length);
-            if (PathOfModifiers.logNetwork)
-                PathOfModifiers.Log($"SendMaps: {affixes.Length} ");
+            PathOfModifiers.Instance.Logger.Debug($"SendMaps: {affixes.Length} ");
             Affix affix;
             for (int i = 0; i < affixes.Length; i++)
             {
                 affix = affixes[i];
-                if (PathOfModifiers.logNetwork)
-                    PathOfModifiers.Log($"SendMaps: {i} / {affix.GetType().FullName} from mod {affix.mod}");
+                PathOfModifiers.Instance.Logger.Debug($"SendMaps: {i} / {affix.GetType().FullName} from mod {affix.mod}");
                 packet.Write(affix.mod.Name);
                 packet.Write(affix.GetType().FullName);
             }
@@ -180,11 +174,8 @@ namespace PathOfModifiers
             try
             {
                 int length = reader.ReadInt32();
-                if (PathOfModifiers.logNetwork)
-                {
-                    PathOfModifiers.Log($"ReceiveMaps: {length} ");
-                    PathOfModifiers.Log($"LoadedData: {affixMap.Count} ");
-                }
+                PathOfModifiers.Instance.Logger.Debug($"ReceiveMaps: {length} ");
+                PathOfModifiers.Instance.Logger.Debug($"LoadedData: {affixMap.Count} ");
 
                 Dictionary<Type, int> newAffixMap = new Dictionary<Type, int>(length);
                 Affix[] newAffixes = new Affix[length];
@@ -196,8 +187,7 @@ namespace PathOfModifiers
                     mod = ModLoader.GetMod(reader.ReadString());
                     type = mod.Code.GetType(reader.ReadString(), true);
 
-                    if (PathOfModifiers.logNetwork)
-                        PathOfModifiers.Log($"ReceiveMaps: {i} / {type.FullName} from mod {mod}");
+                    PathOfModifiers.Instance.Logger.Debug($"ReceiveMaps: {i} / {type.FullName} from mod {mod}");
 
                     newAffixes[i] = affixes[affixMap[type]];
                     newAffixMap.Add(type, i);
@@ -259,7 +249,7 @@ namespace PathOfModifiers
             }
             catch(Exception e)
             {
-                ErrorLogger.Log(e.ToString());
+                PathOfModifiers.Instance.Logger.Error(e.ToString());
             }
         }
     }

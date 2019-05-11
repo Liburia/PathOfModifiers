@@ -890,7 +890,7 @@ namespace PathOfModifiers
             }
             catch (Exception e)
             {
-                ErrorLogger.Log(e.ToString());
+                mod.Logger.Error(e.ToString());
             }
         }
         public override void OnCraft(Item item, Recipe recipe)
@@ -901,7 +901,7 @@ namespace PathOfModifiers
             }
             catch (Exception e)
             {
-                ErrorLogger.Log(e.ToString());
+                mod.Logger.Error(e.ToString());
             }
         }
 
@@ -953,7 +953,7 @@ namespace PathOfModifiers
                 }
                 catch (Exception e)
                 {
-                    ErrorLogger.Log(e.ToString());
+                    mod.Logger.Error(e.ToString());
                 }
             }
             //TODO: Add light/dust?
@@ -968,7 +968,7 @@ namespace PathOfModifiers
                 }
                 catch (Exception e)
                 {
-                    ErrorLogger.Log(e.ToString());
+                    mod.Logger.Error(e.ToString());
                 }
             }
         }
@@ -1006,14 +1006,14 @@ namespace PathOfModifiers
             Mod mod = ModLoader.GetMod(rarityModName);
             if (mod == null)
             {
-                PathOfModifiers.Log($"PathOfModifiers: Mod not found {rarityModName}");
+                PathOfModifiers.Instance.Logger.Warn($"Mod not found {rarityModName}");
                 return;
             }
             string rarityFullName = tag.GetString("rarityFullName");
             Type type = mod.Code.GetType(rarityFullName);
             if (type == null)
             {
-                PathOfModifiers.Log($"PathOfModifiers: Rarity not found {rarityFullName}");
+                PathOfModifiers.Instance.Logger.Warn($"Rarity not found {rarityFullName}");
                 return;
             }
             rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[type]];
@@ -1026,13 +1026,13 @@ namespace PathOfModifiers
                 mod = ModLoader.GetMod(affixTag.GetString("affixMod"));
                 if (mod == null)
                 {
-                    PathOfModifiers.Log("PathOfModifiers: Mod not found");
+                    PathOfModifiers.Instance.Logger.Warn("Mod not found");
                     continue;
                 }
                 type = mod.Code.GetType(affixTag.GetString("affixFullName"));
                 if (type == null)
                 {
-                    PathOfModifiers.Log("PathOfModifiers: Affix not found");
+                    PathOfModifiers.Instance.Logger.Warn("Affix not found");
                     continue;
                 }
                 affix = PoMDataLoader.affixes[PoMDataLoader.affixMap[type]].Clone();
@@ -1076,7 +1076,7 @@ namespace PathOfModifiers
             }
             catch(Exception e)
             {
-                ErrorLogger.Log(e.ToString());
+                mod.Logger.Error(e.ToString());
             }
         }
         public override void NetReceive(Item item, BinaryReader reader)
@@ -1097,7 +1097,7 @@ namespace PathOfModifiers
             }
             catch (Exception e)
             {
-                ErrorLogger.Log(e.ToString());
+                mod.Logger.Error(e.ToString());
             }
         }
     }
