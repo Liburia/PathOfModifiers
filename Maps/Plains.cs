@@ -21,7 +21,7 @@ namespace PathOfModifiers.Maps
     {
         public override Type generatorType => typeof(Generators.LayeredSurfaceCaves);
 
-        public override int baseNNPCs => 20;
+        public override float baseNPCFrequency => 20;
 
         public override Pack[] packs => new Pack[]
         {
@@ -46,7 +46,7 @@ namespace PathOfModifiers.Maps
             }),
         };
 
-        public override void Generate(Rectangle dimensions)
+        public override bool Open(Rectangle dimensions)
         {
             LayeredSurfaceCaves gen = (LayeredSurfaceCaves)generator;
             gen.SetupSineWaves(0.5f, 10, 25f);
@@ -66,11 +66,12 @@ namespace PathOfModifiers.Maps
 
             OreSetting[] ores = new OreSetting[]
             {
-                new OreSetting(6, new Generator.PatchSettings(TileID.Copper, Main.rand.Next(1, 4), 4, 10, 4, 8, Main.rand.NextFloat(0.3f, 0.9f), -20)),
-                new OreSetting(6, new Generator.PatchSettings(TileID.Tin, Main.rand.Next(1, 4), 4, 10, 4, 8, Main.rand.NextFloat(0.3f, 0.9f), -20)),
+                new OreSetting(6, new Generator.PatchSettings(TileID.Copper, Main.rand.Next(1, 4), 4, 10, 4, 8, Main.rand.NextFloat(0.3f, 0.9f), -20, new int[]{ TileID.Dirt, TileID.Grass, TileID.Stone })),
+                new OreSetting(6, new Generator.PatchSettings(TileID.Tin, Main.rand.Next(1, 4), 4, 10, 4, 8, Main.rand.NextFloat(0.3f, 0.9f), -20, new int[]{ TileID.Dirt, TileID.Grass, TileID.Stone })),
             };
             gen.SetupOres(ores);
-            base.Generate(dimensions);
+
+            return base.Open(dimensions);
         }
     }
 }

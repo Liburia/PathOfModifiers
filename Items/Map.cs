@@ -45,7 +45,7 @@ namespace PathOfModifiers.Items
             //if (player.whoAmI == Main.myPlayer)
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                map.Generate(new Rectangle((int)player.position.X / 16 + 4, (int)player.position.Y / 16 + 4, 50, 50));
+                map.Open(new Rectangle((int)player.position.X / 16 + 4, (int)player.position.Y / 16 + 4, 50, 50));
             }
             return true;
         }

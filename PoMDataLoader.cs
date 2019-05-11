@@ -175,7 +175,7 @@ namespace PathOfModifiers
                 packet.Write(map.GetType().FullName);
             }
         }
-        public static void ReceiveMaps(BinaryReader reader)
+        public static void ReceiveDataMaps(BinaryReader reader)
         {
             try
             {

@@ -13,12 +13,13 @@ using Terraria.ObjectData;
 using PathOfModifiers.Maps;
 using System.Collections.Generic;
 using System.Linq;
+using PathOfModifiers.Utilities.Extensions;
 
 namespace PathOfModifiers.Tiles
 {
     public class MapDevice : ModTile
     {
-        public static TEMapDevice activeMD;
+        public static MapDeviceTE activeMD;
 
         public override void SetDefaults()
         {
@@ -30,7 +31,7 @@ namespace PathOfModifiers.Tiles
 			Main.tileValue[Type] = 500;
 			TileID.Sets.HasOutlines[Type] = true;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<TEMapDevice>().Hook_AfterPlacement, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<MapDeviceTE>().Hook_AfterPlacement, -1, 0, true);
             TileObjectData.newTile.Origin = new Point16(0, 1);
 			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
 			//TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
@@ -57,7 +58,7 @@ namespace PathOfModifiers.Tiles
             if (Main.netMode != 1)
                 Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("MapDevice"));
 
-            TEMapDevice tileEntity = (TEMapDevice)TileEntity.ByID[mod.GetTileEntity<TEMapDevice>().Find(i, j)];
+            MapDeviceTE tileEntity = (MapDeviceTE)TileEntity.ByID[mod.GetTileEntity<MapDeviceTE>().Find(i, j)];
 
             if (Main.netMode != 2 && activeMD == tileEntity)
                 HideUI();
@@ -87,7 +88,7 @@ namespace PathOfModifiers.Tiles
 				Main.editSign = false;
 				Main.npcChatText = "";
             }
-            TEMapDevice clickedMD = (TEMapDevice)TileEntity.ByPosition[new Point16(left, top)];
+            MapDeviceTE clickedMD = (MapDeviceTE)TileEntity.ByPosition[new Point16(left, top)];
             if (MapDeviceUI.Instance.Visible && activeMD == clickedMD)
             {
                 HideUI();
@@ -99,7 +100,7 @@ namespace PathOfModifiers.Tiles
             return;
 		}
 
-        public static void ShowUI(TEMapDevice md)
+        public static void ShowUI(MapDeviceTE md)
         {
             if (activeMD != null)
                 Main.PlaySound(SoundID.MenuTick);
@@ -108,6 +109,7 @@ namespace PathOfModifiers.Tiles
             activeMD = md;
             Main.playerInventory = true;
             MapDeviceUI.Instance.Visible = true;
+            MapDeviceUI.Instance.UpdateText();
         }
         public static void HideUI()
         {
@@ -153,7 +155,7 @@ namespace PathOfModifiers.Tiles
 		}
 	}
 
-    public class TEMapDevice : PoMTileEntity
+    public class MapDeviceTE : PoMTileEntity
     {
         public enum MapAction
         {
@@ -161,7 +163,7 @@ namespace PathOfModifiers.Tiles
             Close = 1,
         }
 
-        public Item map = new Item();
+        public Item mapItem = new Item();
 
         public int timeLeft = 0;
 
@@ -247,7 +249,7 @@ namespace PathOfModifiers.Tiles
 
         public bool CanBegin()
         {
-            return !map.IsAir && map.modItem is Items.Map && timeLeft == 0 && DetectBounds();
+            return !mapItem.IsAir && mapItem.modItem is Items.Map && timeLeft == 0 && DetectBounds();
         }
         public bool CanEnd()
         {
@@ -259,18 +261,14 @@ namespace PathOfModifiers.Tiles
             if (!CanBegin())
                 return;
 
+            //TODO: Set timeLeft somewhere else(map settings/config)
             timeLeft = 10 * 60 * 60;
 
-            Items.Map mapItem = ((Items.Map)map.modItem);
+            Items.Map mapModItem = ((Items.Map)mapItem.modItem);
             Rectangle dimensions = new Rectangle(bounds.Value.X + 1, bounds.Value.Y + 1, bounds.Value.Width - 2, bounds.Value.Height - 2);
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                mapItem.map.Generate(dimensions);
-            }
-            else if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                PoMNetMessage.GenerateMap(dimensions, mapItem.map);
-            }
+
+            var map = mapModItem.map;
+            map.Open(dimensions);
 
             Sync(ID, Main.myPlayer);
         }
@@ -280,8 +278,12 @@ namespace PathOfModifiers.Tiles
                 return;
 
             timeLeft = 0;
+            
+            Items.Map mapModItem = ((Items.Map)mapItem.modItem);
+            Rectangle dimensions = new Rectangle(bounds.Value.X + 1, bounds.Value.Y + 1, bounds.Value.Width - 2, bounds.Value.Height - 2);
 
-
+            var map = mapModItem.map;
+            map.Close();
 
             Sync(ID, Main.myPlayer);
         }
@@ -310,19 +312,28 @@ namespace PathOfModifiers.Tiles
         {
             //PathOfModifiers.Log($"NetSend{Main.netMode}");
             writer.Write(timeLeft);
-            ItemIO.Send(map, writer, true);
+            bool isBoundsNull = bounds == null;
+            writer.Write(isBoundsNull);
+            if(!isBoundsNull)
+                writer.Write((Rectangle)bounds);
+
+            ItemIO.Send(mapItem, writer, true);
         }
         public override void NetReceive(BinaryReader reader, bool lightReceive)
         {
             //PathOfModifiers.Log($"NetReceive{Main.netMode}");
             timeLeft = reader.ReadInt32();
-            map = ItemIO.Receive(reader, true);
-            if (Main.netMode != 2)
+            bool isBoundsNull = reader.ReadBoolean();
+            bounds = isBoundsNull ? null : (Rectangle?)reader.ReadRectangle();
+
+            mapItem = ItemIO.Receive(reader, true);
+
+            if (Main.netMode != NetmodeID.Server)
             {
                 if (MapDevice.activeMD != null && MapDevice.activeMD.Position == Position)
                     MapDevice.ShowUI(this);
                 else if (MapDevice.activeMD == this)
-                    MapDeviceUI.Instance.SetItemSlot(map.Clone());
+                    MapDeviceUI.Instance.SetItemSlot(mapItem.Clone());
                 MapDeviceUI.Instance.UpdateText();
             }
         }
@@ -332,14 +343,24 @@ namespace PathOfModifiers.Tiles
             //PathOfModifiers.Log($"Save{Main.netMode}");
             TagCompound tag = new TagCompound();
             tag.Set("timeLeft", timeLeft);
-            tag.Set("map", ItemIO.Save(map));
+            bool isBoundsNull = bounds == null;
+            tag.Set("isBoundsNull", isBoundsNull);
+            if (!isBoundsNull)
+                tag.Set("bounds", bounds);
+
+            tag.Set("map", ItemIO.Save(mapItem));
+
             return tag;
         }
         public override void Load(TagCompound tag)
         {
             //PathOfModifiers.Log($"Load{Main.netMode}");
             timeLeft = tag.GetInt("timeLeft");
-            map = ItemIO.Load(tag.GetCompound("map"));
+            bool isBoundsNull = tag.GetBool("isBoundsNull");
+            bounds = isBoundsNull ? null : (Rectangle?)tag.Get<Rectangle>("bounds");
+
+            mapItem = ItemIO.Load(tag.GetCompound("map"));
+
             if (Main.netMode != 2)
                 MapDeviceUI.Instance.UpdateText();
         }
@@ -366,9 +387,9 @@ namespace PathOfModifiers.Tiles
         {
             if (Main.netMode != 1)
             {
-                if (!map.IsAir)
+                if (!mapItem.IsAir)
                 {
-                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), map, 2);
+                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), mapItem, 2);
                 }
             }
         }

@@ -47,9 +47,43 @@ namespace PathOfModifiers.Maps.Generators
         public Mod mod;
 
         public virtual void GenerateTerrain(Rectangle dimensions) { }
-        public virtual void SpawnPacks(Rectangle dimensions, int nNPCs, Pack[] packs) { }
+        public virtual NPC[] SpawnPacks(Rectangle dimensions, int nNPCs, Pack[] packs) { return new NPC[0]; }
+        public virtual void ClearMap(Rectangle dimensions)
+        {
+            int width = dimensions.Width + 1;
+            int height = dimensions.Height + 1;
 
-        //TODO: Players makes the borders. Or maybe create unbreakable border when the map is active.
+            for(int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    Point tilePos = new Point(dimensions.X + x, dimensions.Y + y);
+                    KillTile(tilePos);
+                    KillWall(tilePos);
+                }
+            }
+
+            var preciseDimensions = dimensions;
+            preciseDimensions.X++;
+            preciseDimensions.Y++;
+            preciseDimensions.Width++;
+            preciseDimensions.Height++;
+
+            for (int i = 0; i < Main.npc.Length; i++)
+            {
+                var npc = Main.npc[i];
+                if (npc.active)
+                {
+                    if (preciseDimensions.Contains(npc.Center.ToTileCoordinates()))
+                    {
+                        npc.active = false;
+                        npc.netUpdate = true;
+                    }
+                }
+            }
+        }
+
+        //TODO: Maybe create unbreakable border when the map is active.
         protected void GenerateBorders(Rectangle dimensions)
         {
             for (int i = 0; i < dimensions.Width + 2; i++)
@@ -121,11 +155,9 @@ namespace PathOfModifiers.Maps.Generators
                 WorldGen.PlaceTile(pos.X, pos.Y, TileID.Dirt, mute, force, player, style);
             WorldGen.PlaceTile(pos.X, pos.Y, type, mute, force, player, style);
         }
-        protected void KillTile(Point pos, bool isMined = false, bool noItem = true, bool effectOnly = false)
+        protected void KillTile(Point pos, bool pretendMine = false, bool isMined = false, bool noItem = true, bool effectOnly = false)
         {
-            Tile tile = Main.tile[pos.X, pos.Y];
-            tile.type = 0;
-            //WorldGen.KillTile(pos.X, pos.Y, isMined, effectOnly, noItem);
+            Terraria.World.Generation.WorldUtils.ClearTile(pos.X, pos.Y, true);
         }
         protected void PlaceWall(Point pos, int type, bool mute = true, bool force = true)
         {
@@ -135,13 +167,12 @@ namespace PathOfModifiers.Maps.Generators
         }
         protected void KillWall(Point pos, bool isMined = false)
         {
-            Tile tile = Main.tile[pos.X, pos.Y];
-            tile.wall = 0;
-            //WorldGen.KillWall(pos.X, pos.Y, isMined);     //shit is for minig walls, fucking vanilla kys
+            Terraria.World.Generation.WorldUtils.ClearWall(pos.X, pos.Y, true);
         }
 
-        protected void SpawnPack(Pack pack, Vector2 pos, float radius, bool clearSpace)
+        protected NPC[] SpawnPack(Pack pack, Vector2 pos, float radius, bool clearSpace)
         {
+            List<NPC> npcs = new List<NPC>();
             for (int i = 0; i < pack.npcCounts.Length; i++)
             {
                 for(int j = 0; j < pack.npcCounts[i].Item2; j++)
@@ -153,7 +184,8 @@ namespace PathOfModifiers.Maps.Generators
                     NPC npc = SpawnNPC(spawnPos, pack.npcCounts[i].Item1);
                     //Main.NewText($"{spawnPos - pos}/{npc.position - pos}");
                     if (npc == null)
-                        return;
+                        return npcs.ToArray();
+
 
                     Vector2 npcHalfSize = new Vector2(npc.width / 2f, npc.height / 2f);
                     Vector2 npcPosOffset = new Vector2(npc.width / 2, npc.height);
@@ -173,8 +205,12 @@ namespace PathOfModifiers.Maps.Generators
                     //PoMDebug.recs.Add(new Rectangle((int)(npc.position.X), (int)(npc.position.Y), npc.width, npc.height));
                     if (clearSpace)
                         ClearSpace(npc);
+
+                    npcs.Add(npc);
                 }
             }
+
+            return npcs.ToArray();
         }
         protected NPC SpawnNPC(Vector2 pos, int type)
         {
@@ -185,6 +221,11 @@ namespace PathOfModifiers.Maps.Generators
             PoMNPC pomNPC = newNPC.GetGlobalNPC<PoMNPC>();
             pomNPC.mapNpc = true;
             return newNPC;
+        }
+        protected void DespawnNPC(NPC npc)
+        {
+            npc.active = false;
+            npc.netUpdate = true;
         }
         protected void ClearSpace(NPC npc)
         {

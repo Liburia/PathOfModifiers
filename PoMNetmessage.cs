@@ -27,15 +27,16 @@ namespace PathOfModifiers
             if (PathOfModifiers.logNetwork)
                 PathOfModifiers.Log($"Msg Received: {Main.netMode.ToString()}/{msg.ToString()}");
 
-            if (msg == MsgType.SyncMaps)
+            //TODO: Make into switch
+            if (msg == MsgType.cSyncDataMaps)
             {
-                PoMDataLoader.ReceiveMaps(reader);
+                PoMDataLoader.ReceiveDataMaps(reader);
             }
             else if (msg == MsgType.PlayerConnected)
             {
                 int player = reader.ReadByte();
                 ModPacket packet = PathOfModifiers.Instance.GetPacket();
-                packet.Write((byte)MsgType.SyncMaps);
+                packet.Write((byte)MsgType.cSyncDataMaps);
                 PoMDataLoader.SendMaps(packet);
                 packet.Send(player);
             }
@@ -119,18 +120,17 @@ namespace PathOfModifiers
                     packet.Send(-1, whoAmI);
                 }
             }
-            else if (msg == MsgType.GenerateMap)
+            else if (msg == MsgType.sOpenMapDeviceMap)
             {
-                int x = reader.ReadInt32();
-                int y = reader.ReadInt32();
-                int width = reader.ReadInt32();
-                int height = reader.ReadInt32();
-                Maps.Map map = PoMDataLoader.maps[reader.ReadInt32()];
-                map.NetReceive(reader);
-
-                Rectangle dimensions = new Rectangle(x, y, width, height);
-
-                map.Generate(dimensions);
+                int mdID = reader.ReadInt32();
+                var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
+                mapDevice.BeginMap();
+            }
+            else if (msg == MsgType.sCloseMapDeviceMap)
+            {
+                int mdID = reader.ReadInt32();
+                var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
+                mapDevice.EndMap();
             }
 
         SkipMsgIf:;
@@ -173,19 +173,24 @@ namespace PathOfModifiers
             packet.Send();
         }
         /// <summary>
-        /// Syncs all generated map tiles and walls to the clients.
+        /// Syncs all map tiles, walls and NPCs to the clients.
         /// </summary>
-        /// <param name="dimensions"></param>
-        /// <param name="map"></param>
-        public static void SyncGeneratedMap(Rectangle dimensions)
+        public static void SyncOpenedMap(Rectangle dimensions, bool closeMap = false)
         {
-
             NetMessage.SendTileRange(-1, dimensions.X - 1, dimensions.Y - 1, dimensions.Width + 2, dimensions.Height + 2);
+
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+
+            var mapBounds = new Rectangle(dimensions.X * 16, dimensions.Y * 16, dimensions.Width * 16, dimensions.Height * 16);
             for (int i = 0; i < 200; i++)
             {
                 NPC npc = Main.npc[i];
-                if (npc.active && new Rectangle(dimensions.X * 16, dimensions.Y * 16, dimensions.Width * 16, dimensions.Height * 16).Intersects(npc.Hitbox))
+                if (mapBounds.Intersects(npc.Hitbox))
                 {
+                    if (closeMap)
+                    {
+                        npc.active = false;
+                    }
                     NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, i);
                 }
             }
@@ -194,32 +199,34 @@ namespace PathOfModifiers
             //NetMessage.SendTileRange(-1, pos.X - 1, pos.Y - 1, size.X + 2, size.Y + 2);
         }
         /// <summary>
-        /// Asks the server to generate the map with given diemnsions.
+        /// Asks the server to open the map located in the map device.
         /// </summary>
         /// <param name="dimensions"></param>
         /// <param name="map"></param>
-        public static void GenerateMap(Rectangle dimensions, Maps.Map map)
+        public static void OpenMapDeviceMap(int mapDeviceID)
         {
-            //TODO: Sync map affixes here
             ModPacket packet = PathOfModifiers.Instance.GetPacket();
-            packet.Write((byte)MsgType.GenerateMap);
-            packet.Write(dimensions.X);
-            packet.Write(dimensions.Y);
-            packet.Write(dimensions.Width);
-            packet.Write(dimensions.Height);
-            packet.Write(PoMDataLoader.mapMap[map.GetType()]);
-            map.NetSend(packet);
+            packet.Write((byte)MsgType.sOpenMapDeviceMap);
+            packet.Write(mapDeviceID);
+            packet.Send();
+        }
+        public static void CloseMapDeviceMap(int mapDeviceID)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.sCloseMapDeviceMap);
+            packet.Write(mapDeviceID);
             packet.Send();
         }
     }
 
     enum MsgType
     {
-        SyncMaps,
+        cSyncDataMaps,
         PlayerConnected,
         SyncTileEntity,
         AddDamageDoTDebuffNPC,
         AddDamageDoTDebuffPlayer,
-        GenerateMap,
+        sOpenMapDeviceMap,
+        sCloseMapDeviceMap,
     }
 }

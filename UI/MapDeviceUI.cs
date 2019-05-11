@@ -34,7 +34,7 @@ namespace PathOfModifiers.UI
                 {
                     if (MapDevice.activeMD != null)
                     {
-                        SetItemSlot(MapDevice.activeMD.map.Clone());
+                        SetItemSlot(MapDevice.activeMD.mapItem.Clone());
                     }
                     PathOfModifiers.mapDeviceUI.SetState(this);
                 }
@@ -101,7 +101,7 @@ namespace PathOfModifiers.UI
             beginConditionPanel.Top.Set(30, 0f);
             beginConditionPanel.Width.Set(100, 0f);
             beginConditionPanel.Height.Set(UIItemSlot.defaultBackgroundTexture.Height, 0f);
-            beginConditionPanel.drawableCondition = delegate () { return MapDevice.activeMD.map.IsAir || MapDevice.activeMD.timeLeft > 0; };
+            beginConditionPanel.drawableCondition = delegate () { return MapDevice.activeMD.mapItem.IsAir || MapDevice.activeMD.timeLeft > 0; };
             mapDevicePanel.Append(beginConditionPanel);
             UIPanelConditioned endConditionPanel = new UIPanelConditioned();
             endConditionPanel.Left.Set(UIItemSlot.defaultBackgroundTexture.Width + (10 * 3) + (100 * 1), 0f);
@@ -130,23 +130,29 @@ namespace PathOfModifiers.UI
         }
         void ModifiedItemChange(Item oldItem, Item newItem)
         {
-            MapDevice.activeMD.map = newItem.Clone();
+            MapDevice.activeMD.mapItem = newItem.Clone();
             MapDevice.activeMD.Sync(MapDevice.activeMD.ID);
         }
         void ModifierItemChange(Item oldItem, Item newItem)
         {
-            MapDevice.activeMD.map = newItem.Clone();
+            MapDevice.activeMD.mapItem = newItem.Clone();
             MapDevice.activeMD.Sync(MapDevice.activeMD.ID);
         }
 
         void BeginButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
-            MapDevice.activeMD.BeginMap();
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                MapDevice.activeMD.BeginMap();
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+                PoMNetMessage.OpenMapDeviceMap(MapDevice.activeMD.ID);
             UpdateText();
         }
         void EndButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
-            MapDevice.activeMD.EndMap();
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                MapDevice.activeMD.EndMap();
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+                PoMNetMessage.CloseMapDeviceMap(MapDevice.activeMD.ID);
             UpdateText();
         }
         void OnSlotItemChange(Item oldItem, Item newItem)

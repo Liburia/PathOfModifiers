@@ -311,8 +311,10 @@ namespace PathOfModifiers.Maps.Generators
 
             ResetSetup();
         }
-        public override void SpawnPacks(Rectangle dimensions, int nNPCs, Pack[] packs)
+        public override NPC[] SpawnPacks(Rectangle dimensions, int nNPCs, Pack[] packs)
         {
+            List<NPC> npcs = new List<NPC>();
+
             Vector2 mapPos = new Vector2(dimensions.X * 16, dimensions.Y * 16);
             Vector2 mapSize = new Vector2(dimensions.Width * 16, dimensions.Height * 16);
             //PoMDebug.recs = new List<Rectangle>();
@@ -327,8 +329,9 @@ namespace PathOfModifiers.Maps.Generators
                 //packPos = new Vector2(mapPos.X + p.radius + 1, mapPos.Y + mapSize.Y - p.radius + 15);
                 //packPos = new Vector2(mapPos.X + mapSize.X - p.radius + 15, mapPos.Y + p.radius + 1);
                 //PoMDebug.recs.Add(new Rectangle((int)(packPos.X - p.radius), (int)(packPos.Y - p.radius), (int)(p.radius * 2), (int)(p.radius * 2)));
-                SpawnPack(p, packPos, p.radius, p.clearSpace);
+                npcs.AddRange(SpawnPack(p, packPos, p.radius, p.clearSpace));
             }
+            return npcs.ToArray();
         }
 
         void KillTilesLine(Vector2 startPos, Vector2 endPos, int width, Rectangle dimensions)

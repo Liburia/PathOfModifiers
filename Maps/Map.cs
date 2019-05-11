@@ -17,6 +17,7 @@ using Terraria.ID;
 
 namespace PathOfModifiers.Maps
 {
+    //TODO: deal with collisionless NPCs(can't force collisions because players can shoot outside the map)
     public class Pack
     {
         public Tuple<int, int>[] npcCounts;
@@ -39,7 +40,10 @@ namespace PathOfModifiers.Maps
 
         public virtual Type generatorType => typeof(Generator);
 
-        public virtual int baseNNPCs => 0;
+        /// <summary>
+        /// Per 10k tiles
+        /// </summary>
+        public virtual float baseNPCFrequency => 0;
         public virtual Pack[] packs => new Pack[0];
         public virtual Pack[] bossPacks => new Pack[0];
 
@@ -54,16 +58,67 @@ namespace PathOfModifiers.Maps
             }
         }
 
-        public virtual void Generate(Rectangle dimensions)
+        public class OpenMap
         {
-            generator.GenerateTerrain(dimensions);
-            generator.SpawnPacks(dimensions, baseNNPCs, MakePackArray());
+            /// <summary>
+            /// Index in the PoMWorld maps array to ID the map.
+            /// </summary>
+            public readonly Rectangle dimensions;
 
-            if (Main.netMode == NetmodeID.Server)
-                PoMNetMessage.SyncGeneratedMap(dimensions);
+            public OpenMap(Rectangle dimensions)
+            {
+                this.dimensions = dimensions;
+            }
         }
 
-        public virtual Pack[] MakePackArray()
+        public OpenMap openMap;
+        public bool isOpened => openMap != null;
+
+        public virtual bool Open(Rectangle dimensions)
+        {
+            if (isOpened)
+                throw new Exception("Cannot open map because it is alread opened.");
+
+            //PoMWorld pomWorld = PathOfModifiers.Instance.GetModWorld<PoMWorld>();
+            //int ID = pomWorld.AddOpenMap(this);
+
+            //if (ID < 0)
+            //    return false;
+
+            generator.GenerateTerrain(dimensions);
+            int npcs = GetNPCFrequency(dimensions);
+            generator.SpawnPacks(dimensions, npcs, MakePackArray(npcs));
+
+
+            openMap = new OpenMap(dimensions);
+
+
+            //This method should never run on a client, so only case is SP/Server
+            if (Main.netMode == NetmodeID.Server)
+                PoMNetMessage.SyncOpenedMap(dimensions);
+
+            return true;
+        }
+
+        public virtual void Close()
+        {
+            if (!isOpened)
+                throw new Exception("Cannot close map because it is not opened.");
+
+            generator.ClearMap(openMap.dimensions);
+
+
+            if (Main.netMode == NetmodeID.Server)
+                PoMNetMessage.SyncOpenedMap(openMap.dimensions, true);
+
+
+            //PoMWorld pomWorld = PathOfModifiers.Instance.GetModWorld<PoMWorld>();
+            //pomWorld.RemoveOpenMap(openMap.ID);
+
+            openMap = null;
+        }
+
+        public virtual Pack[] MakePackArray(int npcs)
         {
             List<Pack> wPacks = new List<Pack>();
 
@@ -73,7 +128,7 @@ namespace PathOfModifiers.Maps
                 .ToArray();
             WeightedRandom<Pack> wRandom = new WeightedRandom<Pack>(Main.rand, packsWeights);
 
-            int npcsRemaining = baseNNPCs;
+            int npcsRemaining = npcs;
             for (int i = 0; i < bossPacks.Length; i++)
             {
                 Pack p = bossPacks[i];
@@ -98,6 +153,11 @@ namespace PathOfModifiers.Maps
             return wPacks.ToArray();
         }
 
+        public int GetNPCFrequency(Rectangle dimensions)
+        {
+            return (int)Math.Round(baseNPCFrequency * ((dimensions.Width + 1) * (dimensions.Height + 1) / 10000f)) + 1;
+        }
+
         public virtual Item MakeItem()
         {
             return new Item();
@@ -105,11 +165,31 @@ namespace PathOfModifiers.Maps
 
         public virtual void Save(TagCompound tag)
         {
+            tag.Set("isOpened", isOpened);
 
+            if (isOpened)
+            {
+                var openMapTag = new TagCompound();
+                openMapTag.Set("dimensions", openMap.dimensions);
+                //openMapTag.Set("ID", openMap.ID);
+                //TODO: save/load NPCs
+                tag.Set("openMap", openMapTag);
+            }
         }
         public virtual void Load(TagCompound tag)
         {
+            if (tag.GetBool("isOpened"))
+            {
+                var openMapTag = tag.GetCompound("openMap");
 
+                //PoMWorld pomWorld = PathOfModifiers.Instance.GetModWorld<PoMWorld>();
+
+                //int ID = openMapTag.GetInt("ID");
+                //pomWorld.AddOpenMap(this, ID);
+
+                openMap = new OpenMap(openMapTag.Get<Rectangle>("dimensions"));
+
+            }
         }
 
         public virtual Map Clone()
@@ -117,14 +197,38 @@ namespace PathOfModifiers.Maps
             Map newMap = (Map)Activator.CreateInstance(GetType());
             newMap.mod = mod;
             newMap._generator = generator;
+            newMap.openMap = null;
             return newMap;
         }
 
         public virtual void NetSend(BinaryWriter writer)
         {
+            writer.Write(isOpened);
+            if (isOpened)
+            {
+                //writer.Write(openMap.ID);
+                writer.Write(openMap.dimensions.X);
+                writer.Write(openMap.dimensions.Y);
+                writer.Write(openMap.dimensions.Width);
+                writer.Write(openMap.dimensions.Height);
+            }
+            //TODO: send/receive NPCs
         }
         public virtual void NetReceive(BinaryReader reader)
         {
+            if (reader.ReadBoolean())
+            {
+                //PoMWorld pomWorld = PathOfModifiers.Instance.GetModWorld<PoMWorld>();
+
+                //int ID = reader.ReadInt32();
+                //pomWorld.AddOpenMap(this, ID, true);
+                openMap = new OpenMap(
+                    new Rectangle(
+                        reader.ReadInt32(),
+                        reader.ReadInt32(),
+                        reader.ReadInt32(),
+                        reader.ReadInt32()));
+            }
         }
     }
 }
