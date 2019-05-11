@@ -6,6 +6,7 @@ namespace PathOfModifiers.Buffs
 {
 	public class DamageDoTDebuff : ModBuff
 	{
+        //TODO: Not referenced anywhere, remove?
         public static float damageMultiplier => 0.5f;
         public static float damageMultiplierHalfSecond => 2.0f;
 

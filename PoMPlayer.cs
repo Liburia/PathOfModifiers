@@ -60,13 +60,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
-                ModPacket packet = mod.GetPacket();
-                packet.Write((byte)MsgType.AddDamageDoTDebuffPlayer);
-                packet.Write(player.whoAmI);
-                packet.Write(buff.Type);
-                packet.Write(damage);
-                packet.Write(time);
-                packet.Send();
+                PoMNetMessage.AddDamageDoTDebuffPlayer(player.whoAmI, buff.Type, damage, time);
             }
         }
 
@@ -79,10 +73,7 @@ namespace PathOfModifiers
         {
             if (Main.netMode == 1)
             {
-                ModPacket packet = mod.GetPacket();
-                packet.Write((byte)MsgType.PlayerConnected);
-                packet.Write((byte)player.whoAmI);
-                packet.Send();
+                PoMNetMessage.PlayerConnected(player.whoAmI);
             }
         }
         

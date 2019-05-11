@@ -109,7 +109,7 @@ namespace PathOfModifiers.UI
             modifierForgePanel.Append(modifierItemSlot);
             #endregion
             #region Close button
-            UIImageButton closeButton = new UIImageButton(ModLoader.GetTexture("PathOfModifiers/UI/CloseButton"));
+            UIImageButton closeButton = new UIImageButton(ModContent.GetTexture("PathOfModifiers/UI/CloseButton"));
             closeButton.Left.Set(474, 0);
             closeButton.Top.Set(10, 0);
             closeButton.OnClick += OnCloseButtonClicked;
@@ -119,19 +119,19 @@ namespace PathOfModifiers.UI
             freeAffixCount = new UIText("[-]", 0.75f);
             freeAffixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freeAffixCount.Top.Set(10, 0f);
-            freeAffixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Affix)]].color;
+            freeAffixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Affix)]].color;
             modifierForgePanel.Append(freeAffixCount);
 
             freePrefixCount = new UIText("[-]", 0.75f);
             freePrefixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freePrefixCount.Top.Set(UIItemSlot.defaultBackgroundTexture.Height / 2 + 3, 0f);
-            freePrefixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Prefix)]].color;
+            freePrefixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Prefix)]].color;
             modifierForgePanel.Append(freePrefixCount);
 
             freeSuffixCount = new UIText("[-]", 0.75f);
             freeSuffixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freeSuffixCount.Top.Set(UIItemSlot.defaultBackgroundTexture.Height / 2 + 22, 0f);
-            freeSuffixCount.TextColor = PoMAffixController.affixes[PoMAffixController.affixMap[typeof(Suffix)]].color;
+            freeSuffixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Suffix)]].color;
             modifierForgePanel.Append(freeSuffixCount);
 
             for (int i = 0; i < itemInfoText.Length; i++)
@@ -420,7 +420,7 @@ namespace PathOfModifiers.UI
             costText.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 5) + (10 * 9), 0f);
             modifierForgePanel.Append(costText);
 
-            UIImage modifierCostImage = new UIImage(ModLoader.GetTexture("PathOfModifiers/Items/ModifierFragment"));
+            UIImage modifierCostImage = new UIImage(ModContent.GetTexture("PathOfModifiers/Items/ModifierFragment"));
             modifierCostImage.Left.Set(160, 0);
             modifierCostImage.Top.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 5) + (10 * 9), 0f);
             modifierForgePanel.Append(modifierCostImage);
@@ -500,11 +500,11 @@ namespace PathOfModifiers.UI
             else if (action == SelectedAction.Rarify || action == SelectedAction.RemoveAll)
                 return TextureManager.Load("Images/NPC_Head_Boss_19");
             else if (action == SelectedAction.AddPrefix || action == SelectedAction.AddSuffix || action == SelectedAction.RemovePrefixes || action == SelectedAction.RemoveSuffixes || action == SelectedAction.RollAffixes)
-                return ModLoader.GetTexture("PathOfModifiers/UI/ActionConditionMechAny");
+                return ModContent.GetTexture("PathOfModifiers/UI/ActionConditionMechAny");
             else if (action == SelectedAction.RollPrefixes || action == SelectedAction.RollSuffixes)
                 return TextureManager.Load("Images/NPC_Head_Boss_11");
 
-            return ModLoader.GetTexture("PathOfModifiers/UI/ActionConditionUnknown");
+            return ModContent.GetTexture("PathOfModifiers/UI/ActionConditionUnknown");
         }
         void ForgeButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
