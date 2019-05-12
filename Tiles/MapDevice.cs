@@ -150,7 +150,7 @@ namespace PathOfModifiers.Tiles
 
         public Rectangle? bounds = null;
 
-        public bool DetectBounds()
+        bool DetectBounds()
         {
             List<Rectangle> boundss = new List<Rectangle>();
             List<Tuple<Point, bool, bool>> adjacentTiles = new List<Tuple<Point, bool, bool>>();
@@ -228,11 +228,11 @@ namespace PathOfModifiers.Tiles
             }
         }
 
-        public bool CanBegin()
+        bool CanOpen()
         {
             return !mapItem.IsAir && mapItem.modItem is Items.Map && timeLeft == 0 && DetectBounds();
         }
-        public bool CanEnd()
+        bool CanClose()
         {
             return timeLeft > 0;
         }
@@ -240,7 +240,7 @@ namespace PathOfModifiers.Tiles
         //Should never run on a client.
         public void OpenMap()
         {
-            if (!CanBegin())
+            if (!CanOpen())
                 return;
 
             //TODO: Set timeLeft somewhere else(map settings/config)
@@ -257,7 +257,7 @@ namespace PathOfModifiers.Tiles
         //Should never run on a client.
         public void CloseMap()
         {
-            if (!CanEnd())
+            if (!CanClose())
                 return;
 
             timeLeft = 0;
@@ -375,9 +375,13 @@ namespace PathOfModifiers.Tiles
 
         public override void OnKill()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                if (!mapItem.IsAir)
+                if (timeLeft > 0)
+                {
+                    CloseMap();
+                }
+                else if (!mapItem.IsAir)
                 {
                     PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), mapItem, 2);
                 }
