@@ -56,7 +56,7 @@ namespace PathOfModifiers
 
                 new MapDeviceUI().Initialize();
                 mapDeviceUI = new UserInterface();
-                MapDeviceUI.Instance.Visible = false;
+                MapDeviceUI.HideUI();
             }
         }
         public override void Unload()
@@ -96,7 +96,7 @@ namespace PathOfModifiers
                     "PathOfModifiers: Map Device",
                     delegate
                     {
-                        if (MapDeviceUI.Instance.Visible)
+                        if (MapDeviceUI.Instance.IsVisible)
                         {
                             MapDeviceUI.Instance.Draw(Main.spriteBatch);
                         }
@@ -110,7 +110,7 @@ namespace PathOfModifiers
         public override void PreSaveAndQuit()
         {
             ModifierForgeUI.Instance.Visible = false;
-            MapDeviceUI.Instance.Visible = false;
+            MapDeviceUI.HideUI();
         }
 
         public override void PostDrawInterface(SpriteBatch spriteBatch)

@@ -19,18 +19,37 @@ namespace PathOfModifiers.UI
     {
         public static MapDeviceUI Instance { get; set; }
 
-		public UIPanel mapDevicePanel;
+        public static void ShowUI(MapDeviceTE md)
+        {
+            if (MapDevice.activeMD != null)
+                Main.PlaySound(SoundID.MenuTick);
+            else
+                Main.PlaySound(SoundID.MenuOpen);
+            MapDevice.activeMD = md;
+            Main.playerInventory = true;
+            Instance.IsVisible = true;
+            Instance.UpdateText();
+        }
+        public static void HideUI()
+        {
+            if (MapDevice.activeMD != null)
+                Main.PlaySound(SoundID.MenuClose);
+            MapDevice.activeMD = null;
+            Instance.IsVisible = false;
+        }
+
+        public UIPanel mapDevicePanel;
         public UIItemSlot mapSlot;
         public UIText timeLeftText;
 
-        bool visible = false;
-        public bool Visible
+        bool isVisible = false;
+        public bool IsVisible
         {
-            get { return visible; }
-            set
+            get { return isVisible; }
+            private set
             {
-                visible = value;
-                if (visible)
+                isVisible = value;
+                if (isVisible)
                 {
                     if (MapDevice.activeMD != null)
                     {
@@ -45,6 +64,9 @@ namespace PathOfModifiers.UI
                 }
             }
         }
+        
+        public bool IsLocked => MapDevice.activeMD.timeLeft > 0;
+
 
         public Vector2 position = new Vector2(500, 400);
 
@@ -75,8 +97,9 @@ namespace PathOfModifiers.UI
             mapSlot = new UIItemSlot(new Item(), null, 1);
             mapSlot.Left.Set(10, 0f);
             mapSlot.Top.Set(30, 0f);
-            mapSlot.CanPutIntoSlot += MapCanPutIntoSlot;
-            mapSlot.OnItemChange += ModifiedItemChange;
+            mapSlot.CheckCanPutIntoSlot += MapCanPutIntoSlot;
+            mapSlot.CheckIsLocked += delegate(ref bool isLocked) { if (!isLocked) isLocked = IsLocked; };
+            mapSlot.OnItemChange += MapItemChanged;
             mapSlot.OnItemChange += OnSlotItemChange;
             mapDevicePanel.Append(mapSlot);
             #endregion
@@ -101,7 +124,7 @@ namespace PathOfModifiers.UI
             beginConditionPanel.Top.Set(30, 0f);
             beginConditionPanel.Width.Set(100, 0f);
             beginConditionPanel.Height.Set(UIItemSlot.defaultBackgroundTexture.Height, 0f);
-            beginConditionPanel.drawableCondition = delegate () { return MapDevice.activeMD.mapItem.IsAir || MapDevice.activeMD.timeLeft > 0; };
+            beginConditionPanel.drawableCondition = delegate () { return MapDevice.activeMD.mapItem.IsAir || MapDevice.activeMD.timeLeft > 0 || !(MapDevice.activeMD.mapItem.modItem is Items.Map); };
             mapDevicePanel.Append(beginConditionPanel);
             UIPanelConditioned endConditionPanel = new UIPanelConditioned();
             endConditionPanel.Left.Set(UIItemSlot.defaultBackgroundTexture.Width + (10 * 3) + (100 * 1), 0f);
@@ -124,25 +147,21 @@ namespace PathOfModifiers.UI
             Append(mapDevicePanel);
 		}
 
-        bool MapCanPutIntoSlot(Item item)
+        void MapCanPutIntoSlot(Item item, ref bool canPut)
         {
-            return PoMItem.IsMap(item);
+            if(canPut)
+                canPut = item.IsAir || PoMItem.IsMap(item);
         }
-        void ModifiedItemChange(Item oldItem, Item newItem)
+        void MapItemChanged(Item oldItem, Item newItem)
         {
             MapDevice.activeMD.mapItem = newItem.Clone();
-            MapDevice.activeMD.Sync(MapDevice.activeMD.ID);
-        }
-        void ModifierItemChange(Item oldItem, Item newItem)
-        {
-            MapDevice.activeMD.mapItem = newItem.Clone();
-            MapDevice.activeMD.Sync(MapDevice.activeMD.ID);
+            MapDevice.activeMD.Sync();
         }
 
         void BeginButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             if (Main.netMode == NetmodeID.SinglePlayer)
-                MapDevice.activeMD.BeginMap();
+                MapDevice.activeMD.OpenMap();
             else if (Main.netMode == NetmodeID.MultiplayerClient)
                 PoMNetMessage.OpenMapDeviceMap(MapDevice.activeMD.ID);
             UpdateText();
@@ -150,7 +169,7 @@ namespace PathOfModifiers.UI
         void EndButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             if (Main.netMode == NetmodeID.SinglePlayer)
-                MapDevice.activeMD.EndMap();
+                MapDevice.activeMD.CloseMap();
             else if (Main.netMode == NetmodeID.MultiplayerClient)
                 PoMNetMessage.CloseMapDeviceMap(MapDevice.activeMD.ID);
             UpdateText();
@@ -160,7 +179,7 @@ namespace PathOfModifiers.UI
         }
         void OnCloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
-            MapDevice.HideUI();
+            HideUI();
         }
 
         Vector2 offset;
@@ -205,15 +224,16 @@ namespace PathOfModifiers.UI
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (Visible)
+            if (IsVisible)
             {
                 Player player = Main.LocalPlayer;
                 Point playerPos = new Point((int)(player.MountedCenter.X / 16), (int)(player.MountedCenter.Y / 16));
                 if (playerPos.X < MapDevice.activeMD.Position.X - Player.tileRangeX || playerPos.X > MapDevice.activeMD.Position.X + Player.tileRangeX + 1 ||
                     playerPos.Y < MapDevice.activeMD.Position.Y - Player.tileRangeY || playerPos.Y > MapDevice.activeMD.Position.Y + Player.tileRangeY + 1)
                 {
-                    MapDevice.HideUI();
+                    HideUI();
                 }
+
             }
         }
 
@@ -233,7 +253,7 @@ namespace PathOfModifiers.UI
 
         public void UpdateText()
         {
-            if (!Visible)
+            if (!IsVisible)
                 return;
             
             timeLeftText.SetText(GetTimeLeftString(MapDevice.activeMD.timeLeft));

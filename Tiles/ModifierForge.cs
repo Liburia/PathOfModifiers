@@ -217,7 +217,7 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync(ID);
+                Sync();
             }
         }
         public void RerollAffixes()
@@ -232,7 +232,7 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync(ID);
+                Sync();
             }
         }
         public void Rarify()
@@ -248,7 +248,7 @@ namespace PathOfModifiers.Tiles
                     ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                     Main.PlaySound(SoundID.Item37, -1, -1);
                     ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    Sync(ID);
+                    Sync();
                 }
             }
         }
@@ -265,7 +265,7 @@ namespace PathOfModifiers.Tiles
                     ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                     Main.PlaySound(SoundID.Item37, -1, -1);
                     ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    Sync(ID);
+                    Sync();
                 }
             }
         }
@@ -282,7 +282,7 @@ namespace PathOfModifiers.Tiles
                     ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                     Main.PlaySound(SoundID.Item37, -1, -1);
                     ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    Sync(ID);
+                    Sync();
                 }
             }
         }
@@ -299,7 +299,7 @@ namespace PathOfModifiers.Tiles
                     ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                     Main.PlaySound(SoundID.Item37, -1, -1);
                     ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    Sync(ID);
+                    Sync();
                 }
             }
         }
@@ -315,7 +315,7 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync(ID);
+                Sync();
             }
         }
         public void RemovePrefixes()
@@ -330,7 +330,7 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync(ID);
+                Sync();
             }
         }
         public void RemoveSuffixes()
@@ -345,7 +345,7 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync(ID);
+                Sync();
             }
         }
         public void RollAffixes()
@@ -360,7 +360,7 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync(ID);
+                Sync();
             }
         }
         public void RollPrefixes()
@@ -375,7 +375,7 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync(ID);
+                Sync();
             }
         }
         public void RollSuffixes()
@@ -390,7 +390,7 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync(ID);
+                Sync();
             }
         }
 

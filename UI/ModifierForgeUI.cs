@@ -95,7 +95,7 @@ namespace PathOfModifiers.UI
             modifiedItemSlot = new UIItemSlot(new Item(), null, 1);
             modifiedItemSlot.Left.Set(10, 0f);
             modifiedItemSlot.Top.Set(10, 0f);
-            modifiedItemSlot.CanPutIntoSlot += ModifiedCanPutIntoSlot;
+            modifiedItemSlot.CheckCanPutIntoSlot += ModifiedCanPutIntoSlot;
             modifiedItemSlot.OnItemChange += ModifiedItemChange;
             modifiedItemSlot.OnItemChange += OnSlotItemChange;
             modifierForgePanel.Append(modifiedItemSlot);
@@ -103,7 +103,7 @@ namespace PathOfModifiers.UI
             modifierItemSlot = new UIItemSlot(new Item(), null, 1);
             modifierItemSlot.Left.Set(UIItemSlot.defaultBackgroundTexture.Width + 20, 0f);
             modifierItemSlot.Top.Set(10, 0f);
-            modifierItemSlot.CanPutIntoSlot += ModifierCanPutIntoSlot;
+            modifierItemSlot.CheckCanPutIntoSlot += ModifierCanPutIntoSlot;
             modifierItemSlot.OnItemChange += ModifierItemChange;
             modifierItemSlot.OnItemChange += OnSlotItemChange;
             modifierForgePanel.Append(modifierItemSlot);
@@ -438,24 +438,26 @@ namespace PathOfModifiers.UI
             Append(modifierForgePanel);
 		}
 
-        bool ModifiedCanPutIntoSlot(Item item)
+        void ModifiedCanPutIntoSlot(Item item, ref bool canPut)
         {
-            return PoMItem.IsRollable(item);
+            if (canPut)
+                canPut = PoMItem.IsRollable(item);
         }
-        bool ModifierCanPutIntoSlot(Item item)
+        void ModifierCanPutIntoSlot(Item item, ref bool canPut)
         {
             //TODO: Actual system
-            return item.type == PathOfModifiers.Instance.ItemType<Items.ModifierFragment>();
+            if (canPut)
+                canPut = item.type == PathOfModifiers.Instance.ItemType<Items.ModifierFragment>();
         }
         void ModifiedItemChange(Item oldItem, Item newItem)
         {
             ModifierForge.activeForge.modifiedItem = newItem.Clone();
-            ModifierForge.activeForge.Sync(ModifierForge.activeForge.ID);
+            ModifierForge.activeForge.Sync();
         }
         void ModifierItemChange(Item oldItem, Item newItem)
         {
             ModifierForge.activeForge.modifierItem = newItem.Clone();
-            ModifierForge.activeForge.Sync(ModifierForge.activeForge.ID);
+            ModifierForge.activeForge.Sync();
         }
 
         void ButtonToggled(UIMouseEvent evt, UIElement listeningElement)

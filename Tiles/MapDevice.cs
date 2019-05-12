@@ -61,7 +61,7 @@ namespace PathOfModifiers.Tiles
             MapDeviceTE tileEntity = (MapDeviceTE)TileEntity.ByID[mod.GetTileEntity<MapDeviceTE>().Find(i, j)];
 
             if (Main.netMode != 2 && activeMD == tileEntity)
-                HideUI();
+                MapDeviceUI.HideUI();
 
             tileEntity.Kill(i, j);
         }
@@ -89,35 +89,16 @@ namespace PathOfModifiers.Tiles
 				Main.npcChatText = "";
             }
             MapDeviceTE clickedMD = (MapDeviceTE)TileEntity.ByPosition[new Point16(left, top)];
-            if (MapDeviceUI.Instance.Visible && activeMD == clickedMD)
+            if (MapDeviceUI.Instance.IsVisible && activeMD == clickedMD)
             {
-                HideUI();
+                MapDeviceUI.HideUI();
             }
             else
             {
-                ShowUI(clickedMD);
+                MapDeviceUI.ShowUI(clickedMD);
             }
             return;
 		}
-
-        public static void ShowUI(MapDeviceTE md)
-        {
-            if (activeMD != null)
-                Main.PlaySound(SoundID.MenuTick);
-            else
-                Main.PlaySound(SoundID.MenuOpen);
-            activeMD = md;
-            Main.playerInventory = true;
-            MapDeviceUI.Instance.Visible = true;
-            MapDeviceUI.Instance.UpdateText();
-        }
-        public static void HideUI()
-        {
-            if (activeMD != null)
-                Main.PlaySound(SoundID.MenuClose);
-            activeMD = null;
-            MapDeviceUI.Instance.Visible = false;
-        }
 
 		public override void MouseOver(int i, int j)
 		{
@@ -255,8 +236,9 @@ namespace PathOfModifiers.Tiles
         {
             return timeLeft > 0;
         }
-
-        public void BeginMap()
+        
+        //Should never run on a client.
+        public void OpenMap()
         {
             if (!CanBegin())
                 return;
@@ -270,9 +252,10 @@ namespace PathOfModifiers.Tiles
             var map = mapModItem.map;
             map.Open(dimensions);
 
-            Sync(ID, Main.myPlayer);
+            Sync();
         }
-        public void EndMap()
+        //Should never run on a client.
+        public void CloseMap()
         {
             if (!CanEnd())
                 return;
@@ -285,23 +268,27 @@ namespace PathOfModifiers.Tiles
             var map = mapModItem.map;
             map.Close();
 
-            Sync(ID, Main.myPlayer);
+            Sync();
         }
 
+        //Never runs on a client
         public override void Update()
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (timeLeft > 0)
             {
-                if (timeLeft > 0)
+                timeLeft--;
+                if (timeLeft == 0)
                 {
-                    timeLeft--;
-                    if (timeLeft == 0)
+                    CloseMap();
+                }
+                else if (timeLeft % 60 == 0)
+                {
+                    if (Main.netMode == NetmodeID.Server)
                     {
-                        EndMap();
+                        Sync();
                     }
-                    else if (timeLeft % 60 == 0)
+                    else if (MapDevice.activeMD == this && MapDeviceUI.Instance.IsVisible)
                     {
-                        Sync(ID);
                         MapDeviceUI.Instance.UpdateText();
                     }
                 }
@@ -328,13 +315,16 @@ namespace PathOfModifiers.Tiles
 
             mapItem = ItemIO.Receive(reader, true);
 
-            if (Main.netMode != NetmodeID.Server)
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
+                //Cloned TE is different or something.
                 if (MapDevice.activeMD != null && MapDevice.activeMD.Position == Position)
-                    MapDevice.ShowUI(this);
+                    MapDeviceUI.ShowUI(this);
                 else if (MapDevice.activeMD == this)
+                {
                     MapDeviceUI.Instance.SetItemSlot(mapItem.Clone());
-                MapDeviceUI.Instance.UpdateText();
+                    MapDeviceUI.Instance.UpdateText();
+                }
             }
         }
 

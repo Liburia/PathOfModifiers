@@ -11,13 +11,17 @@ namespace PathOfModifiers.UI
 {
     class UIItemSlot : UIElement
     {
+        internal delegate void ActionRef<T>(ref T obj);
+        internal delegate void ActionRef<T, U>(T obj, ref U obj2);
+
         public static Texture2D defaultBackgroundTexture = Main.inventoryBack9Texture;
         public Texture2D backgroundTexture = defaultBackgroundTexture;
         internal float scale = .75f;
         public Item item;
 
         internal event Action<Item, Item> OnItemChange;
-        internal event Func<Item, bool> CanPutIntoSlot;
+        internal event ActionRef<Item, bool> CheckCanPutIntoSlot;
+        internal event ActionRef<bool> CheckIsLocked;
 
         public UIItemSlot(Item item, Texture2D backgroundTexture = null, float scale = 1)
         {
@@ -28,13 +32,27 @@ namespace PathOfModifiers.UI
             if (backgroundTexture == null)
                 this.backgroundTexture = defaultBackgroundTexture;
 
-            OnMouseDown += MouseItemDown;
-            CanPutIntoSlot = delegate (Item delItem) { return true; };
+            OnMouseDown += MouseDown;
+            CheckCanPutIntoSlot = delegate (Item delItem, ref bool delBool) { delBool = true; };
+            CheckIsLocked = delegate (ref bool delBool) { delBool = false; };
         }
 
         internal int frameCounter = 0;
         internal int frameTimer = 0;
         private const int frameDelay = 7;
+
+        public bool CanPutIntoSlot(Item item)
+        {
+            bool canPutIntoSlot = false;
+            CheckCanPutIntoSlot(item, ref canPutIntoSlot);
+            return canPutIntoSlot;
+        }
+        public bool IsLocked()
+        {
+            bool isLocked = false;
+            CheckIsLocked(ref isLocked);
+            return isLocked;
+        }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
@@ -108,13 +126,19 @@ namespace PathOfModifiers.UI
                         Main.HoverItem.SetNameOverride(Main.HoverItem.Name + (Main.HoverItem.modItem != null ? " [" + Main.HoverItem.modItem.mod.Name + "]" : ""));
                     }
                 }
+                if (IsLocked())
+                {
+                    spriteBatch.Draw(backgroundTexture, dimensions.Position(), null, new Color(0, 0, 0, 100), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                }
             }
         }
 
-        void MouseItemDown(UIMouseEvent evt, UIElement listeningElement)
+        void MouseDown(UIMouseEvent evt, UIElement listeningElement)
         {
             Player player = Main.LocalPlayer;
-            if ((!item.IsAir || (!Main.mouseItem.IsAir && CanPutIntoSlot(Main.mouseItem))) && player.itemAnimation == 0 && player.itemTime == 0)
+            
+
+            if (player.itemAnimation == 0 && player.itemTime == 0 && !IsLocked() && CanPutIntoSlot(Main.mouseItem))
             {
                 Item tempItem = Main.mouseItem.Clone();
                 Main.mouseItem = item.Clone();

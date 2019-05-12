@@ -50,7 +50,7 @@ namespace PathOfModifiers
                     tileEntity.ID = id;
                     TileEntity.ByID[tileEntity.ID] = tileEntity;
                     TileEntity.ByPosition[tileEntity.Position] = tileEntity;
-                    tileEntity.Sync(tileEntity.ID, whoAmI);
+                    tileEntity.Sync(whoAmI);
                 }
                 else
                 {
@@ -68,7 +68,9 @@ namespace PathOfModifiers
                 int damage = reader.ReadInt32();
                 int time = reader.ReadInt32();
 
+#pragma warning disable IDE0019 // Use pattern matching
                 DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
+#pragma warning restore IDE0019 // Use pattern matching
                 if (debuff == null)
                 {
                     PathOfModifiers.Instance.Logger.Warn($"Invalid buff packet received {buffType}");
@@ -96,7 +98,9 @@ namespace PathOfModifiers
                 int damage = reader.ReadInt32();
                 int time = reader.ReadInt32();
 
+#pragma warning disable IDE0019 // Use pattern matching
                 DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
+#pragma warning restore IDE0019 // Use pattern matching
                 if (debuff == null)
                 {
                     PathOfModifiers.Instance.Logger.Warn($"Invalid buff packet received {buffType}");
@@ -122,13 +126,13 @@ namespace PathOfModifiers
             {
                 int mdID = reader.ReadInt32();
                 var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
-                mapDevice.BeginMap();
+                mapDevice.OpenMap();
             }
             else if (msg == MsgType.sCloseMapDeviceMap)
             {
                 int mdID = reader.ReadInt32();
                 var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
-                mapDevice.EndMap();
+                mapDevice.CloseMap();
             }
 
         SkipMsgIf:;

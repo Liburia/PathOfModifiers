@@ -17,7 +17,7 @@ namespace PathOfModifiers.Tiles
     {
         public override bool ValidTile(int i, int j) { return false; }
 
-        public void Sync(int id, int ignoreClient = -1)
+        public void Sync(int ignoreClient = -1)
         {
             if (Main.netMode == 1)
             {
@@ -25,7 +25,7 @@ namespace PathOfModifiers.Tiles
             }
             else if (Main.netMode == 2)
             {
-                NetMessage.SendData(MessageID.TileEntitySharing, -1, ignoreClient, null, id, Position.X, Position.Y);
+                NetMessage.SendData(MessageID.TileEntitySharing, -1, ignoreClient, null, ID, Position.X, Position.Y);
             }
         }
     }
