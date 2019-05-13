@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using PathOfModifiers.Affixes;
 using PathOfModifiers.Buffs;
+using PathOfModifiers.Tiles;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -76,7 +77,26 @@ namespace PathOfModifiers
                 PoMNetMessage.PlayerConnected(player.whoAmI);
             }
         }
-        
+        public override void PlayerConnect(Player player)
+        {
+            //PathOfModifiers.Instance.Logger.Debug($"PlayerConnect: {Main.netMode}");
+            if (Main.LocalPlayer == player)
+            {
+                var mapBorder = mod.GetTile<MapBorder>();
+                mapBorder.ClearActiveBounds();
+            }
+        }
+        public override void PlayerDisconnect(Player player)
+        {
+            //PathOfModifiers.Instance.Logger.Debug($"PlayerDisconnect: {Main.netMode}");
+
+            if (Main.LocalPlayer == player)
+            {
+                var mapBorder = mod.GetTile<MapBorder>();
+                mapBorder.ClearActiveBounds();
+            }
+        }
+
         public override bool ConsumeAmmo(Item weapon, Item ammo)
         {
             Item item;

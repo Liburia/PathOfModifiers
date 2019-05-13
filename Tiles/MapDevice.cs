@@ -154,7 +154,7 @@ namespace PathOfModifiers.Tiles
         {
             List<Rectangle> boundss = new List<Rectangle>();
             List<Tuple<Point, bool, bool>> adjacentTiles = new List<Tuple<Point, bool, bool>>();
-            
+            //TODO: make array of bounds' tiles to make insdestructible
             Point size = new Point(2, 2);
             int length = size.X * 2 + size.Y * 2 + 4;
             int x = 0;
@@ -189,7 +189,7 @@ namespace PathOfModifiers.Tiles
                 Point tilePos = new Point(Position.X - 1 + x, Position.Y - 1 + y);
                 Tile tile = Main.tile[tilePos.X, tilePos.Y];
                 int? tileType = PoMHelper.GetTileType(tile);
-                if (tileType.HasValue && tileType == TileID.IceBrick)
+                if (tileType.HasValue && tileType == mod.TileType<MapBorder>())
                 {
                     adjacentTiles.Add(new Tuple<Point, bool, bool>(tilePos, scanHoriz, scanVert));
                     lastTileOfType = true;
@@ -219,6 +219,7 @@ namespace PathOfModifiers.Tiles
             if (boundss.Count > 0)
             {
                 bounds = boundss.Aggregate((b1, b2) => b1.Width * b1.Height > b2.Width * b2.Height ? b1 : b2);
+
                 return true;
             }
             else
@@ -240,6 +241,7 @@ namespace PathOfModifiers.Tiles
         //Should never run on a client.
         public void OpenMap()
         {
+            //PathOfModifiers.Instance.Logger.Info($"OpenMap: {Main.netMode}");
             if (!CanOpen())
                 return;
 
@@ -252,11 +254,15 @@ namespace PathOfModifiers.Tiles
             var map = mapModItem.map;
             map.Open(dimensions);
 
+            var mapBorder = mod.GetTile<MapBorder>();
+            mapBorder.AddActiveBounds(bounds.Value);
+
             Sync();
         }
         //Should never run on a client.
         public void CloseMap()
         {
+            //PathOfModifiers.Instance.Logger.Info($"CloseMap: {Main.netMode}");
             if (!CanClose())
                 return;
 
@@ -267,6 +273,9 @@ namespace PathOfModifiers.Tiles
 
             var map = mapModItem.map;
             map.Close();
+
+            var mapBorder = mod.GetTile<MapBorder>();
+            mapBorder.RemoveActiveBounds(bounds.Value);
 
             Sync();
         }
@@ -297,9 +306,10 @@ namespace PathOfModifiers.Tiles
 
         public override void NetSend(BinaryWriter writer, bool lightSend)
         {
-            //PathOfModifiers.Log($"NetSend{Main.netMode}");
+            //PathOfModifiers.Instance.Logger.Info($"NetSend: {Main.netMode}");
+            writer.Write(ID);
             writer.Write(timeLeft);
-            bool isBoundsNull = bounds == null;
+            bool isBoundsNull = !bounds.HasValue;
             writer.Write(isBoundsNull);
             if(!isBoundsNull)
                 writer.Write((Rectangle)bounds);
@@ -308,12 +318,36 @@ namespace PathOfModifiers.Tiles
         }
         public override void NetReceive(BinaryReader reader, bool lightReceive)
         {
-            //PathOfModifiers.Log($"NetReceive{Main.netMode}");
+            //PathOfModifiers.Instance.Logger.Info($"NetReceive: {Main.netMode}");
+            var oldID = reader.ReadInt32();
+
             timeLeft = reader.ReadInt32();
+            
+            var mapBorder = mod.GetTile<MapBorder>();
+
             bool isBoundsNull = reader.ReadBoolean();
             bounds = isBoundsNull ? null : (Rectangle?)reader.ReadRectangle();
 
             mapItem = ItemIO.Receive(reader, true);
+            
+            MapDeviceTE oldMD;
+            int oldTimeLeft = 0;
+            Rectangle? oldBounds = null;
+            if (ByID.TryGetValue(oldID, out TileEntity oldTE))
+            {
+                oldMD = oldTE as MapDeviceTE;
+                oldTimeLeft = oldMD.timeLeft;
+                oldBounds = oldMD.bounds;
+            }
+
+            if (oldTimeLeft == 0 && timeLeft != 0)
+            {
+                mapBorder.AddActiveBounds(bounds.Value);
+            }
+            else if (oldTimeLeft != 0 && timeLeft == 0)
+            {
+                mapBorder.RemoveActiveBounds(oldBounds.Value);
+            }
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
@@ -345,9 +379,14 @@ namespace PathOfModifiers.Tiles
         public override void Load(TagCompound tag)
         {
             //PathOfModifiers.Log($"Load{Main.netMode}");
+
+            var mapBorder = mod.GetTile<MapBorder>();
+
             timeLeft = tag.GetInt("timeLeft");
             bool isBoundsNull = tag.GetBool("isBoundsNull");
             bounds = isBoundsNull ? null : (Rectangle?)tag.Get<Rectangle>("bounds");
+            if (timeLeft > 0 && bounds.HasValue)
+                mapBorder.AddActiveBounds(bounds.Value);
 
             mapItem = ItemIO.Load(tag.GetCompound("map"));
 

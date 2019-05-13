@@ -142,6 +142,7 @@
     <Compile Include="Affixes\Prefixes\WeaponAttackSpeed.cs" />
     <Compile Include="Affixes\Prefixes\WeaponMeleeDamage.cs" />
     <Compile Include="Buffs\DamageDoTDebuff.cs" />
+    <Compile Include="Items\MapBorder.cs" />
     <Compile Include="Items\Map.cs" />
     <Compile Include="Items\MapDevice.cs" />
     <Compile Include="Maps\Generators\LayeredSurfaceCaves.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="PoMDebug.cs" />
     <Compile Include="PoMNetMessage.cs" />
     <Compile Include="PoMWorld.cs" />
+    <Compile Include="Tiles\MapBorder.cs" />
     <Compile Include="Tiles\MapDevice.cs" />
     <Compile Include="Tiles\PoMTileEntity.cs" />
     <Compile Include="UI\MapDeviceUI.cs" />
