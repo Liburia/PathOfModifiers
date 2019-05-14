@@ -13,6 +13,7 @@ using PathOfModifiers.UI;
 using PathOfModifiers.Tiles;
 using Terraria.DataStructures;
 using PathOfModifiers.Buffs;
+using Terraria.Localization;
 
 namespace PathOfModifiers
 {
@@ -35,7 +36,24 @@ namespace PathOfModifiers
 				AutoloadSounds = true
 			};
 		}
-        
+
+        public override void AddRecipeGroups()
+        {
+            RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Copper Bar", new int[]
+            {
+            ItemID.CopperBar,
+            ItemID.TinBar
+            });
+            RecipeGroup.RegisterGroup("PathOfModifiers:CopperBar", group);
+
+            group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bar", new int[]
+            {
+            ItemID.SilverBar,
+            ItemID.TungstenBar
+            });
+            RecipeGroup.RegisterGroup("PathOfModifiers:SilverBar", group);
+        }
+
         public override void Load()
         {
             Instance = this;

@@ -12,6 +12,7 @@ using System.Reflection;
 using PathOfModifiers.Affixes;
 using PathOfModifiers.Rarities;
 using Terraria.ID;
+using Terraria.DataStructures;
 
 namespace PathOfModifiers
 {
@@ -291,5 +292,32 @@ namespace PathOfModifiers
             else
                 return null;
         }
-	}
+
+        /// <summary>
+        /// Queries for a TE that encompasses a tile at (i,j)
+        /// </summary>
+        public static bool TryGetTileEntity(int i, int j, int coordinateFrameWidth, int coordinateFrameHeight, out TileEntity te)
+        {
+            var tile = Main.tile[i, j];
+
+            var tePos = new Point16(
+                i - (tile.frameX / coordinateFrameWidth),
+                j - (tile.frameY / coordinateFrameHeight));
+            return TileEntity.ByPosition.TryGetValue(tePos, out te);
+        }
+
+        /// <summary>
+        /// Sometimes shit doesn't draw where it should. Add this to the position.
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 DrawToScreenOffset()
+        {
+            Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
+            if (Main.drawToScreen)
+            {
+                zero = Vector2.Zero;
+            }
+            return zero;
+        }
+    }
 }

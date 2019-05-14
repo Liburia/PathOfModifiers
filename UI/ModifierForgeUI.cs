@@ -441,13 +441,13 @@ namespace PathOfModifiers.UI
         void ModifiedCanPutIntoSlot(Item item, ref bool canPut)
         {
             if (canPut)
-                canPut = PoMItem.IsRollable(item);
+                canPut = item.IsAir || PoMItem.IsRollable(item);
         }
         void ModifierCanPutIntoSlot(Item item, ref bool canPut)
         {
             //TODO: Actual system
             if (canPut)
-                canPut = item.type == PathOfModifiers.Instance.ItemType<Items.ModifierFragment>();
+                canPut = canPut = item.IsAir || item.type == PathOfModifiers.Instance.ItemType<Items.ModifierFragment>();
         }
         void ModifiedItemChange(Item oldItem, Item newItem)
         {
@@ -628,7 +628,7 @@ namespace PathOfModifiers.UI
             if (selectedAction == SelectedAction.None)
                 modifierCostText.SetText("0");
             else
-                modifierCostText.SetText(ModifierForge.activeForge.CalculateCost((TEModifierForge.ForgeAction)selectedAction).ToString());
+                modifierCostText.SetText(ModifierForge.activeForge.CalculateCost((ModifierForgeTE.ForgeAction)selectedAction).ToString());
             modifierCostText.Recalculate();
 
             int i = 0;

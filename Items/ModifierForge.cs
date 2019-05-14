@@ -30,8 +30,10 @@ namespace PathOfModifiers.Items
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod, "ModifierFragment", 50);
-			recipe.SetResult(this);
+            recipe.AddIngredient(mod, "ModifierFragment", 50);
+            recipe.AddRecipeGroup("PathOfModifiers:CopperBar", 20);
+            recipe.AddRecipeGroup("IronBar", 15);
+            recipe.SetResult(this);
 			recipe.AddRecipe();
 		}
     }

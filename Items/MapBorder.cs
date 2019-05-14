@@ -27,8 +27,10 @@ namespace PathOfModifiers.Items
 
 		public override void AddRecipes() {
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType<ModifierFragment>(), 100);
-			recipe.SetResult(this, 1);
+            recipe.AddIngredient(mod.ItemType<ModifierFragment>(), 10);
+            recipe.AddRecipeGroup("IronBar", 1);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this, 4);
 			recipe.AddRecipe();
 		}
 	}
