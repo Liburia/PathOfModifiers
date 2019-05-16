@@ -24,7 +24,6 @@ namespace PathOfModifiers
         public static bool disableVanillaModifiersAccessories = true;
 
         public static string pathMapIcons = "Images/MapIcons/";
-        public static int mapIconSize = 24;
 
         public static PathOfModifiers Instance { get; private set; }
 

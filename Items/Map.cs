@@ -53,13 +53,13 @@ namespace PathOfModifiers.Items
 
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            map.DrawIcon(spriteBatch, position, Main.itemTexture[item.type].Size(), origin, scale);
+            map.DrawIcon(spriteBatch, position, Main.itemTexture[item.type].Size(), 0, scale);
         }
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
             //World drawing is different so just hardcode this.
             var iconOffset = new Vector2(0, 2);
-            map.DrawIcon(spriteBatch, item.position - Main.screenPosition + iconOffset, Main.itemTexture[item.type].Size(), Vector2.Zero, scale);
+            map.DrawIcon(spriteBatch, item.position - Main.screenPosition + iconOffset, Main.itemTexture[item.type].Size(), rotation, scale);
         }
 
         public override TagCompound Save()

@@ -192,7 +192,7 @@ namespace PathOfModifiers.Tiles
                         mapDevicePos.X * 16 - Main.screenPosition.X + screenDrawOffset.X + itemDrawOffset.X,
                         mapDevicePos.Y * 16 - Main.screenPosition.Y + screenDrawOffset.Y + itemDrawOffset.Y);
                     spriteBatch.Draw(itemTexture, itemPosition, null, Color.White, 0, Vector2.Zero, itemScale, SpriteEffects.None, 0);
-                    ((Items.Map)mapDevice.mapItem.modItem).map.DrawIcon(spriteBatch, itemPosition, itemTexture.Size(), Vector2.Zero, itemScale);
+                    ((Items.Map)mapDevice.mapItem.modItem).map.DrawIcon(spriteBatch, itemPosition, itemTexture.Size(), 0, itemScale);
                 }
             }
         }

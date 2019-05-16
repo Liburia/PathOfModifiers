@@ -84,16 +84,18 @@ namespace PathOfModifiers.Maps
         }
 
         //Drawn the map icon on top of the map
-        public virtual void DrawIcon(SpriteBatch spriteBatch, Vector2 mapPosition, Vector2 mapSize, Vector2 origin, float scale)
+        public virtual void DrawIcon(SpriteBatch spriteBatch, Vector2 mapPosition, Vector2 mapSize, float rotation, float scale)
         {
-            Vector2 iconPosition = mapPosition + ((mapSize - iconTexture.Size()) / 2 * scale);
+            var iconTextureSize = iconTexture.Size();
+            var iconHalfSize = iconTextureSize / 2;
+            Vector2 iconPosition = mapPosition + (((mapSize - iconTextureSize) / 2 + iconHalfSize) * scale);
             spriteBatch.Draw(
                 iconTexture,
                 iconPosition,
                 null,
                 Color.Red,
-                0,
-                origin,
+                rotation,
+                iconHalfSize,
                 scale,
                 SpriteEffects.None,
                 0);
