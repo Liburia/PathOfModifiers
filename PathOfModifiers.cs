@@ -19,8 +19,12 @@ namespace PathOfModifiers
 {
 	class PathOfModifiers : Mod
     {
+        //TODO: config
         public static bool disableVanillaModifiersWeapons = true;
         public static bool disableVanillaModifiersAccessories = true;
+
+        public static string pathMapIcons = "Images/MapIcons/";
+        public static int mapIconSize = 24;
 
         public static PathOfModifiers Instance { get; private set; }
 
@@ -52,6 +56,13 @@ namespace PathOfModifiers
             ItemID.TungstenBar
             });
             RecipeGroup.RegisterGroup("PathOfModifiers:SilverBar", group);
+
+            group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Gold Bar", new int[]
+            {
+            ItemID.GoldBar,
+            ItemID.PlatinumBar
+            });
+            RecipeGroup.RegisterGroup("PathOfModifiers:GoldBar", group);
         }
 
         public override void Load()

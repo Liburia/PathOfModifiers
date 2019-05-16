@@ -13,8 +13,8 @@ namespace PathOfModifiers.Items
 		}
 		public override void SetDefaults()
         {
-            item.width = 26;
-            item.height = 22;
+            item.width = 64;
+            item.height = 64;
 			item.value = 500000;
 			item.rare = 2;
             item.maxStack = 99;
@@ -30,6 +30,7 @@ namespace PathOfModifiers.Items
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddRecipeGroup("PathOfModifiers:GoldBar", 25);
             recipe.AddIngredient(mod, "ModifierFragment", 50);
             recipe.AddIngredient(mod, "Map", 1);
             recipe.SetResult(this);

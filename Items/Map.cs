@@ -6,6 +6,7 @@ using PathOfModifiers;
 using System.IO;
 using System;
 using Terraria.ModLoader.IO;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace PathOfModifiers.Items
 {
@@ -48,6 +49,17 @@ namespace PathOfModifiers.Items
                 map.Open(new Rectangle((int)player.position.X / 16 + 4, (int)player.position.Y / 16 + 4, 50, 50));
             }
             return true;
+        }
+
+        public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            map.DrawIcon(spriteBatch, position, Main.itemTexture[item.type].Size(), origin, scale);
+        }
+        public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+        {
+            //World drawing is different so just hardcode this.
+            var iconOffset = new Vector2(0, 2);
+            map.DrawIcon(spriteBatch, item.position - Main.screenPosition + iconOffset, Main.itemTexture[item.type].Size(), Vector2.Zero, scale);
         }
 
         public override TagCompound Save()

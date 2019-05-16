@@ -14,6 +14,7 @@ using PathOfModifiers.Maps;
 using System.Collections.Generic;
 using System.Linq;
 using PathOfModifiers.Utilities.Extensions;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace PathOfModifiers.Tiles
 {
@@ -21,34 +22,86 @@ namespace PathOfModifiers.Tiles
     {
         public static MapDeviceTE activeMD;
 
+        static int activeAnimationFirstFrame;
+        static int activeAnimationFrameCount;
+        static int activeAnimationFullFrameCount;
+
         public override void SetDefaults()
         {
             Main.tileSpelunker[Type] = false;
-			Main.tileShine2[Type] = true;
-			Main.tileShine[Type] = 1200;
-			Main.tileFrameImportant[Type] = true;
+            //Main.tileShine2[Type] = true;
+            //Main.tileShine[Type] = 1200;
+            Main.tileLighted[Type] = true;
+            Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
 			Main.tileValue[Type] = 500;
 			TileID.Sets.HasOutlines[Type] = true;
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style5x4);
+            TileObjectData.newTile.Width = 4;
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<MapDeviceTE>().Hook_AfterPlacement, -1, 0, true);
-            TileObjectData.newTile.Origin = new Point16(0, 1);
-			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
-			//TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
-			//TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
-			TileObjectData.newTile.AnchorInvalidTiles = new int[] { 127 };
+            TileObjectData.newTile.Origin = new Point16(1, 3);
+			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16 };
+            TileObjectData.newTile.DrawYOffset = 2;
+            //TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
+            //TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
+            TileObjectData.newTile.AnchorInvalidTiles = new int[] { 127 };
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.LavaDeath = false;
 			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
 			TileObjectData.addTile(Type);
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Map Device");
-			AddMapEntry(new Color(200, 200, 200), name);
+			AddMapEntry(new Color(107, 66, 130), name);
 			disableSmartCursor = false;
 			drop = 0;
-		}
+            animationFrameHeight = 72;
 
-		public override bool HasSmartInteract()
+            activeAnimationFirstFrame = 1;
+            activeAnimationFrameCount = 4;
+            activeAnimationFullFrameCount = activeAnimationFrameCount * 2 - 2;
+        }
+
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            frameCounter++;
+            if (frameCounter >= 40)
+            {
+                frameCounter = 0;
+                frame++;
+                if (frame >= activeAnimationFullFrameCount)
+                {
+                    frame = 0;
+                }
+            }
+        }
+
+        public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
+        {
+            //Hardcoded frame coordinate values because using TileObjectData is cancer.
+            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
+            {
+                var mapDevice = (MapDeviceTE)te;
+
+                if (!mapDevice.mapItem.IsAir || mapDevice.timeLeft > 0)
+                {
+                    int frame = Main.tileFrame[type];
+                    if (frame >= activeAnimationFrameCount)
+                    {
+                        frame = activeAnimationFrameCount - (frame - activeAnimationFrameCount) - 2;
+                    }
+
+                    //Map present or portal is open
+                    frameYOffset = animationFrameHeight * (activeAnimationFirstFrame + frame);
+                }
+                else
+                {
+                    //Map absent
+                    frameYOffset = 0;
+                }
+            }
+        }
+        
+        public override bool HasSmartInteract()
 		{
 			return true;
 		}
@@ -69,18 +122,9 @@ namespace PathOfModifiers.Tiles
         public override void RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
-			Tile tile = Main.tile[i, j];
 			Main.mouseRightRelease = false;
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
-			{
-				left--;
-			}
-			if (tile.frameY != 0)
-			{
-				top--;
-			}
 			if (player.sign >= 0)
 			{
 				Main.PlaySound(SoundID.MenuClose);
@@ -88,32 +132,24 @@ namespace PathOfModifiers.Tiles
 				Main.editSign = false;
 				Main.npcChatText = "";
             }
-            MapDeviceTE clickedMD = (MapDeviceTE)TileEntity.ByPosition[new Point16(left, top)];
+            //Hardcoded frame coordinate values because using TileObjectData is cancer.
+            PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te);
+            MapDeviceTE clickedMD = (MapDeviceTE)te;
             if (MapDeviceUI.Instance.IsVisible && activeMD == clickedMD)
             {
-                MapDeviceUI.HideUI();
+                MapDeviceUI. HideUI();
             }
             else
             {
                 MapDeviceUI.ShowUI(clickedMD);
             }
             return;
-		}
+
+        }
 
 		public override void MouseOver(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
-			Tile tile = Main.tile[i, j];
-			int left = i;
-			int top = j;
-			if (tile.frameX % 36 != 0)
-			{
-				left--;
-			}
-			if (tile.frameY != 0)
-			{
-				top--;
-			}
 			player.showItemIconText = "Map Device";
 			if (player.showItemIconText == "Map Device")
 			{
@@ -133,8 +169,62 @@ namespace PathOfModifiers.Tiles
 				player.showItemIcon = false;
 				player.showItemIcon2 = 0;
 			}
-		}
-	}
+        }
+
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            //Hardcoded dimension values because using TileObjectData is cancer.
+            var mapDevicePos = new Point16(i - 2, j - 1);
+            if (TileEntity.ByPosition.TryGetValue(mapDevicePos, out TileEntity te))
+            {
+                var mapDevice = (MapDeviceTE)te;
+
+                if (!mapDevice.mapItem.IsAir)
+                {
+                    var screenDrawOffset = PoMHelper.DrawToScreenOffset();
+
+                    var itemTexture = Main.itemTexture[mapDevice.mapItem.type];
+                    var itemSize = 24;
+                    var itemScale = itemSize / (float)itemTexture.Width;
+                    var itemDrawOffset = new Point16(20, 16);
+
+                    var itemPosition = new Vector2(
+                        mapDevicePos.X * 16 - Main.screenPosition.X + screenDrawOffset.X + itemDrawOffset.X,
+                        mapDevicePos.Y * 16 - Main.screenPosition.Y + screenDrawOffset.Y + itemDrawOffset.Y);
+                    spriteBatch.Draw(itemTexture, itemPosition, null, Color.White, 0, Vector2.Zero, itemScale, SpriteEffects.None, 0);
+                    ((Items.Map)mapDevice.mapItem.modItem).map.DrawIcon(spriteBatch, itemPosition, itemTexture.Size(), Vector2.Zero, itemScale);
+                }
+            }
+        }
+
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            bool emitLight = false;
+            //Hardcoded dimension values because using TileObjectData is cancer.
+            var mapDevicePos = new Point16(i - 1, j - 1);
+            if (TileEntity.ByPosition.TryGetValue(mapDevicePos, out TileEntity te))
+            {
+                var mapDevice = (MapDeviceTE)te;
+                if (!mapDevice.mapItem.IsAir)
+                {
+                    emitLight = true;
+                }
+            }
+
+            if (emitLight)
+            {
+                r = 0.506f;
+                g = 0f;
+                b = 0.78f;
+            }
+            else
+            {
+                r = 0f;
+                g = 0f;
+                b = 0;
+            }
+        }
+    }
 
     public class MapDeviceTE : PoMTileEntity
     {
@@ -154,8 +244,7 @@ namespace PathOfModifiers.Tiles
         {
             List<Rectangle> boundss = new List<Rectangle>();
             List<Tuple<Point, bool, bool>> adjacentTiles = new List<Tuple<Point, bool, bool>>();
-            //TODO: make array of bounds' tiles to make insdestructible
-            Point size = new Point(2, 2);
+            Point size = new Point(4, 4);
             int length = size.X * 2 + size.Y * 2 + 4;
             int x = 0;
             int y = 0;
@@ -397,7 +486,7 @@ namespace PathOfModifiers.Tiles
         public override bool ValidTile(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType<MapDevice>() && tile.frameX == 0 && tile.frameY == 0;
+            return tile.active() && tile.type == mod.TileType<MapDevice>();
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)

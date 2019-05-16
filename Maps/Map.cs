@@ -34,9 +34,22 @@ namespace PathOfModifiers.Maps
         }
     }
 
+    public class OpenMap
+    {
+        public readonly Rectangle dimensions;
+
+        public OpenMap(Rectangle dimensions)
+        {
+            this.dimensions = dimensions;
+        }
+    }
+
     public class Map
     {
         public Mod mod;
+
+        public Texture2D iconTexture { get; private set; }
+        public virtual string iconTextureName => GetType().Name;
 
         public virtual Type generatorType => typeof(Generator);
 
@@ -57,22 +70,34 @@ namespace PathOfModifiers.Maps
                 return _generator;
             }
         }
-
-        public class OpenMap
-        {
-            /// <summary>
-            /// Index in the PoMWorld maps array to ID the map.
-            /// </summary>
-            public readonly Rectangle dimensions;
-
-            public OpenMap(Rectangle dimensions)
-            {
-                this.dimensions = dimensions;
-            }
-        }
-
+        
         public OpenMap openMap;
         public bool isOpened => openMap != null;
+
+        /// <summary>
+        /// Load the texture from textureName
+        /// </summary>
+        public virtual void Initialize()
+        {
+            if (Main.netMode != NetmodeID.Server)
+                iconTexture = mod.GetTexture($"{PathOfModifiers.pathMapIcons}{iconTextureName}");
+        }
+
+        //Drawn the map icon on top of the map
+        public virtual void DrawIcon(SpriteBatch spriteBatch, Vector2 mapPosition, Vector2 mapSize, Vector2 origin, float scale)
+        {
+            Vector2 iconPosition = mapPosition + ((mapSize - iconTexture.Size()) / 2 * scale);
+            spriteBatch.Draw(
+                iconTexture,
+                iconPosition,
+                null,
+                Color.Red,
+                0,
+                origin,
+                scale,
+                SpriteEffects.None,
+                0);
+        }
 
         public virtual bool Open(Rectangle dimensions)
         {
@@ -178,6 +203,7 @@ namespace PathOfModifiers.Maps
         }
         public virtual void Load(TagCompound tag)
         {
+            Initialize();
             if (tag.GetBool("isOpened"))
             {
                 var openMapTag = tag.GetCompound("openMap");
@@ -188,7 +214,6 @@ namespace PathOfModifiers.Maps
                 //pomWorld.AddOpenMap(this, ID);
 
                 openMap = new OpenMap(openMapTag.Get<Rectangle>("dimensions"));
-
             }
         }
 
@@ -196,6 +221,7 @@ namespace PathOfModifiers.Maps
         {
             Map newMap = (Map)Activator.CreateInstance(GetType());
             newMap.mod = mod;
+            newMap.iconTexture = iconTexture;
             newMap._generator = generator;
             newMap.openMap = null;
             return newMap;

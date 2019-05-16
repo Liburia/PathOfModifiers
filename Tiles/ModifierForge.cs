@@ -18,6 +18,7 @@ namespace PathOfModifiers.Tiles
     public class ModifierForge : ModTile
     {
         public static ModifierForgeTE activeForge;
+
         static int activeAnimationFirstFrame;
         static int activeAnimationFrameCount;
         static int activeAnimationFullFrameCount;
@@ -529,7 +530,7 @@ namespace PathOfModifiers.Tiles
         public override bool ValidTile(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType<ModifierForge>() && tile.frameX == 0 && tile.frameY == 0;
+            return tile.active() && tile.type == mod.TileType<ModifierForge>();
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)

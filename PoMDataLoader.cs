@@ -100,6 +100,7 @@ namespace PathOfModifiers
                     {
                         map = (Map)Activator.CreateInstance(t);
                         map.mod = mod;
+                        map.Initialize();
                         mapList.Add(map);
                         mapMap.Add(t, mapIndex);
                         mod.Logger.Debug($"Added map {t.FullName} with index {mapIndex} from mod {mod.Name}");

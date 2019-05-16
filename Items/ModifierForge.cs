@@ -13,8 +13,8 @@ namespace PathOfModifiers.Items
 		}
 		public override void SetDefaults()
         {
-            item.width = 26;
-            item.height = 22;
+            item.width = 48;
+            item.height = 34;
 			item.value = 500000;
 			item.rare = 2;
             item.maxStack = 99;
