@@ -54,6 +54,11 @@ namespace PathOfModifiers.Maps
         public virtual Type generatorType => typeof(Generator);
 
         /// <summary>
+        /// Rectangle that the player can randomly teleport inside when entering a map. Values can range 0-1. x, y, width, height
+        /// </summary>
+        public virtual Vector4 spawnArea => new Vector4(0, 0, 1, 1);
+
+        /// <summary>
         /// Per 10k tiles
         /// </summary>
         public virtual float baseNPCFrequency => 0;

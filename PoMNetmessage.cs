@@ -16,6 +16,7 @@ using Terraria.DataStructures;
 using PathOfModifiers.Tiles;
 using PathOfModifiers;
 using PathOfModifiers.Buffs;
+using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers
 {
@@ -38,28 +39,6 @@ namespace PathOfModifiers
                 packet.Write((byte)MsgType.cSyncDataMaps);
                 PoMDataLoader.SendMaps(packet);
                 packet.Send(player);
-            }
-            else if (msg == MsgType.SyncTileEntity)
-            {
-                int id = reader.ReadInt32();
-                bool contains = reader.ReadBoolean();
-                if (contains)
-                {
-                    PoMTileEntity tileEntity;
-                    tileEntity = (PoMTileEntity)TileEntity.Read(reader, true);
-                    tileEntity.ID = id;
-                    TileEntity.ByID[tileEntity.ID] = tileEntity;
-                    TileEntity.ByPosition[tileEntity.Position] = tileEntity;
-                    tileEntity.Sync(whoAmI);
-                }
-                else
-                {
-                    if (TileEntity.ByID.TryGetValue(id, out TileEntity tileEntity) && tileEntity is ModTileEntity)
-                    {
-                        TileEntity.ByID.Remove(id);
-                        TileEntity.ByPosition.Remove(tileEntity.Position);
-                    }
-                }
             }
             else if (msg == MsgType.AddDamageDoTDebuffNPC)
             {
@@ -134,6 +113,30 @@ namespace PathOfModifiers
                 var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
                 mapDevice.CloseMap();
             }
+            else if (msg == MsgType.sModifierForgeModifiedItemChanged)
+            {
+                byte ignoreClient = reader.ReadByte();
+                int mfID = reader.ReadInt32();
+                var mf = (ModifierForgeTE)TileEntity.ByID[mfID];
+                mf.modifiedItem = ItemIO.Receive(reader, true);
+                mf.SendToClients(ignoreClient);
+            }
+            else if (msg == MsgType.sModifierForgeModifierItemChanged)
+            {
+                byte ignoreClient = reader.ReadByte();
+                int mfID = reader.ReadInt32();
+                var mf = (ModifierForgeTE)TileEntity.ByID[mfID];
+                mf.modifierItem = ItemIO.Receive(reader, true);
+                mf.SendToClients(ignoreClient);
+            }
+            else if (msg == MsgType.sMapDeviceMapItemChanged)
+            {
+                byte ignoreClient = reader.ReadByte();
+                int mdID = reader.ReadInt32();
+                var md = (MapDeviceTE)TileEntity.ByID[mdID];
+                md.mapItem = ItemIO.Receive(reader, true);
+                md.SendToClients(ignoreClient);
+            }
 
         SkipMsgIf:;
         }
@@ -163,15 +166,6 @@ namespace PathOfModifiers
             packet.Write(buffType);
             packet.Write(damage);
             packet.Write(time);
-            packet.Send();
-        }
-        public static void SyncTileEntity(int id, bool byID, TileEntity te)
-        {
-            ModPacket packet = PathOfModifiers.Instance.GetPacket();
-            packet.Write((byte)MsgType.SyncTileEntity);
-            packet.Write(id);
-            packet.Write(byID);
-            TileEntity.Write(packet, te, true);
             packet.Send();
         }
         /// <summary>
@@ -219,16 +213,48 @@ namespace PathOfModifiers
             packet.Write(mapDeviceID);
             packet.Send();
         }
+        public static void sModifierForgeModifiedItemChanged(int mapDeviceID, Item item)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.sModifierForgeModifiedItemChanged);
+            packet.Write((byte)Main.myPlayer);
+            packet.Write(mapDeviceID);
+            ItemIO.Send(item, packet, true);
+            packet.Send();
+        }
+        public static void sModifierForgeModifierItemChanged(int mapDeviceID, Item item)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.sModifierForgeModifierItemChanged);
+            packet.Write((byte)Main.myPlayer);
+            packet.Write(mapDeviceID);
+            ItemIO.Send(item, packet, true);
+            packet.Send();
+        }
+        public static void sMapDeviceMapItemChanged(int mapDeviceID, Item item)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.sMapDeviceMapItemChanged);
+            packet.Write((byte)Main.myPlayer);
+            packet.Write(mapDeviceID);
+            ItemIO.Send(item, packet, true);
+            packet.Send();
+        }
     }
 
+    /// <summary>
+    /// First letter tells which direction the message is sent. c = to the cient.
+    /// </summary>
     enum MsgType
     {
         cSyncDataMaps,
         PlayerConnected,
-        SyncTileEntity,
         AddDamageDoTDebuffNPC,
         AddDamageDoTDebuffPlayer,
         sOpenMapDeviceMap,
         sCloseMapDeviceMap,
+        sModifierForgeModifiedItemChanged,
+        sModifierForgeModifierItemChanged,
+        sMapDeviceMapItemChanged,
     }
 }

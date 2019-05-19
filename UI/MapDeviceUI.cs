@@ -68,7 +68,7 @@ namespace PathOfModifiers.UI
         public bool IsLocked => MapDevice.activeMD.timeLeft > 0;
 
 
-        public Vector2 position = new Vector2(500, 400);
+        public Vector2 position = new Vector2(100, 400);
 
 		public override void OnInitialize()
 		{
@@ -155,7 +155,8 @@ namespace PathOfModifiers.UI
         void MapItemChanged(Item oldItem, Item newItem)
         {
             MapDevice.activeMD.mapItem = newItem.Clone();
-            MapDevice.activeMD.Sync();
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                PoMNetMessage.sMapDeviceMapItemChanged(MapDevice.activeMD.ID, MapDevice.activeMD.mapItem);
         }
 
         void BeginButtonClicked(UIMouseEvent evt, UIElement listeningElement)
@@ -227,9 +228,10 @@ namespace PathOfModifiers.UI
             if (IsVisible)
             {
                 Player player = Main.LocalPlayer;
-                Point playerPos = new Point((int)(player.MountedCenter.X / 16), (int)(player.MountedCenter.Y / 16));
-                if (playerPos.X < MapDevice.activeMD.Position.X - Player.tileRangeX || playerPos.X > MapDevice.activeMD.Position.X + Player.tileRangeX + 1 ||
-                    playerPos.Y < MapDevice.activeMD.Position.Y - Player.tileRangeY || playerPos.Y > MapDevice.activeMD.Position.Y + Player.tileRangeY + 1)
+                Point16 playerPos = new Point16((int)(player.MountedCenter.X / 16), (int)(player.MountedCenter.Y / 16));
+                //TODO: Don't hardcode TE size?
+                if (playerPos.X < MapDevice.activeMD.Position.X - Player.tileRangeX || playerPos.X > MapDevice.activeMD.Position.X + Player.tileRangeX + 3 ||
+                    playerPos.Y < MapDevice.activeMD.Position.Y - Player.tileRangeY || playerPos.Y > MapDevice.activeMD.Position.Y + Player.tileRangeY + 3)
                 {
                     HideUI();
                 }

@@ -9,9 +9,9 @@ namespace PathOfModifiers.Tiles
 {
 	public class MapBorder : ModTile
 	{
-        List<Point> activeTiles;
+        static List<Point> activeTiles;
 
-        public void AddActiveBounds(Rectangle bounds)
+        public static void AddActiveBounds(Rectangle bounds)
         {
             for (int i = bounds.Left; i <= bounds.Right; i++)
             {
@@ -24,13 +24,13 @@ namespace PathOfModifiers.Tiles
                 activeTiles.Add(new Point(bounds.Right, j));
             }
         }
-        public void RemoveActiveBounds(Rectangle bounds)
+        public static void RemoveActiveBounds(Rectangle bounds)
         {
             var point = bounds.TopLeft().ToPoint();
             var index = activeTiles.IndexOf(point);
             activeTiles.RemoveRange(index, bounds.Width * 2 + bounds.Height * 2);
         }
-        public void ClearActiveBounds()
+        public static void ClearActiveBounds()
         {
             activeTiles.Clear();
             activeTiles.TrimExcess();

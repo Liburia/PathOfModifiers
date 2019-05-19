@@ -83,7 +83,7 @@ namespace PathOfModifiers
             if (Main.LocalPlayer == player)
             {
                 var mapBorder = mod.GetTile<MapBorder>();
-                mapBorder.ClearActiveBounds();
+                MapBorder.ClearActiveBounds();
             }
         }
         public override void PlayerDisconnect(Player player)
@@ -93,7 +93,7 @@ namespace PathOfModifiers
             if (Main.LocalPlayer == player)
             {
                 var mapBorder = mod.GetTile<MapBorder>();
-                mapBorder.ClearActiveBounds();
+                MapBorder.ClearActiveBounds();
             }
         }
 

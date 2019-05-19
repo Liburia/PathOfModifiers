@@ -80,7 +80,7 @@ namespace PathOfModifiers
             {
                 new ModifierForgeUI().Initialize();
                 modifierForgeUI = new UserInterface();
-                ModifierForgeUI.Instance.Visible = false;
+                ModifierForgeUI.Instance.IsVisible = false;
 
                 new MapDeviceUI().Initialize();
                 mapDeviceUI = new UserInterface();
@@ -112,7 +112,7 @@ namespace PathOfModifiers
                     "PathOfModifiers: Modifier Forge",
                     delegate
                     {
-                        if (ModifierForgeUI.Instance.Visible)
+                        if (ModifierForgeUI.Instance.IsVisible)
                         {
                             ModifierForgeUI.Instance.Draw(Main.spriteBatch);
                         }
@@ -137,7 +137,7 @@ namespace PathOfModifiers
 
         public override void PreSaveAndQuit()
         {
-            ModifierForgeUI.Instance.Visible = false;
+            ModifierForgeUI.Instance.IsVisible = false;
             MapDeviceUI.HideUI();
         }
 

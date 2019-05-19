@@ -35,19 +35,37 @@ namespace PathOfModifiers.UI
 
         public static ModifierForgeUI Instance { get; set; }
 
-		public UIPanel modifierForgePanel;
+        public static void ShowUI(ModifierForgeTE forge)
+        {
+            if (ModifierForge.activeForge != null)
+                Main.PlaySound(SoundID.MenuTick);
+            else
+                Main.PlaySound(SoundID.MenuOpen);
+            ModifierForge.activeForge = forge;
+            Main.playerInventory = true;
+            Instance.IsVisible = true;
+        }
+        public static void HideUI()
+        {
+            if (ModifierForge.activeForge != null)
+                Main.PlaySound(SoundID.MenuClose);
+            ModifierForge.activeForge = null;
+            Instance.IsVisible = false;
+        }
+
+        public UIPanel modifierForgePanel;
         public UIItemSlot modifiedItemSlot;
         public UIItemSlot modifierItemSlot;
         public UIText modifierCostText;
 
-        bool visible = false;
-        public bool Visible
+        bool isVisible = false;
+        public bool IsVisible
         {
-            get { return visible; }
+            get { return isVisible; }
             set
             {
-                visible = value;
-                if (visible)
+                isVisible = value;
+                if (isVisible)
                 {
                     if (ModifierForge.activeForge != null)
                     {
@@ -452,12 +470,14 @@ namespace PathOfModifiers.UI
         void ModifiedItemChange(Item oldItem, Item newItem)
         {
             ModifierForge.activeForge.modifiedItem = newItem.Clone();
-            ModifierForge.activeForge.Sync();
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                PoMNetMessage.sModifierForgeModifiedItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifiedItem);
         }
         void ModifierItemChange(Item oldItem, Item newItem)
         {
             ModifierForge.activeForge.modifierItem = newItem.Clone();
-            ModifierForge.activeForge.Sync();
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                PoMNetMessage.sModifierForgeModifierItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifierItem);
         }
 
         void ButtonToggled(UIMouseEvent evt, UIElement listeningElement)
@@ -554,7 +574,7 @@ namespace PathOfModifiers.UI
         }
         void OnCloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
-            ModifierForge.HideUI();
+            HideUI();
         }
 
         Vector2 offset;
@@ -599,14 +619,15 @@ namespace PathOfModifiers.UI
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (Visible)
+            if (IsVisible)
             {
                 Player player = Main.LocalPlayer;
                 Point playerPos = new Point((int)(player.MountedCenter.X / 16), (int)(player.MountedCenter.Y / 16));
-                if (playerPos.X < ModifierForge.activeForge.Position.X - Player.tileRangeX || playerPos.X > ModifierForge.activeForge.Position.X + Player.tileRangeX + 1 ||
+                //TODO: Don't hardcode TE size?
+                if (playerPos.X < ModifierForge.activeForge.Position.X - Player.tileRangeX || playerPos.X > ModifierForge.activeForge.Position.X + Player.tileRangeX + 2 ||
                     playerPos.Y < ModifierForge.activeForge.Position.Y - Player.tileRangeY || playerPos.Y > ModifierForge.activeForge.Position.Y + Player.tileRangeY + 1)
                 {
-                    ModifierForge.HideUI();
+                    HideUI();
                 }
             }
         }
@@ -622,7 +643,7 @@ namespace PathOfModifiers.UI
         /// </summary>
         public void UpdateText()
         {
-            if (!Visible)
+            if (!IsVisible)
                 return;
 
             if (selectedAction == SelectedAction.None)

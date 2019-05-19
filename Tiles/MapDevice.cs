@@ -29,8 +29,6 @@ namespace PathOfModifiers.Tiles
         public override void SetDefaults()
         {
             Main.tileSpelunker[Type] = false;
-            //Main.tileShine2[Type] = true;
-            //Main.tileShine[Type] = 1200;
             Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -42,8 +40,6 @@ namespace PathOfModifiers.Tiles
             TileObjectData.newTile.Origin = new Point16(1, 3);
 			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16 };
             TileObjectData.newTile.DrawYOffset = 2;
-            //TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
-            //TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
             TileObjectData.newTile.AnchorInvalidTiles = new int[] { 127 };
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.LavaDeath = false;
@@ -53,7 +49,6 @@ namespace PathOfModifiers.Tiles
 			name.SetDefault("Map Device");
 			AddMapEntry(new Color(107, 66, 130), name);
 			disableSmartCursor = false;
-			drop = 0;
             animationFrameHeight = 72;
 
             activeAnimationFirstFrame = 1;
@@ -111,20 +106,13 @@ namespace PathOfModifiers.Tiles
             if (Main.netMode != 1)
                 Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("MapDevice"));
 
-            MapDeviceTE tileEntity = (MapDeviceTE)TileEntity.ByID[mod.GetTileEntity<MapDeviceTE>().Find(i, j)];
-
-            if (Main.netMode != 2 && activeMD == tileEntity)
-                MapDeviceUI.HideUI();
-
-            tileEntity.Kill(i, j);
+            mod.GetTileEntity<MapDeviceTE>().Kill(i, j);
         }
-
+        
         public override void RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			Main.mouseRightRelease = false;
-			int left = i;
-			int top = j;
 			if (player.sign >= 0)
 			{
 				Main.PlaySound(SoundID.MenuClose);
@@ -132,37 +120,62 @@ namespace PathOfModifiers.Tiles
 				Main.editSign = false;
 				Main.npcChatText = "";
             }
+
             //Hardcoded frame coordinate values because using TileObjectData is cancer.
-            PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te);
-            MapDeviceTE clickedMD = (MapDeviceTE)te;
-            if (MapDeviceUI.Instance.IsVisible && activeMD == clickedMD)
+            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
-                MapDeviceUI. HideUI();
+                MapDeviceTE clickedMD = (MapDeviceTE)te;
+                if (clickedMD.timeLeft > 0 && IsTilePortal(clickedMD, i, j))
+                {
+                    Map map = ((Items.Map)clickedMD.mapItem.modItem).map;
+                    var teleportBounds = new Vector4(
+                        map.openMap.dimensions.Left + (map.openMap.dimensions.Width * map.spawnArea.X),
+                        map.openMap.dimensions.Top + (map.openMap.dimensions.Height * map.spawnArea.Y),
+                        map.openMap.dimensions.Width * map.spawnArea.Z,
+                        map.openMap.dimensions.Height * map.spawnArea.W);
+                    var newPlayerPos = new Vector2(
+                        Main.rand.NextFloat(teleportBounds.X * 16, (teleportBounds.X + teleportBounds.Z - 1) * 16),
+                        Main.rand.NextFloat(teleportBounds.Y * 16, (teleportBounds.Y + teleportBounds.W - 2) * 16));
+                    var oldPos = player.position;
+                    player.Teleport(newPlayerPos, 3);
+                    player.Teleport(oldPos, 3);
+                }
+                else
+                {
+                    if (MapDeviceUI.Instance.IsVisible && activeMD == clickedMD)
+                    {
+                        MapDeviceUI.HideUI();
+                    }
+                    else
+                    {
+                        MapDeviceUI.ShowUI(clickedMD);
+                    }
+                }
             }
-            else
-            {
-                MapDeviceUI.ShowUI(clickedMD);
-            }
+            
             return;
 
         }
 
 		public override void MouseOver(int i, int j)
 		{
-			Player player = Main.LocalPlayer;
-			player.showItemIconText = "Map Device";
-			if (player.showItemIconText == "Map Device")
-			{
-				player.showItemIcon2 = mod.ItemType("MapDevice");
-				player.showItemIconText = "";
-			}
-			player.noThrow = 2;
-			player.showItemIcon = true;
+            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
+            {
+                var mapDevice = (MapDeviceTE)te;
+
+                Player player = Main.LocalPlayer;
+                player.showItemIcon = true;
+                if (mapDevice.timeLeft > 0 && IsTilePortal(mapDevice, i, j))
+                    player.showItemIcon2 = mod.ItemType("ModifierForge");
+                else
+                    player.showItemIcon2 = mod.ItemType("MapDevice");
+                player.showItemIconText = "";
+                player.noThrow = 2;
+            }
 		}
 
 		public override void MouseOverFar(int i, int j)
 		{
-			MouseOver(i, j);
 			Player player = Main.LocalPlayer;
 			if (player.showItemIconText == "")
 			{
@@ -174,7 +187,7 @@ namespace PathOfModifiers.Tiles
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             //Hardcoded dimension values because using TileObjectData is cancer.
-            var mapDevicePos = new Point16(i - 2, j - 1);
+            var mapDevicePos = new Point16(i - 3, j - 3);
             if (TileEntity.ByPosition.TryGetValue(mapDevicePos, out TileEntity te))
             {
                 var mapDevice = (MapDeviceTE)te;
@@ -224,16 +237,15 @@ namespace PathOfModifiers.Tiles
                 b = 0;
             }
         }
+
+        bool IsTilePortal(MapDeviceTE md, int i, int j)
+        {
+            return j - md.Position.Y < 3;
+        }
     }
 
     public class MapDeviceTE : PoMTileEntity
     {
-        public enum MapAction
-        {
-            Open = 0,
-            Close = 1,
-        }
-
         public Item mapItem = new Item();
 
         public int timeLeft = 0;
@@ -342,11 +354,10 @@ namespace PathOfModifiers.Tiles
 
             var map = mapModItem.map;
             map.Open(dimensions);
+            
+            MapBorder.AddActiveBounds(bounds.Value);
 
-            var mapBorder = mod.GetTile<MapBorder>();
-            mapBorder.AddActiveBounds(bounds.Value);
-
-            Sync();
+            SendToClients();
         }
         //Should never run on a client.
         public void CloseMap()
@@ -363,10 +374,9 @@ namespace PathOfModifiers.Tiles
             var map = mapModItem.map;
             map.Close();
 
-            var mapBorder = mod.GetTile<MapBorder>();
-            mapBorder.RemoveActiveBounds(bounds.Value);
+            MapBorder.RemoveActiveBounds(bounds.Value);
 
-            Sync();
+            SendToClients();
         }
 
         //Never runs on a client
@@ -383,7 +393,7 @@ namespace PathOfModifiers.Tiles
                 {
                     if (Main.netMode == NetmodeID.Server)
                     {
-                        Sync();
+                        SendToClients();
                     }
                     else if (MapDevice.activeMD == this && MapDeviceUI.Instance.IsVisible)
                     {
@@ -396,7 +406,6 @@ namespace PathOfModifiers.Tiles
         public override void NetSend(BinaryWriter writer, bool lightSend)
         {
             //PathOfModifiers.Instance.Logger.Info($"NetSend: {Main.netMode}");
-            writer.Write(ID);
             writer.Write(timeLeft);
             bool isBoundsNull = !bounds.HasValue;
             writer.Write(isBoundsNull);
@@ -408,45 +417,30 @@ namespace PathOfModifiers.Tiles
         public override void NetReceive(BinaryReader reader, bool lightReceive)
         {
             //PathOfModifiers.Instance.Logger.Info($"NetReceive: {Main.netMode}");
-            var oldID = reader.ReadInt32();
-
-            timeLeft = reader.ReadInt32();
-            
-            var mapBorder = mod.GetTile<MapBorder>();
+            var newTimeLeft = reader.ReadInt32();
 
             bool isBoundsNull = reader.ReadBoolean();
-            bounds = isBoundsNull ? null : (Rectangle?)reader.ReadRectangle();
+            var newBounds = isBoundsNull ? null : (Rectangle?)reader.ReadRectangle();
 
             mapItem = ItemIO.Receive(reader, true);
-            
-            MapDeviceTE oldMD;
-            int oldTimeLeft = 0;
-            Rectangle? oldBounds = null;
-            if (ByID.TryGetValue(oldID, out TileEntity oldTE))
+
+            if (timeLeft == 0 && newTimeLeft != 0)
             {
-                oldMD = oldTE as MapDeviceTE;
-                oldTimeLeft = oldMD.timeLeft;
-                oldBounds = oldMD.bounds;
+                MapBorder.AddActiveBounds(newBounds.Value);
+            }
+            else if (timeLeft != 0 && newTimeLeft == 0)
+            {
+                MapBorder.RemoveActiveBounds(bounds.Value);
             }
 
-            if (oldTimeLeft == 0 && timeLeft != 0)
-            {
-                mapBorder.AddActiveBounds(bounds.Value);
-            }
-            else if (oldTimeLeft != 0 && timeLeft == 0)
-            {
-                mapBorder.RemoveActiveBounds(oldBounds.Value);
-            }
+            timeLeft = newTimeLeft;
+            bounds = newBounds;
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                //Cloned TE is different or something.
-                if (MapDevice.activeMD != null && MapDevice.activeMD.Position == Position)
-                    MapDeviceUI.ShowUI(this);
-                else if (MapDevice.activeMD == this)
+                if (MapDevice.activeMD?.Position == Position)
                 {
-                    MapDeviceUI.Instance.SetItemSlot(mapItem.Clone());
-                    MapDeviceUI.Instance.UpdateText();
+                    MapDeviceUI.ShowUI(this);
                 }
             }
         }
@@ -469,13 +463,11 @@ namespace PathOfModifiers.Tiles
         {
             //PathOfModifiers.Log($"Load{Main.netMode}");
 
-            var mapBorder = mod.GetTile<MapBorder>();
-
             timeLeft = tag.GetInt("timeLeft");
             bool isBoundsNull = tag.GetBool("isBoundsNull");
             bounds = isBoundsNull ? null : (Rectangle?)tag.Get<Rectangle>("bounds");
             if (timeLeft > 0 && bounds.HasValue)
-                mapBorder.AddActiveBounds(bounds.Value);
+                MapBorder.AddActiveBounds(bounds.Value);
 
             mapItem = ItemIO.Load(tag.GetCompound("map"));
 
@@ -489,14 +481,16 @@ namespace PathOfModifiers.Tiles
             return tile.active() && tile.type == mod.TileType<MapDevice>();
         }
 
+
+        //Passing true when registering the hook makes these i, j the top left tile
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
         {
-            //Main.NewText("i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
-            if (Main.netMode == 1)
+            //Main.NewText("i " + i + " j " + j + " x " + -1 + " y " + -1);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                NetMessage.SendTileSquare(Main.myPlayer, i, j, 3);
-                NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
-                return -1;
+				NetMessage.SendTileSquare(Main.myPlayer, i + 1, j + 1, 5);
+				NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
+				return -1;
             }
             return Place(i, j);
         }
@@ -514,6 +508,8 @@ namespace PathOfModifiers.Tiles
                     PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), mapItem, 2);
                 }
             }
+            if (Main.netMode != NetmodeID.Server && MapDevice.activeMD == this)
+                MapDeviceUI.HideUI();
         }
     }
 }

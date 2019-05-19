@@ -17,11 +17,15 @@ namespace PathOfModifiers.Tiles
     {
         public override bool ValidTile(int i, int j) { return false; }
 
-        public void Sync(int ignoreClient = -1)
+        /// <summary>
+        /// Should only be called on the server
+        /// </summary>
+        /// <param name="ignoreClient"></param>
+        public void SendToClients(int ignoreClient = -1)
         {
-            if (Main.netMode == 1)
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                PoMNetMessage.SyncTileEntity(ID, ByID.ContainsKey(ID), this);
+                throw new Exception("PoMTileEntity.Sync should never be called from the client");
             }
             else if (Main.netMode == 2)
             {

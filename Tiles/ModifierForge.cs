@@ -26,8 +26,6 @@ namespace PathOfModifiers.Tiles
         public override void SetDefaults()
         {
             Main.tileSpelunker[Type] = false;
-            //Main.tileShine2[Type] = true;
-            //Main.tileShine[Type] = 1200;
             Main.tileLighted[Type] = true;
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -38,8 +36,6 @@ namespace PathOfModifiers.Tiles
             TileObjectData.newTile.Origin = new Point16(1, 1);
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
             TileObjectData.newTile.DrawYOffset = 2;
-            //TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
-            //TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
             TileObjectData.newTile.AnchorInvalidTiles = new int[] { 127 };
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.LavaDeath = false;
@@ -49,7 +45,6 @@ namespace PathOfModifiers.Tiles
 			name.SetDefault("Modifier Forge");
 			AddMapEntry(new Color(192, 120, 0), name);
 			disableSmartCursor = false;
-			drop = 0;
             animationFrameHeight = 38;
             
             activeAnimationFirstFrame = 2;
@@ -116,12 +111,7 @@ namespace PathOfModifiers.Tiles
             if (Main.netMode != 1)
                 Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("ModifierForge"));
 
-            ModifierForgeTE tileEntity = (ModifierForgeTE)TileEntity.ByID[mod.GetTileEntity<ModifierForgeTE>().Find(i, j)];
-
-            if (Main.netMode != 2 && activeForge == tileEntity)
-                HideUI();
-
-            tileEntity.Kill(i, j);
+            mod.GetTileEntity<MapDeviceTE>().Kill(i, j);
         }
 
         public override void RightClick(int i, int j)
@@ -137,36 +127,19 @@ namespace PathOfModifiers.Tiles
             }
 
             //Hardcoded frame coordinate values because using TileObjectData is cancer.
-            PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te);
-            ModifierForgeTE clickedForge = (ModifierForgeTE)te;
-            if (ModifierForgeUI.Instance.Visible && activeForge == clickedForge)
+            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
-                HideUI();
+                ModifierForgeTE clickedForge = (ModifierForgeTE)te;
+                if (ModifierForgeUI.Instance.IsVisible && activeForge == clickedForge)
+                {
+                    ModifierForgeUI.HideUI();
+                }
+                else
+                {
+                    ModifierForgeUI.ShowUI(clickedForge);
+                }
             }
-            else
-            {
-                ShowUI(clickedForge);
-            }
-            return;
 		}
-
-        public static void ShowUI(ModifierForgeTE forge)
-        {
-            if (activeForge != null)
-                Main.PlaySound(SoundID.MenuTick);
-            else
-                Main.PlaySound(SoundID.MenuOpen);
-            activeForge = forge;
-            Main.playerInventory = true;
-            ModifierForgeUI.Instance.Visible = true;
-        }
-        public static void HideUI()
-        {
-            if (activeForge != null)
-                Main.PlaySound(SoundID.MenuClose);
-            activeForge = null;
-            ModifierForgeUI.Instance.Visible = false;
-        }
 
 		public override void MouseOver(int i, int j)
 		{
@@ -183,7 +156,6 @@ namespace PathOfModifiers.Tiles
 
 		public override void MouseOverFar(int i, int j)
 		{
-			MouseOver(i, j);
 			Player player = Main.LocalPlayer;
 			if (player.showItemIconText == "")
 			{
@@ -207,14 +179,13 @@ namespace PathOfModifiers.Tiles
                     var itemTexture = Main.itemTexture[forge.modifiedItem.type];
                     var itemWidth = 24;
                     var itemHeight = (int)(itemWidth * (itemTexture.Height / (float)itemTexture.Width));
+                    var itemScale = itemWidth / (float)itemTexture.Width;
                     var itemDrawOffset = new Point16((48 - itemWidth) / 2, 5 - itemHeight);
 
-                    var destRect = new Rectangle(
-                        forgePos.X * 16 - (int)Main.screenPosition.X + (int)screenDrawOffset.X + itemDrawOffset.X,
-                        forgePos.Y * 16 - (int)Main.screenPosition.Y + (int)screenDrawOffset.Y + itemDrawOffset.Y,
-                        itemWidth,
-                        itemHeight);
-                    spriteBatch.Draw(itemTexture, destRect, Color.White);
+                    var itemPosition = new Vector2(
+                        forgePos.X * 16 - Main.screenPosition.X + screenDrawOffset.X + itemDrawOffset.X,
+                        forgePos.Y * 16 - Main.screenPosition.Y + screenDrawOffset.Y + itemDrawOffset.Y);
+                    spriteBatch.Draw(itemTexture, itemPosition, null, Color.White, 0, Vector2.Zero, itemScale, SpriteEffects.None, 0);
                 }
             }
         }
@@ -315,7 +286,8 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync();
+                SendModifiedItemToServer();
+                SendModifierItemToServer();
             }
         }
         public void RerollAffixes()
@@ -330,7 +302,8 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync();
+                SendModifiedItemToServer();
+                SendModifierItemToServer();
             }
         }
         public void Rarify()
@@ -346,7 +319,8 @@ namespace PathOfModifiers.Tiles
                     ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                     Main.PlaySound(SoundID.Item37, -1, -1);
                     ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    Sync();
+                    SendModifiedItemToServer();
+                    SendModifierItemToServer();
                 }
             }
         }
@@ -363,7 +337,8 @@ namespace PathOfModifiers.Tiles
                     ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                     Main.PlaySound(SoundID.Item37, -1, -1);
                     ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    Sync();
+                    SendModifiedItemToServer();
+                    SendModifierItemToServer();
                 }
             }
         }
@@ -380,7 +355,8 @@ namespace PathOfModifiers.Tiles
                     ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                     Main.PlaySound(SoundID.Item37, -1, -1);
                     ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    Sync();
+                    SendModifiedItemToServer();
+                    SendModifierItemToServer();
                 }
             }
         }
@@ -397,7 +373,8 @@ namespace PathOfModifiers.Tiles
                     ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                     Main.PlaySound(SoundID.Item37, -1, -1);
                     ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    Sync();
+                    SendModifiedItemToServer();
+                    SendModifierItemToServer();
                 }
             }
         }
@@ -413,7 +390,8 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync();
+                SendModifiedItemToServer();
+                SendModifierItemToServer();
             }
         }
         public void RemovePrefixes()
@@ -428,7 +406,8 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync();
+                SendModifiedItemToServer();
+                SendModifierItemToServer();
             }
         }
         public void RemoveSuffixes()
@@ -443,7 +422,8 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync();
+                SendModifiedItemToServer();
+                SendModifierItemToServer();
             }
         }
         public void RollAffixes()
@@ -458,7 +438,8 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync();
+                SendModifiedItemToServer();
+                SendModifierItemToServer();
             }
         }
         public void RollPrefixes()
@@ -473,7 +454,8 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync();
+                SendModifiedItemToServer();
+                SendModifierItemToServer();
             }
         }
         public void RollSuffixes()
@@ -488,8 +470,20 @@ namespace PathOfModifiers.Tiles
                 ItemText.NewText(modifiedItem, modifiedItem.stack, true, false);
                 Main.PlaySound(SoundID.Item37, -1, -1);
                 ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                Sync();
+                SendModifiedItemToServer();
+                SendModifierItemToServer();
             }
+        }
+
+        public void SendModifiedItemToServer()
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                PoMNetMessage.sModifierForgeModifiedItemChanged(ID, modifiedItem);
+        }
+        public void SendModifierItemToServer()
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                PoMNetMessage.sModifierForgeModifierItemChanged(ID, modifierItem);
         }
 
         public override void NetSend(BinaryWriter writer, bool lightSend)
@@ -505,10 +499,10 @@ namespace PathOfModifiers.Tiles
             modifierItem = ItemIO.Receive(reader, true);
             if (Main.netMode != 2)
             {
-                if (ModifierForge.activeForge != null && ModifierForge.activeForge.Position == Position)
-                    ModifierForge.ShowUI(this);
-                else if (ModifierForge.activeForge == this)
-                    ModifierForgeUI.Instance.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                if (ModifierForge.activeForge?.Position == Position)
+                {
+                    ModifierForgeUI.ShowUI(this);
+                }
             }
         }
 
@@ -538,7 +532,7 @@ namespace PathOfModifiers.Tiles
             //Main.NewText("i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
             if (Main.netMode == 1)
             {
-                NetMessage.SendTileSquare(Main.myPlayer, i, j, 3);
+                NetMessage.SendTileSquare(Main.myPlayer, i + 1, j, 3);
                 NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
                 return -1;
             }
@@ -547,7 +541,7 @@ namespace PathOfModifiers.Tiles
 
         public override void OnKill()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (!modifiedItem.IsAir)
                 {
@@ -558,6 +552,9 @@ namespace PathOfModifiers.Tiles
                     PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifierItem, 2);
                 }
             }
+
+            if (Main.netMode != NetmodeID.Server && ModifierForge.activeForge == this)
+                ModifierForgeUI.HideUI();
         }
     }
 }
