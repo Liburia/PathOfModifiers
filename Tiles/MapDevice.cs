@@ -313,7 +313,7 @@ namespace PathOfModifiers.Tiles
             {
                 Rectangle bound = boundss[i];
                 bool intersecnt = tileBoundsInflated.X < bound.X + bound.Width && bound.X < tileBoundsInflated.X + tileBoundsInflated.Width && tileBoundsInflated.Y < bound.Y + bound.Height && bound.Y < tileBoundsInflated.Y + tileBoundsInflated.Height;
-                if (!bound.Intersects(tileBoundsInflated) || bound.Contains(tileBounds))
+                if (!bound.Intersects(tileBoundsInflated) || bound.Contains(tileBounds) || MapBorder.InteresectsOrContainsActiveBounds(bound))
                     boundss.RemoveAt(i);
             }
 
