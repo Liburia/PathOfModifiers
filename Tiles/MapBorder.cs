@@ -40,7 +40,7 @@ namespace PathOfModifiers.Tiles
         {
             foreach (var bounds in activeBounds)
             {
-                if (((x == bounds.Left || x == bounds.Left) && y >= bounds.Top && y <= bounds.Bottom) ||
+                if (((x == bounds.Left || x == bounds.Right) && y >= bounds.Top && y <= bounds.Bottom) ||
                     ((y == bounds.Top || y == bounds.Bottom) && x >= bounds.Left && x <= bounds.Right))
                 {
                     return true;

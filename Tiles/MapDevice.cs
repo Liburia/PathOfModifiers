@@ -136,9 +136,13 @@ namespace PathOfModifiers.Tiles
                     var newPlayerPos = new Vector2(
                         Main.rand.NextFloat(teleportBounds.X * 16, (teleportBounds.X + teleportBounds.Z - 1) * 16),
                         Main.rand.NextFloat(teleportBounds.Y * 16, (teleportBounds.Y + teleportBounds.W - 2) * 16));
+#if DEBUG
                     var oldPos = player.position;
+#endif
                     player.Teleport(newPlayerPos, 3);
+#if DEBUG
                     player.Teleport(oldPos, 3);
+#endif
                 }
                 else
                 {
