@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using PathOfModifiers.Affixes;
+using PathOfModifiers.AffixesItem;
 using PathOfModifiers.Rarities;
 using Terraria.ID;
 
@@ -219,7 +219,6 @@ namespace PathOfModifiers.Maps.Generators
                 return null;
             NPC newNPC = Main.npc[newNpcIndex];
             PoMNPC pomNPC = newNPC.GetGlobalNPC<PoMNPC>();
-            pomNPC.mapNpc = true;
             return newNPC;
         }
         protected void DespawnNPC(NPC npc)

@@ -23,5 +23,9 @@ namespace PathOfModifiers.Rarities
         {
             return PoMItem.IsMap(item);
         }
+        public static bool CanRollNPC(NPC npc)
+        {
+            return true;    //TODO: ALL THIS SHIT LIKE BILLIONS OF THIS
+        }
     }
 }

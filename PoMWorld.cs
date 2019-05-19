@@ -6,7 +6,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using PathOfModifiers.Affixes;
+using PathOfModifiers.AffixesItem;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using System.IO;

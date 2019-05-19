@@ -4,7 +4,7 @@ using Terraria.Graphics;
 
 namespace PathOfModifiers.Rarities
 {
-    public class WeaponUncommon : Rarity
+    public class WeaponUncommon : RarityItem
     {
         public override float weight => 1f;
         public override byte minAffixes => 1;

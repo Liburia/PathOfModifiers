@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using PathOfModifiers.Affixes;
 using PathOfModifiers.Rarities;
 using PathOfModifiers.Maps;
 using PathOfModifiers.Maps.Generators;
@@ -20,10 +19,16 @@ namespace PathOfModifiers
     {
         public static List<Mod> mods = new List<Mod>();
 
-        public static Dictionary<Type, int> affixMap;
-        public static Affix[] affixes;
-        public static Dictionary<Type, int> rarityMap;
-        public static Rarity[] rarities;
+        public static Dictionary<Type, int> affixItemMap;
+        public static AffixesItem.Affix[] affixesItem;
+        public static Dictionary<Type, int> rarityItemMap;
+        public static RarityItem[] raritiesItem;
+
+        public static Dictionary<Type, int> affixNPCMap;
+        public static AffixesNPC.Affix[] affixesNPC;
+        public static Dictionary<Type, int> rarityNPCMap;
+        public static RarityNPC[] raritiesNPC;
+
         public static Dictionary<Type, int> generatorMap;
         public static Generator[] generators;
         public static Dictionary<Type, int> mapMap;
@@ -43,11 +48,17 @@ namespace PathOfModifiers
         /// </summary>
         public static void LoadData()
         {
-            affixMap = new Dictionary<Type, int>();
-            List<Affix> affixList = new List<Affix>();
+            affixItemMap = new Dictionary<Type, int>();
+            List<AffixesItem.Affix> affixItemList = new List<AffixesItem.Affix>();
 
-            rarityMap = new Dictionary<Type, int>();
-            List<Rarity> rarityList = new List<Rarity>();
+            rarityItemMap = new Dictionary<Type, int>();
+            List<RarityItem> rarityItemList = new List<RarityItem>();
+
+            affixNPCMap = new Dictionary<Type, int>();
+            List<AffixesNPC.Affix> affixNPCList = new List<AffixesNPC.Affix>();
+
+            rarityNPCMap = new Dictionary<Type, int>();
+            List<RarityNPC> rarityNPCList = new List<RarityNPC>();
 
             generatorMap = new Dictionary<Type, int>();
             List<Generator> generatorList = new List<Generator>();
@@ -55,12 +66,16 @@ namespace PathOfModifiers
             mapMap = new Dictionary<Type, int>();
             List<Map> mapList = new List<Map>();
 
-            int affixIndex = 0;
-            int rarityIndex = 0;
+            int affixItemIndex = 0;
+            int rarityItemIndex = 0;
+            int affixNPCIndex = 0;
+            int rarityNPCIndex = 0;
             int mapIndex = 0;
             int generatorIndex = 0;
-            Affix affix;
-            Rarity rarity;
+            AffixesItem.Affix affixItem;
+            RarityItem rarityItem;
+            AffixesNPC.Affix affixNPC;
+            RarityNPC rarityNPC;
             Generator generator;
             Map map;
             foreach (Mod mod in mods)
@@ -69,23 +84,41 @@ namespace PathOfModifiers
 
                 foreach(Type t in types)
                 {
-                    if (t.IsSubclassOf(typeof(Affix)) || t == typeof(Affix))
+                    if (t.IsSubclassOf(typeof(AffixesItem.Affix)) || t == typeof(AffixesItem.Affix))
                     {
-                        affix = (Affix)Activator.CreateInstance(t);
-                        affix.mod = mod;
-                        affixList.Add(affix);
-                        affixMap.Add(t, affixIndex);
-                        mod.Logger.Debug($"Added affix {t.FullName} with index {affixIndex} from mod {mod.Name}");
-                        affixIndex++;
+                        affixItem = (AffixesItem.Affix)Activator.CreateInstance(t);
+                        affixItem.mod = mod;
+                        affixItemList.Add(affixItem);
+                        affixItemMap.Add(t, affixItemIndex);
+                        mod.Logger.Debug($"Added item affix {t.FullName} with index {affixItemIndex} from mod {mod.Name}");
+                        affixItemIndex++;
                     }
-                    else if(t.IsSubclassOf(typeof(Rarity)) && t != typeof(Rarity))
+                    else if(t.IsSubclassOf(typeof(RarityItem)) && t != typeof(RarityItem))
                     {
-                        rarity = (Rarity)Activator.CreateInstance(t);
-                        rarity.mod = mod;
-                        rarityList.Add(rarity);
-                        rarityMap.Add(t, rarityIndex);
-                        mod.Logger.Debug($"Added rarity {t.FullName} with index {rarityIndex} from mod {mod.Name}");
-                        rarityIndex++;
+                        rarityItem = (RarityItem)Activator.CreateInstance(t);
+                        rarityItem.mod = mod;
+                        rarityItemList.Add(rarityItem);
+                        rarityItemMap.Add(t, rarityItemIndex);
+                        mod.Logger.Debug($"Added item rarity {t.FullName} with index {rarityItemIndex} from mod {mod.Name}");
+                        rarityItemIndex++;
+                    }
+                    else if (t.IsSubclassOf(typeof(AffixesNPC.Affix)) || t == typeof(AffixesNPC.Affix))
+                    {
+                        affixNPC = (AffixesNPC.Affix)Activator.CreateInstance(t);
+                        affixNPC.mod = mod;
+                        affixNPCList.Add(affixNPC);
+                        affixNPCMap.Add(t, affixNPCIndex);
+                        mod.Logger.Debug($"Added NPC affix {t.FullName} with index {affixNPCIndex} from mod {mod.Name}");
+                        affixNPCIndex++;
+                    }
+                    else if (t.IsSubclassOf(typeof(RarityNPC)) && t != typeof(RarityNPC))
+                    {
+                        rarityNPC = (RarityNPC)Activator.CreateInstance(t);
+                        rarityNPC.mod = mod;
+                        rarityNPCList.Add(rarityNPC);
+                        rarityNPCMap.Add(t, rarityNPCIndex);
+                        mod.Logger.Debug($"Added NPC rarity {t.FullName} with index {rarityNPCIndex} from mod {mod.Name}");
+                        rarityNPCIndex++;
                     }
                     else if (t.IsSubclassOf(typeof(Generator)) && t != typeof(Generator))
                     {
@@ -108,8 +141,10 @@ namespace PathOfModifiers
                     }
                 }
             }
-            affixes = affixList.ToArray();
-            rarities = rarityList.ToArray();
+            affixesItem = affixItemList.ToArray();
+            raritiesItem = rarityItemList.ToArray();
+            affixesNPC = affixNPCList.ToArray();
+            raritiesNPC = rarityNPCList.ToArray();
             generators = generatorList.ToArray();
             maps = mapList.ToArray();
         }
@@ -117,11 +152,17 @@ namespace PathOfModifiers
         {
             mods = new List<Mod>();
 
-            affixMap = new Dictionary<Type, int>();
-            affixes = new Affix[0];
+            affixItemMap = new Dictionary<Type, int>();
+            affixesItem = new AffixesItem.Affix[0];
 
-            rarityMap = new Dictionary<Type, int>();
-            rarities = new Rarity[0];
+            rarityItemMap = new Dictionary<Type, int>();
+            raritiesItem = new RarityItem[0];
+
+            affixNPCMap = new Dictionary<Type, int>();
+            affixesNPC = new AffixesNPC.Affix[0];
+
+            rarityNPCMap = new Dictionary<Type, int>();
+            raritiesNPC = new RarityNPC[0];
 
             generatorMap = new Dictionary<Type, int>();
             generators = new Generator[0];
@@ -132,24 +173,46 @@ namespace PathOfModifiers
 
         public static void SendMaps(ModPacket packet)
         {
-            packet.Write(affixes.Length);
-            PathOfModifiers.Instance.Logger.Debug($"SendMaps: {affixes.Length} ");
-            Affix affix;
-            for (int i = 0; i < affixes.Length; i++)
+            packet.Write(affixesItem.Length);
+            PathOfModifiers.Instance.Logger.Debug($"Sending Item Affix Map Length: {affixesItem.Length} ");
+            AffixesItem.Affix affixItem;
+            for (int i = 0; i < affixesItem.Length; i++)
             {
-                affix = affixes[i];
-                PathOfModifiers.Instance.Logger.Debug($"SendMaps: {i} / {affix.GetType().FullName} from mod {affix.mod}");
-                packet.Write(affix.mod.Name);
-                packet.Write(affix.GetType().FullName);
+                affixItem = affixesItem[i];
+                PathOfModifiers.Instance.Logger.Debug($"SendMaps: {i} / {affixItem.GetType().FullName} from mod {affixItem.mod}");
+                packet.Write(affixItem.mod.Name);
+                packet.Write(affixItem.GetType().FullName);
             }
 
-            packet.Write(rarities.Length);
-            Rarity rarity;
-            for (int i = 0; i < rarities.Length; i++)
+            packet.Write(raritiesItem.Length);
+            PathOfModifiers.Instance.Logger.Debug($"Sending Item Rarity Map Length: {raritiesItem.Length} ");
+            RarityItem rarityItem;
+            for (int i = 0; i < raritiesItem.Length; i++)
             {
-                rarity = rarities[i];
-                packet.Write(rarity.mod.Name);
-                packet.Write(rarity.GetType().FullName);
+                rarityItem = raritiesItem[i];
+                packet.Write(rarityItem.mod.Name);
+                packet.Write(rarityItem.GetType().FullName);
+            }
+
+            packet.Write(affixesNPC.Length);
+            PathOfModifiers.Instance.Logger.Debug($"Sending NPC Affix Map Length: {affixesNPC.Length} ");
+            AffixesNPC.Affix affixNPC;
+            for (int i = 0; i < affixesNPC.Length; i++)
+            {
+                affixNPC = affixesNPC[i];
+                PathOfModifiers.Instance.Logger.Debug($"SendMaps: {i} / {affixNPC.GetType().FullName} from mod {affixNPC.mod}");
+                packet.Write(affixNPC.mod.Name);
+                packet.Write(affixNPC.GetType().FullName);
+            }
+
+            packet.Write(raritiesNPC.Length);
+            PathOfModifiers.Instance.Logger.Debug($"Sending NPC Rarity Map Length: {raritiesNPC.Length} ");
+            RarityNPC rarityNPC;
+            for (int i = 0; i < raritiesNPC.Length; i++)
+            {
+                rarityNPC = raritiesNPC[i];
+                packet.Write(rarityNPC.mod.Name);
+                packet.Write(rarityNPC.GetType().FullName);
             }
 
             packet.Write(generators.Length);
@@ -174,12 +237,13 @@ namespace PathOfModifiers
         {
             try
             {
+                #region Item Affixes
                 int length = reader.ReadInt32();
-                PathOfModifiers.Instance.Logger.Debug($"ReceiveMaps: {length} ");
-                PathOfModifiers.Instance.Logger.Debug($"LoadedData: {affixMap.Count} ");
+                PathOfModifiers.Instance.Logger.Debug($"Receiving Item Affix Map Length: {length} ");
+                PathOfModifiers.Instance.Logger.Debug($"Loaded Item Affix Map Length: {affixItemMap.Count} ");
 
-                Dictionary<Type, int> newAffixMap = new Dictionary<Type, int>(length);
-                Affix[] newAffixes = new Affix[length];
+                Dictionary<Type, int> newAffixItemMap = new Dictionary<Type, int>(length);
+                AffixesItem.Affix[] newAffixesItem = new AffixesItem.Affix[length];
 
                 Type type;
                 Mod mod;
@@ -190,30 +254,76 @@ namespace PathOfModifiers
 
                     PathOfModifiers.Instance.Logger.Debug($"ReceiveMaps: {i} / {type.FullName} from mod {mod}");
 
-                    newAffixes[i] = affixes[affixMap[type]];
-                    newAffixMap.Add(type, i);
+                    newAffixesItem[i] = affixesItem[affixItemMap[type]];
+                    newAffixItemMap.Add(type, i);
                 }
 
-                affixMap = newAffixMap;
-                affixes = newAffixes;
-
+                affixItemMap = newAffixItemMap;
+                affixesItem = newAffixesItem;
+                #endregion
+                #region Item Rarities
                 length = reader.ReadInt32();
+                PathOfModifiers.Instance.Logger.Debug($"Receiving Item Rarity Map Length: {length} ");
+                PathOfModifiers.Instance.Logger.Debug($"Loaded Item Rarity Map Length: {rarityItemMap.Count} ");
 
-                Dictionary<Type, int> newRarityMap = new Dictionary<Type, int>(length);
-                Rarity[] newRarities = new Rarity[length];
+                Dictionary<Type, int> newRarityMapItem = new Dictionary<Type, int>(length);
+                RarityItem[] newRaritiesItem = new RarityItem[length];
 
                 for (int i = 0; i < length; i++)
                 {
                     mod = ModLoader.GetMod(reader.ReadString());
                     type = mod.Code.GetType(reader.ReadString(), true);
 
-                    newRarities[i] = rarities[rarityMap[type]];
-                    newRarityMap.Add(type, i);
+                    newRaritiesItem[i] = raritiesItem[rarityItemMap[type]];
+                    newRarityMapItem.Add(type, i);
                 }
 
-                rarityMap = newRarityMap;
-                rarities = newRarities;
+                rarityItemMap = newRarityMapItem;
+                raritiesItem = newRaritiesItem;
+                #endregion
+                #region NPC Affixes
+                length = reader.ReadInt32();
+                PathOfModifiers.Instance.Logger.Debug($"Receiving NPC Affix Map Length: {length} ");
+                PathOfModifiers.Instance.Logger.Debug($"Loaded NPC Affix Map Length: {affixNPCMap.Count} ");
 
+                Dictionary<Type, int> newAffixNPCMap = new Dictionary<Type, int>(length);
+                AffixesNPC.Affix[] newAffixesNPC = new AffixesNPC.Affix[length];
+                
+                for (int i = 0; i < length; i++)
+                {
+                    mod = ModLoader.GetMod(reader.ReadString());
+                    type = mod.Code.GetType(reader.ReadString(), true);
+
+                    PathOfModifiers.Instance.Logger.Debug($"ReceiveMaps: {i} / {type.FullName} from mod {mod}");
+
+                    newAffixesNPC[i] = affixesNPC[affixNPCMap[type]];
+                    newAffixNPCMap.Add(type, i);
+                }
+
+                affixNPCMap = newAffixNPCMap;
+                affixesNPC = newAffixesNPC;
+                #endregion
+                #region NPC Rarities
+                length = reader.ReadInt32();
+                PathOfModifiers.Instance.Logger.Debug($"Receiving NPC Rarity Map Length: {length} ");
+                PathOfModifiers.Instance.Logger.Debug($"Loaded NPC Rarity Map Length: {rarityNPCMap.Count} ");
+
+                Dictionary<Type, int> newRarityNPCMap = new Dictionary<Type, int>(length);
+                RarityNPC[] newRaritiesNPC = new RarityNPC[length];
+
+                for (int i = 0; i < length; i++)
+                {
+                    mod = ModLoader.GetMod(reader.ReadString());
+                    type = mod.Code.GetType(reader.ReadString(), true);
+
+                    newRaritiesNPC[i] = raritiesNPC[rarityNPCMap[type]];
+                    newRarityNPCMap.Add(type, i);
+                }
+
+                rarityNPCMap = newRarityNPCMap;
+                raritiesNPC = newRaritiesNPC;
+                #endregion
+                #region Map Generators
                 length = reader.ReadInt32();
 
                 Dictionary<Type, int> newGenratorMap = new Dictionary<Type, int>(length);
@@ -227,12 +337,10 @@ namespace PathOfModifiers
                     newGenerators[i] = generators[generatorMap[type]];
                     newGenratorMap.Add(type, i);
                 }
-
-                rarityMap = newRarityMap;
-                rarities = newRarities;
-
+                #endregion
+                #region Maps
                 length = reader.ReadInt32();
-
+                
                 Dictionary<Type, int> newMapMap = new Dictionary<Type, int>(length);
                 Map[] newMaps = new Map[length];
 
@@ -247,10 +355,11 @@ namespace PathOfModifiers
 
                 mapMap = newMapMap;
                 maps = newMaps;
+                #endregion
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                PathOfModifiers.Instance.Logger.Error(e.ToString());
+                PathOfModifiers.Instance.Logger.Fatal(e.ToString());
             }
         }
     }

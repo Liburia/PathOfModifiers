@@ -4,7 +4,7 @@ using Terraria.Graphics;
 
 namespace PathOfModifiers.Rarities
 {
-    public class AccessoryLegendary : Rarity
+    public class AccessoryLegendary : RarityItem
     {
         public override float weight => 0.1f;
         public override byte minAffixes => 1;

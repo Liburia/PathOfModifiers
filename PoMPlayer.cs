@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.Affixes;
+using PathOfModifiers.AffixesItem;
 using PathOfModifiers.Buffs;
 using PathOfModifiers.Tiles;
 using System;

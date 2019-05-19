@@ -6,7 +6,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using PathOfModifiers.Affixes;
+using PathOfModifiers.AffixesItem;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using System.IO;
@@ -24,7 +24,7 @@ namespace PathOfModifiers
 
         public override bool InstancePerEntity => true;
 
-        public Rarity rarity;
+        public RarityItem rarity;
 
         public List<Affix> affixes;
         public List<Prefix> prefixes;
@@ -36,7 +36,7 @@ namespace PathOfModifiers
 
         public PoMItem()
         {
-            rarity = ((PoMDataLoader.rarities?.Length ?? 0) == 0) ? new None() : PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(None)]];
+            rarity = ((PoMDataLoader.raritiesItem?.Length ?? 0) == 0) ? new ItemNone() : PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ItemNone)]];
             affixes = new List<Affix>();
             prefixes = new List<Prefix>();
             suffixes = new List<Suffix>();
@@ -175,7 +175,7 @@ namespace PathOfModifiers
 
         public void UpdateName(Item item)
         {
-            if (rarity == null || rarity.GetType() == typeof(None))
+            if (rarity == null || rarity.GetType() == typeof(ItemNone))
                 item.ClearNameOverride();
             else
             {
@@ -215,7 +215,7 @@ namespace PathOfModifiers
             }
             else
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(None)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ItemNone)]];
                 return false;
             }
         }
@@ -267,62 +267,62 @@ namespace PathOfModifiers
             bool raised = false;
             if (rarityType == typeof(WeaponCommon))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(WeaponUncommon)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponUncommon)]];
                 raised = true;
             }
             else if (rarityType == typeof(WeaponUncommon))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(WeaponRare)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponRare)]];
                 raised = true;
             }
             else if (rarityType == typeof(WeaponRare))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(WeaponEpic)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponEpic)]];
                 raised = true;
             }
             else if (rarityType == typeof(WeaponEpic))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(WeaponLegendary)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponLegendary)]];
                 raised = true;
             }
             else if (rarityType == typeof(ArmorCommon))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(ArmorUncommon)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorUncommon)]];
                 raised = true;
             }
             else if (rarityType == typeof(ArmorUncommon))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(ArmorRare)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorRare)]];
                 raised = true;
             }
             else if (rarityType == typeof(ArmorRare))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(ArmorEpic)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorEpic)]];
                 raised = true;
             }
             else if (rarityType == typeof(ArmorEpic))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(ArmorLegendary)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorLegendary)]];
                 raised = true;
             }
             else if (rarityType == typeof(AccessoryCommon))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(AccessoryUncommon)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryUncommon)]];
                 raised = true;
             }
             else if (rarityType == typeof(AccessoryUncommon))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(AccessoryRare)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryRare)]];
                 raised = true;
             }
             else if (rarityType == typeof(AccessoryRare))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(AccessoryEpic)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryEpic)]];
                 raised = true;
             }
             else if (rarityType == typeof(AccessoryEpic))
             {
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(AccessoryLegendary)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryLegendary)]];
                 raised = true;
             }
             if (raised)
@@ -380,11 +380,11 @@ namespace PathOfModifiers
 
             Type rarityType = rarity.GetType();
             if (rarityType == typeof(WeaponUncommon) || rarityType == typeof(WeaponRare) || rarityType == typeof(WeaponEpic) || rarityType == typeof(WeaponLegendary))
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(WeaponCommon)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponCommon)]];
             else if (rarityType == typeof(ArmorUncommon) || rarityType == typeof(ArmorRare) || rarityType == typeof(ArmorEpic) || rarityType == typeof(ArmorLegendary))
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(ArmorCommon)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorCommon)]];
             else if (rarityType == typeof(AccessoryUncommon) || rarityType == typeof(AccessoryRare) || rarityType == typeof(AccessoryEpic) || rarityType == typeof(AccessoryLegendary))
-                rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[typeof(AccessoryCommon)]];
+                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryCommon)]];
 
             UpdateName(item);
         }
@@ -915,7 +915,7 @@ namespace PathOfModifiers
             {
                 suffix.ModifyTooltips(PathOfModifiers.Instance, item, tooltips);
             }
-            if (rarity.GetType() != typeof(None))
+            if (rarity.GetType() != typeof(ItemNone))
             {
                 foreach(TooltipLine line in tooltips)
                 {
@@ -945,7 +945,7 @@ namespace PathOfModifiers
         }
         public override void PostUpdate(Item item)
         {
-            if (rarity == null || rarity.GetType() == typeof(None))
+            if (rarity == null || rarity.GetType() == typeof(ItemNone))
             {
                 try
                 {
@@ -960,7 +960,7 @@ namespace PathOfModifiers
         }
         public override void PostDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            if (Main.npcShop == 0 && (rarity == null || rarity.GetType() == typeof(None)))
+            if (Main.npcShop == 0 && (rarity == null || rarity.GetType() == typeof(ItemNone)))
             {
                 try
                 {
@@ -1016,7 +1016,7 @@ namespace PathOfModifiers
                 PathOfModifiers.Instance.Logger.Warn($"Rarity not found {rarityFullName}");
                 return;
             }
-            rarity = PoMDataLoader.rarities[PoMDataLoader.rarityMap[type]];
+            rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[type]];
             int affixCount = tag.GetAsInt("affixCount");
             TagCompound affixTag;
             Affix affix;
@@ -1035,7 +1035,7 @@ namespace PathOfModifiers
                     PathOfModifiers.Instance.Logger.Warn("Affix not found");
                     continue;
                 }
-                affix = PoMDataLoader.affixes[PoMDataLoader.affixMap[type]].Clone();
+                affix = PoMDataLoader.affixesItem[PoMDataLoader.affixItemMap[type]].Clone();
                 affix.Load(affixTag, item);
                 AddAffix(affix, item);
             }
@@ -1063,14 +1063,14 @@ namespace PathOfModifiers
         {
             try
             {
-                writer.Write(PoMDataLoader.rarityMap[rarity.GetType()]);
+                writer.Write(PoMDataLoader.rarityItemMap[rarity.GetType()]);
 
                 writer.Write((byte)affixes.Count);
                 Affix affix;
                 for(int i = 0; i < affixes.Count; i++)
                 {
                     affix = affixes[i];
-                    writer.Write(PoMDataLoader.affixMap[affix.GetType()]);
+                    writer.Write(PoMDataLoader.affixItemMap[affix.GetType()]);
                     affix.NetSend(item, writer);
                 }
             }
@@ -1083,13 +1083,13 @@ namespace PathOfModifiers
         {
             try
             {
-                rarity = PoMDataLoader.rarities[reader.ReadInt32()];
+                rarity = PoMDataLoader.raritiesItem[reader.ReadInt32()];
 
                 int affixCount = reader.ReadByte();
                 Affix affix;
                 for (int i = 0; i < affixCount; i++)
                 {
-                    affix = PoMDataLoader.affixes[reader.ReadInt32()].Clone();
+                    affix = PoMDataLoader.affixesItem[reader.ReadInt32()].Clone();
                     affix.NetReceive(item, reader);
                     AddAffix(affix, item);
                 }

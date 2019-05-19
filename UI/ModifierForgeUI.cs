@@ -11,7 +11,7 @@ using PathOfModifiers.Tiles;
 using Terraria.DataStructures;
 using Terraria.Graphics;
 using System.Collections.Generic;
-using PathOfModifiers.Affixes;
+using PathOfModifiers.AffixesItem;
 
 namespace PathOfModifiers.UI
 {
@@ -137,19 +137,19 @@ namespace PathOfModifiers.UI
             freeAffixCount = new UIText("[-]", 0.75f);
             freeAffixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freeAffixCount.Top.Set(10, 0f);
-            freeAffixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Affix)]].color;
+            freeAffixCount.TextColor = Color.White;
             modifierForgePanel.Append(freeAffixCount);
 
             freePrefixCount = new UIText("[-]", 0.75f);
             freePrefixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freePrefixCount.Top.Set(UIItemSlot.defaultBackgroundTexture.Height / 2 + 3, 0f);
-            freePrefixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Prefix)]].color;
+            freePrefixCount.TextColor = Color.White;
             modifierForgePanel.Append(freePrefixCount);
 
             freeSuffixCount = new UIText("[-]", 0.75f);
             freeSuffixCount.Left.Set((UIItemSlot.defaultBackgroundTexture.Width * 2) + 30, 0);
             freeSuffixCount.Top.Set(UIItemSlot.defaultBackgroundTexture.Height / 2 + 22, 0f);
-            freeSuffixCount.TextColor = PoMDataLoader.affixes[PoMDataLoader.affixMap[typeof(Suffix)]].color;
+            freeSuffixCount.TextColor = Color.White;
             modifierForgePanel.Append(freeSuffixCount);
 
             for (int i = 0; i < itemInfoText.Length; i++)
