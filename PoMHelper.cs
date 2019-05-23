@@ -30,6 +30,32 @@ namespace PathOfModifiers
             }
             return buffCount;
         }
+        
+        /// <summary>
+        /// Returns spawned NPC or null if the cap is reached
+        /// </summary>
+        public static NPC SpawnNPC(int x, int y, int type, bool rollAffixes = true, bool netSync = true, int start = 0, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, int target = 255)
+        {
+            if (!rollAffixes)
+            {
+                PoMNPC.dontRollNextNPC = true;
+            }
+
+            int npcIndex = NPC.NewNPC(x, y, type, start, ai0, ai1, ai2, ai3, target);
+            NPC npc = null;
+
+            if (npcIndex != 200)
+            {
+                npc = Main.npc[npcIndex];
+
+                if (netSync)
+                {
+                    NetMessage.SendData(23, -1, -1, null, npcIndex);
+                }
+            }
+
+            return npc;
+        }
 
         public static void DropItem(Vector2 pos, Item item, int syncWhenNetMode, bool noBroadcast = false, bool noGrabDelay = false)
         {

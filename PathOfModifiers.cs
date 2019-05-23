@@ -137,7 +137,7 @@ namespace PathOfModifiers
 
         public override void PreSaveAndQuit()
         {
-            ModifierForgeUI.Instance.IsVisible = false;
+            ModifierForgeUI.HideUI();
             MapDeviceUI.HideUI();
         }
 

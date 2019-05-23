@@ -9,11 +9,17 @@ using PathOfModifiers.Buffs;
 using Terraria.ID;
 using PathOfModifiers.Rarities;
 using System.Text;
+using System.IO;
 
 namespace PathOfModifiers
 {
     public class PoMNPC : GlobalNPC
     {
+        /// <summary>
+        /// Set to true to skip rolling rarity and affixes for the next NPC that is spawned(and has its SetDefaults called)
+        /// </summary>
+        public static bool dontRollNextNPC = false;
+
         public override bool InstancePerEntity => true;
 
         public Entity lastDamageDealer;
@@ -226,8 +232,25 @@ namespace PathOfModifiers
 
         public override void SetDefaults(NPC npc)
         {
-            RollNPC(npc);
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                if (dontRollNextNPC)
+                {
+                    dontRollNextNPC = false;
+                }
+                else
+                {
+                    RollNPC(npc);
+                    InitializeNPC(npc);
+                    UpdateName(npc);
 
+                    if (Main.netMode == NetmodeID.Server)
+                        PoMNetMessage.cNPCSyncAffixes(npc, this);
+                }
+            }
+        }
+        public void InitializeNPC(NPC npc)
+        {
             foreach (var prefix in prefixes)
             {
                 prefix.InitializeNPC(this, npc);
@@ -236,8 +259,6 @@ namespace PathOfModifiers
             {
                 suffix.InitializeNPC(this, npc);
             }
-
-            UpdateName(npc);
         }
 
         public override bool? CanBeHitByItem(NPC npc, Player player, Item item)
@@ -323,6 +344,48 @@ namespace PathOfModifiers
             foreach (var suffix in suffixes)
             {
                 suffix.OnHitPlayer(npc, target, damage, crit);
+            }
+        }
+
+        public void NetSend(BinaryWriter writer)
+        {
+            try
+            {
+                writer.Write(PoMDataLoader.rarityItemMap[rarity.GetType()]);
+
+                writer.Write((byte)affixes.Count);
+                Affix affix;
+                for (int i = 0; i < affixes.Count; i++)
+                {
+                    affix = affixes[i];
+                    writer.Write(PoMDataLoader.affixItemMap[affix.GetType()]);
+                    affix.NetSend(writer);
+                }
+            }
+            catch (Exception e)
+            {
+                mod.Logger.Error(e.ToString());
+            }
+        }
+        public void NetReceive(BinaryReader reader, NPC npc)
+        {
+            try
+            {
+                rarity = PoMDataLoader.raritiesNPC[reader.ReadInt32()];
+
+                int affixCount = reader.ReadByte();
+                Affix affix;
+                for (int i = 0; i < affixCount; i++)
+                {
+                    affix = PoMDataLoader.affixesNPC[reader.ReadInt32()].Clone();
+                    affix.NetReceive(reader);
+                    AddAffix(affix, npc);
+                }
+                UpdateName(npc);
+            }
+            catch (Exception e)
+            {
+                mod.Logger.Error(e.ToString());
             }
         }
     }

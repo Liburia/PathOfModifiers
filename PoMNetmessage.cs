@@ -137,6 +137,56 @@ namespace PathOfModifiers
                 md.mapItem = ItemIO.Receive(reader, true);
                 md.SendToClients(ignoreClient);
             }
+            else if (msg == MsgType.cNPCSyncAffixes)
+            {
+                var npc = Main.npc[reader.ReadByte()];
+                var pomNPC = npc.GetGlobalNPC<PoMNPC>();
+                pomNPC.NetReceive(reader, npc);
+            }
+            else if (msg == MsgType.sSpawnNPC)
+            {
+                var x = reader.ReadInt32();
+                var y = reader.ReadInt32();
+                var type = reader.ReadInt32();
+
+                var npc = PoMHelper.SpawnNPC(x, y, type, false, true);
+                
+                if (npc == null)
+                    goto SkipMsgIf;
+
+                var pomNPC = npc.GetGlobalNPC<PoMNPC>();
+
+                var rarityID = reader.ReadInt32();
+                pomNPC.rarity = PoMDataLoader.raritiesNPC[rarityID];
+
+                var affixesLength = reader.ReadInt32();
+                for(int i = 0; i < affixesLength; i++)
+                {
+                    var affixID = reader.ReadInt32();
+                    var affixTier = reader.ReadInt32();
+                    var affixTierMultiplier = reader.ReadSingle();
+                    var affix = PoMDataLoader.affixesNPC[affixID].Clone();
+                    if (affix is ITieredStatFloatAffix fAffix)
+                    {
+                        TieredAffixHelper.SetTier(fAffix, affixTier);
+                        TieredAffixHelper.SetTierMultiplier(fAffix, affixTierMultiplier);
+                    }
+                    if (affix is ITieredStatIntAffix iAffix)
+                    {
+                        TieredAffixHelper.SetTier(iAffix, affixTier);
+                        TieredAffixHelper.SetTierMultiplier(iAffix, affixTierMultiplier);
+                    }
+                    if (affix is ITieredStatIntValueAffix ivAffix)
+                    {
+                        TieredAffixHelper.SetTier(ivAffix, affixTier);
+                    }
+
+                    pomNPC.AddAffix(affix, npc);
+                }
+                pomNPC.InitializeNPC(npc);
+                pomNPC.UpdateName(npc);
+                cNPCSyncAffixes(npc, pomNPC);
+            }
 
         SkipMsgIf:;
         }
@@ -240,6 +290,32 @@ namespace PathOfModifiers
             ItemIO.Send(item, packet, true);
             packet.Send();
         }
+        public static void cNPCSyncAffixes(NPC npc, PoMNPC pomNPC)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.cNPCSyncAffixes);
+            packet.Write((byte)npc.whoAmI);
+            pomNPC.NetSend(packet);
+            packet.Send();
+        }
+        public static void sSpawnNPC(int x, int y, int type, int rarityID, (int, int, float)[] affixes)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.sSpawnNPC);
+            packet.Write(x);
+            packet.Write(y);
+            packet.Write(type);
+            packet.Write(rarityID);
+            packet.Write(affixes.Length);
+            for (int i = 0; i < affixes.Length; i++)
+            {
+                var idValue = affixes[i];
+                packet.Write(idValue.Item1);
+                packet.Write(idValue.Item2);
+                packet.Write(idValue.Item3);
+            }
+            packet.Send();
+        }
     }
 
     /// <summary>
@@ -256,5 +332,7 @@ namespace PathOfModifiers
         sModifierForgeModifiedItemChanged,
         sModifierForgeModifierItemChanged,
         sMapDeviceMapItemChanged,
+        cNPCSyncAffixes,
+        sSpawnNPC,
     }
 }
