@@ -20,19 +20,19 @@ namespace PathOfModifiers
         public static List<Mod> mods = new List<Mod>();
 
         public static Dictionary<Type, int> affixItemMap;
-        public static AffixesItem.Affix[] affixesItem;
+        public static AffixesItem.Affix[] affixesItem = new AffixesItem.Affix[0];
         public static Dictionary<Type, int> rarityItemMap;
-        public static RarityItem[] raritiesItem;
+        public static RarityItem[] raritiesItem = new RarityItem[0];
 
         public static Dictionary<Type, int> affixNPCMap;
-        public static AffixesNPC.Affix[] affixesNPC;
+        public static AffixesNPC.Affix[] affixesNPC = new AffixesNPC.Affix[0];
         public static Dictionary<Type, int> rarityNPCMap;
-        public static RarityNPC[] raritiesNPC;
+        public static RarityNPC[] raritiesNPC = new RarityNPC[0];
 
         public static Dictionary<Type, int> generatorMap;
-        public static Generator[] generators;
+        public static Generator[] generators = new Generator[0];
         public static Dictionary<Type, int> mapMap;
-        public static Map[] maps;
+        public static Map[] maps = new Map[0];
 
         public static void Initialize()
         {
