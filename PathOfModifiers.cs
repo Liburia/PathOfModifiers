@@ -20,8 +20,9 @@ namespace PathOfModifiers
 	class PathOfModifiers : Mod
     {
         //TODO: config
-        public static bool disableVanillaModifiersWeapons = true;
-        public static bool disableVanillaModifiersAccessories = true;
+        public const bool disableVanillaModifiersWeapons = true;
+        public const bool disableVanillaModifiersAccessories = true;
+        public const bool disableMaps = true;
 
         public static string pathMapIcons = "Images/MapIcons/";
 
@@ -80,7 +81,7 @@ namespace PathOfModifiers
             {
                 new ModifierForgeUI().Initialize();
                 modifierForgeUI = new UserInterface();
-                ModifierForgeUI.Instance.IsVisible = false;
+                ModifierForgeUI.HideUI();
 
                 new MapDeviceUI().Initialize();
                 mapDeviceUI = new UserInterface();

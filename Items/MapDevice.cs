@@ -29,6 +29,9 @@ namespace PathOfModifiers.Items
 
 		public override void AddRecipes()
 		{
+            if (PathOfModifiers.disableMaps)
+                return;
+
 			ModRecipe recipe = new ModRecipe(mod);
             recipe.AddRecipeGroup("PathOfModifiers:GoldBar", 25);
             recipe.AddIngredient(mod, "ModifierFragment", 50);

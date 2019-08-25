@@ -25,8 +25,12 @@ namespace PathOfModifiers.Items
 			item.createTile = mod.TileType("MapBorder");
 		}
 
-		public override void AddRecipes() {
-			ModRecipe recipe = new ModRecipe(mod);
+		public override void AddRecipes()
+        {
+            if (PathOfModifiers.disableMaps)
+                return;
+
+            ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(mod.ItemType<ModifierFragment>(), 10);
             recipe.AddRecipeGroup("IronBar", 1);
             recipe.AddTile(TileID.Anvils);
