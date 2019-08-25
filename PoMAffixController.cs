@@ -113,7 +113,7 @@ namespace PathOfModifiers
                 .Select(r => new Tuple<RarityNPC, double>(r, r.weight))
                 .ToArray();
             WeightedRandom<RarityNPC> weightedRandom = new WeightedRandom<RarityNPC>(Main.rand, tuples);
-            RarityNPC rarity = weightedRandom;
+            RarityNPC rarity = (RarityNPC)weightedRandom ?? new NPCNone();
             return rarity;
         }
         /// <summary>

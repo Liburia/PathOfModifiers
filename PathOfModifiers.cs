@@ -29,7 +29,7 @@ namespace PathOfModifiers
 
         public static UserInterface modifierForgeUI;
         public static UserInterface mapDeviceUI;
-
+        
         public PathOfModifiers()
 		{
 			Properties = new ModProperties()
@@ -90,6 +90,8 @@ namespace PathOfModifiers
         public override void Unload()
         {
             Instance = null;
+            modifierForgeUI = null;
+            mapDeviceUI = null;
             PoMDataLoader.Unload();
         }
 
