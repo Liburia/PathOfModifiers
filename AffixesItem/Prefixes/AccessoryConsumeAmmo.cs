@@ -18,13 +18,15 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers = new float[] { 0f, 0.04f, 0.07f, 0.1f };
+        static float[] tiers = new float[] { 0f, 0.025f, 0.05f, 0.075f, 0.1f };
         static Tuple<int, double>[] tierWeights = new Tuple<int, double>[] {
-            new Tuple<int, double>(0, 5),
-            new Tuple<int, double>(1, 2.5),
-            new Tuple<int, double>(2, 0.5),
+            new Tuple<int, double>(0, 4),
+            new Tuple<int, double>(1, 2),
+            new Tuple<int, double>(2, 1),
+            new Tuple<int, double>(3, 0.5),
         };
         static string[] tierNames = new string[] {
+            "Wasteful",
             "Stable",
             "Prudent",
             "Materialistic",
@@ -51,7 +53,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         {
             return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to not consume ammo";
         }
-        
+
         public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
         {
             if (PoMItem.IsAccessoryEquipped(item, player))

@@ -57,7 +57,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         {
             return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to not consume ammo";
         }
-        
+
         public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
         {
             if (player.armor[2] == item)
