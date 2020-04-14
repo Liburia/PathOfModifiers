@@ -917,7 +917,7 @@ namespace PathOfModifiers
             }
             if (rarity.GetType() != typeof(ItemNone))
             {
-                foreach(TooltipLine line in tooltips)
+                foreach (TooltipLine line in tooltips)
                 {
                     if (line.mod == "Terraria" && line.Name == "ItemName")
                     {
@@ -1006,14 +1006,19 @@ namespace PathOfModifiers
             Mod mod = ModLoader.GetMod(rarityModName);
             if (mod == null)
             {
-                PathOfModifiers.Instance.Logger.Warn($"Mod not found {rarityModName}");
+                PathOfModifiers.Instance.Logger.Warn($"Mod '{rarityModName}' not found");
                 return;
             }
             string rarityFullName = tag.GetString("rarityFullName");
             Type type = mod.Code.GetType(rarityFullName);
             if (type == null)
             {
-                PathOfModifiers.Instance.Logger.Warn($"Rarity not found {rarityFullName}");
+                PathOfModifiers.Instance.Logger.Warn($"Rarity '{type.FullName}' doesn't exist");
+                return;
+            }
+            if (type.IsDefined(typeof(ExcludeFromLoadingInPoM), false))
+            {
+                PathOfModifiers.Instance.Logger.Warn($"Rarity '{type.FullName}' is disabled");
                 return;
             }
             rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[type]];
@@ -1023,16 +1028,22 @@ namespace PathOfModifiers
             for (int i = 0; i < affixCount; i++)
             {
                 affixTag = tag.GetCompound(i.ToString());
-                mod = ModLoader.GetMod(affixTag.GetString("affixMod"));
+                string affixModName = affixTag.GetString("affixMod");
+                mod = ModLoader.GetMod(affixModName);
                 if (mod == null)
                 {
-                    PathOfModifiers.Instance.Logger.Warn("Mod not found");
+                    PathOfModifiers.Instance.Logger.Warn($"Mod '{affixModName}' not found");
                     continue;
                 }
                 type = mod.Code.GetType(affixTag.GetString("affixFullName"));
                 if (type == null)
                 {
-                    PathOfModifiers.Instance.Logger.Warn("Affix not found");
+                    PathOfModifiers.Instance.Logger.Warn($"Affix '{type.FullName}' doesn't exist");
+                    continue;
+                }
+                if (type.IsDefined(typeof(ExcludeFromLoadingInPoM), false))
+                {
+                    PathOfModifiers.Instance.Logger.Warn($"Affix '{type.FullName}' is disabled");
                     continue;
                 }
                 affix = PoMDataLoader.affixesItem[PoMDataLoader.affixItemMap[type]].Clone();
@@ -1067,14 +1078,14 @@ namespace PathOfModifiers
 
                 writer.Write((byte)affixes.Count);
                 Affix affix;
-                for(int i = 0; i < affixes.Count; i++)
+                for (int i = 0; i < affixes.Count; i++)
                 {
                     affix = affixes[i];
                     writer.Write(PoMDataLoader.affixItemMap[affix.GetType()]);
                     affix.NetSend(item, writer);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 mod.Logger.Error(e.ToString());
             }

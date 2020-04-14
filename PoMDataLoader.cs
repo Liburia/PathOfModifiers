@@ -84,6 +84,10 @@ namespace PathOfModifiers
 
                 foreach (Type t in types)
                 {
+                    if (t.IsDefined(typeof(ExcludeFromLoadingInPoM), false))
+                    {
+                        continue;
+                    }
                     if (t.IsSubclassOf(typeof(AffixesItem.Affix)) || t == typeof(AffixesItem.Affix))
                     {
                         affixItem = (AffixesItem.Affix)Activator.CreateInstance(t);
