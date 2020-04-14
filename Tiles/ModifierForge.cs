@@ -239,7 +239,7 @@ namespace PathOfModifiers.Tiles
         public Item modifiedItem = new Item();
         public Item modifierItem = new Item();
 
-        int[] forgeActionCostMultipliers = { 1, 5, 10, 15, 15, 5, 15, 15, 5, 15, 15 };
+        int[] forgeActionCostMultipliers = { 1, 50, 10, 15, 15, 5, 15, 15, 5, 15, 15 };
 
         /// <summary>
         /// Sets <see cref="cost"/>.
