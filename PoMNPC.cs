@@ -95,7 +95,7 @@ namespace PathOfModifiers
         {
             if (type == NPCID.Wizard)
             {
-                shop.item[nextSlot].SetDefaults(mod.ItemType<Items.ModifierFragment>());
+                shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.ModifierFragment>());
                 nextSlot++;
             }
         }
@@ -337,7 +337,7 @@ namespace PathOfModifiers
         }
         public override void OnHitPlayer(NPC npc, Player target, int damage, bool crit)
         {
-            foreach(var prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.OnHitPlayer(npc, target, damage, crit);
             }

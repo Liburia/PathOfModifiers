@@ -57,7 +57,7 @@ namespace PathOfModifiers
 
         public override void Initialize()
         {
-            var mapBorder = mod.GetTile<MapBorder>();
+            var mapBorder = ModContent.GetInstance<MapBorder>();
             MapBorder.ClearActiveBounds();
         }
     }

@@ -75,9 +75,9 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         void SpawnForceNova(Player player, Entity target, Vector2 position, Vector2 direction, int damage)
         {
             float angle = direction.ToRotation();
-            
+
             Vector2 velocity = direction.SafeNormalize(Vector2.Zero) * 8;
-            int projectileID = Projectile.NewProjectile(position, velocity, mod.ProjectileType<ForceWave>(), (int)Math.Round(damage * damageMultiplier), (int)Math.Round(Math.Sqrt(damage)), player.whoAmI);
+            int projectileID = Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<ForceWave>(), (int)Math.Round(damage * damageMultiplier), (int)Math.Round(Math.Sqrt(damage)), player.whoAmI);
             ForceWave projectile = (ForceWave)Main.projectile[projectileID].modProjectile;
         }
 

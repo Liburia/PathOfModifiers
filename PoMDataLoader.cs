@@ -15,7 +15,7 @@ using PathOfModifiers.Maps.Generators;
 
 namespace PathOfModifiers
 {
-	public static class PoMDataLoader
+    public static class PoMDataLoader
     {
         public static List<Mod> mods = new List<Mod>();
 
@@ -82,7 +82,7 @@ namespace PathOfModifiers
             {
                 var types = mod.Code.GetTypes().Where(t => t.IsClass && !t.IsAbstract);
 
-                foreach(Type t in types)
+                foreach (Type t in types)
                 {
                     if (t.IsSubclassOf(typeof(AffixesItem.Affix)) || t == typeof(AffixesItem.Affix))
                     {
@@ -93,7 +93,7 @@ namespace PathOfModifiers
                         mod.Logger.Debug($"Added item affix {t.FullName} with index {affixItemIndex} from mod {mod.Name}");
                         affixItemIndex++;
                     }
-                    else if(t.IsSubclassOf(typeof(RarityItem)) && t != typeof(RarityItem))
+                    else if (t.IsSubclassOf(typeof(RarityItem)) && t != typeof(RarityItem))
                     {
                         rarityItem = (RarityItem)Activator.CreateInstance(t);
                         rarityItem.mod = mod;
@@ -288,7 +288,7 @@ namespace PathOfModifiers
 
                 Dictionary<Type, int> newAffixNPCMap = new Dictionary<Type, int>(length);
                 AffixesNPC.Affix[] newAffixesNPC = new AffixesNPC.Affix[length];
-                
+
                 for (int i = 0; i < length; i++)
                 {
                     mod = ModLoader.GetMod(reader.ReadString());
@@ -340,7 +340,7 @@ namespace PathOfModifiers
                 #endregion
                 #region Maps
                 length = reader.ReadInt32();
-                
+
                 Dictionary<Type, int> newMapMap = new Dictionary<Type, int>(length);
                 Map[] newMaps = new Map[length];
 

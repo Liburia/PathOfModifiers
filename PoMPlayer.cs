@@ -34,7 +34,7 @@ namespace PathOfModifiers
         public float potionDelayTime;
         public float restorationDelayTime;
         #endregion
-        
+
         public Entity lastDamageDealer;
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace PathOfModifiers
             //PathOfModifiers.Instance.Logger.Debug($"PlayerConnect: {Main.netMode}");
             if (Main.LocalPlayer == player)
             {
-                var mapBorder = mod.GetTile<MapBorder>();
+                var mapBorder = ModContent.GetInstance<MapBorder>();
                 MapBorder.ClearActiveBounds();
             }
         }
@@ -92,7 +92,7 @@ namespace PathOfModifiers
 
             if (Main.LocalPlayer == player)
             {
-                var mapBorder = mod.GetTile<MapBorder>();
+                var mapBorder = ModContent.GetInstance<MapBorder>();
                 MapBorder.ClearActiveBounds();
             }
         }
@@ -108,7 +108,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 if (!pomItem.PlayerConsumeAmmo(player, item, ammo))
                     return false;
             }
@@ -118,7 +118,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 if (!pomItem.PlayerConsumeAmmo(player, item, ammo))
                     return false;
             }
@@ -136,7 +136,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 if (!pomItem.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
             }
@@ -146,7 +146,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 if (!pomItem.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
             }
@@ -164,7 +164,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -173,7 +173,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
             regen = (regen * regenMultiplier) + (player.lifeRegen * regenMultiplier) - player.lifeRegen;
@@ -189,7 +189,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -198,7 +198,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
             }
         }
@@ -212,7 +212,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.OnHitByNPC(item, player, npc, damage, crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -221,11 +221,11 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.OnHitByNPC(item, player, npc, damage, crit);
             }
         }
-        
+
         public void OnKillNPC(NPC target)
         {
             Item affixItem;
@@ -236,7 +236,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerOnKillNPC(affixItem, player, target);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -245,7 +245,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerOnKillNPC(affixItem, player, target);
             }
         }
@@ -259,7 +259,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerOnKillPvp(affixItem, player, target);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -268,7 +268,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerOnKillPvp(affixItem, player, target);
             }
         }
@@ -284,7 +284,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -293,7 +293,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
             damage = (int)Math.Round(damage * damageMultiplier);
@@ -310,7 +310,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -319,7 +319,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
             damage = (int)Math.Round(damage * damageMultiplier);
@@ -334,7 +334,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -343,7 +343,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
             }
         }
@@ -357,7 +357,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -366,7 +366,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
             }
         }
@@ -382,7 +382,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -391,7 +391,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
             }
         }
@@ -407,7 +407,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -416,7 +416,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 pomItem.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
         }
@@ -432,7 +432,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjOnHitNPC(item, player, proj, target, damage, knockback, crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -441,7 +441,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjOnHitNPC(item, player, proj, target, damage, knockback, crit);
             }
         }
@@ -457,7 +457,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -466,7 +466,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>(mod);
+                pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
             }
         }
@@ -481,7 +481,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 if (!pomItem.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
                     shoot = false;
             }
@@ -491,7 +491,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>(mod);
+                pomItem = affixItem.GetGlobalItem<PoMItem>();
                 if (!pomItem.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
                     shoot = false;
             }
@@ -506,7 +506,7 @@ namespace PathOfModifiers
                 lastDamageDealerPlayer.GetModPlayer<PoMPlayer>().OnKillPvp(player);
             }
         }
-        
+
         public override void ResetEffects()
         {
             meleeCrit = 1;
@@ -543,7 +543,7 @@ namespace PathOfModifiers
             player.rangedDamage *= rangedDamage;
             player.thrownDamage *= throwingDamage;
             player.minionDamage *= minionDamage;
-            
+
             player.meleeSpeed *= meleeSpeed;
             player.pickSpeed *= pickSpeed;
 

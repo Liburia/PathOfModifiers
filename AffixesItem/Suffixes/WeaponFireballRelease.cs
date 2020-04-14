@@ -81,7 +81,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             for (int i = 0; i < 3; i++)
             {
                 Vector2 velocity = Main.rand.NextFloat(angleMin, angleMax).ToRotationVector2() * 8;
-                int bladeID = Projectile.NewProjectile(position, velocity, mod.ProjectileType<Fireball>(), (int)Math.Round(damage * damageMultiplier), 0, player.whoAmI);
+                int bladeID = Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<Fireball>(), (int)Math.Round(damage * damageMultiplier), 0, player.whoAmI);
                 Fireball fireball = (Fireball)Main.projectile[bladeID].modProjectile;
                 fireball.ignoreTarget = target;
             }

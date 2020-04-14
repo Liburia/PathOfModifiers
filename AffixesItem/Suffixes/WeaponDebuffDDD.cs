@@ -46,7 +46,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         float tierMultiplier = 0;
         float multiplier = 1;
-        
+
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return
@@ -64,7 +64,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.GetGlobalNPC<PoMNPC>().AddDamageDoTBuff(target, mod.GetBuff<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
+                    target.GetGlobalNPC<PoMNPC>().AddDamageDoTBuff(target, ModContent.GetInstance<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.GetModPlayer<PoMPlayer>().AddDamageDoTBuff(target, mod.GetBuff<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
+                    target.GetModPlayer<PoMPlayer>().AddDamageDoTBuff(target, ModContent.GetInstance<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
                 }
             }
         }
@@ -84,7 +84,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.GetGlobalNPC<PoMNPC>().AddDamageDoTBuff(target, mod.GetBuff<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
+                    target.GetGlobalNPC<PoMNPC>().AddDamageDoTBuff(target, ModContent.GetInstance<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.GetModPlayer<PoMPlayer>().AddDamageDoTBuff(target, mod.GetBuff<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
+                    target.GetModPlayer<PoMPlayer>().AddDamageDoTBuff(target, ModContent.GetInstance<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
                 }
             }
         }

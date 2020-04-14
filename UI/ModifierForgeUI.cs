@@ -91,23 +91,23 @@ namespace PathOfModifiers.UI
         UIText freeSuffixCount;
         UIText[] itemInfoText;
 
-		public override void OnInitialize()
-		{
+        public override void OnInitialize()
+        {
             Instance = this;
             toggleElements = new UIPanelButton[11];
             itemInfoText = new UIText[9];
 
             #region Panel definition
             modifierForgePanel = new UIPanel();
-			modifierForgePanel.SetPadding(0);
-			modifierForgePanel.Left.Set(position.X, 0f);
-			modifierForgePanel.Top.Set(position.Y, 0f);
-			modifierForgePanel.Width.Set(500f, 0f);
+            modifierForgePanel.SetPadding(0);
+            modifierForgePanel.Left.Set(position.X, 0f);
+            modifierForgePanel.Top.Set(position.Y, 0f);
+            modifierForgePanel.Width.Set(500f, 0f);
             modifierForgePanel.Height.Set(UIItemSlot.defaultBackgroundTexture.Height + (32 * 5) + (10 * 10) + 46, 0f);
             modifierForgePanel.BackgroundColor = new Color(73, 94, 171);
 
-			modifierForgePanel.OnMouseDown += new MouseEvent(DragStart);
-			modifierForgePanel.OnMouseUp += new MouseEvent(DragEnd);
+            modifierForgePanel.OnMouseDown += new MouseEvent(DragStart);
+            modifierForgePanel.OnMouseUp += new MouseEvent(DragEnd);
             #endregion
             #region Item slots
             modifiedItemSlot = new UIItemSlot(new Item(), null, 1);
@@ -454,7 +454,7 @@ namespace PathOfModifiers.UI
             modifierForgePanel.Append(modifierCostText);
 
             Append(modifierForgePanel);
-		}
+        }
 
         void ModifiedCanPutIntoSlot(Item item, ref bool canPut)
         {
@@ -465,7 +465,7 @@ namespace PathOfModifiers.UI
         {
             //TODO: Actual system
             if (canPut)
-                canPut = canPut = item.IsAir || item.type == PathOfModifiers.Instance.ItemType<Items.ModifierFragment>();
+                canPut = canPut = item.IsAir || item.type == ModContent.ItemType<Items.ModifierFragment>();
         }
         void ModifiedItemChange(Item oldItem, Item newItem)
         {
@@ -578,16 +578,16 @@ namespace PathOfModifiers.UI
         }
 
         Vector2 offset;
-		public bool dragging = false;
-		void DragStart(UIMouseEvent evt, UIElement listeningElement)
+        public bool dragging = false;
+        void DragStart(UIMouseEvent evt, UIElement listeningElement)
         {
             if (!(evt.Target is UIImageButton) && !(evt.Target is UIPanelButton) && !(evt.Target is UIItemSlot))
             {
                 offset = new Vector2(evt.MousePosition.X - modifierForgePanel.Left.Pixels, evt.MousePosition.Y - modifierForgePanel.Top.Pixels);
                 dragging = true;
             }
-		}
-		void DragEnd(UIMouseEvent evt, UIElement listeningElement)
+        }
+        void DragEnd(UIMouseEvent evt, UIElement listeningElement)
         {
             if (!(evt.Target is UIImageButton) && !(evt.Target is UIPanelButton) && !(evt.Target is UIItemSlot))
             {
@@ -599,22 +599,22 @@ namespace PathOfModifiers.UI
 
                 Recalculate();
             }
-		}
+        }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             Vector2 MousePosition = new Vector2((float)Main.mouseX, (float)Main.mouseY);
-			if (modifierForgePanel.ContainsPoint(MousePosition))
-			{
-				Main.LocalPlayer.mouseInterface = true;
-			}
-			if (dragging)
-			{
-				modifierForgePanel.Left.Set(MousePosition.X - offset.X, 0f);
-				modifierForgePanel.Top.Set(MousePosition.Y - offset.Y, 0f);
-				Recalculate();
-			}
-		}
+            if (modifierForgePanel.ContainsPoint(MousePosition))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+            if (dragging)
+            {
+                modifierForgePanel.Left.Set(MousePosition.X - offset.X, 0f);
+                modifierForgePanel.Top.Set(MousePosition.Y - offset.Y, 0f);
+                Recalculate();
+            }
+        }
 
         public override void Update(GameTime gameTime)
         {

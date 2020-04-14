@@ -95,7 +95,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             for (int i = 0; i < spikeCount; i++)
             {
                 Vector2 velocity = angle.ToRotationVector2() * 8;
-                int projectileID = Projectile.NewProjectile(target.Center, velocity, mod.ProjectileType<FrostSpike>(), damage, knockback, player.whoAmI);
+                int projectileID = Projectile.NewProjectile(target.Center, velocity, ModContent.ProjectileType<FrostSpike>(), damage, knockback, player.whoAmI);
                 angle += angleIncrement;
             }
         }

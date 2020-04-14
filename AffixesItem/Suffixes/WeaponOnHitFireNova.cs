@@ -90,7 +90,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         void SpawnNova(Player player, int damage)
         {
             float calcDamage = damage * damageMultiplier;
-            Projectile.NewProjectile(player.Center - (FireNova.size * FireNova.collisionScale * FireNova.startScale / 2), Vector2.Zero, mod.ProjectileType<FireNova>(), (int)Math.Round(calcDamage), 0, player.whoAmI);
+            Projectile.NewProjectile(player.Center - (FireNova.size * FireNova.collisionScale * FireNova.startScale / 2), Vector2.Zero, ModContent.ProjectileType<FireNova>(), (int)Math.Round(calcDamage), 0, player.whoAmI);
         }
 
         #region Interface Properties

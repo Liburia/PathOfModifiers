@@ -31,24 +31,24 @@ namespace PathOfModifiers.Tiles
             Main.tileSpelunker[Type] = false;
             Main.tileLighted[Type] = true;
             Main.tileFrameImportant[Type] = true;
-			Main.tileNoAttach[Type] = true;
-			Main.tileValue[Type] = 500;
-			TileID.Sets.HasOutlines[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileValue[Type] = 500;
+            TileID.Sets.HasOutlines[Type] = true;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style5x4);
             TileObjectData.newTile.Width = 4;
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<MapDeviceTE>().Hook_AfterPlacement, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<MapDeviceTE>().Hook_AfterPlacement, -1, 0, true);
             TileObjectData.newTile.Origin = new Point16(1, 3);
-			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16 };
+            TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16 };
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.AnchorInvalidTiles = new int[] { 127 };
-			TileObjectData.newTile.StyleHorizontal = true;
-			TileObjectData.newTile.LavaDeath = false;
-			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
-			TileObjectData.addTile(Type);
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Map Device");
-			AddMapEntry(new Color(107, 66, 130), name);
-			disableSmartCursor = false;
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.LavaDeath = false;
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+            TileObjectData.addTile(Type);
+            ModTranslation name = CreateMapEntryName();
+            name.SetDefault("Map Device");
+            AddMapEntry(new Color(107, 66, 130), name);
+            disableSmartCursor = false;
             animationFrameHeight = 72;
 
             activeAnimationFirstFrame = 1;
@@ -95,30 +95,30 @@ namespace PathOfModifiers.Tiles
                 }
             }
         }
-        
+
         public override bool HasSmartInteract()
-		{
-			return true;
-		}
+        {
+            return true;
+        }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             if (Main.netMode != 1)
                 Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("MapDevice"));
 
-            mod.GetTileEntity<MapDeviceTE>().Kill(i, j);
+            ModContent.GetInstance<MapDeviceTE>().Kill(i, j);
         }
-        
+
         public override void RightClick(int i, int j)
-		{
-			Player player = Main.LocalPlayer;
-			Main.mouseRightRelease = false;
-			if (player.sign >= 0)
-			{
-				Main.PlaySound(SoundID.MenuClose);
-				player.sign = -1;
-				Main.editSign = false;
-				Main.npcChatText = "";
+        {
+            Player player = Main.LocalPlayer;
+            Main.mouseRightRelease = false;
+            if (player.sign >= 0)
+            {
+                Main.PlaySound(SoundID.MenuClose);
+                player.sign = -1;
+                Main.editSign = false;
+                Main.npcChatText = "";
             }
 
             //Hardcoded frame coordinate values because using TileObjectData is cancer.
@@ -156,13 +156,13 @@ namespace PathOfModifiers.Tiles
                     }
                 }
             }
-            
+
             return;
 
         }
 
-		public override void MouseOver(int i, int j)
-		{
+        public override void MouseOver(int i, int j)
+        {
             if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
                 var mapDevice = (MapDeviceTE)te;
@@ -176,16 +176,16 @@ namespace PathOfModifiers.Tiles
                 player.showItemIconText = "";
                 player.noThrow = 2;
             }
-		}
+        }
 
-		public override void MouseOverFar(int i, int j)
-		{
-			Player player = Main.LocalPlayer;
-			if (player.showItemIconText == "")
-			{
-				player.showItemIcon = false;
-				player.showItemIcon2 = 0;
-			}
+        public override void MouseOverFar(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            if (player.showItemIconText == "")
+            {
+                player.showItemIcon = false;
+                player.showItemIcon2 = 0;
+            }
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
@@ -294,7 +294,7 @@ namespace PathOfModifiers.Tiles
                 Point tilePos = new Point(Position.X - 1 + x, Position.Y - 1 + y);
                 Tile tile = Main.tile[tilePos.X, tilePos.Y];
                 int? tileType = PoMHelper.GetTileType(tile);
-                if (tileType.HasValue && tileType == mod.TileType<MapBorder>())
+                if (tileType.HasValue && tileType == ModContent.TileType<MapBorder>())
                 {
                     adjacentTiles.Add(new Tuple<Point, bool, bool>(tilePos, scanHoriz, scanVert));
                     lastTileOfType = true;
@@ -342,7 +342,7 @@ namespace PathOfModifiers.Tiles
         {
             return timeLeft > 0;
         }
-        
+
         //Should never run on a client.
         public void OpenMap()
         {
@@ -358,7 +358,7 @@ namespace PathOfModifiers.Tiles
 
             var map = mapModItem.map;
             map.Open(dimensions);
-            
+
             MapBorder.AddActiveBounds(bounds.Value);
 
             SendToClients();
@@ -371,7 +371,7 @@ namespace PathOfModifiers.Tiles
                 return;
 
             timeLeft = 0;
-            
+
             Items.Map mapModItem = ((Items.Map)mapItem.modItem);
             Rectangle dimensions = new Rectangle(bounds.Value.X + 1, bounds.Value.Y + 1, bounds.Value.Width - 2, bounds.Value.Height - 2);
 
@@ -413,7 +413,7 @@ namespace PathOfModifiers.Tiles
             writer.Write(timeLeft);
             bool isBoundsNull = !bounds.HasValue;
             writer.Write(isBoundsNull);
-            if(!isBoundsNull)
+            if (!isBoundsNull)
                 writer.Write((Rectangle)bounds);
 
             ItemIO.Send(mapItem, writer, true);
@@ -482,7 +482,7 @@ namespace PathOfModifiers.Tiles
         public override bool ValidTile(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType<MapDevice>();
+            return tile.active() && tile.type == ModContent.TileType<MapDevice>();
         }
 
 
@@ -492,9 +492,9 @@ namespace PathOfModifiers.Tiles
             //Main.NewText("i " + i + " j " + j + " x " + -1 + " y " + -1);
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-				NetMessage.SendTileSquare(Main.myPlayer, i + 1, j + 1, 5);
-				NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
-				return -1;
+                NetMessage.SendTileSquare(Main.myPlayer, i + 1, j + 1, 5);
+                NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
+                return -1;
             }
             return Place(i, j);
         }

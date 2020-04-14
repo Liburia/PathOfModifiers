@@ -27,26 +27,26 @@ namespace PathOfModifiers.Tiles
         {
             Main.tileSpelunker[Type] = false;
             Main.tileLighted[Type] = true;
-			Main.tileFrameImportant[Type] = true;
-			Main.tileNoAttach[Type] = true;
-			Main.tileValue[Type] = 500;
-			TileID.Sets.HasOutlines[Type] = true;
+            Main.tileFrameImportant[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileValue[Type] = 500;
+            TileID.Sets.HasOutlines[Type] = true;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<ModifierForgeTE>().Hook_AfterPlacement, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(ModContent.GetInstance<ModifierForgeTE>().Hook_AfterPlacement, -1, 0, true);
             TileObjectData.newTile.Origin = new Point16(1, 1);
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.AnchorInvalidTiles = new int[] { 127 };
-			TileObjectData.newTile.StyleHorizontal = true;
-			TileObjectData.newTile.LavaDeath = false;
-			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
-			TileObjectData.addTile(Type);
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Modifier Forge");
-			AddMapEntry(new Color(192, 120, 0), name);
-			disableSmartCursor = false;
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.LavaDeath = false;
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+            TileObjectData.addTile(Type);
+            ModTranslation name = CreateMapEntryName();
+            name.SetDefault("Modifier Forge");
+            AddMapEntry(new Color(192, 120, 0), name);
+            disableSmartCursor = false;
             animationFrameHeight = 38;
-            
+
             activeAnimationFirstFrame = 2;
             activeAnimationFrameCount = 4;
             activeAnimationFullFrameCount = activeAnimationFrameCount * 2 - 2;
@@ -66,7 +66,7 @@ namespace PathOfModifiers.Tiles
                 }
             }
         }
-        
+
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             //Hardcoded frame coordinate values because using TileObjectData is cancer.
@@ -102,28 +102,28 @@ namespace PathOfModifiers.Tiles
         }
 
         public override bool HasSmartInteract()
-		{
-			return true;
-		}
+        {
+            return true;
+        }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             if (Main.netMode != 1)
                 Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("ModifierForge"));
 
-            mod.GetTileEntity<MapDeviceTE>().Kill(i, j);
+            ModContent.GetInstance<MapDeviceTE>().Kill(i, j);
         }
 
         public override void RightClick(int i, int j)
-		{
-			Player player = Main.LocalPlayer;
-			Main.mouseRightRelease = false;
-			if (player.sign >= 0)
-			{
-				Main.PlaySound(SoundID.MenuClose);
-				player.sign = -1;
-				Main.editSign = false;
-				Main.npcChatText = "";
+        {
+            Player player = Main.LocalPlayer;
+            Main.mouseRightRelease = false;
+            if (player.sign >= 0)
+            {
+                Main.PlaySound(SoundID.MenuClose);
+                player.sign = -1;
+                Main.editSign = false;
+                Main.npcChatText = "";
             }
 
             //Hardcoded frame coordinate values because using TileObjectData is cancer.
@@ -139,30 +139,30 @@ namespace PathOfModifiers.Tiles
                     ModifierForgeUI.ShowUI(clickedForge);
                 }
             }
-		}
+        }
 
-		public override void MouseOver(int i, int j)
-		{
-			Player player = Main.LocalPlayer;
-			player.showItemIconText = "Modifier Forge";
-			if (player.showItemIconText == "Modifier Forge")
-			{
-				player.showItemIcon2 = mod.ItemType("ModifierForge");
-				player.showItemIconText = "";
-			}
-			player.noThrow = 2;
-			player.showItemIcon = true;
-		}
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            player.showItemIconText = "Modifier Forge";
+            if (player.showItemIconText == "Modifier Forge")
+            {
+                player.showItemIcon2 = mod.ItemType("ModifierForge");
+                player.showItemIconText = "";
+            }
+            player.noThrow = 2;
+            player.showItemIcon = true;
+        }
 
-		public override void MouseOverFar(int i, int j)
-		{
-			Player player = Main.LocalPlayer;
-			if (player.showItemIconText == "")
-			{
-				player.showItemIcon = false;
-				player.showItemIcon2 = 0;
-			}
-		}
+        public override void MouseOverFar(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            if (player.showItemIconText == "")
+            {
+                player.showItemIcon = false;
+                player.showItemIcon2 = 0;
+            }
+        }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
@@ -238,7 +238,7 @@ namespace PathOfModifiers.Tiles
 
         public Item modifiedItem = new Item();
         public Item modifierItem = new Item();
-        
+
         int[] forgeActionCostMultipliers = { 1, 5, 10, 15, 15, 5, 15, 15, 5, 15, 15 };
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace PathOfModifiers.Tiles
         {
             return !modifiedItem.IsAir && !modifierItem.IsAir && modifierItem.stack >= cost && ItemLoader.PreReforge(modifiedItem);
         }
-        
+
         /// <summary>
         /// Vanilla reforge
         /// </summary>
@@ -524,7 +524,7 @@ namespace PathOfModifiers.Tiles
         public override bool ValidTile(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType<ModifierForge>();
+            return tile.active() && tile.type == ModContent.TileType<ModifierForge>();
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)
