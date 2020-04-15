@@ -158,6 +158,22 @@ namespace PathOfModifiers
             return item.modItem is Map;
         }
 
+
+        public static bool IsEquipped(Item item, Player player)
+        {
+            return IsArmorEquipped(item, player) || IsAccessoryEquipped(item, player);
+        }
+        public static bool IsArmorEquipped(Item item, Player player)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (player.armor[i] == item)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public static bool IsAccessoryEquipped(Item item, Player player)
         {
             for (int i = 3; i < 8 + player.extraAccessorySlots; i++)
