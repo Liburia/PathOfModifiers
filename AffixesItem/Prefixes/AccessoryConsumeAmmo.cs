@@ -13,7 +13,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 {
     public class AccessoryConsumeAmmo : Prefix, ITieredStatFloatAffix
     {
-        public override float weight => 0.5f;
+        public override float weight => 9990.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
@@ -51,7 +51,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to not consume ammo";
+            return $"{(int)Math.Round(multiplier * 100)}% chance to not consume ammo";
         }
 
         public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
@@ -110,6 +110,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

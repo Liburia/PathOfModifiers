@@ -52,7 +52,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{tierText}] {(int)Math.Round(Math.Abs(multiplier * 100))}% melee damage reflected";
+            return $"{(int)Math.Round(Math.Abs(multiplier * 100))}% melee damage reflected";
         }
 
         public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
@@ -115,6 +115,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

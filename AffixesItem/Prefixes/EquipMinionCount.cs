@@ -45,7 +45,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override string GetTolltipText(Item item)
         {
             int value = tiers[tier];
-            return $"[T{tierText}] {(value < 0 ? '-' : '+')}{Math.Abs(value)} max minions";
+            return $"{(value < 0 ? '-' : '+')}{Math.Abs(value)} max minions";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)
@@ -96,6 +96,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

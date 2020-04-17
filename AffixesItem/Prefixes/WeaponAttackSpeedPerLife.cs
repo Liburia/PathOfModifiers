@@ -62,7 +62,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override string GetTolltipText(Item item)
         {
             float percent = (int)Math.Round(Math.Abs((multiplier - 1) * 5000));
-            return $"[T{tierText}] Up to {(multiplier < 1 ? '-' : '+')}{percent}% attack speed above 50% life and up to {(multiplier < 1 ? '+' : '-')}{percent}% below";
+            return $"Up to {(multiplier < 1 ? '-' : '+')}{percent}% attack speed above 50% life and up to {(multiplier < 1 ? '+' : '-')}{percent}% below";
         }
 
         #region Interface Properties
@@ -114,6 +114,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

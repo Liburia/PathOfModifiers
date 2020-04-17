@@ -31,6 +31,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             new Tuple<int, double>(5, 0.5),
         };
         static int maxTier1 => tiers1.Length - 2;
+        int tierText1 => MaxTier1 - Tier1 + 1;
         static float[] tiers2 = new float[] { 0f, 0.0016f, 0.0033f, 0.005f, 0.0066f, 0.0083f, 0.001f };
         static Tuple<int, double>[] tierWeights2 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
@@ -41,6 +42,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             new Tuple<int, double>(5, 0.5),
         };
         static int maxTier2 => tiers2.Length - 2;
+        int tierText2 => MaxTier2 - Tier2 + 1;
         static int[] tiers3 = new int[] { 1, 2, 3, 4, 5, 6 };
         static Tuple<int, double>[] tierWeights3 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
@@ -51,6 +53,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             new Tuple<int, double>(5, 0.5),
         };
         static int maxTier3 => tiers3.Length - 2;
+        int tierText3 => MaxTier3 - Tier3 + 1;
 
         static string[] tierNames = new string[] {
             "of Blood",
@@ -63,7 +66,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         int compoundTier => (Tier1 + Tier2 + Tier3) / 3;
         int maxCompoundTier => (MaxTier1 + MaxTier2 + MaxTier3) / 3;
-        int tierText => MaxCompoundTier - CompoundTier + 1;
+        int compoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         int tier1 = 0;
         float tierMultiplier1 = 0;
@@ -81,7 +84,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{TierText}] {(int)Math.Round(multiplier1 * 100)}% chance to release {Tiers3[Tier3]} life orbs on hit that heal {(int)Math.Round(multiplier2 * 100)}% of damage dealt";
+            return $"{(int)Math.Round(multiplier1 * 100)}% chance to release {Tiers3[Tier3]} life orbs on hit that heal {(int)Math.Round(multiplier2 * 100)}% of damage dealt";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
@@ -122,7 +125,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         public float Weight => weight;
 
         public string[] TierNames => tierNames;
-        public int TierText => tierText;
+        public int CompoundTierText => compoundTierText;
         public string AddedTextTiered { get { return AddedTextTiered; } set { addedTextTiered = value; } }
         public float AddedTextWeightTiered { get { return addedTextWeightTiered; } set { addedTextWeightTiered = value; } }
         public int CompoundTier => compoundTier;
@@ -131,14 +134,17 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         public float[] Tiers1 => tiers1;
         public Tuple<int, double>[] TierWeights1 => tierWeights1;
         public int MaxTier1 => maxTier1;
+        public int TierText1 => tierText1;
 
         public float[] Tiers2 => tiers2;
         public Tuple<int, double>[] TierWeights2 => tierWeights2;
         public int MaxTier2 => maxTier2;
+        public int TierText2 => tierText2;
 
         public int[] Tiers3 => tiers3;
         public Tuple<int, double>[] TierWeights3 => tierWeights3;
         public int MaxTier3 => maxTier3;
+        public int TierText3 => tierText3;
 
         public int Tier1 { get { return tier1; } set { tier1 = value; } }
         public float TierMultiplier1 { get { return tierMultiplier1; } set { tierMultiplier1 = value; } }

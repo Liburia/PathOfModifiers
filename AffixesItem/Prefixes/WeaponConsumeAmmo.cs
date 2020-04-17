@@ -56,7 +56,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{tierText}] {(int)Math.Round(multiplier * 100)}% chance to not consume ammo";
+            return $"{(int)Math.Round(multiplier * 100)}% chance to not consume ammo";
         }
 
         public override bool ConsumeAmmo(Item item, Player player)
@@ -113,6 +113,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

@@ -56,7 +56,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{tierText}] x{Math.Round(multiplier, 2)} critical strike chance";
+            return $"x{Math.Round(multiplier, 2)} critical strike chance";
         }
 
         public override void GetWeaponCrit(Item item, Player player, ref float multiplier)
@@ -113,6 +113,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

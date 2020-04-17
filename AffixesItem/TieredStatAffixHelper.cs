@@ -72,6 +72,10 @@ namespace PathOfModifiers.AffixesItem
             SetTier(affix, reader.ReadInt32());
             SetTierMultiplier(affix, reader.ReadSingle());
         }
+        public static string GetForgeText(ITieredStatFloatAffix affix, Item item)
+        {
+            return $"[T{affix.TierText}] {affix.GetTolltipText(item)}";
+        }
         #endregion
 
 
@@ -133,6 +137,10 @@ namespace PathOfModifiers.AffixesItem
             SetTier(affix, reader.ReadInt32());
             SetTierMultiplier(affix, reader.ReadSingle());
         }
+        public static string GetForgeText(ITieredStatIntAffix affix, Item item)
+        {
+            return $"[T{affix.TierText}] {affix.GetTolltipText(item)}";
+        }
         #endregion
 
         #region ITieredStatIntValueAffix
@@ -176,6 +184,10 @@ namespace PathOfModifiers.AffixesItem
         public static void NetReceive(ITieredStatIntValueAffix affix, Item item, BinaryReader reader)
         {
             SetTier(affix, reader.ReadInt32());
+        }
+        public static string GetForgeText(ITieredStatIntValueAffix affix, Item item)
+        {
+            return $"[T{affix.TierText}] {affix.GetTolltipText(item)}";
         }
         #endregion
 
@@ -281,6 +293,10 @@ namespace PathOfModifiers.AffixesItem
             int t3 = reader.ReadInt32();
             SetTier(affix, t1, t2, t3);
             SetTierMultiplier(affix, t1, t2);
+        }
+        public static string GetForgeText(ITieredStatFloat2IntValueAffix affix, Item item)
+        {
+            return $"[T{affix.CompoundTierText}] {affix.GetTolltipText(item)}";
         }
         #endregion
     }

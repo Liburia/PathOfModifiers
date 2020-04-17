@@ -56,7 +56,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% summon damage";
+            return $"{(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% summon damage";
         }
 
         public override void ModifyWeaponDamage(Item item, Player player, ref float multiplier, ref float flat)
@@ -113,6 +113,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

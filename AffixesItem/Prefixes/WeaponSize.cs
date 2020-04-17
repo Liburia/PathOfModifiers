@@ -58,9 +58,9 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% size";
+            return $"{(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% size";
         }
-        
+
         public override void UseItem(Item item, Player player)
         {
             item.scale = baseScale * multiplier;
@@ -137,6 +137,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         {
             TieredAffixHelper.NetReceive(this, item, reader);
             baseScale = reader.ReadSingle();
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

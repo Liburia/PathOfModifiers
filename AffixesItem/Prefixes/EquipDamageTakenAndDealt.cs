@@ -14,7 +14,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 {
     public class EquipDamageTakenAndDealt : Prefix, ITieredStatFloatAffix
     {
-        public override float weight => 99990.5f;
+        public override float weight => 0.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
@@ -58,7 +58,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override string GetTolltipText(Item item)
         {
             string moreLess = multiplier > 1 ? "increased" : "reduced";
-            return $"[T{tierText}] Take and deal {Math.Abs(Math.Round((multiplier - 1) * 100))}% {moreLess} damage";
+            return $"Take and deal {Math.Abs(Math.Round((multiplier - 1) * 100))}% {moreLess} damage";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
@@ -134,6 +134,10 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }

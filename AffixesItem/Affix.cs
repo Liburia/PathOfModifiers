@@ -84,6 +84,8 @@ namespace PathOfModifiers.AffixesItem
         }
         public virtual string GetTolltipText(Item item) { return string.Empty; }
 
+        public virtual string GetForgeText(Item item) { return string.Empty; }
+
         public virtual void Save(TagCompound tag, Item item)
         {
         }

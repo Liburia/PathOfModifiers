@@ -666,7 +666,7 @@ namespace PathOfModifiers.UI
                     if (i >= itemInfoText.Length)
                         break;
                     UIText iiText = itemInfoText[i];
-                    iiText.SetText(prefix.GetTolltipText(modifiedItemSlot.item));
+                    iiText.SetText(prefix.GetForgeText(modifiedItemSlot.item));
                     iiText.TextColor = prefix.color;
                     iiText.Recalculate();
                     i++;
@@ -676,7 +676,7 @@ namespace PathOfModifiers.UI
                     if (i >= itemInfoText.Length)
                         break;
                     UIText iiText = itemInfoText[i];
-                    iiText.SetText(suffix.GetTolltipText(modifiedItemSlot.item));
+                    iiText.SetText(suffix.GetForgeText(modifiedItemSlot.item));
                     iiText.TextColor = suffix.color;
                     iiText.Recalculate();
                     i++;

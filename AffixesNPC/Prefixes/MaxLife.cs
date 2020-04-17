@@ -43,6 +43,14 @@ namespace PathOfModifiers.AffixesNPC.Prefixes
         float multiplier = 0;
 
 
+        public string GetTolltipText(Item item)
+        {
+            string value = Math.Round((Multiplier * 100)).ToString();
+            string increasedReduced = multiplier >= 1 ? "increased" : "reduced";
+            return $"{value}% {increasedReduced} life";
+        }
+
+
         public override bool CanBeRolled(PoMNPC pomNPC, NPC npc)
         {
             return true;

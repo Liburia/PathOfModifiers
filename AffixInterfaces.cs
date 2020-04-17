@@ -27,13 +27,15 @@ namespace PathOfModifiers
 
         float TierMultiplier { get; set; }
         float Multiplier { get; set; }
+
+        string GetTolltipText(Item item);
     }
     public interface ITieredStatFloat2IntValueAffix
     {
         float Weight { get; }
 
         string[] TierNames { get; }
-        int TierText { get; }
+        int CompoundTierText { get; }
         string AddedTextTiered { get; set; }
         float AddedTextWeightTiered { get; set; }
         int CompoundTier { get; }
@@ -54,12 +56,17 @@ namespace PathOfModifiers
         int Tier1 { get; set; }
         float TierMultiplier1 { get; set; }
         float Multiplier1 { get; set; }
+        int TierText1 { get; }
 
         int Tier2 { get; set; }
         float TierMultiplier2 { get; set; }
         float Multiplier2 { get; set; }
+        int TierText2 { get; }
 
         int Tier3 { get; set; }
+        int TierText3 { get; }
+
+        string GetTolltipText(Item item);
     }
     public interface ITieredStatIntValueAffix
     {
@@ -74,6 +81,8 @@ namespace PathOfModifiers
         int Tier { get; set; }
         string AddedTextTiered { get; set; }
         float AddedTextWeightTiered { get; set; }
+
+        string GetTolltipText(Item item);
     }
     public interface ITieredStatIntAffix
     {
@@ -91,5 +100,7 @@ namespace PathOfModifiers
 
         float TierMultiplier { get; set; }
         int Value { get; set; }
+
+        string GetTolltipText(Item item);
     }
 }
