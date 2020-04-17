@@ -10,7 +10,7 @@ namespace PathOfModifiers.Rarities
         public override byte minAffixes => 2;
         public override byte maxAffixes => 4;
         public override byte maxPrefixes => 3;
-        public override byte maxSuffixes => 2;
+        public override byte maxSuffixes => 1;
         public override float chanceToRollAffix => 0.6f;
         public override Color color => new Color(0.149f, 0.388f, 0.827f, 1f);
         public override int vanillaRarity => 1;
