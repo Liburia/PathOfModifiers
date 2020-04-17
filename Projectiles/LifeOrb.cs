@@ -106,6 +106,19 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
+        public override bool? CanHitNPC(NPC target)
+        {
+            return false;
+        }
+        public override bool CanHitPlayer(Player target)
+        {
+            return false;
+        }
+        public override bool CanHitPvp(Player target)
+        {
+            return false;
+        }
+
         public override void Kill(int timeLeft)
         {
             if (timeLeft == 0)
