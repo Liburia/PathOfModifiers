@@ -61,7 +61,13 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            float percent = (int)Math.Round(Math.Abs((multiplier - 1) * 5000));
+            float percent = Math.Abs((multiplier - 1) * 5000);
+            int decimals = 0;
+            if (percent < 1)
+            {
+                decimals = 2;
+            }
+            percent = (float)Math.Round(percent, decimals);
             return $"Up to {(multiplier < 1 ? '-' : '+')}{percent}% attack speed above 50% life and up to {(multiplier < 1 ? '+' : '-')}{percent}% below";
         }
 

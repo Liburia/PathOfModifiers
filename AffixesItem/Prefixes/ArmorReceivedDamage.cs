@@ -56,7 +56,14 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% received damage";
+            float percent = Math.Abs((multiplier - 1) * 100);
+            int decimals = 0;
+            if (percent < 1)
+            {
+                decimals = 2;
+            }
+            percent = (float)Math.Round(percent, decimals);
+            return $"{(multiplier < 1 ? '-' : '+')}{percent}% received damage";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

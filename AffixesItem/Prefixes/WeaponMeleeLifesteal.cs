@@ -56,7 +56,14 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(int)Math.Round(multiplier * 100, 1)}% lifesteal on melee hits";
+            float percent = multiplier * 100;
+            int decimals = 0;
+            if (percent < 1)
+            {
+                decimals = 2;
+            }
+            percent = (float)Math.Round(percent, decimals);
+            return $"{percent}% lifesteal on melee hits";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

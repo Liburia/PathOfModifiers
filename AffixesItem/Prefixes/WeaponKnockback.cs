@@ -56,7 +56,14 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% knockback";
+            float percent = Math.Abs((multiplier - 1) * 100);
+            int decimals = 0;
+            if (percent < 1)
+            {
+                decimals = 2;
+            }
+            percent = (float)Math.Round(percent, decimals);
+            return $"{(multiplier < 1 ? '-' : '+')}{percent}% knockback";
         }
 
         public override void GetWeaponKnockback(Item item, Player player, ref float multiplier)

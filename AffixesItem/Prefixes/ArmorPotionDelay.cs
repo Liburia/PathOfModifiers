@@ -55,7 +55,14 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% potion delay";
+            float percent = Math.Abs((multiplier - 1) * 100);
+            int decimals = 0;
+            if (percent < 1)
+            {
+                decimals = 2;
+            }
+            percent = (float)Math.Round(percent, decimals);
+            return $"{(multiplier < 1 ? '-' : '+')}{percent}% potion delay";
         }
 
         public override void UpdateEquip(Item item, PoMPlayer player)

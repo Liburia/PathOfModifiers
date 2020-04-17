@@ -56,7 +56,14 @@ namespace PathOfModifiers.AffixesItem.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(int)Math.Round(Math.Abs(multiplier * 100))}% melee damage reflected";
+            float percent = multiplier * 100;
+            int decimals = 0;
+            if (percent < 1)
+            {
+                decimals = 2;
+            }
+            percent = (float)Math.Round(percent, decimals);
+            return $"{percent}% melee damage reflected";
         }
 
         public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)

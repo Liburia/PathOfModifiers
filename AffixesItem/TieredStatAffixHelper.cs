@@ -292,7 +292,7 @@ namespace PathOfModifiers.AffixesItem
             float tm2 = reader.ReadSingle();
             int t3 = reader.ReadInt32();
             SetTier(affix, t1, t2, t3);
-            SetTierMultiplier(affix, t1, t2);
+            SetTierMultiplier(affix, tm1, tm2);
         }
         public static string GetForgeText(ITieredStatFloat2IntValueAffix affix, Item item)
         {
