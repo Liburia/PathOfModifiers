@@ -17,7 +17,7 @@ using Terraria.Localization;
 
 namespace PathOfModifiers
 {
-	class PathOfModifiers : Mod
+    class PathOfModifiers : Mod
     {
         //TODO: config
         public const bool disableVanillaModifiersWeapons = true;
@@ -28,18 +28,20 @@ namespace PathOfModifiers
 
         public static PathOfModifiers Instance { get; private set; }
 
+        public static GameTime gameTime;
+
         public static UserInterface modifierForgeUI;
         public static UserInterface mapDeviceUI;
-        
+
         public PathOfModifiers()
-		{
-			Properties = new ModProperties()
-			{
-				Autoload = true,
-				AutoloadGores = true,
-				AutoloadSounds = true
-			};
-		}
+        {
+            Properties = new ModProperties()
+            {
+                Autoload = true,
+                AutoloadGores = true,
+                AutoloadSounds = true
+            };
+        }
 
         public override void AddRecipeGroups()
         {
@@ -68,6 +70,7 @@ namespace PathOfModifiers
         public override void Load()
         {
             Instance = this;
+            gameTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
 
             AddPrefix("", new PoMPrefix());
 
@@ -91,6 +94,7 @@ namespace PathOfModifiers
         public override void Unload()
         {
             Instance = null;
+            gameTime = null;
             modifierForgeUI = null;
             mapDeviceUI = null;
             PoMDataLoader.Unload();
@@ -103,6 +107,7 @@ namespace PathOfModifiers
 
         public override void UpdateUI(GameTime gameTime)
         {
+            PathOfModifiers.gameTime = gameTime;
             modifierForgeUI?.Update(gameTime);
             mapDeviceUI?.Update(gameTime);
         }
