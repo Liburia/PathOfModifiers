@@ -11,6 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
+    [DisableAffix]
     public class WeaponDebuffIgnite : Suffix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;
@@ -45,7 +46,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         float tierMultiplier = 0;
         float multiplier = 1;
-        
+
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return

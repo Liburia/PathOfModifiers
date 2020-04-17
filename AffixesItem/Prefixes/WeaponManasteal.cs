@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.AffixesItem.Prefixes
 {
-    [ExcludeFromLoadingInPoM]
+    [DisableAffix]
     public class WeaponManasteal : Prefix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;

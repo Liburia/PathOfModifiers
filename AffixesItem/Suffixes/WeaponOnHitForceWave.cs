@@ -12,6 +12,7 @@ using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
+    [DisableAffix]
     public class WeaponOnHitForceWave : Suffix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;

@@ -12,10 +12,10 @@ using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
-    //TODO: Remove, this can't roll and is replaces with WeaponOnHitFireball
+    [DisableAffix]
     public class WeaponFireballRelease : Suffix, ITieredStatFloatAffix
     {
-        public override float weight => 0f;
+        public override float weight => 0.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;

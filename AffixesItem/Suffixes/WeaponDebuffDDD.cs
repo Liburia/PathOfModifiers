@@ -12,6 +12,7 @@ using PathOfModifiers.Buffs;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
+    [DisableAffix]
     public class WeaponDebuffDDD : Suffix, ITieredStatFloatAffix
     {
         public override float weight => 0.0f;

@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.AffixesItem.Prefixes
 {
-    [ExcludeFromLoadingInPoM]
+    [DisableAffix]
     public class WeaponMeleeLifesteal : Prefix, ITieredStatFloatAffix
     {
         public override float weight => 0.4f;

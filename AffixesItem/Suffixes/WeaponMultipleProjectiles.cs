@@ -11,9 +11,10 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
+    [DisableAffix]
     public class WeaponMultipleProjectiles : Suffix, ITieredStatIntValueAffix
     {
-        public override float weight => 0;
+        public override float weight => 0.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
@@ -44,7 +45,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         float tierMultiplier = 0;
         float multiplier = 1;
-        
+
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return

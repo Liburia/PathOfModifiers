@@ -12,6 +12,7 @@ using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
+    [DisableAffix]
     public class WeaponOnKillFrostSpikes : Suffix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;

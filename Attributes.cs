@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace PathOfModifiers
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class ExcludeFromLoadingInPoM : Attribute
+    public class DisableAffix : Attribute
     {
 
     }
