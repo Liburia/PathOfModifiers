@@ -20,7 +20,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers
 {
-	public static class PoMNetMessage
+    public static class PoMNetMessage
     {
         public static void HandlePacket(BinaryReader reader, int whoAmI)
         {
@@ -150,7 +150,7 @@ namespace PathOfModifiers
                 var type = reader.ReadInt32();
 
                 var npc = PoMHelper.SpawnNPC(x, y, type, false, true);
-                
+
                 if (npc == null)
                     goto SkipMsgIf;
 
@@ -160,7 +160,7 @@ namespace PathOfModifiers
                 pomNPC.rarity = PoMDataLoader.raritiesNPC[rarityID];
 
                 var affixesLength = reader.ReadInt32();
-                for(int i = 0; i < affixesLength; i++)
+                for (int i = 0; i < affixesLength; i++)
                 {
                     var affixID = reader.ReadInt32();
                     var affixTier = reader.ReadInt32();
