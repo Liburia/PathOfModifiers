@@ -14,7 +14,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 {
     public class WeaponOnHitLifeOrbs : Suffix, ITieredStatFloat2IntValueAffix
     {
-        public override float weight => 0.5f;
+        public override float weight => 9990.5f;
 
         string addedTextTiered = string.Empty;
         float addedTextWeightTiered = 1;
@@ -84,7 +84,25 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(int)Math.Round(multiplier1 * 100)}% chance to release {Tiers3[Tier3]} life orbs on hit that heal {(int)Math.Round(multiplier2 * 100)}% of damage dealt";
+            float percent1 = multiplier1 * 100;
+            float percent2 = multiplier2 * 100;
+
+            int decimals1 = 0;
+            int decimals2 = 0;
+
+            if (percent1 < 1)
+            {
+                decimals1 = 2;
+            }
+            if (percent2 < 1)
+            {
+                decimals2 = 2;
+            }
+
+            percent1 = (float)Math.Round(percent1, decimals1);
+            percent2 = (float)Math.Round(percent2, decimals2);
+
+            return $"{percent1}% chance to release {Tiers3[Tier3]} life orbs on hit that heal {percent2}% of damage dealt";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
@@ -192,6 +210,10 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         public override void NetReceive(Item item, BinaryReader reader)
         {
             TieredAffixHelper.NetReceive(this, item, reader);
+        }
+        public override string GetForgeText(Item item)
+        {
+            return TieredAffixHelper.GetForgeText(this, item);
         }
         #endregion
     }
