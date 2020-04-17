@@ -351,14 +351,14 @@ namespace PathOfModifiers
         {
             try
             {
-                writer.Write(PoMDataLoader.rarityItemMap[rarity.GetType()]);
+                writer.Write(PoMDataLoader.rarityNPCMap[rarity.GetType()]);
 
                 writer.Write((byte)affixes.Count);
                 Affix affix;
                 for (int i = 0; i < affixes.Count; i++)
                 {
                     affix = affixes[i];
-                    writer.Write(PoMDataLoader.affixItemMap[affix.GetType()]);
+                    writer.Write(PoMDataLoader.affixNPCMap[affix.GetType()]);
                     affix.NetSend(writer);
                 }
             }
@@ -371,7 +371,8 @@ namespace PathOfModifiers
         {
             try
             {
-                rarity = PoMDataLoader.raritiesNPC[reader.ReadInt32()];
+                int rarityIndex = reader.ReadInt32();
+                rarity = PoMDataLoader.raritiesNPC[rarityIndex];
 
                 int affixCount = reader.ReadByte();
                 Affix affix;

@@ -84,7 +84,7 @@ namespace PathOfModifiers
 
                 foreach (Type t in types)
                 {
-                    if (t.IsDefined(typeof(ExcludeFromLoadingInPoM), false))
+                    if (t.IsDefined(typeof(DisableAffix), false))
                     {
                         continue;
                     }

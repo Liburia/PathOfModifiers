@@ -67,6 +67,7 @@ namespace PathOfModifiers
 
         public override void Initialize()
         {
+            lastDamageDealer = null;
             damageDotDebuffDamages = new Dictionary<Type, int>();
         }
 

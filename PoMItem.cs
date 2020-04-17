@@ -1032,7 +1032,7 @@ namespace PathOfModifiers
                 PathOfModifiers.Instance.Logger.Warn($"Rarity '{type.FullName}' doesn't exist");
                 return;
             }
-            if (type.IsDefined(typeof(ExcludeFromLoadingInPoM), false))
+            if (type.IsDefined(typeof(DisableAffix), false))
             {
                 PathOfModifiers.Instance.Logger.Warn($"Rarity '{type.FullName}' is disabled");
                 return;
@@ -1057,7 +1057,7 @@ namespace PathOfModifiers
                     PathOfModifiers.Instance.Logger.Warn($"Affix '{type.FullName}' doesn't exist");
                     continue;
                 }
-                if (type.IsDefined(typeof(ExcludeFromLoadingInPoM), false))
+                if (type.IsDefined(typeof(DisableAffix), false))
                 {
                     PathOfModifiers.Instance.Logger.Warn($"Affix '{type.FullName}' is disabled");
                     continue;
