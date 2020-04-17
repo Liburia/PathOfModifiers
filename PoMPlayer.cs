@@ -15,11 +15,6 @@ namespace PathOfModifiers
     public class PoMPlayer : ModPlayer
     {
         #region Stats
-        public float meleeCrit;
-        public float magicCrit;
-        public float rangedCrit;
-        public float thrownCrit;
-
         public float meleeDamage;
         public float magicDamage;
         public float rangedDamage;
@@ -178,6 +173,32 @@ namespace PathOfModifiers
                 pomItem.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
             regen = (regen * regenMultiplier) + (player.lifeRegen * regenMultiplier) - player.lifeRegen;
+        }
+
+        public override void GetWeaponCrit(Item heldItem, ref int crit)
+        {
+            Item item;
+            PoMItem pomItem;
+            float multiplier = 1f;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                item = player.inventory[i];
+                if (item.type == 0 || item.stack == 0)
+                    continue;
+
+                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                item = player.armor[i];
+                if (item.type == 0 || item.stack == 0)
+                    continue;
+
+                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
+            }
+            crit = (int)Math.Round(crit * multiplier);
         }
 
         public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
@@ -510,11 +531,6 @@ namespace PathOfModifiers
 
         public override void ResetEffects()
         {
-            meleeCrit = 1;
-            magicCrit = 1;
-            rangedCrit = 1;
-            thrownCrit = 1;
-
             meleeDamage = 1;
             magicDamage = 1;
             rangedDamage = 1;
@@ -534,11 +550,6 @@ namespace PathOfModifiers
         }
         public override void PostUpdateEquips()
         {
-            player.meleeCrit = (int)Math.Round(player.meleeCrit * meleeCrit);
-            player.magicCrit = (int)Math.Round(player.magicCrit * magicCrit);
-            player.rangedCrit = (int)Math.Round(player.rangedCrit * rangedCrit);
-            player.thrownCrit = (int)Math.Round(player.thrownCrit * thrownCrit);
-
             player.meleeDamage *= meleeDamage;
             player.magicDamage *= magicDamage;
             player.rangedDamage *= rangedDamage;

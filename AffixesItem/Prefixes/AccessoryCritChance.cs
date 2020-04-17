@@ -54,12 +54,12 @@ namespace PathOfModifiers.AffixesItem.Prefixes
             return $"x{Math.Round(multiplier, 2)} critical strike chance";
         }
 
-        public override void UpdateEquip(Item item, PoMPlayer player)
+        public override void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
         {
-            player.meleeCrit += multiplier - 1;
-            player.rangedCrit += multiplier - 1;
-            player.magicCrit += multiplier - 1;
-            player.thrownCrit += multiplier - 1;
+            if (PoMItem.IsAccessoryEquipped(item, player))
+            {
+                multiplier += this.multiplier - 1;
+            }
         }
 
         #region Interface Properties

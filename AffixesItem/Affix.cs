@@ -64,6 +64,7 @@ namespace PathOfModifiers.AffixesItem
         public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo) { return true; }
         public virtual bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource) { return true; }
         public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }
+        public virtual void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier) { }
         public virtual void ModifyHitByNPC(Item item, Player player, NPC npc, ref int damage, ref bool crit) { }
         public virtual void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit) { }
         public virtual bool PlayerShoot(Item affixItem, Player player, Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack) { return true; }

@@ -788,6 +788,17 @@ namespace PathOfModifiers
                 suffix.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
         }
+        public void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
+        {
+            foreach (Prefix prefix in prefixes)
+            {
+                prefix.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
+            }
+            foreach (Suffix suffix in suffixes)
+            {
+                suffix.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
+            }
+        }
         public void ModifyHitByNPC(Item item, Player player, NPC npc, ref int damage, ref bool crit)
         {
             float damageMultiplier = 1f;
