@@ -540,18 +540,17 @@ namespace PathOfModifiers
             }
             crit = (int)Math.Round(crit * multiplier);
         }
-        public override void GetWeaponDamage(Item item, Player player, ref int damage)
+
+        public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
         {
-            float multiplier = 1f;
             foreach (Prefix prefix in prefixes)
             {
-                prefix.GetWeaponDamage(item, player, ref multiplier);
+                prefix.ModifyWeaponDamage(item, player, ref mult, ref flat);
             }
             foreach (Suffix suffix in suffixes)
             {
-                suffix.GetWeaponDamage(item, player, ref multiplier);
+                suffix.ModifyWeaponDamage(item, player, ref mult, ref flat);
             }
-            damage = (int)Math.Round(damage * multiplier);
         }
         public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
         {

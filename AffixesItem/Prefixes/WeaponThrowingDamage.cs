@@ -59,7 +59,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
             return $"[T{tierText}] {(multiplier < 1 ? '-' : '+')}{(int)Math.Round(Math.Abs((multiplier - 1) * 100))}% throwing damage";
         }
 
-        public override void GetWeaponDamage(Item item, Player player, ref float multiplier)
+        public override void ModifyWeaponDamage(Item item, Player player, ref float multiplier, ref float flat)
         {
             multiplier += this.multiplier - 1;
         }

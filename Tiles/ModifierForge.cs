@@ -114,7 +114,7 @@ namespace PathOfModifiers.Tiles
             ModContent.GetInstance<MapDeviceTE>().Kill(i, j);
         }
 
-        public override void RightClick(int i, int j)
+        public override bool NewRightClick(int i, int j)
         {
             Player player = Main.LocalPlayer;
             Main.mouseRightRelease = false;
@@ -126,7 +126,7 @@ namespace PathOfModifiers.Tiles
                 Main.npcChatText = "";
             }
 
-            //Hardcoded frame coordinate values because using TileObjectData is cancer.
+            //TODO: (Or not to do) Hardcoded frame coordinate values because using TileObjectData is cancer.
             if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
                 ModifierForgeTE clickedForge = (ModifierForgeTE)te;
@@ -138,7 +138,11 @@ namespace PathOfModifiers.Tiles
                 {
                     ModifierForgeUI.ShowUI(clickedForge);
                 }
+
+                return true;
             }
+
+            return false;
         }
 
         public override void MouseOver(int i, int j)

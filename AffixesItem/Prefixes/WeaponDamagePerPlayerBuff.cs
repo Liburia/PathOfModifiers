@@ -59,7 +59,7 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         }
 
         #region Item Hooks
-        public override void GetWeaponDamage(Item item, Player player, ref float multiplier)
+        public override void ModifyWeaponDamage(Item item, Player player, ref float multiplier, ref float flat)
         {
             multiplier += (this.multiplier - 1) * PoMHelper.CountBuffs(player.buffType);
         }
