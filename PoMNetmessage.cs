@@ -101,6 +101,27 @@ namespace PathOfModifiers
                     packet.Send(-1, whoAmI);
                 }
             }
+            else if (msg == MsgType.AddMoveSpeedBuffPlayer)
+            {
+                int playerID = reader.ReadInt32();
+                float speedMultiplier = reader.ReadInt32();
+                int time = reader.ReadInt32();
+
+                Player player = Main.player[playerID];
+                PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
+                pomPlayer.AddMoveSpeedBuff(player, speedMultiplier, time, false);
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    ModPacket packet = PathOfModifiers.Instance.GetPacket
+();
+                    packet.Write((byte)MsgType.AddMoveSpeedBuffPlayer);
+                    packet.Write(playerID);
+                    packet.Write(speedMultiplier);
+                    packet.Write(time);
+                    packet.Send(-1, whoAmI);
+                }
+            }
             else if (msg == MsgType.sOpenMapDeviceMap)
             {
                 int mdID = reader.ReadInt32();
@@ -218,6 +239,15 @@ namespace PathOfModifiers
             packet.Write(time);
             packet.Send();
         }
+        public static void AddMoveSpeedBuffPlayer(int whoAmI, float speedMultiplier, int time)
+        {
+            ModPacket packet = PathOfModifiers.Instance.GetPacket();
+            packet.Write((byte)MsgType.AddMoveSpeedBuffPlayer);
+            packet.Write(whoAmI);
+            packet.Write(speedMultiplier);
+            packet.Write(time);
+            packet.Send();
+        }
         /// <summary>
         /// Syncs all map tiles, walls and NPCs to the clients.
         /// </summary>
@@ -327,6 +357,7 @@ namespace PathOfModifiers
         PlayerConnected,
         AddDamageDoTDebuffNPC,
         AddDamageDoTDebuffPlayer,
+        AddMoveSpeedBuffPlayer,
         sOpenMapDeviceMap,
         sCloseMapDeviceMap,
         sModifierForgeModifiedItemChanged,

@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.Net;
 
 namespace PathOfModifiers
@@ -36,8 +37,10 @@ namespace PathOfModifiers
         /// Stores the damage of the hit that procced the debuff.
         /// </summary>
         Dictionary<Type, int> damageDotDebuffDamages = new Dictionary<Type, int>();
-
         public bool dddDamageDotDebuff = false;
+
+        float moveSpeedBuffMultiplier = 1;
+        public bool moveSpeedBuff = false;
 
         public void AddDamageDoTBuff(Player player, DamageDoTDebuff buff, int damage, int time, bool syncMP = true, int ignoreClient = -1)
         {
@@ -45,6 +48,8 @@ namespace PathOfModifiers
             Type buffType = buff.GetType();
             if (damageDotDebuffDamages.TryGetValue(buffType, out dddDamage))
             {
+                //TODO: Pretty sure the dictionary isn't cleared ever, so the highest damage would remain even if the buff ran out.
+                //TODO: also it's not saved, so after entering a world the debuff will do no damage
                 if (damage > dddDamage)
                     damageDotDebuffDamages[buffType] = damage;
             }
@@ -57,6 +62,16 @@ namespace PathOfModifiers
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
                 PoMNetMessage.AddDamageDoTDebuffPlayer(player.whoAmI, buff.Type, damage, time);
+            }
+        }
+        public void AddMoveSpeedBuff(Player player, float speedMultiplier, int time, bool syncMP = true, int ignoreClient = -1)
+        {
+            moveSpeedBuffMultiplier = speedMultiplier;
+            player.AddBuff(ModContent.BuffType<MoveSpeed>(), time, true);
+
+            if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
+            {
+                PoMNetMessage.AddMoveSpeedBuffPlayer(player.whoAmI, speedMultiplier, time);
             }
         }
 
@@ -547,9 +562,15 @@ namespace PathOfModifiers
 
 
             dddDamageDotDebuff = false;
+            moveSpeedBuff = false;
         }
         public override void PostUpdateEquips()
         {
+            if (moveSpeedBuff)
+            {
+                moveSpeed += moveSpeedBuffMultiplier - 1;
+            }
+
             player.meleeDamage *= meleeDamage;
             player.magicDamage *= magicDamage;
             player.rangedDamage *= rangedDamage;
@@ -560,6 +581,7 @@ namespace PathOfModifiers
             player.pickSpeed *= pickSpeed;
 
             player.moveSpeed *= moveSpeed;
+            player.maxRunSpeed *= moveSpeed;
 
             player.potionDelayTime = (int)Math.Round(player.potionDelayTime * potionDelayTime);
             player.restorationDelayTime = (int)Math.Round(player.restorationDelayTime * restorationDelayTime);
@@ -572,6 +594,18 @@ namespace PathOfModifiers
                 debuffDamage = (int)Math.Round(damageDotDebuffDamages[typeof(DamageDoTDebuff)] * DamageDoTDebuff.damageMultiplierHalfSecond);
                 player.lifeRegen -= debuffDamage;
             }
+        }
+
+        public override TagCompound Save()
+        {
+            TagCompound tag = new TagCompound();
+            tag.Add("moveSpeedBuffMultiplier", moveSpeedBuffMultiplier);
+
+            return tag;
+        }
+        public override void Load(TagCompound tag)
+        {
+            moveSpeedBuffMultiplier = tag.GetFloat("moveSpeedBuffMultiplier");
         }
     }
 }

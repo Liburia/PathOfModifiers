@@ -8,32 +8,35 @@ using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
+using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
-    public class WeaponOnHitVelocity : Suffix, ITieredStatFloatAffix
+    public class WeaponLowHPCrit : Suffix, ITieredStatFloatAffix
     {
+        float lowHPThreshold = 0.2f;
+
         public override float weight => 0.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers = new float[] { -4f, -2.6f, -1.3f, 0f, 1.3f, 2.6f, 4f };
+        static float[] tiers = new float[] { 0.7f, 0.8f, 0.9f, 1f, 1.1f, 1.2f, 1.3f };
         static Tuple<int, double>[] tierWeights = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 0.5),
-            new Tuple<int, double>(1, 1),
+            new Tuple<int, double>(1, 1.2),
             new Tuple<int, double>(2, 2),
             new Tuple<int, double>(3, 2),
             new Tuple<int, double>(4, 1),
             new Tuple<int, double>(5, 0.5),
         };
         static string[] tierNames = new string[] {
-            "of Repulsion",
-            "of Repel",
-            "of Fending",
-            "of Pulling",
-            "of Attraction",
-            "of Gravity",
+            "of Failure",
+            "of Mercy",
+            "of Hesitation",
+            "of Carnage",
+            "of Execution",
+            "of Extermination",
         };
         static int maxTier => tiers.Length - 2;
 
@@ -54,50 +57,48 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            float velocity = Math.Abs(multiplier);
-            int decimals = 0;
-            if (velocity < 1)
+            float percent1 = Math.Abs((Multiplier - 1) * 100);
+
+            int decimals1 = 0;
+            if (percent1 < 1)
             {
-                decimals = 2;
+                decimals1 = 2;
             }
-            velocity = (float)Math.Round(velocity, decimals);
-            string towardsAway = multiplier >= 1 ? "towards" : "away from";
-            return $"Gain {velocity} velocity {towardsAway} target on hit";
+            percent1 = (float)Math.Round(percent1, decimals1);
+            string plusMinus = Multiplier >= 1 ? "+" : "-";
+
+            return $"Deal {plusMinus}{percent1}% damage to low HP enemies";
         }
 
-        public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+        public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
-            if (player.HeldItem == item)
+            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
+            if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= lowHPThreshold)
             {
-                GainVelocity(player, target);
+                damageMultiplier += Multiplier - 1;
             }
         }
-        public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+        public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (player.HeldItem == item)
+            if (item == player.HeldItem && (target.statLife / (float)target.statLifeMax2) <= lowHPThreshold)
             {
-                GainVelocity(player, target);
+                damageMultiplier += Multiplier - 1;
             }
         }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
-            if (player.HeldItem == item)
+            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
+            if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= lowHPThreshold)
             {
-                GainVelocity(player, target);
+                damageMultiplier += Multiplier - 1;
             }
         }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
+        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (player.HeldItem == item)
+            if (item == player.HeldItem && (target.statLife / (float)target.statLifeMax2) <= lowHPThreshold)
             {
-                GainVelocity(player, target);
+                damageMultiplier += Multiplier - 1;
             }
-        }
-
-        void GainVelocity(Player player, Entity target)
-        {
-            Vector2 addVelocity = (target.Center - player.Center).SafeNormalize(Vector2.Zero) * Multiplier;
-            player.velocity += addVelocity;
         }
 
         #region Interface Properties

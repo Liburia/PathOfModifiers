@@ -77,6 +77,216 @@ namespace PathOfModifiers.AffixesItem
             return $"[T{affix.TierText}] {affix.GetTolltipText(item)}";
         }
         #endregion
+        #region ITieredStatFloat2Affix
+        public static void SetTier(ITieredStatFloat2Affix affix, int t1, int t2, bool ignore1 = false, bool ignore2 = false)
+        {
+            if (!ignore1)
+            {
+                affix.Tier1 = t1;
+            }
+            if (!ignore2)
+            {
+                affix.Tier2 = t2;
+            }
+            affix.AddedTextTiered = affix.TierNames[affix.CompoundTier];
+            affix.AddedTextWeightTiered = affix.Weight / (float)affix.TierWeights1[affix.CompoundTier].Item2;
+        }
+        public static void SetTierMultiplier(ITieredStatFloat2Affix affix, float m1, float m2, bool ignore1 = false, bool ignore2 = false)
+        {
+            if (!ignore1)
+            {
+                affix.TierMultiplier1 = m1;
+                affix.Multiplier1 = affix.Tiers1[affix.Tier1] + (affix.Tiers1[affix.Tier1 + 1] - affix.Tiers1[affix.Tier1]) * m1;
+            }
+            if (!ignore2)
+            {
+                affix.TierMultiplier2 = m2;
+                affix.Multiplier2 = affix.Tiers2[affix.Tier2] + (affix.Tiers2[affix.Tier2 + 1] - affix.Tiers2[affix.Tier2]) * m2;
+            }
+        }
+        public static Affix Clone(ITieredStatFloat2Affix affix, ITieredStatFloat2Affix newAffix)
+        {
+            SetTier(newAffix, affix.Tier1, affix.Tier2, false, false);
+            SetTierMultiplier(newAffix, affix.TierMultiplier1, affix.TierMultiplier2, false, false);
+
+            return (Affix)newAffix;
+        }
+        public static void RollTier(ITieredStatFloat2Affix affix, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
+        {
+            int wr1 = -1;
+            int wr2 = -1;
+            if (!ignore1)
+            {
+                wr1 = new WeightedRandom<int>(Main.rand, affix.TierWeights1);
+            }
+            if (!ignore2)
+            {
+                wr2 = new WeightedRandom<int>(Main.rand, affix.TierWeights2);
+            }
+            SetTier(affix, wr1, wr2, ignore1, ignore2);
+        }
+        public static void RollTierMultiplier(ITieredStatFloat2Affix affix, bool ignore1 = false, bool ignore2 = false)
+        {
+            SetTierMultiplier(affix, Main.rand.NextFloat(0, 1), Main.rand.NextFloat(0, 1), ignore1, ignore2);
+        }
+        public static void RollValue(ITieredStatFloat2Affix affix, bool rollTier)
+        {
+            if (rollTier)
+                RollTier(affix);
+            RollTierMultiplier(affix);
+        }
+        public static void ReforgePrice(ITieredStatFloat2Affix affix, Item item, ref int price)
+        {
+            price += (int)Math.Round(item.value * 0.2f * affix.CompoundTier / 4 / affix.Weight);
+        }
+        public static void Save(ITieredStatFloat2Affix affix, TagCompound tag, Item item)
+        {
+            tag.Set("tier1", affix.Tier1);
+            tag.Set("tierMultiplier1", affix.TierMultiplier1);
+            tag.Set("tier2", affix.Tier2);
+            tag.Set("tierMultiplier2", affix.TierMultiplier2);
+        }
+        public static void Load(ITieredStatFloat2Affix affix, TagCompound tag, Item item)
+        {
+            SetTier(affix, tag.GetInt("tier1"), tag.GetInt("tier2"));
+            SetTierMultiplier(affix, tag.Get<float>("tierMultiplier1"), tag.Get<float>("tierMultiplier2"));
+        }
+        public static void NetSend(ITieredStatFloat2Affix affix, Item item, BinaryWriter writer)
+        {
+            writer.Write(affix.Tier1);
+            writer.Write(affix.TierMultiplier1);
+            writer.Write(affix.Tier2);
+            writer.Write(affix.TierMultiplier2);
+        }
+        public static void NetReceive(ITieredStatFloat2Affix affix, Item item, BinaryReader reader)
+        {
+            int t1 = reader.ReadInt32();
+            float tm1 = reader.ReadSingle();
+            int t2 = reader.ReadInt32();
+            float tm2 = reader.ReadSingle();
+            SetTier(affix, t1, t2);
+            SetTierMultiplier(affix, tm1, tm2);
+        }
+        public static string GetForgeText(ITieredStatFloat2Affix affix, Item item)
+        {
+            return $"[T{affix.CompoundTierText}] {affix.GetTolltipText(item)}";
+        }
+        #endregion
+        #region ITieredStatFloat3Affix
+        public static void SetTier(ITieredStatFloat3Affix affix, int t1, int t2, int t3, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
+        {
+            if (!ignore1)
+            {
+                affix.Tier1 = t1;
+            }
+            if (!ignore2)
+            {
+                affix.Tier2 = t2;
+            }
+            if (!ignore3)
+            {
+                affix.Tier3 = t3;
+            }
+            affix.AddedTextTiered = affix.TierNames[affix.CompoundTier];
+            affix.AddedTextWeightTiered = affix.Weight / (float)affix.TierWeights1[affix.CompoundTier].Item2;
+        }
+        public static void SetTierMultiplier(ITieredStatFloat3Affix affix, float m1, float m2, float m3, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
+        {
+            if (!ignore1)
+            {
+                affix.TierMultiplier1 = m1;
+                affix.Multiplier1 = affix.Tiers1[affix.Tier1] + (affix.Tiers1[affix.Tier1 + 1] - affix.Tiers1[affix.Tier1]) * m1;
+            }
+            if (!ignore2)
+            {
+                affix.TierMultiplier2 = m2;
+                affix.Multiplier2 = affix.Tiers2[affix.Tier2] + (affix.Tiers2[affix.Tier2 + 1] - affix.Tiers2[affix.Tier2]) * m2;
+            }
+            if (!ignore3)
+            {
+                affix.TierMultiplier3 = m3;
+                affix.Multiplier3 = affix.Tiers3[affix.Tier3] + (affix.Tiers3[affix.Tier3 + 1] - affix.Tiers3[affix.Tier3]) * m3;
+            }
+        }
+        public static Affix Clone(ITieredStatFloat3Affix affix, ITieredStatFloat3Affix newAffix)
+        {
+            SetTier(newAffix, affix.Tier1, affix.Tier2, affix.Tier3);
+            SetTierMultiplier(newAffix, affix.TierMultiplier1, affix.TierMultiplier2, affix.TierMultiplier3);
+
+            return (Affix)newAffix;
+        }
+        public static void RollTier(ITieredStatFloat3Affix affix, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
+        {
+            int wr1 = -1;
+            int wr2 = -1;
+            int wr3 = -1;
+            if (!ignore1)
+            {
+                wr1 = new WeightedRandom<int>(Main.rand, affix.TierWeights1);
+            }
+            if (!ignore2)
+            {
+                wr2 = new WeightedRandom<int>(Main.rand, affix.TierWeights2);
+            }
+            if (!ignore3)
+            {
+                wr3 = new WeightedRandom<int>(Main.rand, affix.TierWeights3);
+            }
+            SetTier(affix, wr1, wr2, wr3, ignore1, ignore2, ignore3);
+        }
+        public static void RollTierMultiplier(ITieredStatFloat3Affix affix, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
+        {
+            SetTierMultiplier(affix, Main.rand.NextFloat(0, 1), Main.rand.NextFloat(0, 1), Main.rand.NextFloat(0, 1), ignore1, ignore2, ignore3);
+        }
+        public static void RollValue(ITieredStatFloat3Affix affix, bool rollTier)
+        {
+            if (rollTier)
+                RollTier(affix);
+            RollTierMultiplier(affix);
+        }
+        public static void ReforgePrice(ITieredStatFloat3Affix affix, Item item, ref int price)
+        {
+            price += (int)Math.Round(item.value * 0.2f * affix.CompoundTier / 4 / affix.Weight);
+        }
+        public static void Save(ITieredStatFloat3Affix affix, TagCompound tag, Item item)
+        {
+            tag.Set("tier1", affix.Tier1);
+            tag.Set("tierMultiplier1", affix.TierMultiplier1);
+            tag.Set("tier2", affix.Tier2);
+            tag.Set("tierMultiplier2", affix.TierMultiplier2);
+            tag.Set("tier3", affix.Tier3);
+            tag.Set("tierMultiplier3", affix.TierMultiplier3);
+        }
+        public static void Load(ITieredStatFloat3Affix affix, TagCompound tag, Item item)
+        {
+            SetTier(affix, tag.GetInt("tier1"), tag.GetInt("tier2"), tag.GetInt("tier3"));
+            SetTierMultiplier(affix, tag.Get<float>("tierMultiplier1"), tag.Get<float>("tierMultiplier2"), tag.Get<float>("tierMultiplier3"));
+        }
+        public static void NetSend(ITieredStatFloat3Affix affix, Item item, BinaryWriter writer)
+        {
+            writer.Write(affix.Tier1);
+            writer.Write(affix.TierMultiplier1);
+            writer.Write(affix.Tier2);
+            writer.Write(affix.TierMultiplier2);
+            writer.Write(affix.Tier3);
+            writer.Write(affix.TierMultiplier3);
+        }
+        public static void NetReceive(ITieredStatFloat3Affix affix, Item item, BinaryReader reader)
+        {
+            int t1 = reader.ReadInt32();
+            float tm1 = reader.ReadSingle();
+            int t2 = reader.ReadInt32();
+            float tm2 = reader.ReadSingle();
+            int t3 = reader.ReadInt32();
+            float tm3 = reader.ReadSingle();
+            SetTier(affix, t1, t2, t3);
+            SetTierMultiplier(affix, tm1, tm2, tm3);
+        }
+        public static string GetForgeText(ITieredStatFloat3Affix affix, Item item)
+        {
+            return $"[T{affix.CompoundTierText}] {affix.GetTolltipText(item)}";
+        }
+        #endregion
 
 
         #region ITieredStatIntAffix
@@ -188,102 +398,6 @@ namespace PathOfModifiers.AffixesItem
         public static string GetForgeText(ITieredStatIntValueAffix affix, Item item)
         {
             return $"[T{affix.TierText}] {affix.GetTolltipText(item)}";
-        }
-        #endregion
-
-        #region ITieredStatFloat2Affix
-        public static void SetTier(ITieredStatFloat2Affix affix, int t1, int t2, bool ignore1 = false, bool ignore2 = false)
-        {
-            if (!ignore1)
-            {
-                affix.Tier1 = t1;
-            }
-            if (!ignore2)
-            {
-                affix.Tier2 = t2;
-            }
-            affix.AddedTextTiered = affix.TierNames[affix.CompoundTier];
-            affix.AddedTextWeightTiered = affix.Weight / (float)affix.TierWeights1[affix.CompoundTier].Item2;
-        }
-        public static void SetTierMultiplier(ITieredStatFloat2Affix affix, float m1, float m2, bool ignore1 = false, bool ignore2 = false)
-        {
-            if (!ignore1)
-            {
-                affix.TierMultiplier1 = m1;
-                affix.Multiplier1 = affix.Tiers1[affix.Tier1] + (affix.Tiers1[affix.Tier1 + 1] - affix.Tiers1[affix.Tier1]) * m1;
-            }
-            if (!ignore2)
-            {
-                affix.TierMultiplier2 = m2;
-                affix.Multiplier2 = affix.Tiers2[affix.Tier2] + (affix.Tiers2[affix.Tier2 + 1] - affix.Tiers2[affix.Tier2]) * m2;
-            }
-        }
-        public static Affix Clone(ITieredStatFloat2Affix affix, ITieredStatFloat2Affix newAffix)
-        {
-            SetTier(newAffix, affix.Tier1, affix.Tier2, false, false);
-            SetTierMultiplier(newAffix, affix.TierMultiplier1, affix.TierMultiplier2, false, false);
-
-            return (Affix)newAffix;
-        }
-        public static void RollTier(ITieredStatFloat2Affix affix, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
-        {
-            int wr1 = -1;
-            int wr2 = -1;
-            if (!ignore1)
-            {
-                wr1 = new WeightedRandom<int>(Main.rand, affix.TierWeights1);
-            }
-            if (!ignore2)
-            {
-                wr2 = new WeightedRandom<int>(Main.rand, affix.TierWeights2);
-            }
-            SetTier(affix, wr1, wr2, ignore1, ignore2);
-        }
-        public static void RollTierMultiplier(ITieredStatFloat2Affix affix, bool ignore1 = false, bool ignore2 = false)
-        {
-            SetTierMultiplier(affix, Main.rand.NextFloat(0, 1), Main.rand.NextFloat(0, 1), ignore1, ignore2);
-        }
-        public static void RollValue(ITieredStatFloat2Affix affix, bool rollTier)
-        {
-            if (rollTier)
-                RollTier(affix);
-            RollTierMultiplier(affix);
-        }
-        public static void ReforgePrice(ITieredStatFloat2Affix affix, Item item, ref int price)
-        {
-            price += (int)Math.Round(item.value * 0.2f * affix.CompoundTier / 4 / affix.Weight);
-        }
-        public static void Save(ITieredStatFloat2Affix affix, TagCompound tag, Item item)
-        {
-            tag.Set("tier1", affix.Tier1);
-            tag.Set("tierMultiplier1", affix.TierMultiplier1);
-            tag.Set("tier2", affix.Tier2);
-            tag.Set("tierMultiplier2", affix.TierMultiplier2);
-        }
-        public static void Load(ITieredStatFloat2Affix affix, TagCompound tag, Item item)
-        {
-            SetTier(affix, tag.GetInt("tier1"), tag.GetInt("tier2"));
-            SetTierMultiplier(affix, tag.Get<float>("tierMultiplier1"), tag.Get<float>("tierMultiplier2"));
-        }
-        public static void NetSend(ITieredStatFloat2Affix affix, Item item, BinaryWriter writer)
-        {
-            writer.Write(affix.Tier1);
-            writer.Write(affix.TierMultiplier1);
-            writer.Write(affix.Tier2);
-            writer.Write(affix.TierMultiplier2);
-        }
-        public static void NetReceive(ITieredStatFloat2Affix affix, Item item, BinaryReader reader)
-        {
-            int t1 = reader.ReadInt32();
-            float tm1 = reader.ReadSingle();
-            int t2 = reader.ReadInt32();
-            float tm2 = reader.ReadSingle();
-            SetTier(affix, t1, t2);
-            SetTierMultiplier(affix, tm1, tm2);
-        }
-        public static string GetForgeText(ITieredStatFloat2Affix affix, Item item)
-        {
-            return $"[T{affix.CompoundTierText}] {affix.GetTolltipText(item)}";
         }
         #endregion
 

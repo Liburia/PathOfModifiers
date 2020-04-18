@@ -8,32 +8,33 @@ using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
+using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
-    public class WeaponOnHitVelocity : Suffix, ITieredStatFloatAffix
+    public class WeaponFullHPCrit : Suffix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;
 
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers = new float[] { -4f, -2.6f, -1.3f, 0f, 1.3f, 2.6f, 4f };
+        static float[] tiers = new float[] { 0f, 0.016f, 0.033f, 0.05f, 0.066f, 0.084f, 0.1f };
         static Tuple<int, double>[] tierWeights = new Tuple<int, double>[] {
-            new Tuple<int, double>(0, 0.5),
-            new Tuple<int, double>(1, 1),
+            new Tuple<int, double>(0, 3),
+            new Tuple<int, double>(1, 2.5),
             new Tuple<int, double>(2, 2),
-            new Tuple<int, double>(3, 2),
+            new Tuple<int, double>(3, 1.5),
             new Tuple<int, double>(4, 1),
             new Tuple<int, double>(5, 0.5),
         };
         static string[] tierNames = new string[] {
-            "of Repulsion",
-            "of Repel",
-            "of Fending",
-            "of Pulling",
-            "of Attraction",
-            "of Gravity",
+            "of Decimation",
+            "of Butchery",
+            "of Slaying",
+            "of Assassination",
+            "of Eradication",
+            "of Annihilation",
         };
         static int maxTier => tiers.Length - 2;
 
@@ -54,50 +55,54 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            float velocity = Math.Abs(multiplier);
-            int decimals = 0;
-            if (velocity < 1)
+            float percent1 = Multiplier * 100;
+
+            int decimals1 = 0;
+            if (percent1 < 1)
             {
-                decimals = 2;
+                decimals1 = 2;
             }
-            velocity = (float)Math.Round(velocity, decimals);
-            string towardsAway = multiplier >= 1 ? "towards" : "away from";
-            return $"Gain {velocity} velocity {towardsAway} target on hit";
+            percent1 = (float)Math.Round(percent1, decimals1);
+
+            return $"Deal {percent1}% of enemy HP with the first attack";
         }
 
-        public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+        public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
-            if (player.HeldItem == item)
+            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
+            if (item == player.HeldItem && realTarget.life >= realTarget.lifeMax)
             {
-                GainVelocity(player, target);
+                int critDamage = (int)Math.Round(target.lifeMax * multiplier);
+                int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
+                player.ApplyDamageToNPC(target, critDamage, 0, direction, false);
             }
         }
-        public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+        public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (player.HeldItem == item)
+            if (item == player.HeldItem && target.statLife >= target.statLifeMax2)
             {
-                GainVelocity(player, target);
+                int critDamage = (int)Math.Round(target.statLifeMax2 * multiplier);
+                int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
+                target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
             }
         }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
-            if (player.HeldItem == item)
+            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
+            if (item == player.HeldItem && realTarget.life >= realTarget.lifeMax)
             {
-                GainVelocity(player, target);
+                int critDamage = (int)Math.Round(target.lifeMax * multiplier);
+                player.ApplyDamageToNPC(target, critDamage, 0, hitDirection, false);
             }
         }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
+        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (player.HeldItem == item)
+            if (item == player.HeldItem && target.statLife >= target.statLifeMax2)
             {
-                GainVelocity(player, target);
+                int critDamage = (int)Math.Round(target.statLifeMax2 * multiplier);
+                int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
+                target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
             }
-        }
-
-        void GainVelocity(Player player, Entity target)
-        {
-            Vector2 addVelocity = (target.Center - player.Center).SafeNormalize(Vector2.Zero) * Multiplier;
-            player.velocity += addVelocity;
         }
 
         #region Interface Properties
