@@ -113,7 +113,15 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         {
             int amount = (int)MathHelper.Clamp(player.statLifeMax2 * multiplier1, 1, 9999999);
             player.statLife += amount;
-            player.HealEffect(amount);
+            player.HealEffect(amount, false);
+            for (int i = 0; i < 7; i++)
+            {
+                Vector2 dustPosition = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height));
+                Vector2 dustVelocity = new Vector2(0, -Main.rand.NextFloat(0.5f, 2.5f));
+                float dustScale = Main.rand.NextFloat(1f, 2.5f);
+                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.HealEffect>(), dustVelocity, Scale: dustScale);
+            }
+            PoMNetMessage.SyncHealEffect(player.whoAmI, amount);
             lastCastTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
         }
 
