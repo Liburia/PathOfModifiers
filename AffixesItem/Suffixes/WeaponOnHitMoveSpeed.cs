@@ -121,7 +121,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         void OnHit(Item item, Player player)
         {
-            if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProc) / 1000.0 >= multiplier2)
+            if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProc) / 1000.0 >= multiplier3)
                 GainMoveSpeed(player);
         }
 
