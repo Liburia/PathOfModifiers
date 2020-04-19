@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
+using Terraria.ID;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
@@ -121,7 +122,10 @@ namespace PathOfModifiers.AffixesItem.Suffixes
                 float dustScale = Main.rand.NextFloat(1f, 2.5f);
                 Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.HealEffect>(), dustVelocity, Scale: dustScale);
             }
-            PoMNetMessage.SyncHealEffect(player.whoAmI, amount);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                PoMNetMessage.SyncHealEffect(player.whoAmI, amount);
+            }
             lastCastTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
         }
 
