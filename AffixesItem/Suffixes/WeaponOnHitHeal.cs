@@ -90,22 +90,22 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
         {
-            OnHit(item, player);
+            Hit(item, player);
         }
         public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
         {
-            OnHit(item, player);
+            Hit(item, player);
         }
         public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
         {
-            OnHit(item, player);
+            Hit(item, player);
         }
         public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
         {
-            OnHit(item, player);
+            Hit(item, player);
         }
 
-        void OnHit(Item item, Player player)
+        void Hit(Item item, Player player)
         {
             if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastCastTime) / 1000.0 >= multiplier2)
                 HealPlayer(player);
@@ -116,16 +116,10 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             int amount = (int)MathHelper.Clamp(player.statLifeMax2 * multiplier1, 1, 9999999);
             player.statLife += amount;
             player.HealEffect(amount, false);
-            for (int i = 0; i < 7; i++)
-            {
-                Vector2 dustPosition = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height));
-                Vector2 dustVelocity = new Vector2(0, -Main.rand.NextFloat(0.5f, 2.5f));
-                float dustScale = Main.rand.NextFloat(1f, 2.5f);
-                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.HealEffect>(), dustVelocity, Scale: dustScale);
-            }
+            PoMEffectHelper.Heal(player, amount);
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                EffectPacketHandler.CSyncHealEffect(player.whoAmI, amount);
+                EffectPacketHandler.CSyncHeal(player.whoAmI, amount);
             }
             lastCastTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
         }

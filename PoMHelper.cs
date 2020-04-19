@@ -346,4 +346,27 @@ namespace PathOfModifiers
             return zero;
         }
     }
+
+    public static class PoMEffectHelper
+    {
+        public static void Heal(Player player, int amount)
+        {
+            player.HealEffect(amount, false);
+            for (int i = 0; i < 7; i++)
+            {
+                Vector2 dustPosition = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height));
+                Vector2 dustVelocity = new Vector2(0, -Main.rand.NextFloat(0.5f, 2.5f));
+                float dustScale = Main.rand.NextFloat(1f, 2.5f);
+                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.HealEffect>(), dustVelocity, Scale: dustScale);
+            }
+        }
+        public static void FullHPCrit(Vector2 position, int width, int height)
+        {
+            int howMany = (width * height) / 50;
+            for (int i = 0; i < howMany; i++)
+            {
+                Dust.NewDust(position, width, height, ModContent.DustType<Dusts.LifeOrbDebris>(), newColor: new Color(1, 0.7f, 0.7f));
+            }
+        }
+    }
 }

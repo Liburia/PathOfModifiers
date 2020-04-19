@@ -69,40 +69,52 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
-            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
-            if (item == player.HeldItem && realTarget.life >= realTarget.lifeMax)
-            {
-                int critDamage = (int)Math.Round(target.lifeMax * multiplier);
-                int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
-                player.ApplyDamageToNPC(target, critDamage, 0, direction, false);
-            }
+            Hit(item, player, target);
         }
         public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (item == player.HeldItem && target.statLife >= target.statLifeMax2)
-            {
-                int critDamage = (int)Math.Round(target.statLifeMax2 * multiplier);
-                int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
-                target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
-            }
+            Hit(item, player, target);
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
+        {
+            Hit(item, player, target);
+        }
+        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
+        {
+            Hit(item, player, target);
+        }
+
+        void Hit(Item item, Player player, NPC target)
         {
             NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
             if (item == player.HeldItem && realTarget.life >= realTarget.lifeMax)
             {
-                int critDamage = (int)Math.Round(target.lifeMax * multiplier);
-                player.ApplyDamageToNPC(target, critDamage, 0, hitDirection, false);
+                DoDamage(player, target);
             }
         }
-        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
+        void Hit(Item item, Player player, Player target)
         {
             if (item == player.HeldItem && target.statLife >= target.statLifeMax2)
             {
-                int critDamage = (int)Math.Round(target.statLifeMax2 * multiplier);
-                int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
-                target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
+                DoDamage(player, target);
             }
+        }
+
+        void DoDamage(Player player, NPC target)
+        {
+            int critDamage = (int)Math.Round(target.lifeMax * multiplier);
+            int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
+            player.ApplyDamageToNPC(target, critDamage, 0, direction, false);
+            PoMEffectHelper.FullHPCrit(target.position, target.width, target.height);
+            ModNet.PacketHandlers.EffectPacketHandler.CSyncFullHPCrit(target);
+        }
+        void DoDamage(Player player, Player target)
+        {
+            int critDamage = (int)Math.Round(target.statLifeMax2 * multiplier);
+            int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
+            target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
+            PoMEffectHelper.FullHPCrit(target.position, target.width, target.height);
+            ModNet.PacketHandlers.EffectPacketHandler.CSyncFullHPCrit(target);
         }
 
         #region Interface Properties

@@ -12,7 +12,8 @@ namespace PathOfModifiers.ModNet.PacketHandlers
 
         public enum PacketType
         {
-            SyncHealEffect,
+            SyncHeal,
+            SyncFullHPCrit,
         }
 
         public EffectPacketHandler() : base(PacketHandlerType.Effect)
@@ -25,27 +26,30 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             PacketType packetType = (PacketType)reader.ReadByte();
             switch (packetType)
             {
-                case PacketType.SyncHealEffect:
-                    SReceiveSyncHealEffect(reader, fromWho);
+                case PacketType.SyncHeal:
+                    SReceiveSyncHeal(reader, fromWho);
+                    break;
+                case PacketType.SyncFullHPCrit:
+                    SReceiveSyncFullHPCrit(reader, fromWho);
                     break;
             }
         }
 
-        public static void CSyncHealEffect(int fromWho, int amount)
+        public static void CSyncHeal(int fromWho, int amount)
         {
-            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncHealEffect);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncHeal);
             packet.Write((byte)fromWho);
             packet.Write(amount);
             packet.Send();
         }
-        void SReceiveSyncHealEffect(BinaryReader reader, int fromWho)
+        void SReceiveSyncHeal(BinaryReader reader, int fromWho)
         {
             int playerID = reader.ReadByte();
             int amount = reader.ReadInt32();
 
             if (Main.netMode == NetmodeID.Server)
             {
-                ModPacket packet = GetPacket((byte)PacketType.SyncHealEffect);
+                ModPacket packet = GetPacket((byte)PacketType.SyncHeal);
                 packet.Write((byte)playerID);
                 packet.Write(amount);
                 packet.Send(-1, fromWho);
@@ -53,14 +57,56 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             else
             {
                 Player player = Main.player[playerID];
-                player.HealEffect(amount, false);
-                for (int i = 0; i < 7; i++)
+                PoMEffectHelper.Heal(player, amount);
+            }
+        }
+
+        public static void CSyncFullHPCrit(Player target)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncFullHPCrit);
+            packet.Write(true);
+            packet.Write((byte)target.whoAmI);
+            packet.Send();
+        }
+        public static void CSyncFullHPCrit(NPC target)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncFullHPCrit);
+            packet.Write(false);
+            packet.Write(target.whoAmI);
+            packet.Send();
+        }
+        void SReceiveSyncFullHPCrit(BinaryReader reader, int fromWho)
+        {
+            bool isPlayer = reader.ReadBoolean();
+            int targetID = isPlayer ? reader.ReadByte() : reader.ReadInt32();
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.SyncFullHPCrit);
+                packet.Write(isPlayer);
+                if (isPlayer)
                 {
-                    Vector2 dustPosition = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height));
-                    Vector2 dustVelocity = new Vector2(0, -Main.rand.NextFloat(0.5f, 2.5f));
-                    float dustScale = Main.rand.NextFloat(1f, 2.5f);
-                    Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.HealEffect>(), dustVelocity, Scale: dustScale);
+                    packet.Write((byte)targetID);
                 }
+                else
+                {
+                    packet.Write(targetID);
+                }
+                packet.Send(-1, fromWho);
+            }
+            else
+            {
+                Entity target;
+                if (isPlayer)
+                {
+                    target = Main.player[targetID];
+                }
+                else
+                {
+                    target = Main.npc[targetID];
+                }
+
+                PoMEffectHelper.FullHPCrit(target.position, target.width, target.height);
             }
         }
     }
