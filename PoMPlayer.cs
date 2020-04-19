@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using PathOfModifiers.AffixesItem;
 using PathOfModifiers.Buffs;
+using PathOfModifiers.ModNet.PacketHandlers;
 using PathOfModifiers.Tiles;
 using System;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
-                ModNet.ModNetHandler.buff.CSendAddDamageDoTDebuffPlayer(player.whoAmI, buff.Type, damage, time);
+                BuffPacketHandler.CSendAddDamageDoTDebuffPlayer(player.whoAmI, buff.Type, damage, time);
             }
         }
         public void AddMoveSpeedBuff(Player player, float speedMultiplier, int time, bool syncMP = true, int ignoreClient = -1)
@@ -71,7 +72,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
-                ModNet.ModNetHandler.buff.CSendAddMoveSpeedBuffPlayer(player.whoAmI, speedMultiplier, time);
+                BuffPacketHandler.CSendAddMoveSpeedBuffPlayer(player.whoAmI, speedMultiplier, time);
             }
         }
 
@@ -85,7 +86,7 @@ namespace PathOfModifiers
         {
             if (Main.netMode == 1)
             {
-                ModNet.ModNetHandler.mod.CPlayerConnected();
+                ModPacketHandler.CPlayerConnected();
             }
         }
         public override void PlayerConnect(Player player)

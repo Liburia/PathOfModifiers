@@ -75,6 +75,7 @@ namespace PathOfModifiers
 
             AddPrefix("", new PoMPrefix());
 
+            ModNet.ModNet.Initialize();
             PoMDataLoader.RegisterMod(this);
         }
         public override void PostSetupContent()
@@ -103,7 +104,7 @@ namespace PathOfModifiers
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
-            ModNetHandler.HandlePacket(reader, whoAmI);
+            ModNet.ModNet.HandlePacket(reader, whoAmI);
         }
 
         public override void UpdateUI(GameTime gameTime)

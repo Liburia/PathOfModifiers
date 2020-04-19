@@ -4,43 +4,49 @@ using System.IO;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 
-namespace PathOfModifiers.ModNet
+namespace PathOfModifiers.ModNet.PacketHandlers
 {
     internal class EffectPacketHandler : PacketHandler
     {
-        public const byte syncHealEffect = 1;
+        static EffectPacketHandler Instance { get; set; }
 
-        public EffectPacketHandler(byte handlerType) : base(handlerType)
+        public enum PacketType
         {
+            SyncHealEffect,
+        }
+
+        public EffectPacketHandler() : base(PacketHandlerType.Effect)
+        {
+            Instance = this;
         }
 
         public override void HandlePacket(BinaryReader reader, int fromWho)
         {
-            switch (reader.ReadByte())
+            PacketType packetType = (PacketType)reader.ReadByte();
+            switch (packetType)
             {
-                case syncHealEffect:
+                case PacketType.SyncHealEffect:
                     SReceiveSyncHealEffect(reader, fromWho);
                     break;
             }
         }
 
-        public void CSyncHealEffect(int fromWho, int amount)
+        public static void CSyncHealEffect(int fromWho, int amount)
         {
-            ModPacket packet = GetPacket(syncHealEffect);
-            packet.Write(fromWho);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncHealEffect);
+            packet.Write((byte)fromWho);
             packet.Write(amount);
             packet.Send();
         }
         void SReceiveSyncHealEffect(BinaryReader reader, int fromWho)
         {
-            //TODO: send bytes for player IDs not ints
-            int playerID = reader.ReadInt32();
+            int playerID = reader.ReadByte();
             int amount = reader.ReadInt32();
 
             if (Main.netMode == NetmodeID.Server)
             {
-                ModPacket packet = GetPacket(syncHealEffect);
-                packet.Write(playerID);
+                ModPacket packet = GetPacket((byte)PacketType.SyncHealEffect);
+                packet.Write((byte)playerID);
                 packet.Write(amount);
                 packet.Send(-1, fromWho);
             }

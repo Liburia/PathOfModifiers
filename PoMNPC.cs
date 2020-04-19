@@ -10,6 +10,7 @@ using Terraria.ID;
 using PathOfModifiers.Rarities;
 using System.Text;
 using System.IO;
+using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers
 {
@@ -48,7 +49,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
-                ModNet.ModNetHandler.buff.CSendAddDamageDoTDebuffNPC(npc.whoAmI, buff.Type, damage, time);
+                BuffPacketHandler.CSendAddDamageDoTDebuffNPC(npc.whoAmI, buff.Type, damage, time);
             }
         }
 
@@ -245,7 +246,7 @@ namespace PathOfModifiers
                     UpdateName(npc);
 
                     if (Main.netMode == NetmodeID.Server)
-                        ModNet.ModNetHandler.npc.SNPCSyncAffixes(npc, this);
+                        NPCPacketHandler.SNPCSyncAffixes(npc, this);
                 }
             }
         }

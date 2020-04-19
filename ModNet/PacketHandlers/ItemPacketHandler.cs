@@ -6,39 +6,46 @@ using Terraria.ModLoader.IO;
 using Terraria.DataStructures;
 using PathOfModifiers.Tiles;
 
-namespace PathOfModifiers.ModNet
+namespace PathOfModifiers.ModNet.PacketHandlers
 {
     internal class ItemPacketHandler : PacketHandler
     {
-        public const byte modifierForgeModifiedItemChanged = 1;
-        public const byte modifierForgeModifierItemChanged = 2;
+        static ItemPacketHandler Instance { get; set; }
 
-        public ItemPacketHandler(byte handlerType) : base(handlerType)
+        public enum PacketType
         {
+            ModifierForgeModifiedItemChanged,
+            ModifierForgeModifierItemChanged,
+        }
+
+        public ItemPacketHandler() : base(PacketHandlerType.Item)
+        {
+            Instance = this;
         }
 
         public override void HandlePacket(BinaryReader reader, int fromWho)
         {
-            switch (reader.ReadByte())
+            PacketType packetType = (PacketType)reader.ReadByte();
+            switch (packetType)
             {
-                case modifierForgeModifiedItemChanged:
+                case PacketType.ModifierForgeModifiedItemChanged:
                     SReceiveModifierForgeModifiedItemChanged(reader);
                     break;
-                case modifierForgeModifierItemChanged:
+                case PacketType.ModifierForgeModifierItemChanged:
                     SReceiveModifierForgeModifierItemChanged(reader);
                     break;
             }
         }
 
-        public void CModifierForgeModifiedItemChanged(int mapDeviceID, Item item)
+        public static void CModifierForgeModifiedItemChanged(int mapDeviceID, Item item)
         {
-            ModPacket packet = GetPacket(modifierForgeModifiedItemChanged);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.ModifierForgeModifiedItemChanged);
             packet.Write((byte)Main.myPlayer);
             packet.Write(mapDeviceID);
             ItemIO.Send(item, packet, true);
             packet.Send();
         }
-        public void SReceiveModifierForgeModifiedItemChanged(BinaryReader reader)
+        void SReceiveModifierForgeModifiedItemChanged(BinaryReader reader)
         {
             byte ignoreClient = reader.ReadByte();
             int mfID = reader.ReadInt32();
@@ -47,15 +54,15 @@ namespace PathOfModifiers.ModNet
             mf.SendToClients(ignoreClient);
         }
 
-        public void CModifierForgeModifierItemChanged(int mapDeviceID, Item item)
+        public static void CModifierForgeModifierItemChanged(int mapDeviceID, Item item)
         {
-            ModPacket packet = GetPacket(modifierForgeModifierItemChanged);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.ModifierForgeModifierItemChanged);
             packet.Write((byte)Main.myPlayer);
             packet.Write(mapDeviceID);
             ItemIO.Send(item, packet, true);
             packet.Send();
         }
-        public void SReceiveModifierForgeModifierItemChanged(BinaryReader reader)
+        void SReceiveModifierForgeModifierItemChanged(BinaryReader reader)
         {
             byte ignoreClient = reader.ReadByte();
             int mfID = reader.ReadInt32();

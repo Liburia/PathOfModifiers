@@ -7,29 +7,36 @@ using Microsoft.Xna.Framework;
 using PathOfModifiers.Tiles;
 using Terraria.DataStructures;
 
-namespace PathOfModifiers.ModNet
+namespace PathOfModifiers.ModNet.PacketHandlers
 {
     internal class MapPacketHandler : PacketHandler
     {
-        public const byte mapDeviceOpenMap = 1;
-        public const byte mapDeviceCloseMap = 2;
-        public const byte mapDeviceMapItemChanged = 3;
+        static MapPacketHandler Instance { get; set; }
 
-        public MapPacketHandler(byte handlerType) : base(handlerType)
+        public enum PacketType
         {
+            MapDeviceOpenMap,
+            MapDeviceCloseMap,
+            MapDeviceMapItemChanged,
+        }
+
+        public MapPacketHandler() : base(PacketHandlerType.Map)
+        {
+            Instance = this;
         }
 
         public override void HandlePacket(BinaryReader reader, int fromWho)
         {
-            switch (reader.ReadByte())
+            PacketType packetType = (PacketType)reader.ReadByte();
+            switch (packetType)
             {
-                case mapDeviceOpenMap:
+                case PacketType.MapDeviceOpenMap:
                     SReceiveMapDeviceOpenMap(reader);
                     break;
-                case mapDeviceCloseMap:
+                case PacketType.MapDeviceCloseMap:
                     SReceiveMapDeviceCloseMap(reader);
                     break;
-                case mapDeviceMapItemChanged:
+                case PacketType.MapDeviceMapItemChanged:
                     SReceiveMapDeviceMapItemChanged(reader);
                     break;
             }
@@ -37,7 +44,7 @@ namespace PathOfModifiers.ModNet
         /// <summary>
         /// Syncs all map tiles, walls and NPCs to the clients.
         /// </summary>
-        public void SSyncOpenedMap(Rectangle dimensions, bool closeMap = false)
+        public static void SSyncOpenedMap(Rectangle dimensions, bool closeMap = false)
         {
             NetMessage.SendTileRange(-1, dimensions.X - 1, dimensions.Y - 1, dimensions.Width + 2, dimensions.Height + 2);
 
@@ -60,39 +67,41 @@ namespace PathOfModifiers.ModNet
         /// </summary>
         /// <param name="dimensions"></param>
         /// <param name="map"></param>
-        public void CMapDeviceOpenMap(int mapDeviceID)
+        public static void CMapDeviceOpenMap(int mapDeviceID)
         {
-            ModPacket packet = GetPacket(mapDeviceOpenMap);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.MapDeviceOpenMap);
             packet.Write(mapDeviceID);
             packet.Send();
         }
-        public void SReceiveMapDeviceOpenMap(BinaryReader reader)
+        void SReceiveMapDeviceOpenMap(BinaryReader reader)
         {
             int mdID = reader.ReadInt32();
             var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
             mapDevice.OpenMap();
         }
-        public void CMapDeviceCloseMap(int mapDeviceID)
+
+        public static void CMapDeviceCloseMap(int mapDeviceID)
         {
-            ModPacket packet = GetPacket(mapDeviceCloseMap);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.MapDeviceCloseMap);
             packet.Write(mapDeviceID);
             packet.Send();
         }
-        public void SReceiveMapDeviceCloseMap(BinaryReader reader)
+        void SReceiveMapDeviceCloseMap(BinaryReader reader)
         {
             int mdID = reader.ReadInt32();
             var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
             mapDevice.OpenMap();
         }
-        public void CMapDeviceMapItemChanged(int mapDeviceID, Item item)
+
+        public static void CMapDeviceMapItemChanged(int mapDeviceID, Item item)
         {
-            ModPacket packet = GetPacket(mapDeviceMapItemChanged);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.MapDeviceMapItemChanged);
             packet.Write((byte)Main.myPlayer);
             packet.Write(mapDeviceID);
             ItemIO.Send(item, packet, true);
             packet.Send();
         }
-        public void SReceiveMapDeviceMapItemChanged(BinaryReader reader)
+        void SReceiveMapDeviceMapItemChanged(BinaryReader reader)
         {
             byte ignoreClient = reader.ReadByte();
             int mdID = reader.ReadInt32();

@@ -3,30 +3,36 @@ using Terraria;
 using System.IO;
 using Terraria.ID;
 
-namespace PathOfModifiers.ModNet
+namespace PathOfModifiers.ModNet.PacketHandlers
 {
     internal class NPCPacketHandler : PacketHandler
     {
-        public const byte npcSyncAffixes = 1;
-        public const byte spawnNPC = 2;
+        static NPCPacketHandler Instance { get; set; }
 
-        public NPCPacketHandler(byte handlerType) : base(handlerType)
+        public enum PacketType
         {
+            NpcSyncAffixes,
+        }
+
+        public NPCPacketHandler() : base(PacketHandlerType.NPC)
+        {
+            Instance = this;
         }
 
         public override void HandlePacket(BinaryReader reader, int fromWho)
         {
-            switch (reader.ReadByte())
+            PacketType packetType = (PacketType)reader.ReadByte();
+            switch (packetType)
             {
-                case npcSyncAffixes:
+                case PacketType.NpcSyncAffixes:
                     CReceiveNPCSyncAffixes(reader);
                     break;
             }
         }
 
-        public void SNPCSyncAffixes(NPC npc, PoMNPC pomNPC)
+        public static void SNPCSyncAffixes(NPC npc, PoMNPC pomNPC)
         {
-            ModPacket packet = GetPacket(npcSyncAffixes);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.NpcSyncAffixes);
             packet.Write(npc.whoAmI);
             pomNPC.NetSend(packet);
             packet.Send();

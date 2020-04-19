@@ -3,32 +3,39 @@ using Terraria;
 using System.IO;
 using Terraria.ID;
 
-namespace PathOfModifiers.ModNet
+namespace PathOfModifiers.ModNet.PacketHandlers
 {
     internal class ModPacketHandler : PacketHandler
     {
-        public const byte playerConnected = 1;
-        public const byte syncDataMaps = 2;
+        static ModPacketHandler Instance { get; set; }
 
-        public ModPacketHandler(byte handlerType) : base(handlerType)
+        public enum PacketType
         {
+            PlayerConnected,
+            SyncDataMaps,
+        }
+
+        public ModPacketHandler() : base(PacketHandlerType.Mod)
+        {
+            Instance = this;
         }
 
         public override void HandlePacket(BinaryReader reader, int fromWho)
         {
-            switch (reader.ReadByte())
+            PacketType packetType = (PacketType)reader.ReadByte();
+            switch (packetType)
             {
-                case playerConnected:
+                case PacketType.PlayerConnected:
                     SReceivePlayerConnected(fromWho);
                     break;
-                case syncDataMaps:
+                case PacketType.SyncDataMaps:
                     CReceiveDataMaps(reader);
                     break;
             }
         }
-        public void CPlayerConnected()
+        public static void CPlayerConnected()
         {
-            ModPacket packet = GetPacket(playerConnected);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.PlayerConnected);
             packet.Send();
         }
         void SReceivePlayerConnected(int fromWho)
@@ -37,7 +44,7 @@ namespace PathOfModifiers.ModNet
         }
         void SSendDataMaps(int toWhom)
         {
-            ModPacket packet = GetPacket(syncDataMaps);
+            ModPacket packet = GetPacket((byte)PacketType.SyncDataMaps);
             PoMDataLoader.SendMaps(packet);
             packet.Send(toWhom);
         }

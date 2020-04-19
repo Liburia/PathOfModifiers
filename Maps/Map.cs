@@ -14,6 +14,7 @@ using PathOfModifiers.Rarities;
 using PathOfModifiers.Maps.Generators;
 using Terraria.ModLoader.IO;
 using Terraria.ID;
+using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers.Maps
 {
@@ -127,7 +128,7 @@ namespace PathOfModifiers.Maps
 
             //This method should never run on a client, so only case is SP/Server
             if (Main.netMode == NetmodeID.Server)
-                ModNet.ModNetHandler.map.SSyncOpenedMap(dimensions);
+                MapPacketHandler.SSyncOpenedMap(dimensions);
 
             return true;
         }
@@ -141,7 +142,7 @@ namespace PathOfModifiers.Maps
 
 
             if (Main.netMode == NetmodeID.Server)
-                ModNet.ModNetHandler.map.SSyncOpenedMap(openMap.dimensions, true);
+                MapPacketHandler.SSyncOpenedMap(openMap.dimensions, true);
 
 
             //PoMWorld pomWorld = PathOfModifiers.Instance.GetModWorld<PoMWorld>();

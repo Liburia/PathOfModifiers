@@ -12,6 +12,7 @@ using Terraria.DataStructures;
 using Terraria.Graphics;
 using System.Collections.Generic;
 using PathOfModifiers.AffixesItem;
+using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers.UI
 {
@@ -471,13 +472,13 @@ namespace PathOfModifiers.UI
         {
             ModifierForge.activeForge.modifiedItem = newItem.Clone();
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ModNet.ModNetHandler.item.CModifierForgeModifiedItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifiedItem);
+                ItemPacketHandler.CModifierForgeModifiedItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifiedItem);
         }
         void ModifierItemChange(Item oldItem, Item newItem)
         {
             ModifierForge.activeForge.modifierItem = newItem.Clone();
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ModNet.ModNetHandler.item.CModifierForgeModifierItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifierItem);
+                ItemPacketHandler.CModifierForgeModifierItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifierItem);
         }
 
         void ButtonToggled(UIMouseEvent evt, UIElement listeningElement)

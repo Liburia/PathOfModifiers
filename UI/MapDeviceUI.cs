@@ -12,6 +12,7 @@ using Terraria.DataStructures;
 using Terraria.Graphics;
 using System.Collections.Generic;
 using PathOfModifiers.AffixesItem;
+using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers.UI
 {
@@ -156,7 +157,7 @@ namespace PathOfModifiers.UI
         {
             MapDevice.activeMD.mapItem = newItem.Clone();
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ModNet.ModNetHandler.map.CMapDeviceMapItemChanged(MapDevice.activeMD.ID, MapDevice.activeMD.mapItem);
+                MapPacketHandler.CMapDeviceMapItemChanged(MapDevice.activeMD.ID, MapDevice.activeMD.mapItem);
         }
 
         void BeginButtonClicked(UIMouseEvent evt, UIElement listeningElement)
@@ -164,7 +165,7 @@ namespace PathOfModifiers.UI
             if (Main.netMode == NetmodeID.SinglePlayer)
                 MapDevice.activeMD.OpenMap();
             else if (Main.netMode == NetmodeID.MultiplayerClient)
-                ModNet.ModNetHandler.map.CMapDeviceOpenMap(MapDevice.activeMD.ID);
+                MapPacketHandler.CMapDeviceOpenMap(MapDevice.activeMD.ID);
             UpdateText();
         }
         void EndButtonClicked(UIMouseEvent evt, UIElement listeningElement)
@@ -172,7 +173,7 @@ namespace PathOfModifiers.UI
             if (Main.netMode == NetmodeID.SinglePlayer)
                 MapDevice.activeMD.CloseMap();
             else if (Main.netMode == NetmodeID.MultiplayerClient)
-                ModNet.ModNetHandler.map.CMapDeviceCloseMap(MapDevice.activeMD.ID);
+                MapPacketHandler.CMapDeviceCloseMap(MapDevice.activeMD.ID);
             UpdateText();
         }
         void OnSlotItemChange(Item oldItem, Item newItem)

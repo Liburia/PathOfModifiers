@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
 using Terraria.ID;
+using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
@@ -124,7 +125,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             }
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                ModNet.ModNetHandler.effect.CSyncHealEffect(player.whoAmI, amount);
+                EffectPacketHandler.CSyncHealEffect(player.whoAmI, amount);
             }
             lastCastTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
         }

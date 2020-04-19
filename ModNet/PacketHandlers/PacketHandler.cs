@@ -4,15 +4,15 @@ using Terraria;
 using System.IO;
 using Terraria.ID;
 
-namespace PathOfModifiers.ModNet
+namespace PathOfModifiers.ModNet.PacketHandlers
 {
-    internal abstract class PacketHandler
+    internal class PacketHandler
     {
-        internal byte HandlerType { get; set; }
+        internal PacketHandlerType HandlerType { get; set; }
 
-        public abstract void HandlePacket(BinaryReader reader, int fromWho);
+        public virtual void HandlePacket(BinaryReader reader, int fromWho) { }
 
-        protected PacketHandler(byte handlerType)
+        protected PacketHandler(PacketHandlerType handlerType)
         {
             HandlerType = handlerType;
         }
@@ -20,7 +20,7 @@ namespace PathOfModifiers.ModNet
         protected ModPacket GetPacket(byte packetType)
         {
             var p = PathOfModifiers.Instance.GetPacket();
-            p.Write(HandlerType);
+            p.Write((byte)HandlerType);
             p.Write(packetType);
             return p;
         }

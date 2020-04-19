@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Items;
+using PathOfModifiers.ModNet.PacketHandlers;
 using PathOfModifiers.UI;
 using Terraria;
 using Terraria.DataStructures;
@@ -482,12 +483,12 @@ namespace PathOfModifiers.Tiles
         public void SendModifiedItemToServer()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ModNet.ModNetHandler.item.CModifierForgeModifiedItemChanged(ID, modifiedItem);
+                ItemPacketHandler.CModifierForgeModifiedItemChanged(ID, modifiedItem);
         }
         public void SendModifierItemToServer()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ModNet.ModNetHandler.item.CModifierForgeModifierItemChanged(ID, modifierItem);
+                ItemPacketHandler.CModifierForgeModifierItemChanged(ID, modifierItem);
         }
 
         public override void NetSend(BinaryWriter writer, bool lightSend)
