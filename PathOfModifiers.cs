@@ -14,6 +14,7 @@ using PathOfModifiers.Tiles;
 using Terraria.DataStructures;
 using PathOfModifiers.Buffs;
 using Terraria.Localization;
+using PathOfModifiers.ModNet;
 
 namespace PathOfModifiers
 {
@@ -102,7 +103,7 @@ namespace PathOfModifiers
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
-            PoMNetMessage.HandlePacket(reader, whoAmI);
+            ModNetHandler.HandlePacket(reader, whoAmI);
         }
 
         public override void UpdateUI(GameTime gameTime)

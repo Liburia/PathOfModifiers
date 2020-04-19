@@ -124,7 +124,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             }
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                PoMNetMessage.SyncHealEffect(player.whoAmI, amount);
+                ModNet.ModNetHandler.effect.CSyncHealEffect(player.whoAmI, amount);
             }
             lastCastTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
         }

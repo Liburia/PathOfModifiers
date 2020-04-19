@@ -16,7 +16,7 @@ using Terraria.DataStructures;
 
 namespace PathOfModifiers
 {
-	public static class PoMHelper
+    public static class PoMHelper
     {
         public static int CountBuffs(int[] buffs)
         {
@@ -30,7 +30,7 @@ namespace PathOfModifiers
             }
             return buffCount;
         }
-        
+
         /// <summary>
         /// Returns spawned NPC or null if the cap is reached
         /// </summary>
@@ -100,7 +100,7 @@ namespace PathOfModifiers
                 return;
 
             List<Line> adjacentLines = new List<Line>();
-            
+
             if (scanHoriz)
             {
                 Line left = GetLine(startPos, new Point(-1, 0));
@@ -166,7 +166,7 @@ namespace PathOfModifiers
             for (int i = 1; i <= length; i++)
             {
                 Point centerTilePos = new Point(line.p1.X + direction.X * i, line.p1.Y + direction.Y * i);
-                
+
                 Tile tile = Main.tile[centerTilePos.X + direction90.X, centerTilePos.Y + direction90.Y];
                 int? type = GetTileType(tile);
                 if (type.HasValue && type == tileType)
@@ -310,7 +310,7 @@ namespace PathOfModifiers
 
             return line;
         }
-        
+
         public static int? GetTileType(Tile tile)
         {
             if (tile.active())

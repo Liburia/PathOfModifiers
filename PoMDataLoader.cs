@@ -253,8 +253,10 @@ namespace PathOfModifiers
                 Mod mod;
                 for (int i = 0; i < length; i++)
                 {
-                    mod = ModLoader.GetMod(reader.ReadString());
-                    type = mod.Code.GetType(reader.ReadString(), true);
+                    string modString = reader.ReadString();
+                    string typeString = reader.ReadString();
+                    mod = ModLoader.GetMod(modString);
+                    type = mod.Code.GetType(typeString, true);
 
                     PathOfModifiers.Instance.Logger.Debug($"ReceiveMaps: {i} / {type.FullName} from mod {mod}");
 

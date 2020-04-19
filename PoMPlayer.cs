@@ -61,7 +61,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
-                PoMNetMessage.AddDamageDoTDebuffPlayer(player.whoAmI, buff.Type, damage, time);
+                ModNet.ModNetHandler.buff.CSendAddDamageDoTDebuffPlayer(player.whoAmI, buff.Type, damage, time);
             }
         }
         public void AddMoveSpeedBuff(Player player, float speedMultiplier, int time, bool syncMP = true, int ignoreClient = -1)
@@ -71,7 +71,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
-                PoMNetMessage.AddMoveSpeedBuffPlayer(player.whoAmI, speedMultiplier, time);
+                ModNet.ModNetHandler.buff.CSendAddMoveSpeedBuffPlayer(player.whoAmI, speedMultiplier, time);
             }
         }
 
@@ -85,7 +85,7 @@ namespace PathOfModifiers
         {
             if (Main.netMode == 1)
             {
-                PoMNetMessage.PlayerConnected(player.whoAmI);
+                ModNet.ModNetHandler.mod.CPlayerConnected();
             }
         }
         public override void PlayerConnect(Player player)

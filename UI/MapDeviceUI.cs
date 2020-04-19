@@ -64,14 +64,14 @@ namespace PathOfModifiers.UI
                 }
             }
         }
-        
+
         public bool IsLocked => MapDevice.activeMD.timeLeft > 0;
 
 
         public Vector2 position = new Vector2(100, 400);
 
-		public override void OnInitialize()
-		{
+        public override void OnInitialize()
+        {
             Instance = this;
 
             #region Panel definition
@@ -98,7 +98,7 @@ namespace PathOfModifiers.UI
             mapSlot.Left.Set(10, 0f);
             mapSlot.Top.Set(30, 0f);
             mapSlot.CheckCanPutIntoSlot += MapCanPutIntoSlot;
-            mapSlot.CheckIsLocked += delegate(ref bool isLocked) { if (!isLocked) isLocked = IsLocked; };
+            mapSlot.CheckIsLocked += delegate (ref bool isLocked) { if (!isLocked) isLocked = IsLocked; };
             mapSlot.OnItemChange += MapItemChanged;
             mapSlot.OnItemChange += OnSlotItemChange;
             mapDevicePanel.Append(mapSlot);
@@ -145,18 +145,18 @@ namespace PathOfModifiers.UI
             mapDevicePanel.Append(timeLeftText);
 
             Append(mapDevicePanel);
-		}
+        }
 
         void MapCanPutIntoSlot(Item item, ref bool canPut)
         {
-            if(canPut)
+            if (canPut)
                 canPut = item.IsAir || PoMItem.IsMap(item);
         }
         void MapItemChanged(Item oldItem, Item newItem)
         {
             MapDevice.activeMD.mapItem = newItem.Clone();
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                PoMNetMessage.sMapDeviceMapItemChanged(MapDevice.activeMD.ID, MapDevice.activeMD.mapItem);
+                ModNet.ModNetHandler.map.CMapDeviceMapItemChanged(MapDevice.activeMD.ID, MapDevice.activeMD.mapItem);
         }
 
         void BeginButtonClicked(UIMouseEvent evt, UIElement listeningElement)
@@ -164,7 +164,7 @@ namespace PathOfModifiers.UI
             if (Main.netMode == NetmodeID.SinglePlayer)
                 MapDevice.activeMD.OpenMap();
             else if (Main.netMode == NetmodeID.MultiplayerClient)
-                PoMNetMessage.OpenMapDeviceMap(MapDevice.activeMD.ID);
+                ModNet.ModNetHandler.map.CMapDeviceOpenMap(MapDevice.activeMD.ID);
             UpdateText();
         }
         void EndButtonClicked(UIMouseEvent evt, UIElement listeningElement)
@@ -172,7 +172,7 @@ namespace PathOfModifiers.UI
             if (Main.netMode == NetmodeID.SinglePlayer)
                 MapDevice.activeMD.CloseMap();
             else if (Main.netMode == NetmodeID.MultiplayerClient)
-                PoMNetMessage.CloseMapDeviceMap(MapDevice.activeMD.ID);
+                ModNet.ModNetHandler.map.CMapDeviceCloseMap(MapDevice.activeMD.ID);
             UpdateText();
         }
         void OnSlotItemChange(Item oldItem, Item newItem)
@@ -184,16 +184,16 @@ namespace PathOfModifiers.UI
         }
 
         Vector2 offset;
-		public bool dragging = false;
-		void DragStart(UIMouseEvent evt, UIElement listeningElement)
+        public bool dragging = false;
+        void DragStart(UIMouseEvent evt, UIElement listeningElement)
         {
             if (!(evt.Target is UIImageButton) && !(evt.Target is UIPanelButton) && !(evt.Target is UIItemSlot))
             {
                 offset = new Vector2(evt.MousePosition.X - mapDevicePanel.Left.Pixels, evt.MousePosition.Y - mapDevicePanel.Top.Pixels);
                 dragging = true;
             }
-		}
-		void DragEnd(UIMouseEvent evt, UIElement listeningElement)
+        }
+        void DragEnd(UIMouseEvent evt, UIElement listeningElement)
         {
             if (!(evt.Target is UIImageButton) && !(evt.Target is UIPanelButton) && !(evt.Target is UIItemSlot))
             {
@@ -205,22 +205,22 @@ namespace PathOfModifiers.UI
 
                 Recalculate();
             }
-		}
+        }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             Vector2 MousePosition = new Vector2((float)Main.mouseX, (float)Main.mouseY);
-			if (mapDevicePanel.ContainsPoint(MousePosition))
-			{
-				Main.LocalPlayer.mouseInterface = true;
-			}
-			if (dragging)
-			{
+            if (mapDevicePanel.ContainsPoint(MousePosition))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+            if (dragging)
+            {
                 mapDevicePanel.Left.Set(MousePosition.X - offset.X, 0f);
                 mapDevicePanel.Top.Set(MousePosition.Y - offset.Y, 0f);
-				Recalculate();
-			}
-		}
+                Recalculate();
+            }
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -257,7 +257,7 @@ namespace PathOfModifiers.UI
         {
             if (!IsVisible)
                 return;
-            
+
             timeLeftText.SetText(GetTimeLeftString(MapDevice.activeMD.timeLeft));
             timeLeftText.Recalculate();
         }

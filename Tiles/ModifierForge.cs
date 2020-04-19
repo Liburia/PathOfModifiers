@@ -482,12 +482,12 @@ namespace PathOfModifiers.Tiles
         public void SendModifiedItemToServer()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                PoMNetMessage.sModifierForgeModifiedItemChanged(ID, modifiedItem);
+                ModNet.ModNetHandler.item.CModifierForgeModifiedItemChanged(ID, modifiedItem);
         }
         public void SendModifierItemToServer()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                PoMNetMessage.sModifierForgeModifierItemChanged(ID, modifierItem);
+                ModNet.ModNetHandler.item.CModifierForgeModifierItemChanged(ID, modifierItem);
         }
 
         public override void NetSend(BinaryWriter writer, bool lightSend)

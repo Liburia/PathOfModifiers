@@ -471,13 +471,13 @@ namespace PathOfModifiers.UI
         {
             ModifierForge.activeForge.modifiedItem = newItem.Clone();
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                PoMNetMessage.sModifierForgeModifiedItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifiedItem);
+                ModNet.ModNetHandler.item.CModifierForgeModifiedItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifiedItem);
         }
         void ModifierItemChange(Item oldItem, Item newItem)
         {
             ModifierForge.activeForge.modifierItem = newItem.Clone();
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                PoMNetMessage.sModifierForgeModifierItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifierItem);
+                ModNet.ModNetHandler.item.CModifierForgeModifierItemChanged(ModifierForge.activeForge.ID, ModifierForge.activeForge.modifierItem);
         }
 
         void ButtonToggled(UIMouseEvent evt, UIElement listeningElement)

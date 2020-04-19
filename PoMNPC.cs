@@ -48,7 +48,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
-                PoMNetMessage.AddDamageDoTDebuffNPC(npc.whoAmI, buff.Type, damage, time);
+                ModNet.ModNetHandler.buff.CSendAddDamageDoTDebuffNPC(npc.whoAmI, buff.Type, damage, time);
             }
         }
 
@@ -245,7 +245,7 @@ namespace PathOfModifiers
                     UpdateName(npc);
 
                     if (Main.netMode == NetmodeID.Server)
-                        PoMNetMessage.cNPCSyncAffixes(npc, this);
+                        ModNet.ModNetHandler.npc.SNPCSyncAffixes(npc, this);
                 }
             }
         }

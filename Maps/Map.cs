@@ -75,7 +75,7 @@ namespace PathOfModifiers.Maps
                 return _generator;
             }
         }
-        
+
         public OpenMap openMap;
         public bool isOpened => openMap != null;
 
@@ -127,7 +127,7 @@ namespace PathOfModifiers.Maps
 
             //This method should never run on a client, so only case is SP/Server
             if (Main.netMode == NetmodeID.Server)
-                PoMNetMessage.SyncOpenedMap(dimensions);
+                ModNet.ModNetHandler.map.SSyncOpenedMap(dimensions);
 
             return true;
         }
@@ -141,7 +141,7 @@ namespace PathOfModifiers.Maps
 
 
             if (Main.netMode == NetmodeID.Server)
-                PoMNetMessage.SyncOpenedMap(openMap.dimensions, true);
+                ModNet.ModNetHandler.map.SSyncOpenedMap(openMap.dimensions, true);
 
 
             //PoMWorld pomWorld = PathOfModifiers.Instance.GetModWorld<PoMWorld>();
@@ -174,7 +174,7 @@ namespace PathOfModifiers.Maps
             while (npcsRemaining > 0)
             {
                 Pack p = wRandom;
-                for(int i = 0; i < p.npcCounts.Length; i++)
+                for (int i = 0; i < p.npcCounts.Length; i++)
                 {
                     npcsRemaining -= p.npcCounts[i].Item2;
                 }
