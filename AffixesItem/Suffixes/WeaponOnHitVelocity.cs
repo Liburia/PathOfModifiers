@@ -33,7 +33,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             "of Fending",
             "of Pulling",
             "of Attraction",
-            "of Gravity",
+            "of Magnetism",
         };
         static int maxTier => tiers.Length - 2;
 
