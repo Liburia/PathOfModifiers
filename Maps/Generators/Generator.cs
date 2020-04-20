@@ -53,7 +53,7 @@ namespace PathOfModifiers.Maps.Generators
             int width = dimensions.Width + 1;
             int height = dimensions.Height + 1;
 
-            for(int x = 0; x < width; x++)
+            for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
@@ -69,7 +69,7 @@ namespace PathOfModifiers.Maps.Generators
             preciseDimensions.Width++;
             preciseDimensions.Height++;
 
-            for (int i = 0; i < Main.npc.Length; i++)
+            for (int i = 0; i < Main.maxNPCs; i++)
             {
                 var npc = Main.npc[i];
                 if (npc.active)
@@ -131,7 +131,7 @@ namespace PathOfModifiers.Maps.Generators
 
         protected void PlaceTiles(Point pos, Point size, int type, bool mute = true, bool force = true, int player = -1, int style = 0)
         {
-            for(int x = pos.X; x < pos.X + size.X; x++)
+            for (int x = pos.X; x < pos.X + size.X; x++)
             {
                 for (int y = pos.Y; y < pos.Y + size.Y; y++)
                 {
@@ -175,7 +175,7 @@ namespace PathOfModifiers.Maps.Generators
             List<NPC> npcs = new List<NPC>();
             for (int i = 0; i < pack.npcCounts.Length; i++)
             {
-                for(int j = 0; j < pack.npcCounts[i].Item2; j++)
+                for (int j = 0; j < pack.npcCounts[i].Item2; j++)
                 {
                     Vector2 spawnPosRand = new Vector2(Main.rand.NextFloat(-radius, radius), Main.rand.NextFloat(-radius, radius));
                     //spawnPosRand = new Vector2(-radius, radius);

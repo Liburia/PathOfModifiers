@@ -49,7 +49,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             NetMessage.SendTileRange(-1, dimensions.X - 1, dimensions.Y - 1, dimensions.Width + 2, dimensions.Height + 2);
 
             var mapBounds = new Rectangle(dimensions.X * 16, dimensions.Y * 16, dimensions.Width * 16, dimensions.Height * 16);
-            for (int i = 0; i < Main.npc.Length; i++)
+            for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC npc = Main.npc[i];
                 if (mapBounds.Intersects(npc.Hitbox))
