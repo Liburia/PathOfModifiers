@@ -50,7 +50,7 @@ namespace PathOfModifiers.Projectiles
             if (projectile.owner == Main.myPlayer)
             {
                 Rectangle bounds = projectile.getRect();
-                for (int i = 0; i < Main.player.Length; i++)
+                for (int i = 0; i < Main.maxPlayers; i++)
                 {
                     Player player = Main.player[i];
                     if (player.active && (i == projectile.owner || (player.team != 0 && player.team == Main.player[projectile.owner].team)) && bounds.Intersects(player.getRect()))
