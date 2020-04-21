@@ -15,7 +15,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 {
     public class WeaponCrit : Suffix, ITieredStatFloat2Affix
     {
-        public override float weight => 9990.5f;
+        public override float weight => 0.5f;
 
         string addedTextTiered = string.Empty;
         float addedTextWeightTiered = 1;
@@ -91,33 +91,55 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
-            Hit(item, player, ref damageMultiplier);
+            Hit(item, player, target, ref damageMultiplier);
         }
         public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
         {
-            Hit(item, player, ref damageMultiplier);
+            Hit(item, player, target, ref damageMultiplier);
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
-            Hit(item, player, ref damageMultiplier);
+            Hit(item, player, target, ref damageMultiplier);
         }
         public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
         {
-            Hit(item, player, ref damageMultiplier);
+            Hit(item, player, target, ref damageMultiplier);
         }
 
-        void Hit(Item item, Player player, ref float damageMultiplier)
+        void Hit(Item item, Player player, NPC target, ref float damageMultiplier)
         {
             if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProcTime) >= multiplier2 * 1000)
             {
-                ModifyDamage(ref damageMultiplier);
-                lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+                Crit(target, ref damageMultiplier);
+            }
+        }
+        void Hit(Item item, Player player, Player target, ref float damageMultiplier)
+        {
+            if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProcTime) >= multiplier2 * 1000)
+            {
+                Crit(target, ref damageMultiplier);
             }
         }
 
-        void ModifyDamage(ref float damageMultiplier)
+        void Crit(NPC target, ref float damageMultiplier)
         {
             damageMultiplier += multiplier1 - 1;
+            PoMEffectHelper.Crit(target.position, target.width, target.height, 50);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                EffectPacketHandler.CSyncCrit(target, 50);
+            }
+            lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+        }
+        void Crit(Player target, ref float damageMultiplier)
+        {
+            damageMultiplier += multiplier1 - 1;
+            PoMEffectHelper.Crit(target.position, target.width, target.height, 50);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                EffectPacketHandler.CSyncCrit(target, 50);
+            }
+            lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
         }
 
         #region Interface Properties

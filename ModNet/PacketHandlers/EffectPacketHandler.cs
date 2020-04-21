@@ -13,7 +13,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         public enum PacketType
         {
             SyncHeal,
-            SyncFullHPCrit,
+            SyncCrit,
         }
 
         public EffectPacketHandler() : base(PacketHandlerType.Effect)
@@ -29,8 +29,8 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 case PacketType.SyncHeal:
                     SReceiveSyncHeal(reader, fromWho);
                     break;
-                case PacketType.SyncFullHPCrit:
-                    SReceiveSyncFullHPCrit(reader, fromWho);
+                case PacketType.SyncCrit:
+                    SReceiveSyncCrit(reader, fromWho);
                     break;
             }
         }
@@ -61,28 +61,31 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             }
         }
 
-        public static void CSyncFullHPCrit(Player target)
+        public static void CSyncCrit(Player target, int howMuch)
         {
-            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncFullHPCrit);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncCrit);
             packet.Write(true);
             packet.Write((byte)target.whoAmI);
+            packet.Write(howMuch);
             packet.Send();
         }
-        public static void CSyncFullHPCrit(NPC target)
+        public static void CSyncCrit(NPC target, int howMuch)
         {
-            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncFullHPCrit);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncCrit);
             packet.Write(false);
             packet.Write(target.whoAmI);
+            packet.Write(howMuch);
             packet.Send();
         }
-        void SReceiveSyncFullHPCrit(BinaryReader reader, int fromWho)
+        void SReceiveSyncCrit(BinaryReader reader, int fromWho)
         {
             bool isPlayer = reader.ReadBoolean();
             int targetID = isPlayer ? reader.ReadByte() : reader.ReadInt32();
+            int howMuch = reader.ReadInt32();
 
             if (Main.netMode == NetmodeID.Server)
             {
-                ModPacket packet = GetPacket((byte)PacketType.SyncFullHPCrit);
+                ModPacket packet = GetPacket((byte)PacketType.SyncCrit);
                 packet.Write(isPlayer);
                 if (isPlayer)
                 {
@@ -92,6 +95,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 {
                     packet.Write(targetID);
                 }
+                packet.Write(howMuch);
                 packet.Send(-1, fromWho);
             }
             else
@@ -106,7 +110,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                     target = Main.npc[targetID];
                 }
 
-                PoMEffectHelper.FullHPCrit(target.position, target.width, target.height);
+                PoMEffectHelper.Crit(target.position, target.width, target.height, howMuch);
             }
         }
     }

@@ -360,9 +360,9 @@ namespace PathOfModifiers
                 Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.HealEffect>(), dustVelocity, Scale: dustScale);
             }
         }
-        public static void FullHPCrit(Vector2 position, int width, int height)
+        public static void Crit(Vector2 position, int width, int height, int howMuch = 100)
         {
-            int howMany = (width * height) / 50;
+            int howMany = (width * height) / (5000 / howMuch);
             for (int i = 0; i < howMany; i++)
             {
                 Dust.NewDust(position, width, height, ModContent.DustType<Dusts.LifeOrbDebris>(), newColor: new Color(1, 0.7f, 0.7f));

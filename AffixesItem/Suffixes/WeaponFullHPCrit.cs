@@ -9,6 +9,8 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
+using PathOfModifiers.ModNet.PacketHandlers;
+using Terraria.ID;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
@@ -105,16 +107,22 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             int critDamage = (int)Math.Round(target.lifeMax * multiplier);
             int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
             player.ApplyDamageToNPC(target, critDamage, 0, direction, false);
-            PoMEffectHelper.FullHPCrit(target.position, target.width, target.height);
-            ModNet.PacketHandlers.EffectPacketHandler.CSyncFullHPCrit(target);
+            PoMEffectHelper.Crit(target.position, target.width, target.height, 100);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                EffectPacketHandler.CSyncCrit(target, 100);
+            }
         }
         void DoDamage(Player player, Player target)
         {
             int critDamage = (int)Math.Round(target.statLifeMax2 * multiplier);
             int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
             target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
-            PoMEffectHelper.FullHPCrit(target.position, target.width, target.height);
-            ModNet.PacketHandlers.EffectPacketHandler.CSyncFullHPCrit(target);
+            PoMEffectHelper.Crit(target.position, target.width, target.height, 100);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                EffectPacketHandler.CSyncCrit(target, 100);
+            }
         }
 
         #region Interface Properties
