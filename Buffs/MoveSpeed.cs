@@ -10,7 +10,7 @@ namespace PathOfModifiers.Buffs
         //TODO: Actually load it
         public override bool Autoload(ref string name, ref string texture)
         {
-            texture = "Terraria/Buff_20";
+            texture = "Terraria/Buff_15";
             return true;
         }
 
@@ -18,7 +18,7 @@ namespace PathOfModifiers.Buffs
         {
             DisplayName.SetDefault("DamageDoTDebuff");
             Description.SetDefault("Taking damage over time");
-            Main.debuff[Type] = true;
+            Main.debuff[Type] = false;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = false;
             Main.buffNoTimeDisplay[Type] = false;
