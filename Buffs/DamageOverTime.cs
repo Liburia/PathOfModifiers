@@ -4,10 +4,8 @@ using PathOfModifiers;
 
 namespace PathOfModifiers.Buffs
 {
-	public class DamageDoTDebuff : ModBuff
-	{
-        //TODO: Not referenced anywhere, remove?
-        public static float damageMultiplier => 0.5f;
+    public class DamageOverTime : ModBuff
+    {
         public static float damageMultiplierHalfSecond => 2.0f;
 
         //TODO: Actually load it
@@ -18,25 +16,25 @@ namespace PathOfModifiers.Buffs
         }
 
         public override void SetDefaults()
-		{
-			DisplayName.SetDefault("DamageDoTDebuff");
-			Description.SetDefault("Taking damage over time");
+        {
+            DisplayName.SetDefault("DamageDoTDebuff");
+            Description.SetDefault("Taking damage over time");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = false;
-			Main.buffNoTimeDisplay[Type] = false;
-			canBeCleared = true;
-		}
+            Main.buffNoTimeDisplay[Type] = false;
+            canBeCleared = true;
+        }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
             PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-            pomNPC.dddDamageDotDebuff = true;
+            pomNPC.dotBuffActive = true;
         }
         public override void Update(Player player, ref int buffIndex)
-		{
-			PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.dddDamageDotDebuff = true;
+        {
+            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
+            pomPlayer.dotBuffActive = true;
         }
-	}
+    }
 }

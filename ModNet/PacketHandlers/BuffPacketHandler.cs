@@ -55,7 +55,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             int damage = reader.ReadInt32();
             int time = reader.ReadInt32();
 
-            DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
+            DamageOverTime debuff = BuffLoader.GetBuff(buffType) as DamageOverTime;
             if (debuff == null)
             {
                 PathOfModifiers.Instance.Logger.Warn($"Invalid buff packet received {buffType}");
@@ -63,7 +63,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             }
             NPC npc = Main.npc[npcID];
             PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-            pomNPC.AddDamageDoTBuff(npc, debuff, damage, time, false);
+            pomNPC.AddDoTBuff(npc, debuff, damage, time, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
@@ -92,7 +92,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             int damage = reader.ReadInt32();
             int time = reader.ReadInt32();
 
-            DamageDoTDebuff debuff = BuffLoader.GetBuff(buffType) as DamageDoTDebuff;
+            DamageOverTime debuff = BuffLoader.GetBuff(buffType) as DamageOverTime;
             if (debuff == null)
             {
                 PathOfModifiers.Instance.Logger.Warn($"Invalid buff packet received {buffType}");
@@ -100,7 +100,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             }
             Player player = Main.player[playerID];
             PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddDamageDoTBuff(player, debuff, damage, time, false);
+            pomPlayer.AddDoTBuff(player, debuff, damage, time, false);
 
             if (Main.netMode == NetmodeID.Server)
             {

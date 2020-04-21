@@ -28,26 +28,26 @@ namespace PathOfModifiers
         /// <summary>
         /// Stores the damage of the hit that procced the debuff.
         /// </summary>
-        Dictionary<Type, int> damageDotDebuffDamages = new Dictionary<Type, int>();
+        Dictionary<Type, int> dotBuffInstances = new Dictionary<Type, int>();
 
-        public bool dddDamageDotDebuff = false;
+        public bool dotBuffActive = false;
 
-        public void AddDamageDoTBuff(NPC npc, DamageDoTDebuff buff, int damage, int time, bool syncMP = true, int ignoreClient = -1)
+        public void AddDoTBuff(NPC npc, DamageOverTime buff, int damage, int time, bool syncMP = true, int ignoreClient = -1)
         {
             int dddDamage = 0;
             Type buffType = buff.GetType();
-            if (damageDotDebuffDamages.TryGetValue(buffType, out dddDamage))
+            if (dotBuffInstances.TryGetValue(buffType, out dddDamage))
             {
-                if (damage > dddDamage)
-                    damageDotDebuffDamages[buffType] = damage;
+                if (damage > dddDamage || !npc.HasBuff(buff.Type))
+                    dotBuffInstances[buffType] = damage;
             }
             else
             {
-                damageDotDebuffDamages.Add(buffType, damage);
+                dotBuffInstances.Add(buffType, damage);
             }
             npc.AddBuff(buff.Type, time, true);
 
-            if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
+            if (Main.netMode == NetmodeID.MultiplayerClient && syncMP)
             {
                 BuffPacketHandler.CSendAddDamageDoTDebuffNPC(npc.whoAmI, buff.Type, damage, time);
             }
@@ -60,15 +60,18 @@ namespace PathOfModifiers
 
         public override void ResetEffects(NPC npc)
         {
-            dddDamageDotDebuff = false;
+            dotBuffActive = false;
         }
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
             int debuffDamage;
-            if (dddDamageDotDebuff)
+            if (dotBuffActive)
             {
-                debuffDamage = (int)Math.Round(damageDotDebuffDamages[typeof(DamageDoTDebuff)] * DamageDoTDebuff.damageMultiplierHalfSecond);
-                npc.lifeRegen -= debuffDamage;
+                foreach (var dotInstance in dotBuffInstances.Values)
+                {
+                    debuffDamage = (int)Math.Round(dotInstance * DamageOverTime.damageMultiplierHalfSecond);
+                    npc.lifeRegen -= debuffDamage;
+                }
             }
         }
 

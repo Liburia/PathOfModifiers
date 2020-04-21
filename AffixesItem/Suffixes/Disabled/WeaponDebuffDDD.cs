@@ -65,7 +65,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.GetGlobalNPC<PoMNPC>().AddDamageDoTBuff(target, ModContent.GetInstance<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
+                    target.GetGlobalNPC<PoMNPC>().AddDoTBuff(target, ModContent.GetInstance<DamageOverTime>(), damage, Main.rand.Next(90, 330));
                 }
             }
         }
@@ -75,7 +75,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.GetModPlayer<PoMPlayer>().AddDamageDoTBuff(target, ModContent.GetInstance<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
+                    target.GetModPlayer<PoMPlayer>().AddDoTBuff(target, ModContent.GetInstance<DamageOverTime>(), damage, Main.rand.Next(90, 330));
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.GetGlobalNPC<PoMNPC>().AddDamageDoTBuff(target, ModContent.GetInstance<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
+                    target.GetGlobalNPC<PoMNPC>().AddDoTBuff(target, ModContent.GetInstance<DamageOverTime>(), damage, Main.rand.Next(90, 330));
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             {
                 if (Main.rand.NextFloat(0, 1) < multiplier)
                 {
-                    target.GetModPlayer<PoMPlayer>().AddDamageDoTBuff(target, ModContent.GetInstance<DamageDoTDebuff>(), damage, Main.rand.Next(90, 330));
+                    target.GetModPlayer<PoMPlayer>().AddDoTBuff(target, ModContent.GetInstance<DamageOverTime>(), damage, Main.rand.Next(90, 330));
                 }
             }
         }

@@ -5,6 +5,7 @@ using PathOfModifiers.ModNet.PacketHandlers;
 using PathOfModifiers.Tiles;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -37,30 +38,27 @@ namespace PathOfModifiers
         /// <summary>
         /// Stores the damage of the hit that procced the debuff.
         /// </summary>
-        Dictionary<Type, int> damageDotDebuffDamages = new Dictionary<Type, int>();
-        public bool dddDamageDotDebuff = false;
+        Dictionary<Type, int> dotBuffInstances = new Dictionary<Type, int>();
+        public bool dotBuffActive = false;
 
         float moveSpeedBuffMultiplier = 1;
         public bool moveSpeedBuff = false;
 
-        public void AddDamageDoTBuff(Player player, DamageDoTDebuff buff, int damage, int time, bool syncMP = true, int ignoreClient = -1)
+        public void AddDoTBuff(Player player, DamageOverTime buff, int damage, int time, bool syncMP = true)
         {
-            int dddDamage = 0;
             Type buffType = buff.GetType();
-            if (damageDotDebuffDamages.TryGetValue(buffType, out dddDamage))
+            if (dotBuffInstances.TryGetValue(buffType, out int dddDamage))
             {
-                //TODO: Pretty sure the dictionary isn't cleared ever, so the highest damage would remain even if the buff ran out.
-                //TODO: also it's not saved, so after entering a world the debuff will do no damage
-                if (damage > dddDamage)
-                    damageDotDebuffDamages[buffType] = damage;
+                if (damage > dddDamage || !player.HasBuff(buff.Type))
+                    dotBuffInstances[buffType] = damage;
             }
             else
             {
-                damageDotDebuffDamages.Add(buffType, damage);
+                dotBuffInstances.Add(buffType, damage);
             }
             player.AddBuff(buff.Type, time, true);
 
-            if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
+            if (Main.netMode != NetmodeID.MultiplayerClient && syncMP)
             {
                 BuffPacketHandler.CSendAddDamageDoTDebuffPlayer(player.whoAmI, buff.Type, damage, time);
             }
@@ -79,7 +77,7 @@ namespace PathOfModifiers
         public override void Initialize()
         {
             lastDamageDealer = null;
-            damageDotDebuffDamages = new Dictionary<Type, int>();
+            dotBuffInstances = new Dictionary<Type, int>();
         }
 
         public override void OnEnterWorld(Player player)
@@ -562,7 +560,7 @@ namespace PathOfModifiers
             restorationDelayTime = 1;
 
 
-            dddDamageDotDebuff = false;
+            dotBuffActive = false;
             moveSpeedBuff = false;
         }
         public override void PostUpdateEquips()
@@ -590,22 +588,60 @@ namespace PathOfModifiers
         public override void UpdateBadLifeRegen()
         {
             int debuffDamage;
-            if (dddDamageDotDebuff)
+            if (dotBuffActive)
             {
-                debuffDamage = (int)Math.Round(damageDotDebuffDamages[typeof(DamageDoTDebuff)] * DamageDoTDebuff.damageMultiplierHalfSecond);
-                player.lifeRegen -= debuffDamage;
+                foreach (var dotInstance in dotBuffInstances.Values)
+                {
+                    debuffDamage = (int)Math.Round(dotInstance * DamageOverTime.damageMultiplierHalfSecond);
+                    player.lifeRegen = 0;
+                    player.lifeRegenTime = 0;
+                    player.lifeRegen -= debuffDamage;
+                }
             }
         }
 
         public override TagCompound Save()
         {
             TagCompound tag = new TagCompound();
+            var dotTypeNames = new List<string>(dotBuffInstances.Count);
+            foreach (var dotType in dotBuffInstances.Keys)
+            {
+                dotTypeNames.Add(dotType.AssemblyQualifiedName);
+            }
+            tag.Add("dotTypeNames", dotTypeNames);
+            tag.Add("dotValues", dotBuffInstances.Values.ToList());
             tag.Add("moveSpeedBuffMultiplier", moveSpeedBuffMultiplier);
 
             return tag;
         }
         public override void Load(TagCompound tag)
         {
+            //Load the DoT damages dictionary discarding non-existant buff types and buffs that don't inherit from DamageOverTime
+            var dotTypeNames = tag.Get<List<string>>("dotTypeNames");
+            var dotTypes = new List<Type>(dotTypeNames.Count);
+            var dotValues = tag.Get<List<int>>("dotValues");
+            var dvRemoveIndicies = new Stack<int>();
+            for (int i = 0; i < dotTypeNames.Count; i++)
+            {
+                var dotTypeName = dotTypeNames[i];
+                Type dotType = Type.GetType(dotTypeName, false);
+                if (dotType == null || !dotType.IsSubclassOf(typeof(DamageOverTime)))
+                {
+                    dvRemoveIndicies.Push(i);
+                    mod.Logger.Warn("Buff \"{dotTypeName}\" not found.");
+                }
+                else
+                {
+                    dotTypes.Add(dotType);
+                }
+            }
+            while (dvRemoveIndicies.Count > 0)
+            {
+                dotValues.RemoveAt(dvRemoveIndicies.Pop());
+            }
+
+            dotBuffInstances = dotTypes.Zip(dotValues, (k, v) => new { Key = k, Value = v }).ToDictionary(x => x.Key, x => x.Value);
+
             moveSpeedBuffMultiplier = tag.GetFloat("moveSpeedBuffMultiplier");
         }
     }
