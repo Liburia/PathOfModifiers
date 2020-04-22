@@ -13,7 +13,7 @@ using PathOfModifiers.Buffs;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
-    public class WeaponBleed : Suffix, ITieredStatFloat3Affix
+    public class WeaponPoison : Suffix, ITieredStatFloat3Affix
     {
         public override float weight => 0.5f;
 
@@ -33,7 +33,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         };
         static int maxTier1 => tiers1.Length - 2;
         int tierText1 => MaxTier1 - Tier1 + 1;
-        static float[] tiers2 = new float[] { 0f, 0.33f, 0.66f, 1f, 1.33f, 1.66f, 2f };
+        static float[] tiers2 = new float[] { 0f, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f, 0.06f };
         static Tuple<int, double>[] tierWeights2 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
             new Tuple<int, double>(1, 2.5),
@@ -44,7 +44,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         };
         static int maxTier2 => tiers2.Length - 2;
         int tierText2 => MaxTier2 - Tier2 + 1;
-        static float[] tiers3 = new float[] { 0f, 2f, 4f, 6f, 8f, 10f, 12f };
+        static float[] tiers3 = new float[] { 9f, 12f, 15f, 18f, 21f, 24f, 27f };
         static Tuple<int, double>[] tierWeights3 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
             new Tuple<int, double>(1, 2.5),
@@ -57,12 +57,12 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         int tierText3 => MaxTier3 - Tier3 + 1;
 
         static string[] tierNames = new string[] {
-            "of Wounding",
-            "of Harming",
-            "of Laceration",
-            "of Hemmorrhage",
-            "of Suffering",
-            "of Agony",
+            "of Venom",
+            "of Toxicity",
+            "of Misery",
+            "of Virulence",
+            "of Blight",
+            "of Miasma",
         };
 
         int compoundTier => (Tier1 + Tier2 + Tier3) / 3;
@@ -106,7 +106,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             percent1 = (float)Math.Round(percent1, decimals1);
             percent2 = (float)Math.Round(percent2, decimals2);
 
-            return $"{percent1}% chance to Bleed({percent2}%) for {percent3}s";
+            return $"{percent1}% chance to Poison({percent2}%) for {percent3}s";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
@@ -142,14 +142,14 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             int damage = (int)MathHelper.Clamp(hitDamage * Multiplier2, 1, int.MaxValue);
             int duration = (int)MathHelper.Clamp(Multiplier3 * 60, 1, int.MaxValue);
             PoMNPC pomNPC = target.GetGlobalNPC<PoMNPC>();
-            pomNPC.AddDoTBuff(target, ModContent.GetInstance<Bleeding>(), damage, duration);
+            pomNPC.AddDoTBuff(target, ModContent.GetInstance<Poisoned>(), damage, duration);
         }
         void Bleed(Player target, int hitDamage)
         {
             int damage = (int)MathHelper.Clamp(hitDamage * Multiplier2, 1, int.MaxValue);
             int duration = (int)MathHelper.Clamp(Multiplier3 * 60, 1, int.MaxValue);
             PoMPlayer pomPlayer = target.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddDoTBuff(target, ModContent.GetInstance<Bleeding>(), damage, duration);
+            pomPlayer.AddDoTBuff(target, ModContent.GetInstance<Poisoned>(), damage, duration);
         }
 
         #region Interface Properties

@@ -39,13 +39,13 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             }
         }
 
-        public static void CSendAddDoTBuffNPC(int npcID, int buffType, int damage, int time)
+        public static void CSendAddDoTBuffNPC(int npcID, int buffType, int damage, int dutaionTicks)
         {
             ModPacket packet = Instance.GetPacket((byte)PacketType.AddDamageDoTDebuffNPC);
             packet.Write(npcID);
             packet.Write(buffType);
             packet.Write(damage);
-            packet.Write(time);
+            packet.Write(dutaionTicks);
             packet.Send();
         }
         void ReceiveAddDoTBuffNPC(BinaryReader reader, int fromWho)
@@ -53,17 +53,17 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             int npcID = reader.ReadInt32();
             int buffType = reader.ReadInt32();
             int damage = reader.ReadInt32();
-            int time = reader.ReadInt32();
+            int dutaionTicks = reader.ReadInt32();
 
             DamageOverTime debuff = BuffLoader.GetBuff(buffType) as DamageOverTime;
             if (debuff == null)
             {
-                PathOfModifiers.Instance.Logger.Warn($"Invalid buff packet received {buffType}");
+                PathOfModifiers.Instance.Logger.Warn($"Invalid buff type received buffType: \"{buffType}\"");
                 return;
             }
             NPC npc = Main.npc[npcID];
             PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-            pomNPC.AddDoTBuff(npc, debuff, damage, time, false);
+            pomNPC.AddDoTBuff(npc, debuff, damage, dutaionTicks, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
@@ -71,44 +71,44 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 packet.Write(npcID);
                 packet.Write(buffType);
                 packet.Write(damage);
-                packet.Write(time);
+                packet.Write(dutaionTicks);
                 packet.Send(-1, fromWho);
             }
         }
 
-        public static void CSendAddDoTBuffPlayer(int playerID, int buffType, int damage, int time)
+        public static void CSendAddDoTBuffPlayer(int playerID, int buffType, int damage, int dutaionTicks)
         {
             ModPacket packet = Instance.GetPacket((byte)PacketType.AddDamageDoTDebuffPlayer);
             packet.Write((byte)playerID);
             packet.Write(buffType);
             packet.Write(damage);
-            packet.Write(time);
+            packet.Write(dutaionTicks);
             packet.Send();
         }
         void ReceiveAddDoTBuffPlayer(BinaryReader reader, int fromWho)
         {
-            int playerID = reader.ReadByte();
+            byte playerID = reader.ReadByte();
             int buffType = reader.ReadInt32();
             int damage = reader.ReadInt32();
-            int time = reader.ReadInt32();
+            int duraionTicks = reader.ReadInt32();
 
             DamageOverTime debuff = BuffLoader.GetBuff(buffType) as DamageOverTime;
             if (debuff == null)
             {
-                PathOfModifiers.Instance.Logger.Warn($"Invalid buff packet received {buffType}");
+                PathOfModifiers.Instance.Logger.Warn($"Invalid buff type received buffType: \"{buffType}\"");
                 return;
             }
             Player player = Main.player[playerID];
             PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddDoTBuff(player, debuff, damage, time, false);
+            pomPlayer.AddDoTBuff(player, debuff, damage, duraionTicks, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
-                ModPacket packet = GetPacket((byte)PacketType.AddDamageDoTDebuffNPC);
+                ModPacket packet = GetPacket((byte)PacketType.AddDamageDoTDebuffPlayer);
                 packet.Write(playerID);
                 packet.Write(buffType);
                 packet.Write(damage);
-                packet.Write(time);
+                packet.Write(duraionTicks);
                 packet.Send(-1, fromWho);
             }
         }

@@ -15,6 +15,7 @@ using Terraria.DataStructures;
 using PathOfModifiers.Buffs;
 using Terraria.Localization;
 using PathOfModifiers.ModNet;
+using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers
 {

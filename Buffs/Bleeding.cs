@@ -1,10 +1,11 @@
 using Terraria;
 using Terraria.ModLoader;
 using PathOfModifiers;
+using Microsoft.Xna.Framework;
 
 namespace PathOfModifiers.Buffs
 {
-    public class Bleed : DamageOverTime
+    public class Bleeding : DamageOverTime
     {
         public override bool Autoload(ref string name, ref string texture)
         {
@@ -14,24 +15,28 @@ namespace PathOfModifiers.Buffs
 
         public override void SetDefaults()
         {
-            DisplayName.SetDefault("Bleeding");
+            DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Taking damage over time");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
-            Main.buffNoSave[Type] = false;
-            Main.buffNoTimeDisplay[Type] = false;
+            Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[Type] = true;
             canBeCleared = true;
         }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-            pomNPC.dotBuffActive = true;
+            CreateDust(npc.Center);
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.dotBuffActive = true;
+            CreateDust(player.Center);
+        }
+
+        void CreateDust(Vector2 position)
+        {
+            int dustType = 5; //blood
+            Dust.NewDustPerfect(position, dustType);
         }
     }
 }

@@ -34,14 +34,14 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         {
             ModPacket packet = Instance.GetPacket((byte)PacketType.NpcSyncAffixes);
             packet.Write(npc.whoAmI);
-            pomNPC.NetSend(packet);
+            pomNPC.NetSendAffixes(packet);
             packet.Send();
         }
         void CReceiveNPCSyncAffixes(BinaryReader reader)
         {
             var npc = Main.npc[reader.ReadInt32()];
             var pomNPC = npc.GetGlobalNPC<PoMNPC>();
-            pomNPC.NetReceive(reader, npc);
+            pomNPC.NetReceiveAffixes(reader, npc);
         }
     }
 }

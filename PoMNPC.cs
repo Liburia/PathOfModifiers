@@ -25,30 +25,17 @@ namespace PathOfModifiers
 
         public Entity lastDamageDealer;
 
-        /// <summary>
-        /// Stores the damage of the hit that procced the debuff.
-        /// </summary>
-        Dictionary<Type, int> dotBuffInstances = new Dictionary<Type, int>();
+        DoTInstanceCollection dotInstanceCollection = new DoTInstanceCollection();
 
-        public bool dotBuffActive = false;
-
-        public void AddDoTBuff(NPC npc, DamageOverTime buff, int damage, int time, bool syncMP = true, int ignoreClient = -1)
+        public void AddDoTBuff(NPC npc, DamageOverTime buff, int dps, int durationTicks, bool syncMP = true)
         {
-            Type buffType = buff.GetType();
-            if (dotBuffInstances.TryGetValue(buffType, out int dddDamage))
-            {
-                if (damage > dddDamage || !npc.HasBuff(buff.Type))
-                    dotBuffInstances[buffType] = damage;
-            }
-            else
-            {
-                dotBuffInstances.Add(buffType, damage);
-            }
-            npc.AddBuff(buff.Type, time, true);
+            Type dotBuffType = buff.GetType();
+            double durationMs = (durationTicks / 60f) * 1000;
+            dotInstanceCollection.AddInstance(dotBuffType, dps, durationMs);
 
-            if (Main.netMode == NetmodeID.MultiplayerClient && syncMP)
+            if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
             {
-                BuffPacketHandler.CSendAddDoTBuffNPC(npc.whoAmI, buff.Type, damage, time);
+                BuffPacketHandler.CSendAddDoTBuffNPC(npc.whoAmI, buff.Type, dps, durationTicks);
             }
         }
 
@@ -59,17 +46,25 @@ namespace PathOfModifiers
 
         public override void ResetEffects(NPC npc)
         {
-            dotBuffActive = false;
+            dotInstanceCollection.ResetEffects();
         }
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
-            int debuffDamage;
-            if (dotBuffActive)
+            foreach (var kv in dotInstanceCollection.dotInstances)
             {
-                foreach (var dotInstance in dotBuffInstances.Values)
+                Type type = kv.Key;
+                int dps = kv.Value.dps;
+                if (dps > 0)
                 {
-                    debuffDamage = (int)Math.Round(dotInstance * DamageOverTime.damageMultiplierHalfSecond);
+                    int debuffDamage = (int)Math.Round(dps * DamageOverTime.damageMultiplierHalfSecond);
+                    if (npc.lifeRegen > 0)
+                    {
+                        npc.lifeRegen = 0;
+                    }
                     npc.lifeRegen -= debuffDamage;
+
+                    //TODO: this only works with buffs from this mod; could use BuffLoader.buffs
+                    npc.AddBuff(mod.BuffType(type.Name), 2, true);
                 }
             }
         }
@@ -350,7 +345,7 @@ namespace PathOfModifiers
             }
         }
 
-        public void NetSend(BinaryWriter writer)
+        public void NetSendAffixes(BinaryWriter writer)
         {
             try
             {
@@ -370,7 +365,7 @@ namespace PathOfModifiers
                 mod.Logger.Error(e.ToString());
             }
         }
-        public void NetReceive(BinaryReader reader, NPC npc)
+        public void NetReceiveAffixes(BinaryReader reader, NPC npc)
         {
             try
             {

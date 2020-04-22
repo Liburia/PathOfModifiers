@@ -8,7 +8,6 @@ namespace PathOfModifiers.Buffs
     {
         public static float damageMultiplierHalfSecond => 2.0f;
 
-        //TODO: Actually load it
         public override bool Autoload(ref string name, ref string texture)
         {
             texture = "Terraria/Buff_20";
@@ -17,7 +16,8 @@ namespace PathOfModifiers.Buffs
 
         public override void SetDefaults()
         {
-            DisplayName.SetDefault("DamageDoTDebuff");
+            //TODO: Need this to equal classname because I'm lazy, look at other todos for detail
+            DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Taking damage over time");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
@@ -25,16 +25,24 @@ namespace PathOfModifiers.Buffs
             Main.buffNoTimeDisplay[Type] = false;
             canBeCleared = true;
         }
-
-        public override void Update(NPC npc, ref int buffIndex)
+    }
+    public class StackingDamageOverTime : DamageOverTime
+    {
+        public override bool Autoload(ref string name, ref string texture)
         {
-            PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-            pomNPC.dotBuffActive = true;
+            texture = "Terraria/Buff_20";
+            return true;
         }
-        public override void Update(Player player, ref int buffIndex)
+
+        public override void SetDefaults()
         {
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.dotBuffActive = true;
+            DisplayName.SetDefault(GetType().Name);
+            Description.SetDefault("Taking stacking damage over time");
+            Main.debuff[Type] = true;
+            Main.pvpBuff[Type] = true;
+            Main.buffNoSave[Type] = false;
+            Main.buffNoTimeDisplay[Type] = false;
+            canBeCleared = true;
         }
     }
 }

@@ -35,32 +35,20 @@ namespace PathOfModifiers
 
         public Entity lastDamageDealer;
 
-        /// <summary>
-        /// Stores the damage of the hit that procced the debuff.
-        /// </summary>
-        Dictionary<Type, int> dotBuffInstances = new Dictionary<Type, int>();
-        public bool dotBuffActive = false;
+        DoTInstanceCollection dotInstanceCollection = new DoTInstanceCollection();
 
         float moveSpeedBuffMultiplier = 1;
         public bool moveSpeedBuff = false;
 
-        public void AddDoTBuff(Player player, DamageOverTime buff, int damage, int time, bool syncMP = true)
+        public void AddDoTBuff(Player player, DamageOverTime buff, int dps, int durationTicks, bool syncMP = true)
         {
-            Type buffType = buff.GetType();
-            if (dotBuffInstances.TryGetValue(buffType, out int dddDamage))
-            {
-                if (damage > dddDamage || !player.HasBuff(buff.Type))
-                    dotBuffInstances[buffType] = damage;
-            }
-            else
-            {
-                dotBuffInstances.Add(buffType, damage);
-            }
-            player.AddBuff(buff.Type, time, true);
+            Type dotBuffType = buff.GetType();
+            double durationMs = (durationTicks / 60f) * 1000;
+            dotInstanceCollection.AddInstance(dotBuffType, dps, durationMs);
 
-            if (Main.netMode != NetmodeID.MultiplayerClient && syncMP)
+            if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
             {
-                BuffPacketHandler.CSendAddDoTBuffPlayer(player.whoAmI, buff.Type, damage, time);
+                BuffPacketHandler.CSendAddDoTBuffPlayer(player.whoAmI, buff.Type, dps, durationTicks);
             }
         }
         public void AddMoveSpeedBuff(Player player, float speedMultiplier, int time, bool syncMP = true, int ignoreClient = -1)
@@ -77,7 +65,7 @@ namespace PathOfModifiers
         public override void Initialize()
         {
             lastDamageDealer = null;
-            dotBuffInstances = new Dictionary<Type, int>();
+            dotInstanceCollection = new DoTInstanceCollection();
         }
 
         public override void OnEnterWorld(Player player)
@@ -559,8 +547,8 @@ namespace PathOfModifiers
             potionDelayTime = 1;
             restorationDelayTime = 1;
 
+            dotInstanceCollection.ResetEffects();
 
-            dotBuffActive = false;
             moveSpeedBuff = false;
         }
         public override void PostUpdateEquips()
@@ -587,61 +575,47 @@ namespace PathOfModifiers
         }
         public override void UpdateBadLifeRegen()
         {
-            int debuffDamage;
-            if (dotBuffActive)
+            foreach (var kv in dotInstanceCollection.dotInstances)
             {
-                foreach (var dotInstance in dotBuffInstances.Values)
+                Type type = kv.Key;
+                int dps = kv.Value.dps;
+                if (dps > 0)
                 {
-                    debuffDamage = (int)Math.Round(dotInstance * DamageOverTime.damageMultiplierHalfSecond);
-                    player.lifeRegen = 0;
+                    int debuffDamage = (int)Math.Round(dps * DamageOverTime.damageMultiplierHalfSecond);
                     player.lifeRegenTime = 0;
+                    if (player.lifeRegen > 0)
+                    {
+                        player.lifeRegen = 0;
+                    }
                     player.lifeRegen -= debuffDamage;
+
+                    //TODO: this only works with buffs from this mod; could use BuffLoader.buffs
+                    player.AddBuff(mod.BuffType(type.Name), 2, true);
                 }
+            }
+        }
+
+        public override void PostNurseHeal(NPC nurse, int health, bool removeDebuffs, int price)
+        {
+            if (removeDebuffs)
+            {
+                dotInstanceCollection.Clear();
             }
         }
 
         public override TagCompound Save()
         {
-            TagCompound tag = new TagCompound();
-            var dotTypeNames = new List<string>(dotBuffInstances.Count);
-            foreach (var dotType in dotBuffInstances.Keys)
+            TagCompound tag = new TagCompound
             {
-                dotTypeNames.Add(dotType.AssemblyQualifiedName);
-            }
-            tag.Add("dotTypeNames", dotTypeNames);
-            tag.Add("dotValues", dotBuffInstances.Values.ToList());
-            tag.Add("moveSpeedBuffMultiplier", moveSpeedBuffMultiplier);
+                { "dotInstanceCollection", dotInstanceCollection },
+                { "moveSpeedBuffMultiplier", moveSpeedBuffMultiplier }
+            };
 
             return tag;
         }
         public override void Load(TagCompound tag)
         {
-            //Load the DoT damages dictionary discarding non-existant buff types and buffs that don't inherit from DamageOverTime
-            var dotTypeNames = tag.Get<List<string>>("dotTypeNames");
-            var dotTypes = new List<Type>(dotTypeNames.Count);
-            var dotValues = tag.Get<List<int>>("dotValues");
-            var dvRemoveIndicies = new Stack<int>();
-            for (int i = 0; i < dotTypeNames.Count; i++)
-            {
-                var dotTypeName = dotTypeNames[i];
-                Type dotType = Type.GetType(dotTypeName, false);
-                if (dotType == null || !dotType.IsSubclassOf(typeof(DamageOverTime)))
-                {
-                    dvRemoveIndicies.Push(i);
-                    mod.Logger.Warn("Buff \"{dotTypeName}\" not found.");
-                }
-                else
-                {
-                    dotTypes.Add(dotType);
-                }
-            }
-            while (dvRemoveIndicies.Count > 0)
-            {
-                dotValues.RemoveAt(dvRemoveIndicies.Pop());
-            }
-
-            dotBuffInstances = dotTypes.Zip(dotValues, (k, v) => new { Key = k, Value = v }).ToDictionary(x => x.Key, x => x.Value);
-
+            dotInstanceCollection = tag.Get<DoTInstanceCollection>("dotInstanceCollection");
             moveSpeedBuffMultiplier = tag.GetFloat("moveSpeedBuffMultiplier");
         }
     }
