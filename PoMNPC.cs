@@ -34,9 +34,8 @@ namespace PathOfModifiers
 
         public void AddDoTBuff(NPC npc, DamageOverTime buff, int damage, int time, bool syncMP = true, int ignoreClient = -1)
         {
-            int dddDamage = 0;
             Type buffType = buff.GetType();
-            if (dotBuffInstances.TryGetValue(buffType, out dddDamage))
+            if (dotBuffInstances.TryGetValue(buffType, out int dddDamage))
             {
                 if (damage > dddDamage || !npc.HasBuff(buff.Type))
                     dotBuffInstances[buffType] = damage;
@@ -49,7 +48,7 @@ namespace PathOfModifiers
 
             if (Main.netMode == NetmodeID.MultiplayerClient && syncMP)
             {
-                BuffPacketHandler.CSendAddDamageDoTDebuffNPC(npc.whoAmI, buff.Type, damage, time);
+                BuffPacketHandler.CSendAddDoTBuffNPC(npc.whoAmI, buff.Type, damage, time);
             }
         }
 

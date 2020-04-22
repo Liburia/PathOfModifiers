@@ -60,7 +60,7 @@ namespace PathOfModifiers
 
             if (Main.netMode != NetmodeID.MultiplayerClient && syncMP)
             {
-                BuffPacketHandler.CSendAddDamageDoTDebuffPlayer(player.whoAmI, buff.Type, damage, time);
+                BuffPacketHandler.CSendAddDoTBuffPlayer(player.whoAmI, buff.Type, damage, time);
             }
         }
         public void AddMoveSpeedBuff(Player player, float speedMultiplier, int time, bool syncMP = true, int ignoreClient = -1)

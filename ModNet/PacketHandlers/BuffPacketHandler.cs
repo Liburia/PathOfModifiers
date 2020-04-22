@@ -28,10 +28,10 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             switch (packetType)
             {
                 case PacketType.AddDamageDoTDebuffNPC:
-                    ReceiveAddDamageDoTDebuffNPC(reader, fromWho);
+                    ReceiveAddDoTBuffNPC(reader, fromWho);
                     break;
                 case PacketType.AddDamageDoTDebuffPlayer:
-                    ReceiveAddDamageDoTDebuffPlayer(reader, fromWho);
+                    ReceiveAddDoTBuffPlayer(reader, fromWho);
                     break;
                 case PacketType.AddMoveSpeedBuffPlayer:
                     ReceiveAddMoveSpeedBuffPlayer(reader, fromWho);
@@ -39,7 +39,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             }
         }
 
-        public static void CSendAddDamageDoTDebuffNPC(int npcID, int buffType, int damage, int time)
+        public static void CSendAddDoTBuffNPC(int npcID, int buffType, int damage, int time)
         {
             ModPacket packet = Instance.GetPacket((byte)PacketType.AddDamageDoTDebuffNPC);
             packet.Write(npcID);
@@ -48,7 +48,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             packet.Write(time);
             packet.Send();
         }
-        void ReceiveAddDamageDoTDebuffNPC(BinaryReader reader, int fromWho)
+        void ReceiveAddDoTBuffNPC(BinaryReader reader, int fromWho)
         {
             int npcID = reader.ReadInt32();
             int buffType = reader.ReadInt32();
@@ -76,7 +76,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             }
         }
 
-        public static void CSendAddDamageDoTDebuffPlayer(int playerID, int buffType, int damage, int time)
+        public static void CSendAddDoTBuffPlayer(int playerID, int buffType, int damage, int time)
         {
             ModPacket packet = Instance.GetPacket((byte)PacketType.AddDamageDoTDebuffPlayer);
             packet.Write((byte)playerID);
@@ -85,7 +85,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             packet.Write(time);
             packet.Send();
         }
-        void ReceiveAddDamageDoTDebuffPlayer(BinaryReader reader, int fromWho)
+        void ReceiveAddDoTBuffPlayer(BinaryReader reader, int fromWho)
         {
             int playerID = reader.ReadByte();
             int buffType = reader.ReadInt32();
@@ -104,8 +104,8 @@ namespace PathOfModifiers.ModNet.PacketHandlers
 
             if (Main.netMode == NetmodeID.Server)
             {
-                ModPacket packet = GetPacket((byte)PacketType.AddDamageDoTDebuffPlayer);
-                packet.Write((byte)playerID);
+                ModPacket packet = GetPacket((byte)PacketType.AddDamageDoTDebuffNPC);
+                packet.Write(playerID);
                 packet.Write(buffType);
                 packet.Write(damage);
                 packet.Write(time);
