@@ -67,6 +67,10 @@ namespace PathOfModifiers
                     npc.AddBuff(mod.BuffType(type.Name), 2, true);
                 }
             }
+            if (npc.lifeRegen < 0)
+            {
+                damage = npc.lifeRegen / -4;
+            }
         }
 
         public override void NPCLoot(NPC npc)

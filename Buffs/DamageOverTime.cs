@@ -6,6 +6,9 @@ namespace PathOfModifiers.Buffs
 {
     public class DamageOverTime : ModBuff
     {
+        /// <summary>
+        /// Multiply DPS by this to get damage per 0.5s
+        /// </summary>
         public static float damageMultiplierHalfSecond => 2.0f;
 
         public override bool Autoload(ref string name, ref string texture)
