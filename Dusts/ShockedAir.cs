@@ -14,7 +14,8 @@ namespace PathOfModifiers.Dusts
             public int loopCooldown;
         }
 
-        const int maxAlpha = 200;
+        const int minAlpha = 40;
+        const int addAlpha = 160;
         const int frameTime = 1;
         const int frameWidth = 32;
         const int frameHeight = 32;
@@ -59,7 +60,7 @@ namespace PathOfModifiers.Dusts
             }
             else
             {
-                dust.alpha = (int)(maxAlpha * (customData.time / (float)PathOfModifiers.ailmentDuration));
+                dust.alpha = (int)(minAlpha + (addAlpha * (customData.time / (float)PathOfModifiers.ailmentDuration)));
 
                 if (customData.time % frameTime == 0)
                 {

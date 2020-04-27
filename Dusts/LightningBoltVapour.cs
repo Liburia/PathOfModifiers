@@ -12,10 +12,10 @@ namespace PathOfModifiers.Dusts
             public int currentFrame;
         }
 
-        const float scaleMultiplier = 0.99f;
+        const float scaleMultiplier = 0.95f;
         const int alphaAdd = 5;
         const int removeAtFrame = 6;
-        const int frameTime = 15;
+        const int frameTime = 13;
         const int frameHeight = 16;
 
         public override void OnSpawn(Dust dust)
