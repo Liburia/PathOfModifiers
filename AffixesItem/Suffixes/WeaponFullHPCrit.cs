@@ -60,7 +60,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             float percent1 = Multiplier * 100;
 
             int decimals1 = 0;
-            if (percent1 < 1)
+            if (percent1 < 10)
             {
                 decimals1 = 2;
             }

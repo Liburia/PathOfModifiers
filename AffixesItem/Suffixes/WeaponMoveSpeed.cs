@@ -12,7 +12,7 @@ using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
-    public class WeaponOnHitMoveSpeed : Suffix, ITieredStatFloat3Affix
+    public class WeaponMoveSpeed : Suffix, ITieredStatFloat3Affix
     {
         public override float weight => 0.5f;
 
@@ -93,7 +93,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             float percent3 = (float)Math.Round(Multiplier3, 1);
 
             int decimals1 = 0;
-            if (percent1 < 1)
+            if (percent1 < 10)
             {
                 decimals1 = 2;
             }

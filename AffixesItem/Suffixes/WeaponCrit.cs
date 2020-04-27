@@ -77,7 +77,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         {
             float percent1 = Math.Abs((multiplier1 - 1) * 100);
             int decimals1 = 0;
-            if (percent1 < 1)
+            if (percent1 < 10)
             {
                 decimals1 = 2;
             }

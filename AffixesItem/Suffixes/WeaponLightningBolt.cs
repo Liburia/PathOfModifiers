@@ -1,5 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
@@ -8,21 +9,20 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
-using Terraria.ID;
-using PathOfModifiers.ModNet.PacketHandlers;
+using PathOfModifiers.Buffs;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
-    public class WeaponOnHitHeal : Suffix, ITieredStatFloat2Affix
+    public class WeaponLightningBolt : Suffix, ITieredStatFloat3Affix
     {
-        public override float weight => 0.5f;
+        public override float weight => 990.5f;
 
         string addedTextTiered = string.Empty;
         float addedTextWeightTiered = 1;
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers1 = new float[] { 0f, 0.005f, 0.01f, 0.015f, 0.02f, 0.025f, 0.03f };
+        static float[] tiers1 = new float[] { 10f, 10.05f, 10.1f, 10.15f, 10.2f, 10.25f, 10.3f };
         static Tuple<int, double>[] tierWeights1 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
             new Tuple<int, double>(1, 2.5),
@@ -33,7 +33,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         };
         static int maxTier1 => tiers1.Length - 2;
         int tierText1 => MaxTier1 - Tier1 + 1;
-        static float[] tiers2 = new float[] { 6f, 5.5f, 5f, 4.5f, 4f, 3.5f, 3f };
+        static float[] tiers2 = new float[] { 0f, 0.33f, 0.66f, 1f, 1.33f, 1.66f, 2f };
         static Tuple<int, double>[] tierWeights2 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
             new Tuple<int, double>(1, 2.5),
@@ -44,18 +44,29 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         };
         static int maxTier2 => tiers2.Length - 2;
         int tierText2 => MaxTier2 - Tier2 + 1;
+        static float[] tiers3 = new float[] { 10.9f, 10.93f, 10.97f, 11f, 11.03f, 11.07f, 11.1f };
+        static Tuple<int, double>[] tierWeights3 = new Tuple<int, double>[] {
+            new Tuple<int, double>(0, 0.5),
+            new Tuple<int, double>(1, 1),
+            new Tuple<int, double>(2, 2),
+            new Tuple<int, double>(3, 2),
+            new Tuple<int, double>(4, 1),
+            new Tuple<int, double>(5, 0.5),
+        };
+        static int maxTier3 => tiers3.Length - 2;
+        int tierText3 => MaxTier3 - Tier3 + 1;
 
         static string[] tierNames = new string[] {
-            "of Haleness",
-            "of Well-being",
-            "of Health",
-            "of Constitution",
-            "of Vigor",
-            "of Vermilion",
+            "of Grounding",
+            "of Discharge",
+            "of Dissonance",
+            "of Disruption",
+            "of Instability",
+            "of Discord",
         };
 
-        int compoundTier => (Tier1 + Tier2) / 3;
-        int maxCompoundTier => (MaxTier1 + MaxTier2) / 3;
+        int compoundTier => (Tier1 + Tier2 + Tier3) / 3;
+        int maxCompoundTier => (MaxTier1 + MaxTier2 + MaxTier3) / 3;
         int compoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         int tier1 = 0;
@@ -64,8 +75,9 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         int tier2 = 0;
         float tierMultiplier2 = 0;
         float multiplier2 = 1;
-
-        double lastCastTime = 0;
+        int tier3 = 0;
+        float tierMultiplier3 = 0;
+        float multiplier3 = 1;
 
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
@@ -75,53 +87,72 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            float percent1 = multiplier1 * 100;
+            float percent1 = Multiplier1 * 100;
+            float percent2 = Multiplier2 * 100;
+            float percent3 = Math.Abs((Multiplier3 - 1) * 100);
+
             int decimals1 = 0;
-            if (percent1 < 1)
+            int decimals2 = 0;
+            int decimals3 = 0;
+
+            if (percent1 < 10)
             {
                 decimals1 = 2;
             }
+            if (percent2 < 10)
+            {
+                decimals2 = 2;
+            }
+            if (percent3 < 10)
+            {
+                decimals3 = 2;
+            }
 
             percent1 = (float)Math.Round(percent1, decimals1);
-            float cooldown = (float)Math.Round(multiplier2, 1);
+            percent2 = (float)Math.Round(percent2, decimals2);
+            percent3 = (float)Math.Round(percent3, decimals3);
 
-            return $"Heal {percent1}% of max life on hit ({cooldown}s CD)";
+            return $"{percent1}% chance for lightning to strike for {percent2}% damage and leave Shocked Air({percent3}%)";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
         {
-            Hit(item, player);
+            Hit(item, player, target, damage);
         }
         public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
         {
-            Hit(item, player);
+            Hit(item, player, target, damage);
         }
         public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
         {
-            Hit(item, player);
+            Hit(item, player, target, damage);
         }
         public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
         {
-            Hit(item, player);
+            Hit(item, player, target, damage);
         }
 
-        void Hit(Item item, Player player)
+        void Hit(Item item, Player player, NPC target, int hitDamage)
         {
-            if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastCastTime) / 1000.0 >= multiplier2)
-                HealPlayer(player);
-        }
-
-        void HealPlayer(Player player)
-        {
-            int amount = (int)MathHelper.Clamp(player.statLifeMax2 * multiplier1, 1, 9999999);
-            player.statLife += amount;
-            player.HealEffect(amount, false);
-            PoMEffectHelper.Heal(player, amount);
-            if (Main.netMode == NetmodeID.MultiplayerClient)
+            if (item == player.HeldItem && Main.rand.NextFloat() < multiplier1)
             {
-                EffectPacketHandler.CSyncHeal(player.whoAmI, amount);
+                SpawnLightningBolt(player, target, hitDamage);
             }
-            lastCastTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+        }
+        void Hit(Item item, Player player, Player target, int hitDamage)
+        {
+            if (item == player.HeldItem && Main.rand.NextFloat() < multiplier1)
+            {
+                SpawnLightningBolt(player, target, hitDamage);
+            }
+        }
+
+        void SpawnLightningBolt(Player player, Entity target, int hitDamage)
+        {
+            float height = 512;
+            Vector2 position = target.Center + Main.rand.NextVector2Circular(target.width, target.height) - new Vector2(0, height);
+            int damage = (int)MathHelper.Clamp(hitDamage * multiplier2, 1, 999999);
+            Projectile.NewProjectile(position, Vector2.Zero, ModContent.ProjectileType<LightningBolt>(), damage, 0, player.whoAmI, multiplier3, height);
         }
 
         #region Interface Properties
@@ -144,6 +175,11 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         public int MaxTier2 => maxTier2;
         public int TierText2 => tierText2;
 
+        public float[] Tiers3 => tiers3;
+        public Tuple<int, double>[] TierWeights3 => tierWeights3;
+        public int MaxTier3 => maxTier3;
+        public int TierText3 => tierText3;
+
         public int Tier1 { get { return tier1; } set { tier1 = value; } }
         public float TierMultiplier1 { get { return tierMultiplier1; } set { tierMultiplier1 = value; } }
         public float Multiplier1 { get { return multiplier1; } set { multiplier1 = value; } }
@@ -151,19 +187,23 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         public int Tier2 { get { return tier2; } set { tier2 = value; } }
         public float TierMultiplier2 { get { return tierMultiplier2; } set { tierMultiplier2 = value; } }
         public float Multiplier2 { get { return multiplier2; } set { multiplier2 = value; } }
+
+        public int Tier3 { get { return tier3; } set { tier3 = value; } }
+        public float TierMultiplier3 { get { return tierMultiplier3; } set { tierMultiplier3 = value; } }
+        public float Multiplier3 { get { return multiplier3; } set { multiplier3 = value; } }
         #endregion
         #region Helped Methods
         void SetTier(int t1, int t2, int t3, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
         {
-            TieredAffixHelper.SetTier(this, t1, t2, ignore1, ignore2);
+            TieredAffixHelper.SetTier(this, t1, t2, t3, ignore1, ignore2, ignore3);
         }
-        void SetTierMultiplier(float m1, float m2, bool ignore1 = false, bool ignore2 = false)
+        void SetTierMultiplier(float m1, float m2, float m3, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
         {
-            TieredAffixHelper.SetTierMultiplier(this, m1, m2, ignore1, ignore2);
+            TieredAffixHelper.SetTierMultiplier(this, m1, m2, m3, ignore1, ignore2, ignore3);
         }
         public override Affix Clone()
         {
-            return TieredAffixHelper.Clone(this, (ITieredStatFloat2Affix)base.Clone());
+            return TieredAffixHelper.Clone(this, (ITieredStatFloat3Affix)base.Clone());
         }
         public override void RollValue(bool rollTier = true)
         {

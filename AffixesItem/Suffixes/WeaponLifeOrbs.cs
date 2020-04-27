@@ -12,7 +12,7 @@ using PathOfModifiers.Projectiles;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
-    public class WeaponOnHitLifeOrbs : Suffix, ITieredStatFloat2IntValueAffix
+    public class WeaponLifeOrbs : Suffix, ITieredStatFloat2IntValueAffix
     {
         public override float weight => 0.5f;
 
@@ -90,11 +90,11 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             int decimals1 = 0;
             int decimals2 = 0;
 
-            if (percent1 < 1)
+            if (percent1 < 10)
             {
                 decimals1 = 2;
             }
-            if (percent2 < 1)
+            if (percent2 < 10)
             {
                 decimals2 = 2;
             }

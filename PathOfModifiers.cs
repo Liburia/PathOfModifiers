@@ -26,6 +26,8 @@ namespace PathOfModifiers
         public const bool disableVanillaModifiersAccessories = true;
         public const bool disableMaps = true;
 
+        public const int ailmentDuration = 300;
+
         public static string pathMapIcons = "Images/MapIcons/";
 
         public static PathOfModifiers Instance { get; private set; }
@@ -34,6 +36,7 @@ namespace PathOfModifiers
 
         public static UserInterface modifierForgeUI;
         public static UserInterface mapDeviceUI;
+
 
         public PathOfModifiers()
         {

@@ -50,6 +50,7 @@ namespace PathOfModifiers.Projectiles
             if (projectile.owner == Main.myPlayer)
             {
                 Rectangle bounds = projectile.getRect();
+                //TODO: Don't need to loop, just check the main player.
                 for (int i = 0; i < Main.maxPlayers; i++)
                 {
                     Player player = Main.player[i];

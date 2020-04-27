@@ -35,6 +35,16 @@ namespace PathOfModifiers
 
         public Entity lastDamageDealer;
 
+        public bool isOnShockedAir;
+        public bool isShocked;
+        public bool isOnChilledAir;
+        public bool isChilled;
+
+        float shockedAirMultiplier;
+        float shockedMultiplier;
+        float chilledAirMultiplier;
+        float chilledMultiplier;
+
         DoTInstanceCollection dotInstanceCollection = new DoTInstanceCollection();
 
         float moveSpeedBuffMultiplier = 1;
@@ -60,6 +70,63 @@ namespace PathOfModifiers
             {
                 BuffPacketHandler.CSendAddMoveSpeedBuffPlayer(player.whoAmI, speedMultiplier, time);
             }
+        }
+        public void AddShockedAirBuff(Player player, float multiplier)
+        {
+            shockedAirMultiplier = multiplier;
+            player.AddBuff(ModContent.BuffType<ShockedAir>(), 2, true);
+        }
+        public void AddShockedBuff(Player player, float multiplier, int durationTicks, bool syncMP = true)
+        {
+            shockedMultiplier = multiplier;
+            player.AddBuff(ModContent.BuffType<Shocked>(), durationTicks, true);
+
+            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
+            {
+                BuffPacketHandler.CSendAddShockedBuffPlayer(player.whoAmI, multiplier, durationTicks);
+            }
+        }
+        public void AddChilledBuff(Player player, float multiplier, int durationTicks, bool syncMP = true)
+        {
+            chilledMultiplier = multiplier;
+            player.AddBuff(ModContent.BuffType<Chilled>(), durationTicks, true);
+
+            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
+            {
+                BuffPacketHandler.CSendAddChilledBuffPlayer(player.whoAmI, multiplier, durationTicks);
+            }
+        }
+        public void AddChilledAirBuff(Player player, float multiplier)
+        {
+            chilledAirMultiplier = multiplier;
+            player.AddBuff(ModContent.BuffType<ChilledAir>(), 2, true);
+        }
+
+        public void ShockModifyDamageTaken(ref int damage)
+        {
+            float totalMultiplier = 1;
+            if (isOnShockedAir)
+            {
+                totalMultiplier += shockedAirMultiplier - 1;
+            }
+            if (isShocked)
+            {
+                totalMultiplier += shockedMultiplier - 1;
+            }
+            damage = (int)Math.Round(damage * totalMultiplier);
+        }
+        public void ChillModifyDamageDealt(ref int damage)
+        {
+            float totalMultiplier = 1;
+            if (isOnChilledAir)
+            {
+                totalMultiplier += chilledAirMultiplier - 1;
+            }
+            if (isChilled)
+            {
+                totalMultiplier += chilledMultiplier - 1;
+            }
+            damage = (int)Math.Round(damage * totalMultiplier);
         }
 
         public override void Initialize()
@@ -205,6 +272,8 @@ namespace PathOfModifiers
 
         public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
         {
+            PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
+
             Item item;
             PoMItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -225,6 +294,8 @@ namespace PathOfModifiers
                 pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
             }
+
+            ShockModifyDamageTaken(ref damage);
         }
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
         {
@@ -248,6 +319,14 @@ namespace PathOfModifiers
                 pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.OnHitByNPC(item, player, npc, damage, crit);
             }
+        }
+        public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
+        {
+            ShockModifyDamageTaken(ref damage);
+        }
+        public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+        {
+            base.OnHitByProjectile(proj, damage, crit);
         }
 
         public void OnKillNPC(NPC target)
@@ -322,9 +401,14 @@ namespace PathOfModifiers
             }
             damage = (int)Math.Round(damage * damageMultiplier);
             knockback *= knockbackMultiplier;
+
+            ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
         {
+            PoMPlayer pomPlayer = target.GetModPlayer<PoMPlayer>();
+            pomPlayer.ShockModifyDamageTaken(ref damage);
+
             Item affixItem;
             PoMItem pomItem;
             float damageMultiplier = 1f;
@@ -347,6 +431,8 @@ namespace PathOfModifiers
                 pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
             damage = (int)Math.Round(damage * damageMultiplier);
+
+            ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
@@ -370,9 +456,13 @@ namespace PathOfModifiers
                 pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
             }
+
+            ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
         {
+            target.GetModPlayer<PoMPlayer>().ShockModifyDamageTaken(ref damage);
+
             Item item;
             PoMItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -393,6 +483,8 @@ namespace PathOfModifiers
                 pomItem = item.GetGlobalItem<PoMItem>();
                 pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
             }
+
+            ChillModifyDamageDealt(ref damage);
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
@@ -546,6 +638,11 @@ namespace PathOfModifiers
 
             potionDelayTime = 1;
             restorationDelayTime = 1;
+
+            isOnShockedAir = false;
+            isShocked = false;
+            isOnChilledAir = false;
+            isChilled = false;
 
             dotInstanceCollection.ResetEffects();
 

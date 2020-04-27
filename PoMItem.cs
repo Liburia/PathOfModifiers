@@ -1061,15 +1061,16 @@ namespace PathOfModifiers
                     PathOfModifiers.Instance.Logger.Warn($"Mod '{affixModName}' not found");
                     continue;
                 }
-                type = mod.Code.GetType(affixTag.GetString("affixFullName"));
+                string affixFullName = affixTag.GetString("affixFullName");
+                type = mod.Code.GetType(affixFullName);
                 if (type == null)
                 {
-                    PathOfModifiers.Instance.Logger.Warn($"Affix '{type.FullName}' doesn't exist");
+                    PathOfModifiers.Instance.Logger.Warn($"Affix '{affixFullName}' doesn't exist");
                     continue;
                 }
                 if (type.IsDefined(typeof(DisableAffix), false))
                 {
-                    PathOfModifiers.Instance.Logger.Warn($"Affix '{type.FullName}' is disabled");
+                    PathOfModifiers.Instance.Logger.Warn($"Affix '{affixFullName}' is disabled");
                     continue;
                 }
                 affix = PoMDataLoader.affixesItem[PoMDataLoader.affixItemMap[type]].Clone();

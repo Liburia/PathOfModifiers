@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.AffixesItem.Suffixes
 {
-    public class WeaponOnHitVelocity : Suffix, ITieredStatFloatAffix
+    public class WeaponVelocity : Suffix, ITieredStatFloatAffix
     {
         public override float weight => 0.5f;
 

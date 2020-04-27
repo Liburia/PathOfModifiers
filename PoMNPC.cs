@@ -25,7 +25,18 @@ namespace PathOfModifiers
 
         public Entity lastDamageDealer;
 
+        public bool isOnShockedAir;
+        public bool isShocked;
+        public bool isOnChilledAir;
+        public bool isChilled;
+
+        float shockedAirMultiplier;
+        float shockedMultiplier;
+        float chilledAirMultiplier;
+        float chilledMultiplier;
+
         DoTInstanceCollection dotInstanceCollection = new DoTInstanceCollection();
+
 
         public void AddDoTBuff(NPC npc, DamageOverTime buff, int dps, int durationTicks, bool syncMP = true)
         {
@@ -38,6 +49,36 @@ namespace PathOfModifiers
                 BuffPacketHandler.CSendAddDoTBuffNPC(npc.whoAmI, buff.Type, dps, durationTicks);
             }
         }
+        public void AddShockedAirBuff(NPC npc, float multiplier)
+        {
+            shockedAirMultiplier = multiplier;
+            npc.AddBuff(ModContent.BuffType<ShockedAir>(), 2, true);
+        }
+        public void AddShockedBuff(NPC npc, float multiplier, int durationTicks, bool syncMP = true)
+        {
+            shockedMultiplier = multiplier;
+            npc.AddBuff(ModContent.BuffType<Shocked>(), durationTicks, true);
+
+            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
+            {
+                BuffPacketHandler.CSendAddShockedBuffNPC(npc.whoAmI, multiplier, durationTicks);
+            }
+        }
+        public void AddChilledAirBuff(NPC npc, float multiplier)
+        {
+            chilledAirMultiplier = multiplier;
+            npc.AddBuff(ModContent.BuffType<ChilledAir>(), 2, true);
+        }
+        public void AddChilledBuff(NPC npc, float multiplier, int durationTicks, bool syncMP = true)
+        {
+            chilledMultiplier = multiplier;
+            npc.AddBuff(ModContent.BuffType<Chilled>(), durationTicks, true);
+
+            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
+            {
+                BuffPacketHandler.CSendAddChilledBuffNPC(npc.whoAmI, multiplier, durationTicks);
+            }
+        }
 
         public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit)
         {
@@ -46,6 +87,11 @@ namespace PathOfModifiers
 
         public override void ResetEffects(NPC npc)
         {
+            isOnShockedAir = false;
+            isShocked = false;
+            isOnChilledAir = false;
+            isChilled = false;
+
             dotInstanceCollection.ResetEffects();
         }
         public override void UpdateLifeRegen(NPC npc, ref int damage)
@@ -231,6 +277,32 @@ namespace PathOfModifiers
             suffixes.Clear();
         }
 
+        public void ShockModifyDamageTaken(ref int damage)
+        {
+            float totalMultiplier = 1;
+            if (isOnShockedAir)
+            {
+                totalMultiplier += shockedAirMultiplier - 1;
+            }
+            if (isShocked)
+            {
+                totalMultiplier += shockedMultiplier - 1;
+            }
+            damage = (int)Math.Round(damage * totalMultiplier);
+        }
+        public void ChillModifyDamageDealt(ref int damage)
+        {
+            float totalMultiplier = 1;
+            if (isOnChilledAir)
+            {
+                totalMultiplier += chilledAirMultiplier - 1;
+            }
+            if (isChilled)
+            {
+                totalMultiplier += chilledMultiplier - 1;
+            }
+            damage = (int)Math.Round(damage * totalMultiplier);
+        }
 
         public override void SetDefaults(NPC npc)
         {
@@ -281,6 +353,8 @@ namespace PathOfModifiers
             {
                 suffix.ModifyHitByItem(npc, player, item, ref damage, ref knockback, ref crit);
             }
+
+            ShockModifyDamageTaken(ref damage);
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
@@ -292,6 +366,8 @@ namespace PathOfModifiers
             {
                 suffix.ModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
             }
+
+            ShockModifyDamageTaken(ref damage);
         }
         public override void ModifyHitPlayer(NPC npc, Player target, ref int damage, ref bool crit)
         {
@@ -303,6 +379,8 @@ namespace PathOfModifiers
             {
                 suffix.ModifyHitPlayer(npc, target, ref damage, ref crit);
             }
+
+            ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitNPC(NPC npc, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
@@ -314,6 +392,8 @@ namespace PathOfModifiers
             {
                 suffix.ModifyHitNPC(npc, target, ref damage, ref knockback, ref crit);
             }
+
+            ChillModifyDamageDealt(ref damage);
         }
         public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
         {
