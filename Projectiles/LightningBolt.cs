@@ -12,13 +12,6 @@ namespace PathOfModifiers.Projectiles
 {
     public class LightningBolt : ModProjectile, INonTriggerringProjectile
     {
-        enum DebrisType
-        {
-            Expired,
-            Tile,
-            Entity,
-        }
-
         static Texture2D textureGlow;
 
         static readonly Vector3 emittedLight = new Vector3(1, 0.952f, 0.552f);
@@ -57,7 +50,6 @@ namespace PathOfModifiers.Projectiles
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
             projectile.extraUpdates = 1;
-            projectile.netUpdate = true;
         }
 
         public override bool ShouldUpdatePosition()
@@ -255,14 +247,14 @@ namespace PathOfModifiers.Projectiles
 
                 for (int j = 0; j < howMany; j++)
                 {
-                    Dust.NewDustPerfect(position1 + (direction * dustInterval * j), ModContent.DustType<LightningBoltVapour>(), Velocity: new Vector2(0, Main.rand.NextFloat(-0.3f, -1f)), Scale: Main.rand.NextFloat(0.3f, 0.8f));
+                    Dust.NewDustPerfect(position1 + (direction * dustInterval * j), ModContent.DustType<LightningVapour>(), Velocity: new Vector2(0, Main.rand.NextFloat(-0.3f, -1f)), Scale: Main.rand.NextFloat(0.3f, 0.8f));
                 }
             }
 
             for (int i = 0; i < 40; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(7f, 12f);
-                Dust.NewDustPerfect(targetPosition, ModContent.DustType<LightningBoltDebris>(), velocity, Scale: Main.rand.NextFloat(1f, 2f));
+                Dust.NewDustPerfect(targetPosition, ModContent.DustType<LightningDebris>(), velocity, Scale: Main.rand.NextFloat(1f, 2f));
             }
 
             if (Main.netMode != NetmodeID.Server)

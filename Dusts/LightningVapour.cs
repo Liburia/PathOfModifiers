@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace PathOfModifiers.Dusts
 {
-    public class LightningBoltVapour : ModDust
+    public class LightningVapour : ModDust
     {
         class CustomData
         {

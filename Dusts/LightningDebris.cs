@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace PathOfModifiers.Dusts
 {
-    public class LightningBoltDebris : ModDust
+    public class LightningDebris : ModDust
     {
         public override void OnSpawn(Dust dust)
         {
