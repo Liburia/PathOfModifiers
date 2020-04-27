@@ -28,6 +28,11 @@ namespace PathOfModifiers.Buffs
         {
             PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
             pomNPC.isShocked = true;
+
+            if (Main.rand.NextBool(20))
+            {
+                Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Dusts.Shock>(), Scale: Main.rand.NextFloat(0.3f, 0.7f));
+            }
         }
         public override void Update(Player player, ref int buffIndex)
         {

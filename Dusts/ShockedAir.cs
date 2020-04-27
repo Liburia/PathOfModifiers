@@ -22,6 +22,13 @@ namespace PathOfModifiers.Dusts
         const int totalFrames = 6;
         const int loopCooldown = 20;
 
+        public override bool Autoload(ref string name, ref string texture)
+        {
+            texture = "PathOfModifiers/Dusts/Shock";
+
+            return base.Autoload(ref name, ref texture);
+        }
+
         public override void OnSpawn(Dust dust)
         {
             int frameX = Main.rand.NextBool() ? frameWidth : 0;
