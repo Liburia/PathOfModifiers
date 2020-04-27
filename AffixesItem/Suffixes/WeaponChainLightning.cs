@@ -15,14 +15,14 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 {
     public class WeaponChainLightning : Suffix, ITieredStatFloat3Affix
     {
-        public override float weight => 990.5f;
+        public override float weight => 0.5f;
 
         string addedTextTiered = string.Empty;
         float addedTextWeightTiered = 1;
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers1 = new float[] { 10f, 10.05f, 10.1f, 10.15f, 10.2f, 10.25f, 10.3f };
+        static float[] tiers1 = new float[] { 0f, 0.05f, 0.1f, 0.15f, 0.2f, 0.25f, 0.3f };
         static Tuple<int, double>[] tierWeights1 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
             new Tuple<int, double>(1, 2.5),
@@ -44,7 +44,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         };
         static int maxTier2 => tiers2.Length - 2;
         int tierText2 => MaxTier2 - Tier2 + 1;
-        static float[] tiers3 = new float[] { 10.9f, 10.93f, 10.97f, 11f, 11.03f, 11.07f, 11.1f };
+        static float[] tiers3 = new float[] { 0.9f, 0.93f, 0.97f, 1f, 1.03f, 1.07f, 1.1f };
         static Tuple<int, double>[] tierWeights3 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 0.5),
             new Tuple<int, double>(1, 1),
