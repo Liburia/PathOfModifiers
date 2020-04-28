@@ -218,23 +218,6 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            return false;
-        }
-        public override bool? CanHitNPC(NPC target)
-        {
-            return false;
-        }
-        public override bool CanHitPlayer(Player target)
-        {
-            return false;
-        }
-        public override bool CanHitPvp(Player target)
-        {
-            return false;
-        }
-
         public void Explode()
         {
             for (int i = 1; i < nodes.Count; i++)
@@ -279,7 +262,7 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (npc.active)
+                        if (npc.active && !npc.townNPC)
                         {
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(boltRect) || npcRect.Intersects(airRect))

@@ -19,6 +19,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             AddShockedBuffNPC,
             AddChilledBuffPlayer,
             AddChilledBuffNPC,
+            AddStaticStrikeBuffPlayer,
         }
 
         public BuffPacketHandler() : base(PacketHandlerType.Buff)
@@ -51,6 +52,9 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                     break;
                 case PacketType.AddChilledBuffPlayer:
                     ReceiveAddChilledBuffPlayer(reader, fromWho);
+                    break;
+                case PacketType.AddStaticStrikeBuffPlayer:
+                    ReceiveAddStaticStrikeBuffPlayer(reader, fromWho);
                     break;
             }
         }
@@ -265,6 +269,37 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 packet.Write((byte)playerID);
                 packet.Write(multiplier);
                 packet.Write(time);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void CSendAddStaticStrikeBuffPlayer(int playerID, int damage, int intervalTicks, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddStaticStrikeBuffPlayer);
+            packet.Write((byte)playerID);
+            packet.Write(damage);
+            packet.Write(intervalTicks);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddStaticStrikeBuffPlayer(BinaryReader reader, int fromWho)
+        {
+            byte playerID = reader.ReadByte();
+            int damage = reader.ReadInt32();
+            int intervalTicks = reader.ReadInt32();
+            int dutaionTicks = reader.ReadInt32();
+
+            Player player = Main.player[playerID];
+            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
+            pomPlayer.AddStaticStrikeBuff(player, damage, intervalTicks, dutaionTicks, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddStaticStrikeBuffPlayer);
+                packet.Write(playerID);
+                packet.Write(damage);
+                packet.Write(intervalTicks);
+                packet.Write(dutaionTicks);
                 packet.Send(-1, fromWho);
             }
         }

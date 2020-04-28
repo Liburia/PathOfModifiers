@@ -50,6 +50,11 @@ namespace PathOfModifiers
         float moveSpeedBuffMultiplier = 1;
         public bool moveSpeedBuff = false;
 
+        int staticStrikeDamage;
+        int staticStrikeIntervalTicks;
+        int staticStrikeCurrentInterval;
+        public bool staticStrikeBuff = false;
+
         public void AddDoTBuff(Player player, DamageOverTime buff, int dps, int durationTicks, bool syncMP = true)
         {
             Type dotBuffType = buff.GetType();
@@ -61,7 +66,7 @@ namespace PathOfModifiers
                 BuffPacketHandler.CSendAddDoTBuffPlayer(player.whoAmI, buff.Type, dps, durationTicks);
             }
         }
-        public void AddMoveSpeedBuff(Player player, float speedMultiplier, int time, bool syncMP = true, int ignoreClient = -1)
+        public void AddMoveSpeedBuff(Player player, float speedMultiplier, int time, bool syncMP = true)
         {
             moveSpeedBuffMultiplier = speedMultiplier;
             player.AddBuff(ModContent.BuffType<MoveSpeed>(), time, true);
@@ -100,6 +105,21 @@ namespace PathOfModifiers
         {
             chilledAirMultiplier = multiplier;
             player.AddBuff(ModContent.BuffType<ChilledAir>(), 2, true);
+        }
+        public void AddStaticStrikeBuff(Player player, int damage, int intervalTicks, int time, bool syncMP = true)
+        {
+            if (!staticStrikeBuff)
+            {
+                staticStrikeCurrentInterval = 0;
+            }
+            staticStrikeDamage = damage;
+            staticStrikeIntervalTicks = intervalTicks;
+            player.AddBuff(ModContent.BuffType<StaticStrike>(), time, true);
+
+            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
+            {
+                BuffPacketHandler.CSendAddStaticStrikeBuffPlayer(player.whoAmI, damage, intervalTicks, time);
+            }
         }
 
         public void ShockModifyDamageTaken(ref int damage)
@@ -647,6 +667,8 @@ namespace PathOfModifiers
             dotInstanceCollection.ResetEffects();
 
             moveSpeedBuff = false;
+
+            staticStrikeBuff = false;
         }
         public override void PostUpdateEquips()
         {
@@ -697,6 +719,27 @@ namespace PathOfModifiers
             if (removeDebuffs)
             {
                 dotInstanceCollection.Clear();
+            }
+        }
+
+        public override void PreUpdate()
+        {
+            if (staticStrikeBuff)
+            {
+                staticStrikeCurrentInterval++;
+
+                if (staticStrikeCurrentInterval >= staticStrikeIntervalTicks)
+                {
+                    Projectile.NewProjectile(
+                        position: player.Center,
+                        velocity: Vector2.Zero,
+                        Type: ModContent.ProjectileType<Projectiles.StaticStrike>(),
+                        Damage: staticStrikeDamage,
+                        KnockBack: 0,
+                        Owner: player.whoAmI);
+
+                    staticStrikeCurrentInterval = 0;
+                }
             }
         }
 
