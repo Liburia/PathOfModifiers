@@ -20,7 +20,7 @@ namespace PathOfModifiers.Buffs
             Description.SetDefault("Taking damage over time");
             Main.debuff[Type] = false;
             Main.pvpBuff[Type] = true;
-            Main.buffNoSave[Type] = false;
+            Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
             canBeCleared = true;
         }

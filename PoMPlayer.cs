@@ -700,20 +700,20 @@ namespace PathOfModifiers
             }
         }
 
-        public override TagCompound Save()
-        {
-            TagCompound tag = new TagCompound
-            {
-                { "dotInstanceCollection", dotInstanceCollection },
-                { "moveSpeedBuffMultiplier", moveSpeedBuffMultiplier }
-            };
+        //public override TagCompound Save()
+        //{
+        //    TagCompound tag = new TagCompound
+        //    {
+        //        { "dotInstanceCollection", dotInstanceCollection },
+        //        { "moveSpeedBuffMultiplier", moveSpeedBuffMultiplier }
+        //    };
 
-            return tag;
-        }
-        public override void Load(TagCompound tag)
-        {
-            dotInstanceCollection = tag.Get<DoTInstanceCollection>("dotInstanceCollection");
-            moveSpeedBuffMultiplier = tag.GetFloat("moveSpeedBuffMultiplier");
-        }
+        //    return tag;
+        //}
+        //public override void Load(TagCompound tag)
+        //{
+        //    dotInstanceCollection = tag.Get<DoTInstanceCollection>("dotInstanceCollection");
+        //    moveSpeedBuffMultiplier = tag.GetFloat("moveSpeedBuffMultiplier");
+        //}
     }
 }
