@@ -25,11 +25,15 @@ namespace PathOfModifiers
 
         public Entity lastDamageDealer;
 
+        public bool isOnBurningAir;
+        public bool isIgnited;
         public bool isOnShockedAir;
         public bool isShocked;
         public bool isOnChilledAir;
         public bool isChilled;
 
+        int burningAirDps;
+        int igniteDps;
         float shockedAirMultiplier;
         float shockedMultiplier;
         float chilledAirMultiplier;
@@ -47,6 +51,21 @@ namespace PathOfModifiers
             if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
             {
                 BuffPacketHandler.CSendAddDoTBuffNPC(npc.whoAmI, buff.Type, dps, durationTicks);
+            }
+        }
+        public void AddBurningAirBuff(NPC npc, int dps)
+        {
+            burningAirDps = dps;
+            npc.AddBuff(ModContent.BuffType<BurningAir>(), 2, true);
+        }
+        public void AddIgnitedBuff(NPC npc, int dps, int durationTicks, bool syncMP = true)
+        {
+            igniteDps = dps;
+            npc.AddBuff(ModContent.BuffType<Ignited>(), durationTicks, true);
+
+            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
+            {
+                BuffPacketHandler.CSendAddIgnitedBuffNPC(npc.whoAmI, dps, durationTicks);
             }
         }
         public void AddShockedAirBuff(NPC npc, float multiplier)
@@ -87,6 +106,8 @@ namespace PathOfModifiers
 
         public override void ResetEffects(NPC npc)
         {
+            isOnBurningAir = false;
+            isIgnited = false;
             isOnShockedAir = false;
             isShocked = false;
             isOnChilledAir = false;
@@ -113,6 +134,25 @@ namespace PathOfModifiers
                     npc.AddBuff(mod.BuffType(type.Name), 2, true);
                 }
             }
+            if (isOnBurningAir && burningAirDps > 0)
+            {
+                int debuffDamage = (int)Math.Round(burningAirDps * DamageOverTime.damageMultiplierHalfSecond);
+                if (npc.lifeRegen > 0)
+                {
+                    npc.lifeRegen = 0;
+                }
+                npc.lifeRegen -= debuffDamage;
+            }
+            if (isIgnited && igniteDps > 0)
+            {
+                int debuffDamage = (int)Math.Round(igniteDps * DamageOverTime.damageMultiplierHalfSecond);
+                if (npc.lifeRegen > 0)
+                {
+                    npc.lifeRegen = 0;
+                }
+                npc.lifeRegen -= debuffDamage;
+            }
+
             if (npc.lifeRegen < 0)
             {
                 damage = npc.lifeRegen / -4;
@@ -148,7 +188,22 @@ namespace PathOfModifiers
             }
         }
 
-
+        public override void AI(NPC npc)
+        {
+            if (Main.time % 60 == 0)
+            {
+                if (isOnBurningAir && burningAirDps < 0)
+                {
+                    npc.life += -burningAirDps;
+                    npc.HealEffect(burningAirDps);
+                }
+                if (isIgnited && igniteDps < 0)
+                {
+                    npc.life += -igniteDps;
+                    npc.HealEffect(igniteDps);
+                }
+            }
+        }
 
         public RarityNPC rarity;
 

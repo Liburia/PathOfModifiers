@@ -35,11 +35,15 @@ namespace PathOfModifiers
 
         public Entity lastDamageDealer;
 
+        public bool isOnBurningAir;
+        public bool isIgnited;
         public bool isOnShockedAir;
         public bool isShocked;
         public bool isOnChilledAir;
         public bool isChilled;
 
+        int burningAirDps;
+        int igniteDps;
         float shockedAirMultiplier;
         float shockedMultiplier;
         float chilledAirMultiplier;
@@ -74,6 +78,21 @@ namespace PathOfModifiers
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
                 BuffPacketHandler.CSendAddMoveSpeedBuffPlayer(player.whoAmI, speedMultiplier, time);
+            }
+        }
+        public void AddBurningAirBuff(Player player, int dps)
+        {
+            burningAirDps = dps;
+            player.AddBuff(ModContent.BuffType<BurningAir>(), 2, true);
+        }
+        public void AddIgnitedBuff(Player player, int dps, int durationTicks, bool syncMP = true)
+        {
+            igniteDps = dps;
+            player.AddBuff(ModContent.BuffType<Ignited>(), durationTicks, true);
+
+            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
+            {
+                BuffPacketHandler.CSendAddIgnitedBuffPlayer(player.whoAmI, dps, durationTicks);
             }
         }
         public void AddShockedAirBuff(Player player, float multiplier)
@@ -671,6 +690,8 @@ namespace PathOfModifiers
             potionDelayTime = 1;
             restorationDelayTime = 1;
 
+            isOnBurningAir = false;
+            isIgnited = false;
             isOnShockedAir = false;
             isShocked = false;
             isOnChilledAir = false;
@@ -724,6 +745,24 @@ namespace PathOfModifiers
                     player.AddBuff(mod.BuffType(type.Name), 2, true);
                 }
             }
+            if (isOnBurningAir && burningAirDps > 0)
+            {
+                int debuffDamage = (int)Math.Round(burningAirDps * DamageOverTime.damageMultiplierHalfSecond);
+                if (player.lifeRegen > 0)
+                {
+                    player.lifeRegen = 0;
+                }
+                player.lifeRegen -= debuffDamage;
+            }
+            if (isIgnited && igniteDps > 0)
+            {
+                int debuffDamage = (int)Math.Round(igniteDps * DamageOverTime.damageMultiplierHalfSecond);
+                if (player.lifeRegen > 0)
+                {
+                    player.lifeRegen = 0;
+                }
+                player.lifeRegen -= debuffDamage;
+            }
         }
 
         public override void PostNurseHeal(NPC nurse, int health, bool removeDebuffs, int price)
@@ -736,6 +775,20 @@ namespace PathOfModifiers
 
         public override void PreUpdate()
         {
+            if (Main.time % 60 == 0)
+            {
+                if (isOnBurningAir && burningAirDps < 0)
+                {
+                    player.statLife += -burningAirDps;
+                    player.HealEffect(burningAirDps);
+                }
+                if (isIgnited && igniteDps < 0)
+                {
+                    player.statLife += -igniteDps;
+                    player.HealEffect(igniteDps);
+                }
+            }
+
             if (staticStrikeBuff)
             {
                 staticStrikeCurrentInterval++;

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace PathOfModifiers.Buffs
 {
-    public class Chilled : StackingDamageOverTime
+    public class Chilled : ModBuff
     {
         public override bool Autoload(ref string name, ref string texture)
         {

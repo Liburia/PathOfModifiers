@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace PathOfModifiers.Buffs
 {
-    public class ChilledAir : StackingDamageOverTime
+    public class ChilledAir : ModBuff
     {
         public override bool Autoload(ref string name, ref string texture)
         {
@@ -21,7 +21,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            canBeCleared = true;
+            canBeCleared = false;
         }
 
         public override void Update(NPC npc, ref int buffIndex)

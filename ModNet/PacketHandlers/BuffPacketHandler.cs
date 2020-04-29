@@ -15,6 +15,8 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             AddDamageDoTDebuffNPC,
             AddDamageDoTDebuffPlayer,
             AddMoveSpeedBuffPlayer,
+            AddIgnitedBuffPlayer,
+            AddIgnitedBuffNPC,
             AddShockedBuffPlayer,
             AddShockedBuffNPC,
             AddChilledBuffPlayer,
@@ -40,6 +42,12 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                     break;
                 case PacketType.AddMoveSpeedBuffPlayer:
                     ReceiveAddMoveSpeedBuffPlayer(reader, fromWho);
+                    break;
+                case PacketType.AddIgnitedBuffNPC:
+                    ReceiveAddIgnitedBuffNPC(reader, fromWho);
+                    break;
+                case PacketType.AddIgnitedBuffPlayer:
+                    ReceiveAddIgnitedBuffPlayer(reader, fromWho);
                     break;
                 case PacketType.AddShockedBuffNPC:
                     ReceiveAddShockedBuffNPC(reader, fromWho);
@@ -157,6 +165,62 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 packet.Write(playerID);
                 packet.Write(speedMultiplier);
                 packet.Write(dutaionTicks);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void CSendAddIgnitedBuffNPC(int npcID, int dps, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddIgnitedBuffNPC);
+            packet.Write((byte)npcID);
+            packet.Write(dps);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddIgnitedBuffNPC(BinaryReader reader, int fromWho)
+        {
+            byte npcID = reader.ReadByte();
+            int dps = reader.ReadInt32();
+            int dutaionTicks = reader.ReadInt32();
+
+            NPC npc = Main.npc[npcID];
+            PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
+            pomNPC.AddIgnitedBuff(npc, dps, dutaionTicks, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddIgnitedBuffNPC);
+                packet.Write(npcID);
+                packet.Write(dps);
+                packet.Write(dutaionTicks);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void CSendAddIgnitedBuffPlayer(int playerID, int dps, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddIgnitedBuffPlayer);
+            packet.Write((byte)playerID);
+            packet.Write(dps);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddIgnitedBuffPlayer(BinaryReader reader, int fromWho)
+        {
+            int playerID = reader.ReadByte();
+            int dps = reader.ReadInt32();
+            int time = reader.ReadInt32();
+
+            Player player = Main.player[playerID];
+            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
+            pomPlayer.AddIgnitedBuff(player, dps, time, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddIgnitedBuffPlayer);
+                packet.Write((byte)playerID);
+                packet.Write(dps);
+                packet.Write(time);
                 packet.Send(-1, fromWho);
             }
         }
