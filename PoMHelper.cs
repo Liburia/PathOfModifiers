@@ -345,6 +345,15 @@ namespace PathOfModifiers
             }
             return zero;
         }
+
+        public static bool CanHitNPC(NPC npc)
+        {
+            return npc.active && !npc.townNPC;
+        }
+        public static bool CanHitPvp(Player player, Player target)
+        {
+            return target.active && !target.dead && target != player && (target.team != player.team || target.team == 0) && target.hostile && player.hostile;
+        }
     }
 
     public static class PoMEffectHelper

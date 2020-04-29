@@ -112,7 +112,9 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             percent2 = (float)Math.Round(percent2, decimals2);
             percent3 = (float)Math.Round(percent3, decimals3);
 
-            return $"{percent1}% chance to chain lightning for {percent2}% damage that Shocks({percent3}%)";
+            string plusMinus = multiplier3 >= 1 ? "+" : "-";
+
+            return $"{percent1}% chance to chain lightning for {percent2}% damage that Shocks({plusMinus}{percent3}%)";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

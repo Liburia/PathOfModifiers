@@ -456,52 +456,58 @@ namespace PathOfModifiers
         }
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            Item item;
-            PoMItem pomItem;
-            for (int i = 0; i < player.inventory.Length; i++)
+            if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
-                item = player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
-                    continue;
+                Item item;
+                PoMItem pomItem;
+                for (int i = 0; i < player.inventory.Length; i++)
+                {
+                    item = player.inventory[i];
+                    if (item.type == 0 || item.stack == 0)
+                        continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
-                pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
-            }
-            for (int i = 0; i < player.armor.Length; i++)
-            {
-                item = player.armor[i];
-                if (item.type == 0 || item.stack == 0)
-                    continue;
+                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+                }
+                for (int i = 0; i < player.armor.Length; i++)
+                {
+                    item = player.armor[i];
+                    if (item.type == 0 || item.stack == 0)
+                        continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
-                pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+                }
             }
 
             ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
         {
-            target.GetModPlayer<PoMPlayer>().ShockModifyDamageTaken(ref damage);
-
-            Item item;
-            PoMItem pomItem;
-            for (int i = 0; i < player.inventory.Length; i++)
+            if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
-                item = player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
-                    continue;
+                target.GetModPlayer<PoMPlayer>().ShockModifyDamageTaken(ref damage);
 
-                pomItem = item.GetGlobalItem<PoMItem>();
-                pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
-            }
-            for (int i = 0; i < player.armor.Length; i++)
-            {
-                item = player.armor[i];
-                if (item.type == 0 || item.stack == 0)
-                    continue;
+                Item item;
+                PoMItem pomItem;
+                for (int i = 0; i < player.inventory.Length; i++)
+                {
+                    item = player.inventory[i];
+                    if (item.type == 0 || item.stack == 0)
+                        continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
-                pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
+                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
+                }
+                for (int i = 0; i < player.armor.Length; i++)
+                {
+                    item = player.armor[i];
+                    if (item.type == 0 || item.stack == 0)
+                        continue;
+
+                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
+                }
             }
 
             ChillModifyDamageDealt(ref damage);
@@ -558,52 +564,58 @@ namespace PathOfModifiers
         }
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
-            target.GetGlobalNPC<PoMNPC>().lastDamageDealer = player;
-
-            Item item;
-            PoMItem pomItem;
-            for (int i = 0; i < player.inventory.Length; i++)
+            if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
-                item = player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
-                    continue;
+                target.GetGlobalNPC<PoMNPC>().lastDamageDealer = player;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
-                pomItem.ProjOnHitNPC(item, player, proj, target, damage, knockback, crit);
-            }
-            for (int i = 0; i < player.armor.Length; i++)
-            {
-                item = player.armor[i];
-                if (item.type == 0 || item.stack == 0)
-                    continue;
+                Item item;
+                PoMItem pomItem;
+                for (int i = 0; i < player.inventory.Length; i++)
+                {
+                    item = player.inventory[i];
+                    if (item.type == 0 || item.stack == 0)
+                        continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
-                pomItem.ProjOnHitNPC(item, player, proj, target, damage, knockback, crit);
+                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem.ProjOnHitNPC(item, player, proj, target, damage, knockback, crit);
+                }
+                for (int i = 0; i < player.armor.Length; i++)
+                {
+                    item = player.armor[i];
+                    if (item.type == 0 || item.stack == 0)
+                        continue;
+
+                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem.ProjOnHitNPC(item, player, proj, target, damage, knockback, crit);
+                }
             }
         }
         public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
         {
-            target.GetModPlayer<PoMPlayer>().lastDamageDealer = player;
-
-            Item item;
-            PoMItem pomItem;
-            for (int i = 0; i < player.inventory.Length; i++)
+            if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
-                item = player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
-                    continue;
+                target.GetModPlayer<PoMPlayer>().lastDamageDealer = player;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
-                pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
-            }
-            for (int i = 0; i < player.armor.Length; i++)
-            {
-                item = player.armor[i];
-                if (item.type == 0 || item.stack == 0)
-                    continue;
+                Item item;
+                PoMItem pomItem;
+                for (int i = 0; i < player.inventory.Length; i++)
+                {
+                    item = player.inventory[i];
+                    if (item.type == 0 || item.stack == 0)
+                        continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
-                pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
+                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
+                }
+                for (int i = 0; i < player.armor.Length; i++)
+                {
+                    item = player.armor[i];
+                    if (item.type == 0 || item.stack == 0)
+                        continue;
+
+                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
+                }
             }
         }
         public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

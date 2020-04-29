@@ -218,6 +218,23 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            return false;
+        }
+        public override bool? CanHitNPC(NPC target)
+        {
+            return false;
+        }
+        public override bool CanHitPlayer(Player target)
+        {
+            return false;
+        }
+        public override bool CanHitPvp(Player target)
+        {
+            return false;
+        }
+
         public void Explode()
         {
             for (int i = 1; i < nodes.Count; i++)
@@ -244,16 +261,13 @@ namespace PathOfModifiers.Projectiles
             {
                 Player owner = Main.player[projectile.owner];
 
-                for (int i = 0; i < Main.maxPlayers; i++)
+                Player player = Main.LocalPlayer;
+                if (PoMHelper.CanHitPvp(owner, player))
                 {
-                    Player player = Main.player[i];
-                    if (player.active && !player.dead && player != owner && (player.team != owner.team || player.team == 0) && player.hostile && owner.hostile)
+                    Rectangle localRect = player.getRect();
+                    if (localRect.Intersects(boltRect) || localRect.Intersects(airRect))
                     {
-                        Rectangle localRect = player.getRect();
-                        if (localRect.Intersects(boltRect) || localRect.Intersects(airRect))
-                        {
-                            player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
-                        }
+                        player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
                     }
                 }
 
@@ -262,7 +276,7 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (npc.active && !npc.townNPC)
+                        if (PoMHelper.CanHitNPC(npc))
                         {
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(boltRect) || npcRect.Intersects(airRect))
@@ -278,7 +292,7 @@ namespace PathOfModifiers.Projectiles
             for (int i = 0; i < 32; i++)
             {
                 Vector2 position = targetPosition + new Vector2(Main.rand.NextFloat(-smallerRadius, smallerRadius), Main.rand.NextFloat(-smallerRadius, smallerRadius));
-                Dust dust = Dust.NewDustPerfect(position, ModContent.DustType<ShockedAir>(), Scale: Main.rand.NextFloat(0.6f, 1.5f));
+                Dust.NewDustPerfect(position, ModContent.DustType<ShockedAir>(), Scale: Main.rand.NextFloat(0.6f, 1.5f));
             }
             isCloud = true;
             projectile.timeLeft = PathOfModifiers.ailmentDuration * (projectile.extraUpdates + 1);

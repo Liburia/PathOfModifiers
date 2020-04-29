@@ -88,7 +88,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            float percent1 = (Multiplier1 - 1) * 100;
+            float percent1 = Math.Abs((Multiplier1 - 1) * 100);
             float percent2 = (float)Math.Round(Multiplier2, 1);
             float percent3 = (float)Math.Round(Multiplier3, 1);
 
@@ -99,7 +99,9 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             }
             percent1 = (float)Math.Round(percent1, decimals1);
 
-            return $"Gain {percent1}% move speed on hit for {percent2}s ({percent3}s CD)";
+            string plusMinus = multiplier3 >= 1 ? "+" : "-";
+
+            return $"Gain {plusMinus}{percent1}% move speed on hit for {percent2}s ({percent3}s CD)";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

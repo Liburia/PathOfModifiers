@@ -100,13 +100,11 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            SpawnDebris(DebrisType.Tile);
-            projectile.Kill();
             return false;
         }
-
         public override bool? CanHitNPC(NPC target)
         {
             return false;

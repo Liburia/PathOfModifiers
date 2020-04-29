@@ -72,16 +72,13 @@ namespace PathOfModifiers.Projectiles
             {
                 Player owner = Main.player[projectile.owner];
 
-                for (int i = 0; i < Main.maxPlayers; i++)
+                Player player = Main.LocalPlayer;
+                if (PoMHelper.CanHitPvp(owner, player))
                 {
-                    Player player = Main.player[i];
-                    if (player.active && !player.dead && player != owner && (player.team != owner.team || player.team == 0) && player.hostile && owner.hostile)
+                    if (!hitEntities.Contains(player) && (player.Center - projectile.position).LengthSquared() < hitRadiusSqr)
                     {
-                        if (!hitEntities.Contains(player) && (player.Center - projectile.position).LengthSquared() < hitRadiusSqr)
-                        {
-                            player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
-                            hitEntities.Add(player);
-                        }
+                        player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
+                        hitEntities.Add(player);
                     }
                 }
 
@@ -90,7 +87,7 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (npc.active && !npc.townNPC)
+                        if (PoMHelper.CanHitNPC(npc))
                         {
                             if (!hitEntities.Contains(npc) && (npc.Center - projectile.position).LengthSquared() < hitRadiusSqr)
                             {
@@ -137,6 +134,23 @@ namespace PathOfModifiers.Projectiles
                     0f);
             }
 
+            return false;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            return false;
+        }
+        public override bool? CanHitNPC(NPC target)
+        {
+            return false;
+        }
+        public override bool CanHitPlayer(Player target)
+        {
+            return false;
+        }
+        public override bool CanHitPvp(Player target)
+        {
             return false;
         }
     }
