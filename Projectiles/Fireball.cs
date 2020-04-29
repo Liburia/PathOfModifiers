@@ -10,7 +10,7 @@ namespace PathOfModifiers.Projectiles
     public class Fireball : ModProjectile, INonTriggerringProjectile
     {
         const int baseTimeLeft = 600;
-        const float explosionRadiusSqr = 256f * 256f;
+        const float explosionRadiusSqr = 64f * 64f;
 
         public override void SetStaticDefaults()
         {
