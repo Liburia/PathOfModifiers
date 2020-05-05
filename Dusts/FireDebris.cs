@@ -6,7 +6,7 @@ namespace PathOfModifiers.Dusts
 {
     public class FireDebris : ModDust
     {
-        static readonly Vector3 emittedLight = new Vector3(1f, 0.5f, 0f);
+        static readonly Vector3 emittedLight = new Vector3(1f, 0.611f, 0f);
         const float scaleMultiplier = 0.95f;
         const float removeAtScale = 0.5f;
         const int frameHeight = 10;
@@ -15,7 +15,6 @@ namespace PathOfModifiers.Dusts
         public override void OnSpawn(Dust dust)
         {
             dust.frame = new Rectangle(0, frameHeight * Main.rand.Next(3), 10, 10);
-            dust.alpha = 100;
         }
 
         public override bool Update(Dust dust)

@@ -11,12 +11,11 @@ namespace PathOfModifiers.Projectiles
 {
     public class StaticStrike : ModProjectile, INonTriggerringProjectile
     {
+        static readonly Vector2 halfSize = new Vector2(150f, 150f);
         static readonly Vector3 emittedLight = new Vector3(1, 0.952f, 0.552f);
-        public static float size = 300;
-        public static float hitRadiusSqr = (size * 0.5f) * (size * 0.5f);
-        public static Point frameSize = new Point(32, 32);
-        public static Point frameNumber = new Point(4, 4);
-        public static int frameTime = 3;
+        static readonly Point frameSize = new Point(32, 32);
+        static readonly Point frameNumber = new Point(4, 4);
+        const int frameTime = 3;
 
         HashSet<Entity> hitEntities = new HashSet<Entity>();
         bool init;
@@ -70,12 +69,17 @@ namespace PathOfModifiers.Projectiles
 
             if (Main.netMode != NetmodeID.Server)
             {
+                Rectangle hitRect = new Rectangle(
+                    (int)(projectile.position.X - halfSize.X),
+                    (int)(projectile.position.Y - halfSize.Y),
+                    (int)halfSize.X,
+                    (int)halfSize.Y);
                 Player owner = Main.player[projectile.owner];
 
                 Player player = Main.LocalPlayer;
                 if (PoMHelper.CanHitPvp(owner, player))
                 {
-                    if (!hitEntities.Contains(player) && (player.Center - projectile.position).LengthSquared() < hitRadiusSqr)
+                    if (player.getRect().Intersects(hitRect))
                     {
                         player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
                         hitEntities.Add(player);
@@ -89,7 +93,8 @@ namespace PathOfModifiers.Projectiles
                         NPC npc = Main.npc[i];
                         if (PoMHelper.CanHitNPC(npc))
                         {
-                            if (!hitEntities.Contains(npc) && (npc.Center - projectile.position).LengthSquared() < hitRadiusSqr)
+                            Rectangle npcRect = npc.getRect();
+                            if (npcRect.Intersects(hitRect))
                             {
                                 owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
                                 hitEntities.Add(npc);
@@ -107,7 +112,6 @@ namespace PathOfModifiers.Projectiles
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
             Texture2D texture = Main.projectileTexture[projectile.type];
-            float halfSize = size / 2;
             for (int i = 0; i < 4; i++)
             {
                 Rectangle sourceRectangle = new Rectangle(
@@ -118,8 +122,8 @@ namespace PathOfModifiers.Projectiles
                 Rectangle destination = new Rectangle(
                     (int)(projectile.position.X - Main.screenPosition.X),
                     (int)(projectile.position.Y - Main.screenPosition.Y),
-                    (int)halfSize,
-                    (int)halfSize);
+                    (int)halfSize.X,
+                    (int)halfSize.Y);
 
                 float rotation = MathHelper.PiOver2 * i;
 

@@ -88,10 +88,11 @@ namespace PathOfModifiers
                 }
             }
 
-            foreach(Rectangle rect in recs)
+            foreach (Rectangle rect in recs)
             {
+                Rectangle sourceRect = new Rectangle(0, 0, 1, 1);
                 Rectangle screenRect = new Rectangle(rect.X - (int)Main.screenPosition.X, rect.Y - (int)Main.screenPosition.Y, rect.Width, rect.Height);
-                sb.Draw(Main.magicPixel, screenRect, Color.Red);
+                sb.Draw(Main.magicPixel, screenRect, sourceRect, Color.Red);
             }
         }
     }

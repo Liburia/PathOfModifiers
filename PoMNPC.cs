@@ -190,17 +190,23 @@ namespace PathOfModifiers
 
         public override void AI(NPC npc)
         {
-            if (Main.time % 60 == 0)
+            if (PathOfModifiers.Time % 60 == 0)
             {
                 if (isOnBurningAir && burningAirDps < 0)
                 {
-                    npc.life += -burningAirDps;
-                    npc.HealEffect(burningAirDps);
+                    int heal = Math.Abs(burningAirDps);
+                    npc.life += heal;
+                    npc.HealEffect(heal);
                 }
                 if (isIgnited && igniteDps < 0)
                 {
-                    npc.life += -igniteDps;
-                    npc.HealEffect(igniteDps);
+                    int heal = Math.Abs(igniteDps);
+                    npc.life += heal;
+                    npc.HealEffect(heal);
+                }
+                if (npc.life > npc.lifeMax)
+                {
+                    npc.life = npc.lifeMax;
                 }
             }
         }

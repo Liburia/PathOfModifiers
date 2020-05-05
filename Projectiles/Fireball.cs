@@ -9,8 +9,8 @@ namespace PathOfModifiers.Projectiles
 {
     public class Fireball : ModProjectile, INonTriggerringProjectile
     {
+        static readonly Vector2 explosionHalfSize = new Vector2(60f, 60f);
         const int baseTimeLeft = 600;
-        const float explosionRadiusSqr = 64f * 64f;
 
         public override void SetStaticDefaults()
         {
@@ -54,6 +54,7 @@ namespace PathOfModifiers.Projectiles
                 position,
                 ModContent.DustType<Dusts.FireDebris>(),
                 Velocity: projectile.velocity * 0.4f,
+                Alpha: 100,
                 Scale: Main.rand.NextFloat(2f, 3f)); ;
 
             if (Main.netMode != NetmodeID.Server)
@@ -130,12 +131,17 @@ namespace PathOfModifiers.Projectiles
         {
             if (Main.netMode != NetmodeID.Server)
             {
+                Rectangle explosionBounds = new Rectangle(
+                    (int)(projectile.position.X - explosionHalfSize.X),
+                    (int)(projectile.position.Y - explosionHalfSize.Y),
+                    (int)explosionHalfSize.X,
+                    (int)explosionHalfSize.Y);
                 Player owner = Main.player[projectile.owner];
 
                 Player player = Main.LocalPlayer;
                 if (PoMHelper.CanHitPvp(owner, player))
                 {
-                    if ((player.Center - projectile.position).LengthSquared() < explosionRadiusSqr)
+                    if (player.getRect().Intersects(explosionBounds))
                     {
                         player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
                         player.GetModPlayer<PoMPlayer>().AddIgnitedBuff(player, (int)projectile.ai[0], PathOfModifiers.ailmentDuration);
@@ -149,7 +155,8 @@ namespace PathOfModifiers.Projectiles
                         NPC npc = Main.npc[i];
                         if (PoMHelper.CanHitNPC(npc))
                         {
-                            if ((npc.Center - projectile.position).LengthSquared() < explosionRadiusSqr)
+                            Rectangle npcBounds = npc.getRect();
+                            if (npcBounds.Intersects(explosionBounds))
                             {
                                 owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
                                 npc.GetGlobalNPC<PoMNPC>().AddIgnitedBuff(npc, (int)projectile.ai[0], PathOfModifiers.ailmentDuration);
@@ -162,7 +169,7 @@ namespace PathOfModifiers.Projectiles
             for (int i = 0; i < 20; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.6f, 2f);
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.FireDebris>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(2f, 4f));
+                Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.FireDebris>(), velocity.X, velocity.Y, Alpha: 100, Scale: Main.rand.NextFloat(2f, 4f));
                 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.6f, 1.5f);
                 Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Smoke, velocity.X, velocity.Y, Scale: Main.rand.NextFloat(1f, 2f));
             }

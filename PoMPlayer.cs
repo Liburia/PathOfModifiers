@@ -775,17 +775,19 @@ namespace PathOfModifiers
 
         public override void PreUpdate()
         {
-            if (Main.time % 60 == 0)
+            if (PathOfModifiers.Time % 60 == 0)
             {
                 if (isOnBurningAir && burningAirDps < 0)
                 {
-                    player.statLife += -burningAirDps;
-                    player.HealEffect(burningAirDps);
+                    int heal = Math.Abs(burningAirDps);
+                    player.statLife += heal;
+                    player.HealEffect(heal);
                 }
                 if (isIgnited && igniteDps < 0)
                 {
-                    player.statLife += -igniteDps;
-                    player.HealEffect(igniteDps);
+                    int heal = Math.Abs(igniteDps);
+                    player.statLife += heal;
+                    player.HealEffect(heal);
                 }
             }
 
