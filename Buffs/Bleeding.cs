@@ -7,12 +7,6 @@ namespace PathOfModifiers.Buffs
 {
     public class Bleeding : DamageOverTime
     {
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "Terraria/Buff_30";
-            return true;
-        }
-
         public override void SetDefaults()
         {
             DisplayName.SetDefault(GetType().Name);

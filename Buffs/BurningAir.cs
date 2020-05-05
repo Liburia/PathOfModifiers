@@ -8,12 +8,6 @@ namespace PathOfModifiers.Buffs
 {
     public class BurningAir : ModBuff
     {
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "Terraria/Buff_" + BuffID.Burning;
-            return true;
-        }
-
         public override void SetDefaults()
         {
             DisplayName.SetDefault(GetType().Name);

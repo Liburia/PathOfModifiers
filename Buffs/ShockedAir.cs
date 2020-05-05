@@ -7,12 +7,6 @@ namespace PathOfModifiers.Buffs
 {
     public class ShockedAir : ModBuff
     {
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "Terraria/Buff_20";   //poison
-            return true;
-        }
-
         public override void SetDefaults()
         {
             DisplayName.SetDefault(GetType().Name);

@@ -8,12 +8,6 @@ namespace PathOfModifiers.Buffs
 {
     public class Ignited : ModBuff
     {
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "Terraria/Buff_" + BuffID.Burning;
-            return true;
-        }
-
         public override void SetDefaults()
         {
             DisplayName.SetDefault(GetType().Name);
@@ -41,7 +35,7 @@ namespace PathOfModifiers.Buffs
             if (Main.rand.NextBool(2))
             {
                 Vector2 dustPosition = position + new Vector2(Main.rand.NextFloat(width), Main.rand.NextFloat(height));
-                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.FireDebris>(), new Vector2(0, Main.rand.NextFloat(-3f, -0.5f)), Scale: Main.rand.NextFloat(1f, 2f));
+                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.FireDebris>(), new Vector2(0, Main.rand.NextFloat(-3f, -0.5f)), Alpha: 100, Scale: Main.rand.NextFloat(1f, 2f));
             }
         }
     }
