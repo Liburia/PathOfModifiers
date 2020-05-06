@@ -16,7 +16,7 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 {
     public class WeaponMeteor : Suffix, ITieredStatFloat3Affix
     {
-        public override float weight => 99990.5f;
+        public override float weight => 0.5f;
 
         string addedTextTiered = string.Empty;
         float addedTextWeightTiered = 1;
