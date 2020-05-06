@@ -22,11 +22,23 @@ namespace PathOfModifiers.Buffs
         {
             PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
             pomNPC.isChilled = true;
+
+            if (Main.rand.NextBool(50))
+            {
+                Vector2 position = npc.position + new Vector2(Main.rand.NextFloat(0, npc.width), Main.rand.NextFloat(0, npc.height)) + new Vector2(-14, -14);
+                Dust.NewDustPerfect(position, ModContent.DustType<Dusts.FrostCloud>(), Vector2.Zero, 50, Color.White, Main.rand.NextFloat(0.8f, 1.6f));
+            }
         }
         public override void Update(Player player, ref int buffIndex)
         {
             PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
             pomPlayer.isChilled = true;
+
+            if (Main.rand.NextBool(50))
+            {
+                Vector2 position = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height)) + new Vector2(-14, -14);
+                Dust.NewDustPerfect(position, ModContent.DustType<Dusts.FrostCloud>(), Vector2.Zero, 50, Color.White, Main.rand.NextFloat(0.8f, 1.6f));
+            }
         }
     }
 }
