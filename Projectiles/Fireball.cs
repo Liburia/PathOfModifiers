@@ -72,12 +72,13 @@ namespace PathOfModifiers.Projectiles
 
                 if (Main.myPlayer == projectile.owner)
                 {
+                    Rectangle rect = projectile.getRect();
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
                         if (PoMHelper.CanHitNPC(npc))
                         {
-                            if (projectile.getRect().Intersects(npc.getRect()))
+                            if (rect.Intersects(npc.getRect()))
                             {
                                 projectile.Kill();
                                 break;
