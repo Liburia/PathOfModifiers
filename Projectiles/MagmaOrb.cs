@@ -150,7 +150,7 @@ namespace PathOfModifiers.Projectiles
                         }
                     }
 
-                    Projectile.NewProjectile(projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)projectile.ai[0], 0, projectile.owner);
+                    Projectile.NewProjectile(projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)projectile.ai[0], 0, projectile.owner, 48f);
                 }
             }
         }
