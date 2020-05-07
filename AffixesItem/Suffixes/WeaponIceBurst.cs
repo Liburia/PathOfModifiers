@@ -14,14 +14,14 @@ namespace PathOfModifiers.AffixesItem.Suffixes
 {
     public class WeaponIceBurst : Suffix, ITieredStatFloat3Affix
     {
-        public override float weight => 9990.5f;
+        public override float weight => 0.5f;
 
         string addedTextTiered = string.Empty;
         float addedTextWeightTiered = 1;
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers1 = new float[] { 10f, 10.05f, 10.1f, 10.15f, 10.2f, 10.25f, 10.3f };
+        static float[] tiers1 = new float[] { 0f, 0.05f, 0.1f, 0.15f, 0.2f, 0.25f, 0.3f };
         static Tuple<int, double>[] tierWeights1 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
             new Tuple<int, double>(1, 2.5),
