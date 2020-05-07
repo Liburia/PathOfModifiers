@@ -91,10 +91,14 @@ namespace PathOfModifiers.Projectiles
 
             Lighting.AddLight(projectile.Center, emittedLight);
 
-            int dusts = (int)((airRect.Width * airRect.Height) / dustScarcity);
-            for (int i = 0; i < dusts; i++)
+            float dustsF = (airRect.Width * airRect.Height) / dustScarcity;
+            int dusts = (int)Math.Ceiling(dustsF);
+            if (Main.rand.NextFloat(1f) <= dustsF)
             {
-                Dust.NewDustPerfect(new Vector2(Main.rand.NextFloat(airRect.Left, airRect.Right), Main.rand.NextFloat(airRect.Bottom, airRect.Top)), ModContent.DustType<FireDebris>(), Alpha: 100, Velocity: new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.8f, -0.2f)), Scale: Main.rand.NextFloat(1f, 4f));
+                for (int i = 0; i < dusts; i++)
+                {
+                    Dust.NewDustPerfect(new Vector2(Main.rand.NextFloat(airRect.Left, airRect.Right), Main.rand.NextFloat(airRect.Bottom, airRect.Top)), ModContent.DustType<FireDebris>(), Alpha: 100, Velocity: new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.8f, -0.2f)), Scale: Main.rand.NextFloat(1f, 4f));
+                }
             }
 
             return false;
