@@ -14,16 +14,11 @@ namespace PathOfModifiers.Projectiles
     public class BurningAir : ModProjectile, INonTriggerringProjectile
     {
         static readonly Vector3 emittedLight = new Vector3(1f, 0.611f, 0f);
+        const float dustScarcity = 9200f;
 
 
         Rectangle airRect;
         bool init;
-
-        public override bool Autoload(ref string name)
-        {
-            name = GetType().Name;
-            return true;
-        }
 
         public override void AutoStaticDefaults()
         {
@@ -96,7 +91,8 @@ namespace PathOfModifiers.Projectiles
 
             Lighting.AddLight(projectile.Center, emittedLight);
 
-            for (int i = 0; i < 1; i++)
+            int dusts = (int)((airRect.Width * airRect.Height) / dustScarcity);
+            for (int i = 0; i < dusts; i++)
             {
                 Dust.NewDustPerfect(new Vector2(Main.rand.NextFloat(airRect.Left, airRect.Right), Main.rand.NextFloat(airRect.Bottom, airRect.Top)), ModContent.DustType<FireDebris>(), Alpha: 100, Velocity: new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.8f, -0.2f)), Scale: Main.rand.NextFloat(1f, 4f));
             }
