@@ -39,7 +39,8 @@ namespace PathOfModifiers.AffixesItem.Prefixes
         public override bool CanBeRolled(PoMItem pomItem, Item item)
         {
             return
-                PoMItem.IsHeadArmor(item);
+                PoMItem.IsAnyArmor(item) ||
+                PoMItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
