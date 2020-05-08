@@ -31,6 +31,8 @@ namespace PathOfModifiers
 
         public float potionDelayTime;
         public float restorationDelayTime;
+
+        public float blockChance;
         #endregion
 
         public Entity lastDamageDealer;
@@ -255,6 +257,12 @@ namespace PathOfModifiers
                     hurt = false;
             }
             damage = (int)Math.Round(damage * damageMultiplier);
+
+            if (hurt)
+            {
+                hurt = Main.rand.NextFloat(1) >= blockChance;
+            }
+
             return hurt;
         }
         public override void NaturalLifeRegen(ref float regen)
@@ -689,6 +697,8 @@ namespace PathOfModifiers
 
             potionDelayTime = 1;
             restorationDelayTime = 1;
+
+            blockChance = 0;
 
             isOnBurningAir = false;
             isIgnited = false;
