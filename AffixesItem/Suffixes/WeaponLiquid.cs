@@ -19,22 +19,16 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers = new float[] { 0f, 15f, 30f, 45f, 60f, 75f, 90f };
+        static float[] tiers = new float[] { 0f, 30f, 60f, 90f };
         static Tuple<int, double>[] tierWeights = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
-            new Tuple<int, double>(1, 2.5),
-            new Tuple<int, double>(2, 2),
-            new Tuple<int, double>(3, 1.5),
-            new Tuple<int, double>(4, 1),
-            new Tuple<int, double>(5, 0.5),
+            new Tuple<int, double>(1, 1.5),
+            new Tuple<int, double>(2, 0.5),
         };
         static string[] tierNames = new string[] {
-            "of test1",
-            "of test2",
-            "of test3",
-            "of test4",
-            "of test5",
-            "of test6",
+            "of River",
+            "of Sea",
+            "of Ocean",
         };
         static int maxTier => tiers.Length - 2;
 

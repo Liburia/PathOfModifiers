@@ -46,16 +46,16 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         int tierText2 => MaxTier2 - Tier2 + 1;
 
         static string[] tierNames = new string[] {
-            "of test1",
-            "of test2",
-            "of test3",
-            "of test4",
-            "of test5",
-            "of test6",
+            "of Intuition",
+            "of Insight",
+            "of Acumen",
+            "of Ascendance",
+            "of Transcendence",
+            "of Divinity",
         };
 
-        int compoundTier => (Tier1 + Tier2) / 3;
-        int maxCompoundTier => (MaxTier1 + MaxTier2) / 3;
+        int compoundTier => (Tier1 + Tier2) / 2;
+        int maxCompoundTier => (MaxTier1 + MaxTier2) / 2;
         int compoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         int tier1 = 0;

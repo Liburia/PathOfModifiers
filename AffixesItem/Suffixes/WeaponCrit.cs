@@ -54,8 +54,8 @@ namespace PathOfModifiers.AffixesItem.Suffixes
             "of Planning",
         };
 
-        int compoundTier => (Tier1 + Tier2) / 3;
-        int maxCompoundTier => (MaxTier1 + MaxTier2) / 3;
+        int compoundTier => (Tier1 + Tier2) / 2;
+        int maxCompoundTier => (MaxTier1 + MaxTier2) / 2;
         int compoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         int tier1 = 0;

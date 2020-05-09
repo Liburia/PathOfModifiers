@@ -22,40 +22,31 @@ namespace PathOfModifiers.AffixesItem.Suffixes
         public override string addedText => addedTextTiered;
         public override float addedTextWeight => addedTextWeightTiered;
 
-        static float[] tiers1 = new float[] { 0f, 0.05f, 0.1f, 0.15f, 0.2f, 0.25f, 0.3f };
+        static float[] tiers1 = new float[] { 0f, 0.1f, 0.2f, 0.3f };
         static Tuple<int, double>[] tierWeights1 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
-            new Tuple<int, double>(1, 2.5),
-            new Tuple<int, double>(2, 2),
             new Tuple<int, double>(3, 1.5),
-            new Tuple<int, double>(4, 1),
             new Tuple<int, double>(5, 0.5),
         };
         static int maxTier1 => tiers1.Length - 2;
         int tierText1 => MaxTier1 - Tier1 + 1;
-        static float[] tiers2 = new float[] { 0f, 1f, 2f, 3f, 4f, 5f, 6f };
+        static float[] tiers2 = new float[] { 0f, 2f, 4f, 6f };
         static Tuple<int, double>[] tierWeights2 = new Tuple<int, double>[] {
             new Tuple<int, double>(0, 3),
-            new Tuple<int, double>(1, 2.5),
-            new Tuple<int, double>(2, 2),
             new Tuple<int, double>(3, 1.5),
-            new Tuple<int, double>(4, 1),
             new Tuple<int, double>(5, 0.5),
         };
         static int maxTier2 => tiers2.Length - 2;
         int tierText2 => MaxTier2 - Tier2 + 1;
 
         static string[] tierNames = new string[] {
-            "of test1",
-            "of test2",
-            "of test3",
-            "of test4",
-            "of test5",
-            "of test6",
+            "of Distraction",
+            "of Confusion",
+            "of Deception",
         };
 
-        int compoundTier => (Tier1 + Tier2) / 3;
-        int maxCompoundTier => (MaxTier1 + MaxTier2) / 3;
+        int compoundTier => (Tier1 + Tier2) / 2;
+        int maxCompoundTier => (MaxTier1 + MaxTier2) / 2;
         int compoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         int tier1 = 0;
