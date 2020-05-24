@@ -18,14 +18,14 @@ namespace PathOfModifiers.Tiles
         public override bool ValidTile(int i, int j) { return false; }
 
         /// <summary>
-        /// Should only be called on the server
+        /// Must only be called on the server
         /// </summary>
         /// <param name="ignoreClient"></param>
         public void SendToClients(int ignoreClient = -1)
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                throw new Exception("PoMTileEntity.Sync should never be called from the client");
+                throw new Exception("PoMTileEntity.SendToClients must never be called from the client");
             }
             else if (Main.netMode == 2)
             {

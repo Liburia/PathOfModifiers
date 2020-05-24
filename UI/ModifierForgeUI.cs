@@ -11,7 +11,7 @@ using PathOfModifiers.Tiles;
 using Terraria.DataStructures;
 using Terraria.Graphics;
 using System.Collections.Generic;
-using PathOfModifiers.AffixesItem;
+using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers.UI
@@ -662,23 +662,23 @@ namespace PathOfModifiers.UI
                 freePrefixCount.SetText($"[{pomItem.FreePrefixes}]");
                 freeSuffixCount.SetText($"[{pomItem.FreeSuffixes}]");
 
-                foreach (Prefix prefix in pomItem.prefixes)
+                foreach (var prefix in pomItem.prefixes)
                 {
                     if (i >= itemInfoText.Length)
                         break;
                     UIText iiText = itemInfoText[i];
                     iiText.SetText(prefix.GetForgeText(modifiedItemSlot.item));
-                    iiText.TextColor = prefix.color;
+                    iiText.TextColor = prefix.Color;
                     iiText.Recalculate();
                     i++;
                 }
-                foreach (Suffix suffix in pomItem.suffixes)
+                foreach (var suffix in pomItem.suffixes)
                 {
                     if (i >= itemInfoText.Length)
                         break;
                     UIText iiText = itemInfoText[i];
                     iiText.SetText(suffix.GetForgeText(modifiedItemSlot.item));
-                    iiText.TextColor = suffix.color;
+                    iiText.TextColor = suffix.Color;
                     iiText.Recalculate();
                     i++;
                 }

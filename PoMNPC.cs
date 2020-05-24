@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.AffixesNPC;
+using PathOfModifiers.Affixes.NPCs;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -214,19 +214,13 @@ namespace PathOfModifiers
         public RarityNPC rarity;
 
         public List<Affix> affixes;
-        public List<Prefix> prefixes;
-        public List<Suffix> suffixes;
 
         public int FreeAffixes => rarity.maxAffixes - affixes.Count;
-        public int FreePrefixes => Math.Min(FreeAffixes, rarity.maxPrefixes - prefixes.Count);
-        public int FreeSuffixes => Math.Min(FreeAffixes, rarity.maxSuffixes - suffixes.Count);
 
         public PoMNPC()
         {
             rarity = ((PoMDataLoader.raritiesNPC?.Length ?? 0) == 0) ? new NPCNone() : PoMDataLoader.raritiesNPC[PoMDataLoader.rarityNPCMap[typeof(NPCNone)]];
             affixes = new List<Affix>();
-            prefixes = new List<Prefix>();
-            suffixes = new List<Suffix>();
         }
 
         public string GetBaseName(NPC npc) => Lang.GetNPCNameValue(npc.type);
@@ -236,15 +230,11 @@ namespace PathOfModifiers
             if (rarity != null && rarity.GetType() != typeof(NPCNone))
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (Prefix prefix in prefixes)
+                foreach (Affix affix in affixes)
                 {
-                    sb.AppendFormat("{0} ", prefix.addedText);
+                    sb.AppendFormat("{0} ", affix.AddedText);
                 }
                 sb.AppendFormat("{0} ", GetBaseName(npc));
-                foreach (Suffix suffix in suffixes)
-                {
-                    sb.AppendFormat("{0} ", suffix.addedText);
-                }
                 sb.Remove(sb.Length - 1, 1);
                 npc.GivenName = sb.ToString();
                 npc.rarity = rarity.vanillaRarity;
@@ -283,31 +273,11 @@ namespace PathOfModifiers
             affix.AddAffix(npc, clone);
 
             affixes.Add(affix);
-
-            Prefix prefix = affix as Prefix;
-            if (prefix != null)
-            {
-                prefixes.Add(prefix);
-                return;
-            }
-
-            Suffix suffix = affix as Suffix;
-            if (suffix != null)
-                suffixes.Add(suffix);
         }
         public void RemoveAffix(Affix affix, NPC npc)
         {
             affix.RemoveAffix(npc);
             affixes.Remove(affix);
-            Prefix prefix = affix as Prefix;
-            if (prefix != null)
-                prefixes.Remove(prefix);
-            else
-            {
-                Suffix suffix = affix as Suffix;
-                if (suffix != null)
-                    suffixes.Remove(suffix);
-            }
         }
         public void ClearAffixes(NPC npc)
         {
@@ -316,26 +286,6 @@ namespace PathOfModifiers
                 affix.RemoveAffix(npc);
             }
             affixes.Clear();
-            prefixes.Clear();
-            suffixes.Clear();
-        }
-        public void ClearPrefixes(NPC npc)
-        {
-            foreach (Prefix prefix in prefixes)
-            {
-                prefix.RemoveAffix(npc);
-                affixes.Remove(prefix);
-            }
-            prefixes.Clear();
-        }
-        public void ClearSuffixes(NPC npc)
-        {
-            foreach (Suffix suffix in suffixes)
-            {
-                suffix.RemoveAffix(npc);
-                affixes.Remove(suffix);
-            }
-            suffixes.Clear();
         }
 
         public void ShockModifyDamageTaken(ref int damage)
@@ -386,13 +336,9 @@ namespace PathOfModifiers
         }
         public void InitializeNPC(NPC npc)
         {
-            foreach (var prefix in prefixes)
+            foreach (var affix in affixes)
             {
-                prefix.InitializeNPC(this, npc);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.InitializeNPC(this, npc);
+                affix.InitializeNPC(this, npc);
             }
         }
 
@@ -406,87 +352,59 @@ namespace PathOfModifiers
         }
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
         {
-            foreach (var prefix in prefixes)
+            foreach (var affix in affixes)
             {
-                prefix.ModifyHitByItem(npc, player, item, ref damage, ref knockback, ref crit);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.ModifyHitByItem(npc, player, item, ref damage, ref knockback, ref crit);
+                affix.ModifyHitByItem(npc, player, item, ref damage, ref knockback, ref crit);
             }
 
             ShockModifyDamageTaken(ref damage);
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            foreach (var prefix in prefixes)
+            foreach (var affix in affixes)
             {
-                prefix.ModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.ModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
+                affix.ModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
             }
 
             ShockModifyDamageTaken(ref damage);
         }
         public override void ModifyHitPlayer(NPC npc, Player target, ref int damage, ref bool crit)
         {
-            foreach (var prefix in prefixes)
+            foreach (var affix in affixes)
             {
-                prefix.ModifyHitPlayer(npc, target, ref damage, ref crit);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.ModifyHitPlayer(npc, target, ref damage, ref crit);
+                affix.ModifyHitPlayer(npc, target, ref damage, ref crit);
             }
 
             ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitNPC(NPC npc, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
-            foreach (var prefix in prefixes)
+            foreach (var affix in affixes)
             {
-                prefix.ModifyHitNPC(npc, target, ref damage, ref knockback, ref crit);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.ModifyHitNPC(npc, target, ref damage, ref knockback, ref crit);
+                affix.ModifyHitNPC(npc, target, ref damage, ref knockback, ref crit);
             }
 
             ChillModifyDamageDealt(ref damage);
         }
         public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
         {
-            foreach (var prefix in prefixes)
+            foreach (var affix in affixes)
             {
-                prefix.OnHitByItem(npc, player, item, damage, knockback, crit);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.OnHitByItem(npc, player, item, damage, knockback, crit);
+                affix.OnHitByItem(npc, player, item, damage, knockback, crit);
             }
         }
         public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)
         {
-            foreach (var prefix in prefixes)
+            foreach (var affix in affixes)
             {
-                prefix.OnHitByProjectile(npc, projectile, damage, knockback, crit);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.OnHitByProjectile(npc, projectile, damage, knockback, crit);
+                affix.OnHitByProjectile(npc, projectile, damage, knockback, crit);
             }
         }
         public override void OnHitPlayer(NPC npc, Player target, int damage, bool crit)
         {
-            foreach (var prefix in prefixes)
+            foreach (var affix in affixes)
             {
-                prefix.OnHitPlayer(npc, target, damage, crit);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.OnHitPlayer(npc, target, damage, crit);
+                affix.OnHitPlayer(npc, target, damage, crit);
             }
         }
 

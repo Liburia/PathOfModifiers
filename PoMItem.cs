@@ -6,7 +6,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using PathOfModifiers.AffixesItem;
+using PathOfModifiers.Affixes.Items;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using System.IO;
@@ -27,8 +27,8 @@ namespace PathOfModifiers
         public RarityItem rarity;
 
         public List<Affix> affixes;
-        public List<Prefix> prefixes;
-        public List<Suffix> suffixes;
+        public List<Affix> prefixes;
+        public List<Affix> suffixes;
 
         public int FreeAffixes => rarity.maxAffixes - affixes.Count;
         public int FreePrefixes => Math.Min(FreeAffixes, rarity.maxPrefixes - prefixes.Count);
@@ -38,8 +38,8 @@ namespace PathOfModifiers
         {
             rarity = ((PoMDataLoader.raritiesItem?.Length ?? 0) == 0) ? new ItemNone() : PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ItemNone)]];
             affixes = new List<Affix>();
-            prefixes = new List<Prefix>();
-            suffixes = new List<Suffix>();
+            prefixes = new List<Affix>();
+            suffixes = new List<Affix>();
         }
 
         #region Item conditions
@@ -196,23 +196,23 @@ namespace PathOfModifiers
             else
             {
                 string addedPrefix = string.Empty;
-                float addedPrefixWeight = 0f;
-                foreach (Prefix prefix in prefixes)
+                double addedPrefixWeight = 0f;
+                foreach (var prefix in prefixes)
                 {
-                    if (prefix.addedTextWeight > addedPrefixWeight && prefix.addedText != string.Empty)
+                    if (prefix.AddedTextWeight > addedPrefixWeight && prefix.AddedText != string.Empty)
                     {
-                        addedPrefix = prefix.addedText;
-                        addedPrefixWeight = prefix.addedTextWeight;
+                        addedPrefix = prefix.AddedText;
+                        addedPrefixWeight = prefix.AddedTextWeight;
                     }
                 }
                 string addedSuffix = string.Empty;
                 float addedSuffixWeight = 0f;
-                foreach (Suffix suffix in suffixes)
+                foreach (var suffix in suffixes)
                 {
-                    if (suffix.addedTextWeight > addedSuffixWeight && suffix.addedText != string.Empty)
+                    if (suffix.AddedTextWeight > addedSuffixWeight && suffix.AddedText != string.Empty)
                     {
-                        addedSuffix = suffix.addedText;
-                        addedPrefixWeight = suffix.addedTextWeight;
+                        addedSuffix = suffix.AddedText;
+                        addedPrefixWeight = suffix.AddedTextWeight;
                     }
                 }
                 item.SetNameOverride($"{rarity.name} {addedPrefix}{(addedPrefix != string.Empty ? " " : string.Empty)}{GetBaseName(item)}{(addedSuffix != string.Empty ? " " : string.Empty)}{addedSuffix}");
@@ -366,7 +366,7 @@ namespace PathOfModifiers
         /// <param name="item"></param>
         public bool AddRandomPrefix(Item item)
         {
-            Prefix newPrefix = PoMAffixController.RollNewPrefix(this, item);
+            Affix newPrefix = PoMAffixController.RollNewPrefix(this, item);
             if (newPrefix == null)
                 return false;
 
@@ -424,7 +424,7 @@ namespace PathOfModifiers
         }
         public void RollPrefixTierMultipliers(Item item)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (Affix prefix in prefixes)
             {
                 prefix.RollValue(false);
             }
@@ -432,7 +432,7 @@ namespace PathOfModifiers
         }
         public void RollSuffixTierMultipliers(Item item)
         {
-            foreach (Suffix suffix in suffixes)
+            foreach (Affix suffix in suffixes)
             {
                 suffix.RollValue(false);
             }
@@ -445,29 +445,28 @@ namespace PathOfModifiers
 
             affixes.Add(affix);
 
-            Prefix prefix = affix as Prefix;
-            if (prefix != null)
+            if (affix.IsPrefix)
             {
-                prefixes.Add(prefix);
+                prefixes.Add(affix);
                 return;
             }
 
-            Suffix suffix = affix as Suffix;
-            if (suffix != null)
-                suffixes.Add(suffix);
+            if (affix.IsSuffix)
+            {
+                suffixes.Add(affix);
+                return;
+            }
         }
         public void RemoveAffix(Affix affix, Item item)
         {
             affix.RemoveAffix(item);
             affixes.Remove(affix);
-            Prefix prefix = affix as Prefix;
-            if (prefix != null)
-                prefixes.Remove(prefix);
+            if (affix.IsPrefix)
+                prefixes.Remove(affix);
             else
             {
-                Suffix suffix = affix as Suffix;
-                if (suffix != null)
-                    suffixes.Remove(suffix);
+                if (affix.IsSuffix)
+                    suffixes.Remove(affix);
             }
         }
         public void ClearAffixes(Item item)
@@ -482,7 +481,7 @@ namespace PathOfModifiers
         }
         public void ClearPrefixes(Item item)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.RemoveAffix(item);
                 affixes.Remove(prefix);
@@ -491,7 +490,7 @@ namespace PathOfModifiers
         }
         public void ClearSuffixes(Item item)
         {
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.RemoveAffix(item);
                 affixes.Remove(suffix);
@@ -515,12 +514,12 @@ namespace PathOfModifiers
         #region Affix Hooks
         public override bool ConsumeAmmo(Item item, Player player)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 if (!prefix.ConsumeAmmo(item, player))
                     return false;
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 if (!suffix.ConsumeAmmo(item, player))
                     return false;
@@ -530,11 +529,11 @@ namespace PathOfModifiers
         public override void GetWeaponCrit(Item item, Player player, ref int crit)
         {
             float multiplier = 1f;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.GetWeaponCrit(item, player, ref multiplier);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.GetWeaponCrit(item, player, ref multiplier);
             }
@@ -543,11 +542,11 @@ namespace PathOfModifiers
 
         public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ModifyWeaponDamage(item, player, ref mult, ref flat);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ModifyWeaponDamage(item, player, ref mult, ref flat);
             }
@@ -555,11 +554,11 @@ namespace PathOfModifiers
         public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
         {
             float multiplier = 1f;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.GetWeaponKnockback(item, player, ref multiplier);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.GetWeaponKnockback(item, player, ref multiplier);
             }
@@ -568,11 +567,11 @@ namespace PathOfModifiers
         public override float UseTimeMultiplier(Item item, Player player)
         {
             float multiplier = 1f;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.UseTimeMultiplier(item, player, ref multiplier);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.UseTimeMultiplier(item, player, ref multiplier);
             }
@@ -581,12 +580,12 @@ namespace PathOfModifiers
         public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             bool shoot = true;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 if (!prefix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
                     shoot = false;
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 if (!suffix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
                     shoot = false;
@@ -600,11 +599,11 @@ namespace PathOfModifiers
         public override void UpdateEquip(Item item, Player player)
         {
             PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.UpdateEquip(item, pomPlayer);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.UpdateEquip(item, pomPlayer);
             }
@@ -612,33 +611,33 @@ namespace PathOfModifiers
         public override void UpdateInventory(Item item, Player player)
         {
             PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.UpdateInventory(item, pomPlayer);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.UpdateInventory(item, pomPlayer);
             }
         }
         public override void HoldItem(Item item, Player player)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.HoldItem(item, player);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.HoldItem(item, player);
             }
         }
         public override bool UseItem(Item item, Player player)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.UseItem(item, player);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.UseItem(item, player);
             }
@@ -648,11 +647,11 @@ namespace PathOfModifiers
         {
             float damageMultiplier = 1f;
             float knockbackMultiplier = 1f;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ModifyHitNPC(item, player, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ModifyHitNPC(item, player, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
@@ -662,11 +661,11 @@ namespace PathOfModifiers
         public override void ModifyHitPvp(Item item, Player player, Player target, ref int damage, ref bool crit)
         {
             float damageMultiplier = 1f;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ModifyHitPvp(item, player, target, ref damageMultiplier, ref crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ModifyHitPvp(item, player, target, ref damageMultiplier, ref crit);
             }
@@ -674,22 +673,22 @@ namespace PathOfModifiers
         }
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.OnHitNPC(item, player, target, damage, knockBack, crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.OnHitNPC(item, player, target, damage, knockBack, crit);
             }
         }
         public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.OnHitPvp(item, player, target, damage, crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.OnHitPvp(item, player, target, damage, crit);
             }
@@ -700,11 +699,11 @@ namespace PathOfModifiers
         {
             float damageMultiplier = 1f;
             float knockbackMultiplier = 1f;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ProjModifyHitNPC(item, player, projectile, target, ref damageMultiplier, ref knockbackMultiplier, ref crit, ref hitDirection);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ProjModifyHitNPC(item, player, projectile, target, ref damageMultiplier, ref knockbackMultiplier, ref crit, ref hitDirection);
             }
@@ -714,11 +713,11 @@ namespace PathOfModifiers
         public void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref int damage, ref bool crit)
         {
             float damageMultiplier = 1f;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ProjModifyHitPvp(item, player, projectile, target, ref damageMultiplier, ref crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ProjModifyHitPvp(item, player, projectile, target, ref damageMultiplier, ref crit);
             }
@@ -726,22 +725,22 @@ namespace PathOfModifiers
         }
         public void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ProjOnHitNPC(item, player, projectile, target, damage, knockback, crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ProjOnHitNPC(item, player, projectile, target, damage, knockback, crit);
             }
         }
         public void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ProjOnHitPvp(item, player, projectile, target, damage, crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ProjOnHitPvp(item, player, projectile, target, damage, crit);
             }
@@ -750,12 +749,12 @@ namespace PathOfModifiers
         #region Player Hooks
         public bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 if (!prefix.PlayerConsumeAmmo(player, item, ammo))
                     return false;
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 if (!suffix.PlayerConsumeAmmo(player, item, ammo))
                     return false;
@@ -765,12 +764,12 @@ namespace PathOfModifiers
         public bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             bool hurt = true;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 if (!prefix.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 if (!suffix.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
@@ -779,22 +778,22 @@ namespace PathOfModifiers
         }
         public void NaturalLifeRegen(Item item, Player player, ref float regenMultiplier)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
         }
         public void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
             }
@@ -802,11 +801,11 @@ namespace PathOfModifiers
         public void ModifyHitByNPC(Item item, Player player, NPC npc, ref int damage, ref bool crit)
         {
             float damageMultiplier = 1f;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
             }
@@ -814,55 +813,55 @@ namespace PathOfModifiers
         }
         public void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.OnHitByNPC(item, player, npc, damage, crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.OnHitByNPC(item, player, npc, damage, crit);
             }
         }
         public void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
         }
         public void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
         }
         public void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, int damage, float knockback, bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
             }
         }
         public void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, int damage, bool crit)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
@@ -870,22 +869,22 @@ namespace PathOfModifiers
 
         public void PlayerOnKillNPC(Item item, Player player, NPC target)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.PlayerOnKillNPC(item, player, target);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.PlayerOnKillNPC(item, player, target);
             }
         }
         public void PlayerOnKillPvp(Item item, Player player, Player target)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.PlayerOnKillPvp(item, player, target);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.PlayerOnKillPvp(item, player, target);
             }
@@ -894,12 +893,12 @@ namespace PathOfModifiers
         public bool PlayerShoot(Item affixItem, Player player, Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             bool shoot = true;
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 if (!prefix.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
                     shoot = false;
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 if (!suffix.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
                     shoot = false;
@@ -933,11 +932,11 @@ namespace PathOfModifiers
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
-            foreach (Prefix prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
                 prefix.ModifyTooltips(PathOfModifiers.Instance, item, tooltips);
             }
-            foreach (Suffix suffix in suffixes)
+            foreach (var suffix in suffixes)
             {
                 suffix.ModifyTooltips(PathOfModifiers.Instance, item, tooltips);
             }

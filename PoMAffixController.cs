@@ -13,7 +13,7 @@ using PathOfModifiers.Rarities;
 
 namespace PathOfModifiers
 {
-	public static class PoMAffixController
+    public static class PoMAffixController
     {
         /// <summary>
         /// Returns a valid rarity for the item.
@@ -21,8 +21,8 @@ namespace PathOfModifiers
         public static RarityItem RollRarity(Item item)
         {
             Tuple<RarityItem, double>[] tuples = PoMDataLoader.raritiesItem
-                .Where(r => r.weight > 0 && r.CanBeRolled(item))
-                .Select(r => new Tuple<RarityItem, double>(r, r.weight))
+                .Where(r => r.Weight > 0 && r.CanBeRolled(item))
+                .Select(r => new Tuple<RarityItem, double>(r, r.Weight))
                 .ToArray();
             WeightedRandom<RarityItem> weightedRandom = new WeightedRandom<RarityItem>(Main.rand, tuples);
             RarityItem rarity = weightedRandom;
@@ -31,76 +31,76 @@ namespace PathOfModifiers
         /// <summary>
         /// Returns a valid affix for the item or null.
         /// </summary>
-        public static AffixesItem.Affix RollNewAffix(PoMItem pomItem, Item item)
+        public static Affixes.Items.Affix RollNewAffix(PoMItem pomItem, Item item)
         {
             if (pomItem.FreeAffixes <= 0)
             {
                 return null;
             }
-            Tuple<AffixesItem.Affix, double>[] tuples = PoMDataLoader.affixesItem
+            Tuple<Affixes.Items.Affix, double>[] tuples = PoMDataLoader.affixesItem
                 .Where(a => a.AffixSpaceAvailable(pomItem) &&
-                    a.weight > 0 &&
+                    a.Weight > 0 &&
                     a.CanBeRolled(pomItem, item) &&
                     !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                .Select(a => new Tuple<AffixesItem.Affix, double>(a, a.weight))
+                .Select(a => new Tuple<Affixes.Items.Affix, double>(a, a.Weight))
                 .ToArray();
             if (tuples.Length == 0)
             {
                 return null;
             }
-            WeightedRandom<AffixesItem.Affix> weightedRandom = new WeightedRandom<AffixesItem.Affix>(Main.rand, tuples);
-            AffixesItem.Affix affix = weightedRandom;
+            WeightedRandom<Affixes.Items.Affix> weightedRandom = new WeightedRandom<Affixes.Items.Affix>(Main.rand, tuples);
+            Affixes.Items.Affix affix = weightedRandom;
             affix = affix.Clone();
             affix.InitializeItem(pomItem);
             return affix;
         }
-        public static AffixesItem.Prefix RollNewPrefix(PoMItem pomItem, Item item)
+        public static Affixes.Items.Affix RollNewPrefix(PoMItem pomItem, Item item)
         {
             if (pomItem.FreePrefixes <= 0)
             {
                 return null;
             }
-            Tuple<AffixesItem.Affix, double>[] tuples = PoMDataLoader.affixesItem
+            Tuple<Affixes.Items.Affix, double>[] tuples = PoMDataLoader.affixesItem
                 .Where(a => a.AffixSpaceAvailable(pomItem) &&
-                    a.weight > 0 &&
+                    a.Weight > 0 &&
                     a.CanBeRolled(pomItem, item) &&
-                    a is AffixesItem.Prefix &&
+                    a is Affixes.IPrefix &&
                     !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                .Select(a => new Tuple<AffixesItem.Affix, double>(a, a.weight))
+                .Select(a => new Tuple<Affixes.Items.Affix, double>(a, a.Weight))
                 .ToArray();
             if (tuples.Length == 0)
             {
                 return null;
             }
-            WeightedRandom<AffixesItem.Affix> weightedRandom = new WeightedRandom<AffixesItem.Affix>(Main.rand, tuples);
-            AffixesItem.Affix prefix = weightedRandom;
+            WeightedRandom<Affixes.Items.Affix> weightedRandom = new WeightedRandom<Affixes.Items.Affix>(Main.rand, tuples);
+            Affixes.Items.Affix prefix = weightedRandom;
             prefix = prefix.Clone();
             prefix.InitializeItem(pomItem);
-            return (AffixesItem.Prefix)prefix;
+            return prefix;
         }
-        public static AffixesItem.Suffix RollNewSuffix(PoMItem pomItem, Item item)
+        public static Affixes.Items.Affix RollNewSuffix(PoMItem pomItem, Item item)
         {
             if (pomItem.FreeSuffixes <= 0)
             {
                 return null;
             }
-            Tuple<AffixesItem.Affix, double>[] tuples = PoMDataLoader.affixesItem
+            Tuple<Affixes.Items.Affix, double>[] tuples = PoMDataLoader.affixesItem
                 .Where(a => a.AffixSpaceAvailable(pomItem) &&
-                    a.weight > 0 &&
+                    a.Weight > 0 &&
                     a.CanBeRolled(pomItem, item) &&
-                    a is AffixesItem.Suffix &&
+                    a is Affixes.ISuffix &&
                     !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                .Select(a => new Tuple<AffixesItem.Affix, double>(a, a.weight))
+                .Select(a => new Tuple<Affixes.Items.Affix, double>(a, a.Weight))
                 .ToArray();
             if (tuples.Length == 0)
             {
                 return null;
             }
-            WeightedRandom<AffixesItem.Affix> weightedRandom = new WeightedRandom<AffixesItem.Affix>(Main.rand, tuples);
-            AffixesItem.Affix suffix = weightedRandom;
+            WeightedRandom<Affixes.Items.Affix> weightedRandom = new WeightedRandom<Affixes.Items.Affix>(Main.rand, tuples);
+            Affixes.Items.Affix suffix = weightedRandom;
             suffix = suffix.Clone();
             suffix.InitializeItem(pomItem);
-            return (AffixesItem.Suffix)suffix;
+            return suffix;
         }
 
         /// <summary>
@@ -109,8 +109,8 @@ namespace PathOfModifiers
         public static RarityNPC RollRarity(NPC npc)
         {
             Tuple<RarityNPC, double>[] tuples = PoMDataLoader.raritiesNPC
-                .Where(r => r.weight > 0 && r.CanBeRolled(npc))
-                .Select(r => new Tuple<RarityNPC, double>(r, r.weight))
+                .Where(r => r.Weight > 0 && r.CanBeRolled(npc))
+                .Select(r => new Tuple<RarityNPC, double>(r, r.Weight))
                 .ToArray();
             WeightedRandom<RarityNPC> weightedRandom = new WeightedRandom<RarityNPC>(Main.rand, tuples);
             RarityNPC rarity = (RarityNPC)weightedRandom ?? new NPCNone();
@@ -119,76 +119,28 @@ namespace PathOfModifiers
         /// <summary>
         /// Returns a valid affix for the NPC or null.
         /// </summary>
-        public static AffixesNPC.Affix RollNewAffix(PoMNPC pomNPC, NPC npc)
+        public static Affixes.NPCs.Affix RollNewAffix(PoMNPC pomNPC, NPC npc)
         {
             if (pomNPC.FreeAffixes <= 0)
             {
                 return null;
             }
-            Tuple<AffixesNPC.Affix, double>[] tuples = PoMDataLoader.affixesNPC
+            Tuple<Affixes.NPCs.Affix, double>[] tuples = PoMDataLoader.affixesNPC
                 .Where(a => a.AffixSpaceAvailable(pomNPC) &&
-                    a.weight > 0 &&
+                    a.Weight > 0 &&
                     a.CanBeRolled(pomNPC, npc) &&
                     !pomNPC.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                .Select(a => new Tuple<AffixesNPC.Affix, double>(a, a.weight))
+                .Select(a => new Tuple<Affixes.NPCs.Affix, double>(a, a.Weight))
                 .ToArray();
             if (tuples.Length == 0)
             {
                 return null;
             }
-            WeightedRandom<AffixesNPC.Affix> weightedRandom = new WeightedRandom<AffixesNPC.Affix>(Main.rand, tuples);
-            AffixesNPC.Affix affix = weightedRandom;
+            WeightedRandom<Affixes.NPCs.Affix> weightedRandom = new WeightedRandom<Affixes.NPCs.Affix>(Main.rand, tuples);
+            Affixes.NPCs.Affix affix = weightedRandom;
             affix = affix.Clone();
             affix.InitializeNPC(pomNPC, npc);
             return affix;
-        }
-        public static AffixesNPC.Prefix RollNewPrefix(PoMNPC pomNPC, NPC npc)
-        {
-            if (pomNPC.FreePrefixes <= 0)
-            {
-                return null;
-            }
-            Tuple<AffixesNPC.Affix, double>[] tuples = PoMDataLoader.affixesNPC
-                .Where(a => a.AffixSpaceAvailable(pomNPC) &&
-                    a.weight > 0 &&
-                    a.CanBeRolled(pomNPC, npc) &&
-                    a is AffixesNPC.Prefix &&
-                    !pomNPC.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                .Select(a => new Tuple<AffixesNPC.Affix, double>(a, a.weight))
-                .ToArray();
-            if (tuples.Length == 0)
-            {
-                return null;
-            }
-            WeightedRandom<AffixesNPC.Affix> weightedRandom = new WeightedRandom<AffixesNPC.Affix>(Main.rand, tuples);
-            AffixesNPC.Affix prefix = weightedRandom;
-            prefix = prefix.Clone();
-            prefix.InitializeNPC(pomNPC, npc);
-            return (AffixesNPC.Prefix)prefix;
-        }
-        public static AffixesNPC.Suffix RollNewSuffix(PoMNPC pomNPC, NPC npc)
-        {
-            if (pomNPC.FreeSuffixes <= 0)
-            {
-                return null;
-            }
-            Tuple<AffixesNPC.Affix, double>[] tuples = PoMDataLoader.affixesNPC
-                .Where(a => a.AffixSpaceAvailable(pomNPC) &&
-                    a.weight > 0 &&
-                    a.CanBeRolled(pomNPC, npc) &&
-                    a is AffixesNPC.Suffix &&
-                    !pomNPC.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                .Select(a => new Tuple<AffixesNPC.Affix, double>(a, a.weight))
-                .ToArray();
-            if (tuples.Length == 0)
-            {
-                return null;
-            }
-            WeightedRandom<AffixesNPC.Affix> weightedRandom = new WeightedRandom<AffixesNPC.Affix>(Main.rand, tuples);
-            AffixesNPC.Affix suffix = weightedRandom;
-            suffix = suffix.Clone();
-            suffix.InitializeNPC(pomNPC, npc);
-            return (AffixesNPC.Suffix)suffix;
         }
     }
 }

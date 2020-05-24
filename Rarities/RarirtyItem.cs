@@ -9,7 +9,7 @@ namespace PathOfModifiers.Rarities
     {
         public Mod mod;
 
-        public virtual float weight => 0f;
+        public virtual double Weight => 0;
         public virtual byte minAffixes => 0;
         public virtual byte maxAffixes => 0;
         public virtual byte maxPrefixes => 0;
@@ -19,7 +19,7 @@ namespace PathOfModifiers.Rarities
         public virtual string name => string.Empty;
         public virtual float chanceToRollAffix => 0;
         public virtual int forgeCost => 0;
-        
+
 
         public virtual bool CanBeRolled(Item item)
         {

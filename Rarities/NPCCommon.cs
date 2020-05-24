@@ -7,7 +7,7 @@ namespace PathOfModifiers.Rarities
 {
     public class NPCCommon : RarityNPC
     {
-        public override float weight => 0.5f;
+        public override double Weight => 1;
         public override byte minAffixes => 0;
         public override byte maxAffixes => 1;
         public override byte maxPrefixes => 1;

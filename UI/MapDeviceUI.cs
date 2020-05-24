@@ -11,7 +11,7 @@ using PathOfModifiers.Tiles;
 using Terraria.DataStructures;
 using Terraria.Graphics;
 using System.Collections.Generic;
-using PathOfModifiers.AffixesItem;
+using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers.UI

@@ -6,7 +6,7 @@ namespace PathOfModifiers.Rarities
 {
     public class WeaponUncommon : RarityItem
     {
-        public override float weight => 1f;
+        public override double Weight => 1;
         public override byte minAffixes => 1;
         public override byte maxAffixes => 2;
         public override byte maxPrefixes => 2;

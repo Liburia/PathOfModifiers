@@ -27,6 +27,7 @@ namespace PathOfModifiers
         public const bool disableMaps = true;
 
         public const int ailmentDuration = 300;
+        public const float lowHPThreshold = 0.2f;
 
         public static string pathMapIcons = "Images/MapIcons/";
 

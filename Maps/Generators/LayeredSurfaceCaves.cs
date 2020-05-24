@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using PathOfModifiers.AffixesItem;
+using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.Rarities;
 using Terraria.ID;
 using PathOfModifiers.Utilities;
@@ -112,7 +112,7 @@ namespace PathOfModifiers.Maps.Generators
             caveBezierWidth = width;
 
             caveSetup = true;
-                
+
         }
         public void SetupTiles(LayerSetings[] tileLayers, LayerSetings[] wallLayers, bool createTerrain = true, bool makeOres = true, bool carveCaves = true, bool growTrees = true)
         {
@@ -143,7 +143,7 @@ namespace PathOfModifiers.Maps.Generators
         }
 
         float GetWaveValue(float x)
-        {            
+        {
             float value = 0;
             for (int i = 0; i < sineFrequencies.Length; i++)
             {
@@ -167,14 +167,14 @@ namespace PathOfModifiers.Maps.Generators
                 SetupOres(new OreSetting[0]);
 
             //GenerateBorders(dimensions);
-            
+
             if (tilesMakeTerrain)
             {
                 for (int x = 0; x < mapSize.X; x++)
                 {
                     int[] tileLayerSineOffsets = new int[tileLayers.Length];
                     float waveValue = 0;
-                    for(int i = 0; i < tileLayerSineOffsets.Length; i++)
+                    for (int i = 0; i < tileLayerSineOffsets.Length; i++)
                     {
                         if (!tileLayers[i].useLastLayerWave)
                             waveValue = GetWaveValue(x + mapSize.X * i);
@@ -344,7 +344,7 @@ namespace PathOfModifiers.Maps.Generators
 
             for (int i = 0; i < magnitude; i++)
             {
-                for(int j = -halfWidth; j < -halfWidth + width; j++)
+                for (int j = -halfWidth; j < -halfWidth + width; j++)
                 {
                     Vector2 vTilePos = (direction * i) + (direction90 * j);
                     Point tilePos = new Point(dimensions.X + (int)Math.Round(startPos.X + vTilePos.X), dimensions.Y + (int)Math.Round(startPos.Y + vTilePos.Y));

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.AffixesItem;
+using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.Buffs;
 using PathOfModifiers.ModNet.PacketHandlers;
 using PathOfModifiers.Tiles;
@@ -424,6 +424,8 @@ namespace PathOfModifiers
         }
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
+            target.GetGlobalNPC<ItemAffixNPC>().LastDamageDealer = player;
+
             Item affixItem;
             PoMItem pomItem;
             float damageMultiplier = 1f;
@@ -483,6 +485,8 @@ namespace PathOfModifiers
         }
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
+            target.GetGlobalNPC<ItemAffixNPC>().LastDamageDealer = player;
+
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
@@ -591,10 +595,10 @@ namespace PathOfModifiers
         }
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
+            target.GetGlobalNPC<PoMNPC>().lastDamageDealer = player;
+
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
-                target.GetGlobalNPC<PoMNPC>().lastDamageDealer = player;
-
                 Item item;
                 PoMItem pomItem;
                 for (int i = 0; i < player.inventory.Length; i++)
@@ -619,9 +623,10 @@ namespace PathOfModifiers
         }
         public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
         {
+            target.GetModPlayer<PoMPlayer>().lastDamageDealer = player;
+
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
-                target.GetModPlayer<PoMPlayer>().lastDamageDealer = player;
 
                 Item item;
                 PoMItem pomItem;

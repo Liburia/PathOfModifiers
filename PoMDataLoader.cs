@@ -20,12 +20,12 @@ namespace PathOfModifiers
         public static List<Mod> mods = new List<Mod>();
 
         public static Dictionary<Type, int> affixItemMap;
-        public static AffixesItem.Affix[] affixesItem = new AffixesItem.Affix[0];
+        public static Affixes.Items.Affix[] affixesItem = new Affixes.Items.Affix[0];
         public static Dictionary<Type, int> rarityItemMap;
         public static RarityItem[] raritiesItem = new RarityItem[0];
 
         public static Dictionary<Type, int> affixNPCMap;
-        public static AffixesNPC.Affix[] affixesNPC = new AffixesNPC.Affix[0];
+        public static Affixes.NPCs.Affix[] affixesNPC = new Affixes.NPCs.Affix[0];
         public static Dictionary<Type, int> rarityNPCMap;
         public static RarityNPC[] raritiesNPC = new RarityNPC[0];
 
@@ -49,13 +49,13 @@ namespace PathOfModifiers
         public static void LoadData()
         {
             affixItemMap = new Dictionary<Type, int>();
-            List<AffixesItem.Affix> affixItemList = new List<AffixesItem.Affix>();
+            List<Affixes.Items.Affix> affixItemList = new List<Affixes.Items.Affix>();
 
             rarityItemMap = new Dictionary<Type, int>();
             List<RarityItem> rarityItemList = new List<RarityItem>();
 
             affixNPCMap = new Dictionary<Type, int>();
-            List<AffixesNPC.Affix> affixNPCList = new List<AffixesNPC.Affix>();
+            List<Affixes.NPCs.Affix> affixNPCList = new List<Affixes.NPCs.Affix>();
 
             rarityNPCMap = new Dictionary<Type, int>();
             List<RarityNPC> rarityNPCList = new List<RarityNPC>();
@@ -72,9 +72,9 @@ namespace PathOfModifiers
             int rarityNPCIndex = 0;
             int mapIndex = 0;
             int generatorIndex = 0;
-            AffixesItem.Affix affixItem;
+            Affixes.Items.Affix affixItem;
             RarityItem rarityItem;
-            AffixesNPC.Affix affixNPC;
+            Affixes.NPCs.Affix affixNPC;
             RarityNPC rarityNPC;
             Generator generator;
             Map map;
@@ -88,9 +88,9 @@ namespace PathOfModifiers
                     {
                         continue;
                     }
-                    if (t.IsSubclassOf(typeof(AffixesItem.Affix)) || t == typeof(AffixesItem.Affix))
+                    if (t.IsSubclassOf(typeof(Affixes.Items.Affix)) || t == typeof(Affixes.Items.Affix))
                     {
-                        affixItem = (AffixesItem.Affix)Activator.CreateInstance(t);
+                        affixItem = (Affixes.Items.Affix)Activator.CreateInstance(t);
                         affixItem.mod = mod;
                         affixItemList.Add(affixItem);
                         affixItemMap.Add(t, affixItemIndex);
@@ -106,9 +106,9 @@ namespace PathOfModifiers
                         mod.Logger.Debug($"Added item rarity {t.FullName} with index {rarityItemIndex} from mod {mod.Name}");
                         rarityItemIndex++;
                     }
-                    else if (t.IsSubclassOf(typeof(AffixesNPC.Affix)) || t == typeof(AffixesNPC.Affix))
+                    else if (t.IsSubclassOf(typeof(Affixes.NPCs.Affix)) || t == typeof(Affixes.NPCs.Affix))
                     {
-                        affixNPC = (AffixesNPC.Affix)Activator.CreateInstance(t);
+                        affixNPC = (Affixes.NPCs.Affix)Activator.CreateInstance(t);
                         affixNPC.mod = mod;
                         affixNPCList.Add(affixNPC);
                         affixNPCMap.Add(t, affixNPCIndex);
@@ -157,13 +157,13 @@ namespace PathOfModifiers
             mods = new List<Mod>();
 
             affixItemMap = new Dictionary<Type, int>();
-            affixesItem = new AffixesItem.Affix[0];
+            affixesItem = new Affixes.Items.Affix[0];
 
             rarityItemMap = new Dictionary<Type, int>();
             raritiesItem = new RarityItem[0];
 
             affixNPCMap = new Dictionary<Type, int>();
-            affixesNPC = new AffixesNPC.Affix[0];
+            affixesNPC = new Affixes.NPCs.Affix[0];
 
             rarityNPCMap = new Dictionary<Type, int>();
             raritiesNPC = new RarityNPC[0];
@@ -179,7 +179,7 @@ namespace PathOfModifiers
         {
             packet.Write(affixesItem.Length);
             PathOfModifiers.Instance.Logger.Debug($"Sending Item Affix Map Length: {affixesItem.Length} ");
-            AffixesItem.Affix affixItem;
+            Affixes.Items.Affix affixItem;
             for (int i = 0; i < affixesItem.Length; i++)
             {
                 affixItem = affixesItem[i];
@@ -200,7 +200,7 @@ namespace PathOfModifiers
 
             packet.Write(affixesNPC.Length);
             PathOfModifiers.Instance.Logger.Debug($"Sending NPC Affix Map Length: {affixesNPC.Length} ");
-            AffixesNPC.Affix affixNPC;
+            Affixes.NPCs.Affix affixNPC;
             for (int i = 0; i < affixesNPC.Length; i++)
             {
                 affixNPC = affixesNPC[i];
@@ -247,7 +247,7 @@ namespace PathOfModifiers
                 PathOfModifiers.Instance.Logger.Debug($"Loaded Item Affix Map Length: {affixItemMap.Count} ");
 
                 Dictionary<Type, int> newAffixItemMap = new Dictionary<Type, int>(length);
-                AffixesItem.Affix[] newAffixesItem = new AffixesItem.Affix[length];
+                Affixes.Items.Affix[] newAffixesItem = new Affixes.Items.Affix[length];
 
                 Type type;
                 Mod mod;
@@ -293,7 +293,7 @@ namespace PathOfModifiers
                 PathOfModifiers.Instance.Logger.Debug($"Loaded NPC Affix Map Length: {affixNPCMap.Count} ");
 
                 Dictionary<Type, int> newAffixNPCMap = new Dictionary<Type, int>(length);
-                AffixesNPC.Affix[] newAffixesNPC = new AffixesNPC.Affix[length];
+                Affixes.NPCs.Affix[] newAffixesNPC = new Affixes.NPCs.Affix[length];
 
                 for (int i = 0; i < length; i++)
                 {

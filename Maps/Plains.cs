@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using PathOfModifiers.AffixesItem;
+using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.Rarities;
 using PathOfModifiers.Maps.Generators;
 using Terraria.ModLoader.IO;
