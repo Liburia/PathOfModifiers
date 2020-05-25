@@ -122,8 +122,16 @@ namespace PathOfModifiers.Affixes
             Value = value + (base.GetValue(Tier + 1) - value) * TierMultiplier;
         }
     }
+    /// <summary>
+    /// When IsRange, the value is (inclusive, exclusive)
+    /// </summary>
     public class TTInt : TierType<int>
     {
+        /// <summary>
+        /// Whether 0 is skipped for IsRange
+        /// </summary>
+        public virtual bool CanBeZero { get; }
+
         public override float TierMultiplier { get; protected set; }
         int Value { get; set; }
 
@@ -141,8 +149,47 @@ namespace PathOfModifiers.Affixes
 
         public override void UpdateValue()
         {
-            var value = base.GetValue();
-            Value = (int)Math.Round(value + (base.GetValue(Tier + 1) - value) * TierMultiplier);
+            int currentValue = base.GetValue();
+            int nextValue = base.GetValue(Tier + 1);
+            float value = currentValue + (nextValue - currentValue);
+
+            bool floor = currentValue < nextValue;
+            if (!CanBeZero)
+            {
+                if (floor)
+                {
+                    if (currentValue < 0 && nextValue > 0)
+                    {
+                        value -= 1;
+                    }
+                }
+                else
+                {
+                    if (currentValue > 0 && nextValue < 0)
+                    {
+                        value += 1;
+                    }
+                }
+            }
+
+            value *= TierMultiplier;
+
+            if (floor)
+            {
+                if (!CanBeZero && value >= 0)
+                {
+                    value += 1;
+                }
+                Value = (int)Math.Floor(value);
+            }
+            else
+            {
+                if (!CanBeZero && value <= 0)
+                {
+                    value -= 1;
+                }
+                Value = (int)Math.Ceiling(value);
+            }
         }
     }
 }
