@@ -13,7 +13,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class EquipMinionCount : AffixTiered<TTInt>, IPrefix
     {
-        public override double Weight => 0.6;
+        public override double Weight { get; } = 0.6;
 
         public override TTInt Type1 { get; } = new TTInt()
         {

@@ -13,7 +13,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class EquipFishingPower : AffixTiered<TTInt>, IPrefix
     {
-        public override double Weight => 1;
+        public override double Weight { get; } = 1;
 
         public override TTInt Type1 { get; } = new TTInt()
         {

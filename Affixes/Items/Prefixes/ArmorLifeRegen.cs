@@ -13,7 +13,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class ArmorLifeRegen : AffixTiered<TTFloat>, IPrefix
     {
-        public override double Weight => 1;
+        public override double Weight { get; } = 1;
 
         public override TTFloat Type1 { get; } = new TTFloat()
         {

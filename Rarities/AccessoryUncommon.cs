@@ -6,7 +6,7 @@ namespace PathOfModifiers.Rarities
 {
     public class AccessoryUncommon : RarityItem
     {
-        public override double Weight => 1;
+        public override double Weight { get; } = 1;
         public override byte minAffixes => 1;
         public override byte maxAffixes => 1;
         public override byte maxPrefixes => 1;

@@ -15,7 +15,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 {
     public class WeaponCrit : AffixTiered<TTFloat, TTFloat>, ISuffix
     {
-        public override double Weight => 1;
+        public override double Weight { get; } = 1;
 
         public override TTFloat Type1 { get; } = new TTFloat()
         {

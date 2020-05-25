@@ -13,7 +13,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class WeaponSummonDamage : AffixTiered<TTFloat>
     {
-        public override double Weight => 0.8;
+        public override double Weight { get; } = 0.8;
 
         public override TTFloat Type1 { get; } = new TTFloat()
         {

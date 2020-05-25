@@ -14,7 +14,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
     //Doesn't work with pvp, no hook.
     public class AccessoryReflect : AffixTiered<TTFloat>, IPrefix
     {
-        public override double Weight => 1;
+        public override double Weight { get; } = 1;
 
         public override TTFloat Type1 { get; } = new TTFloat()
         {
