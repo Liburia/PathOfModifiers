@@ -102,6 +102,29 @@ namespace PathOfModifiers
             suffix.InitializeItem(pomItem);
             return suffix;
         }
+        /// <summary>
+        /// Returns a new instance of the affix based on class name
+        /// </summary>
+        public static Affixes.Items.Affix GetAffix(PoMItem pomItem, string name, bool isPrefix)
+        {
+            string namespaceQualifiedTypeName;
+            if (isPrefix)
+            {
+                namespaceQualifiedTypeName = typeof(Affixes.Items.Prefixes.AccessoryConsumeAmmo).Namespace;
+            }
+            else
+            {
+                namespaceQualifiedTypeName = typeof(Affixes.Items.Suffixes.WeaponAssistance).Namespace;
+            }
+            namespaceQualifiedTypeName = $"{ namespaceQualifiedTypeName }.{ name }";
+
+            Type affixType = Type.GetType(namespaceQualifiedTypeName);
+
+            Affixes.Items.Affix affix = PoMDataLoader.affixesItem[PoMDataLoader.affixItemMap[affixType]];
+            affix = affix.Clone();
+            affix.InitializeItem(pomItem);
+            return affix;
+        }
 
         /// <summary>
         /// Returns a valid rarity for the NPC.
