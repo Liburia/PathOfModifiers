@@ -12,7 +12,7 @@ using Terraria.DataStructures;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
-    public class ArmorReceivedDamage : AffixTiered<TTFloat>, IPrefix
+    public class ChestReceivedDamage : AffixTiered<TTFloat>, IPrefix
     {
         public override double Weight { get; } = 1;
 
@@ -22,41 +22,44 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.9f, 0.5),
-                new TTFloat.WeightedTier(0.93f, 1.2),
-                new TTFloat.WeightedTier(0.97f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.03f, 1),
-                new TTFloat.WeightedTier(1.07f, 0.5),
-                new TTFloat.WeightedTier(1.1f, 0),
+                new TTFloat.WeightedTier(0.1f, 0.5),
+                new TTFloat.WeightedTier(0.07f, 1),
+                new TTFloat.WeightedTier(0.03f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(-0.03f, 1),
+                new TTFloat.WeightedTier(-0.07f, 0.5),
+                new TTFloat.WeightedTier(-0.1f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Vulnerable", 4),
+            new WeightedTierName("Vulnerable", 3),
             new WeightedTierName("Exposed", 2),
             new WeightedTierName("Unguarded", 0.5),
             new WeightedTierName("Covered", 0.5),
             new WeightedTierName("Ensconced", 2),
-            new WeightedTierName("Guarded", 4),
+            new WeightedTierName("Guarded", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsBodyArmor(item);
+                AffixItemItem.IsBodyArmor(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat() - 100}% received damage";
+            float value = Type1.GetValue();
+            float valueFormat = Type1.GetValueFormat();
+            char plusMinus = value < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueFormat }% received damage";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (player.armor[1] == item)
+            if (AffixItemItem.IsArmorEquipped(item, player))
             {
-                damageMultiplier += Type1.GetValue() - 1;
+                damageMultiplier += Type1.GetValue();
             }
             return true;
         }

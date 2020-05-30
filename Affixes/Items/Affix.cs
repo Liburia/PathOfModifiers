@@ -37,7 +37,7 @@ namespace PathOfModifiers.Affixes.Items
             }
         }
 
-        public bool AffixSpaceAvailable(PoMItem item) { return this is IPrefix ? item.FreePrefixes > 0 : item.FreeSuffixes > 0; }
+        public bool AffixSpaceAvailable(AffixItemItem item) { return this is IPrefix ? item.FreePrefixes > 0 : item.FreeSuffixes > 0; }
 
         public virtual double Weight => 0;
 
@@ -49,7 +49,7 @@ namespace PathOfModifiers.Affixes.Items
 
         }
 
-        public virtual void InitializeItem(PoMItem item)
+        public virtual void InitializeItem(AffixItemItem item)
         {
             RollValue();
         }
@@ -61,17 +61,18 @@ namespace PathOfModifiers.Affixes.Items
             return newAffix;
         }
 
-        public virtual bool CanBeRolled(PoMItem pomItem, Item item) { return false; }
+        public virtual bool CanBeRolled(AffixItemItem pomItem, Item item) { return false; }
 
         public virtual void RollValue(bool rollTier = true) { }
         #region Item Hooks
         public virtual void GetWeaponCrit(Item item, Player player, ref float multiplier) { }
-        public virtual void ModifyWeaponDamage(Item item, Player player, ref float multiplier, ref float flat) { }
+        public virtual void ModifyWeaponDamage(Item item, Player player, ref float add, ref float multiplier, ref float flat) { }
         public virtual void GetWeaponKnockback(Item item, Player player, ref float multiplier) { }
         public virtual void UseTimeMultiplier(Item item, Player player, ref float multiplier) { }
-        public virtual void UpdateInventory(Item item, PoMPlayer player) { }
-        public virtual void UpdateEquip(Item item, PoMPlayer player) { }
-        public virtual bool ConsumeAmmo(Item item, Player player) { return true; }
+        public virtual void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult) { }
+        public virtual void UpdateInventory(Item item, AffixItemPlayer player) { }
+        public virtual void UpdateEquip(Item item, AffixItemPlayer player) { }
+        public virtual bool ConsumeAmmo(Item item, Player player, ref float chanceToNotConsume) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
         public virtual void UseItem(Item item, Player player) { }
         public virtual void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit) { }
@@ -87,12 +88,14 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit) { }
         #endregion
         #region Player Hooks
-        public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo) { return true; }
+        public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo, ref float chanceToNotConsume) { return true; }
         public virtual bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource) { return true; }
         public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }
         public virtual void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier) { }
         public virtual void ModifyHitByNPC(Item item, Player player, NPC npc, ref int damage, ref bool crit) { }
+        public virtual void ModifyHitByPvp(Item item, Player player, Player attacker, ref int damage, ref bool crit) { }
         public virtual void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit) { }
+        public virtual void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit) { }
         public virtual bool PlayerShoot(Item affixItem, Player player, Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack) { return true; }
 
         public virtual void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit) { }

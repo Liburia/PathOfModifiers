@@ -22,13 +22,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(1f, 3),
-                new TTFloat.WeightedTier(1.1f, 2.5),
-                new TTFloat.WeightedTier(1.2f, 2),
-                new TTFloat.WeightedTier(1.3f, 1.5),
-                new TTFloat.WeightedTier(1.4f, 1),
-                new TTFloat.WeightedTier(1.5f, 0.5),
-                new TTFloat.WeightedTier(1.6f, 0),
+                new TTFloat.WeightedTier(0f, 3),
+                new TTFloat.WeightedTier(0.1f, 2.5),
+                new TTFloat.WeightedTier(0.2f, 2),
+                new TTFloat.WeightedTier(0.3f, 1.5),
+                new TTFloat.WeightedTier(0.4f, 1),
+                new TTFloat.WeightedTier(0.5f, 0.5),
+                new TTFloat.WeightedTier(0.6f, 0),
             },
         };
         public override TTFloat Type2 { get; } = new TTFloat()
@@ -73,17 +73,17 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         double lastProc = 0;
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
         {
             string plusMinus = Type3.GetValue() >= 1 ? "+" : "-";
 
-            return $"Gain {plusMinus}{Type1.GetValueFormat() - 100}% move speed on hit for {Type2.GetValueFormat(1)}s ({Type3.GetValueFormat(1)}s CD)";
+            return $"Gain {plusMinus}{Type1.GetValueFormat()}% move speed on hit for {Type2.GetValueFormat(1)}s ({Type3.GetValueFormat(1)}s CD)";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
@@ -112,8 +112,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         void GainMoveSpeed(Player player)
         {
             int duration = (int)MathHelper.Clamp(Type2.GetValue() * 60, 1, 9999999);
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddMoveSpeedBuff(player, Type1.GetValue(), duration);
+            player.GetModPlayer<BuffPlayer>().AddMoveSpeedBuff(player, Type1.GetValue() + 1, duration);
             lastProc = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
         }
     }

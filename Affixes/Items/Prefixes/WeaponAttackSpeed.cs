@@ -32,19 +32,19 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
             new WeightedTierName("Sluggish", 3),
-            new WeightedTierName("Slow", 2),
-            new WeightedTierName("Lazy", 0.5),
+            new WeightedTierName("Lazy", 2),
+            new WeightedTierName("Slacking", 0.5),
             new WeightedTierName("Nimble", 0.5),
             new WeightedTierName("Agile", 2),
-            new WeightedTierName("Fleeting", 3),
+            new WeightedTierName("Frenzied", 3),
         };
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item) &&
-                !PoMItem.IsSpear(item) &&
-                !PoMItem.IsFlailOrYoyo(item);
+                AffixItemItem.IsWeapon(item) &&
+                !AffixItemItem.IsSpear(item) &&
+                !AffixItemItem.IsFlailOrYoyo(item);
         }
 
         public override void UseTimeMultiplier(Item item, Player player, ref float multiplier)

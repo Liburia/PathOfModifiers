@@ -21,13 +21,13 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.7f, 0.5),
-                new TTFloat.WeightedTier(0.8f, 1.2),
-                new TTFloat.WeightedTier(0.9f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.1f, 1),
-                new TTFloat.WeightedTier(1.2f, 0.5),
-                new TTFloat.WeightedTier(1.3f, 0),
+                new TTFloat.WeightedTier(-0.15f, 0.5),
+                new TTFloat.WeightedTier(-0.1f, 1),
+                new TTFloat.WeightedTier(-0.05f, 2),
+                new TTFloat.WeightedTier(0, 2),
+                new TTFloat.WeightedTier(0.05f, 1),
+                new TTFloat.WeightedTier(0.1f, 0.5),
+                new TTFloat.WeightedTier(0.15f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
@@ -40,15 +40,31 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat() - 100}% damage per enemy buff/debuff";
+            float value = Type1.GetValue();
+            float valueFormat = Type1.GetValueFormat();
+
+            char plusMinus = value < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueFormat }% damage per enemy buff/debuff";
+        }
+
+        public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
+        {
+            float value = Type1.GetValue();
+            damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
+        }
+
+        public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
+        {
+            float value = Type1.GetValue();
+            damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
         }
     }
 }

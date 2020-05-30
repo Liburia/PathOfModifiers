@@ -71,7 +71,7 @@ namespace PathOfModifiers.Tiles
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             //Hardcoded frame coordinate values because using TileObjectData is cancer.
-            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
+            if (PoMUtil.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
                 var forge = (ModifierForgeTE)te;
 
@@ -128,7 +128,7 @@ namespace PathOfModifiers.Tiles
             }
 
             //TODO: (Or not to do) Hardcoded frame coordinate values because using TileObjectData is cancer.
-            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
+            if (PoMUtil.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
                 ModifierForgeTE clickedForge = (ModifierForgeTE)te;
                 if (ModifierForgeUI.Instance.IsVisible && activeForge == clickedForge)
@@ -179,7 +179,7 @@ namespace PathOfModifiers.Tiles
 
                 if (!forge.modifiedItem.IsAir)
                 {
-                    var screenDrawOffset = PoMHelper.DrawToScreenOffset();
+                    var screenDrawOffset = PoMUtil.DrawToScreenOffset();
 
                     var itemTexture = Main.itemTexture[forge.modifiedItem.type];
                     var itemWidth = 24;
@@ -254,7 +254,7 @@ namespace PathOfModifiers.Tiles
         {
             if (modifiedItem == null || modifierItem == null || modifiedItem.IsAir || modifierItem.IsAir)
                 return 0;
-            PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+            AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
             return pomItem.rarity.forgeCost * forgeActionCostMultipliers[(int)action];
         }
 
@@ -300,7 +300,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.Reforge);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 pomItem.RerollAffixes(modifiedItem);
                 modifierItem.stack -= cost;
 
@@ -316,7 +316,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.Rarify);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 if (pomItem.RaiseRarity(modifiedItem))
                 {
                     modifierItem.stack -= cost;
@@ -334,7 +334,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.AddAffix);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 if (pomItem.AddRandomAffix(modifiedItem))
                 {
                     modifierItem.stack -= cost;
@@ -352,7 +352,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.AddPrefix);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 if (pomItem.AddRandomPrefix(modifiedItem))
                 {
                     modifierItem.stack -= cost;
@@ -370,7 +370,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.AddSuffix);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 if (pomItem.AddRandomSuffix(modifiedItem))
                 {
                     modifierItem.stack -= cost;
@@ -388,7 +388,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.RemoveAll);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 pomItem.RemoveAll(modifiedItem);
                 modifierItem.stack -= cost;
 
@@ -404,7 +404,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.RemovePrefixes);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 pomItem.RemovePrefixes(modifiedItem);
                 modifierItem.stack -= cost;
 
@@ -420,7 +420,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.RemoveSuffixes);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 pomItem.RemoveSuffixes(modifiedItem);
                 modifierItem.stack -= cost;
 
@@ -436,7 +436,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.RollAffixes);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 pomItem.RollAffixTierMultipliers(modifiedItem);
                 modifierItem.stack -= cost;
 
@@ -452,7 +452,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.RollPrefixes);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 pomItem.RollPrefixTierMultipliers(modifiedItem);
                 modifierItem.stack -= cost;
 
@@ -468,7 +468,7 @@ namespace PathOfModifiers.Tiles
             int cost = CalculateCost(ForgeAction.RollSuffixes);
             if (CanForge(cost))
             {
-                PoMItem pomItem = modifiedItem.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItem.GetGlobalItem<AffixItemItem>();
                 pomItem.RollSuffixTierMultipliers(modifiedItem);
                 modifierItem.stack -= cost;
 
@@ -550,11 +550,11 @@ namespace PathOfModifiers.Tiles
             {
                 if (!modifiedItem.IsAir)
                 {
-                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifiedItem, 2);
+                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifiedItem, 2);
                 }
                 if (!modifierItem.IsAir)
                 {
-                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifierItem, 2);
+                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifierItem, 2);
                 }
             }
 

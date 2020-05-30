@@ -460,7 +460,7 @@ namespace PathOfModifiers.UI
         void ModifiedCanPutIntoSlot(Item item, ref bool canPut)
         {
             if (canPut)
-                canPut = item.IsAir || PoMItem.IsRollable(item);
+                canPut = item.IsAir || AffixItemItem.IsRollable(item);
         }
         void ModifierCanPutIntoSlot(Item item, ref bool canPut)
         {
@@ -656,7 +656,7 @@ namespace PathOfModifiers.UI
             int i = 0;
             if (!modifiedItemSlot.item.IsAir)
             {
-                PoMItem pomItem = modifiedItemSlot.item.GetGlobalItem<PoMItem>();
+                AffixItemItem pomItem = modifiedItemSlot.item.GetGlobalItem<AffixItemItem>();
 
                 freeAffixCount.SetText($"[{pomItem.FreeAffixes}]");
                 freePrefixCount.SetText($"[{pomItem.FreePrefixes}]");

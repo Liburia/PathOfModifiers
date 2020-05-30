@@ -132,13 +132,13 @@ namespace PathOfModifiers.Projectiles
                 if (isNPC)
                 {
                     NPC npc = (NPC)target;
-                    if (PoMHelper.CanHitNPC(npc))
+                    if (PoMUtil.CanHitNPC(npc))
                     {
                         if (Main.myPlayer == projectile.owner)
                         {
                             owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
                             PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-                            pomNPC.AddShockedBuff(npc, projectile.ai[0], PathOfModifiers.ailmentDuration, true);
+                            pomNPC.AddShockedBuff(npc, projectile.ai[0] + 1, PathOfModifiers.ailmentDuration, true);
                         }
                         SpawnDebris(targetPosition);
                         hitEntities.Add(npc);
@@ -147,13 +147,12 @@ namespace PathOfModifiers.Projectiles
                 else
                 {
                     Player player = (Player)target;
-                    if (PoMHelper.CanHitPvp(owner, player))
+                    if (PoMUtil.CanHitPvp(owner, player))
                     {
                         if (player.whoAmI == Main.myPlayer)
                         {
                             player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
-                            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-                            pomPlayer.AddShockedBuff(player, projectile.ai[0], PathOfModifiers.ailmentDuration, true);
+                            player.GetModPlayer<BuffPlayer>().AddShockedBuff(player, projectile.ai[0] + 1, PathOfModifiers.ailmentDuration, true);
                         }
                         SpawnDebris(targetPosition);
                         hitEntities.Add(player);
@@ -259,7 +258,7 @@ namespace PathOfModifiers.Projectiles
             for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC npc = Main.npc[i];
-                if (PoMHelper.CanHitNPC(npc))
+                if (PoMUtil.CanHitNPC(npc))
                 {
                     float lengthSqr = (npc.Center - projectile.position).LengthSquared();
                     if (lengthSqr < maxJumpLengthSqr && lengthSqr < minLengthSqr && !hitEntities.Contains(npc))
@@ -273,7 +272,7 @@ namespace PathOfModifiers.Projectiles
             for (int i = 0; i < Main.maxPlayers; i++)
             {
                 Player player = Main.player[i];
-                if (PoMHelper.CanHitPvp(owner, player))
+                if (PoMUtil.CanHitPvp(owner, player))
                 {
                     float lengthSqr = (player.Center - projectile.position).LengthSquared();
                     if (lengthSqr < maxJumpLengthSqr && lengthSqr < minLengthSqr && !hitEntities.Contains(player))

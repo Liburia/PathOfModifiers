@@ -12,7 +12,7 @@ namespace PathOfModifiers.ChatCommands
 {
     public class Pom : ModCommand
     {
-        class CmdType
+        static class CmdType
         {
             /// <summary>
             /// add 'p|s' affixType [ tier1 tierMultiplier1 tier2 tierMultiplier2 tier3 tierMultiplier3 ]
@@ -36,13 +36,13 @@ namespace PathOfModifiers.ChatCommands
         {
             if (args.Length == 0)
             {
-                Main.NewTextMultiline($"Commands: { CmdType.addAffix }, { CmdType.clearAffixes }");
+                Main.NewTextMultiline($"Commands: { CmdType.clearAffixes }, { CmdType.addAffix }, { CmdType.modifyAffix }");
                 return;
             }
 
             Player player = Main.LocalPlayer;
             Item item = player.HeldItem;
-            PoMItem pomItem = item.GetGlobalItem<PoMItem>();
+            AffixItemItem pomItem = item.GetGlobalItem<AffixItemItem>();
 
             switch (args[0])
             {

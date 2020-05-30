@@ -10,7 +10,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
     {
         static BuffPacketHandler Instance { get; set; }
 
-        public enum PacketType
+        public enum PacketType : byte
         {
             AddDamageDoTDebuffNPC,
             AddDamageDoTDebuffPlayer,
@@ -22,6 +22,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             AddChilledBuffPlayer,
             AddChilledBuffNPC,
             AddStaticStrikeBuffPlayer,
+            AddBlockChanceBuffPlayer,
         }
 
         public BuffPacketHandler() : base(PacketHandlerType.Buff)
@@ -63,6 +64,9 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                     break;
                 case PacketType.AddStaticStrikeBuffPlayer:
                     ReceiveAddStaticStrikeBuffPlayer(reader, fromWho);
+                    break;
+                case PacketType.AddBlockChanceBuffPlayer:
+                    ReceiveAddBlockChanceBuffPlayer(reader, fromWho);
                     break;
             }
         }
@@ -127,8 +131,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 return;
             }
             Player player = Main.player[playerID];
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddDoTBuff(player, debuff, damage, duraionTicks, false);
+            player.GetModPlayer<BuffPlayer>().AddDoTBuff(player, debuff, damage, duraionTicks, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
@@ -156,8 +159,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             int dutaionTicks = reader.ReadInt32();
 
             Player player = Main.player[playerID];
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddMoveSpeedBuff(player, speedMultiplier, dutaionTicks, false);
+            player.GetModPlayer<BuffPlayer>().AddMoveSpeedBuff(player, speedMultiplier, dutaionTicks, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
@@ -212,8 +214,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             int time = reader.ReadInt32();
 
             Player player = Main.player[playerID];
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddIgnitedBuff(player, dps, time, false);
+            player.GetModPlayer<BuffPlayer>().AddIgnitedBuff(player, dps, time, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
@@ -268,8 +269,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             int time = reader.ReadInt32();
 
             Player player = Main.player[playerID];
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddShockedBuff(player, multiplier, time, false);
+            player.GetModPlayer<BuffPlayer>().AddShockedBuff(player, multiplier, time, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
@@ -324,8 +324,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             int time = reader.ReadInt32();
 
             Player player = Main.player[playerID];
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddChilledBuff(player, multiplier, time, false);
+            player.GetModPlayer<BuffPlayer>().AddChilledBuff(player, multiplier, time, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
@@ -354,8 +353,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             int dutaionTicks = reader.ReadInt32();
 
             Player player = Main.player[playerID];
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddStaticStrikeBuff(player, damage, intervalTicks, dutaionTicks, false);
+            player.GetModPlayer<BuffPlayer>().AddStaticStrikeBuff(player, damage, intervalTicks, dutaionTicks, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
@@ -364,6 +362,33 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 packet.Write(damage);
                 packet.Write(intervalTicks);
                 packet.Write(dutaionTicks);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void CSendAddBlockChanceBuffPlayer(int playerID, float chance, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddBlockChanceBuffPlayer);
+            packet.Write((byte)playerID);
+            packet.Write(chance);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddBlockChanceBuffPlayer(BinaryReader reader, int fromWho)
+        {
+            byte playerID = reader.ReadByte();
+            float chance = reader.ReadSingle();
+            int duraionTicks = reader.ReadInt32();
+
+            Player player = Main.player[playerID];
+            player.GetModPlayer<BuffPlayer>().AddBlockChanceBuff(player, chance, duraionTicks, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddBlockChanceBuffPlayer);
+                packet.Write(playerID);
+                packet.Write(chance);
+                packet.Write(duraionTicks);
                 packet.Send(-1, fromWho);
             }
         }

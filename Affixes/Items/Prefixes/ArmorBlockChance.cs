@@ -12,7 +12,7 @@ using Terraria.DataStructures;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
-    public class EquipBlockChance : AffixTiered<TTFloat>, IPrefix
+    public class ArmorBlockChance : AffixTiered<TTFloat>, IPrefix
     {
         public override double Weight { get; } = 1;
 
@@ -23,29 +23,28 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             Tiers = new TTFloat.WeightedTier[]
     {
                 new TTFloat.WeightedTier(0f, 3),
-                new TTFloat.WeightedTier(0.003f, 2.5),
-                new TTFloat.WeightedTier(0.007f, 2),
-                new TTFloat.WeightedTier(0.01f, 1.5),
-                new TTFloat.WeightedTier(0.013f, 1),
-                new TTFloat.WeightedTier(0.017f, 0.5),
-                new TTFloat.WeightedTier(0.02f, 0),
+                new TTFloat.WeightedTier(0.005f, 2.5),
+                new TTFloat.WeightedTier(0.01f, 2),
+                new TTFloat.WeightedTier(0.015f, 1.5),
+                new TTFloat.WeightedTier(0.02f, 1),
+                new TTFloat.WeightedTier(0.025f, 0.5),
+                new TTFloat.WeightedTier(0.03f, 0),
     },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Testing 1", 4),
-            new WeightedTierName("Testing 2", 2),
-            new WeightedTierName("Testing 3", 0.5),
-            new WeightedTierName("Testing 4", 0.5),
-            new WeightedTierName("Testing 5", 2),
-            new WeightedTierName("Testing 6", 4),
+            new WeightedTierName("Covering", 0.5),
+            new WeightedTierName("Blocking", 1),
+            new WeightedTierName("Fending", 1.5),
+            new WeightedTierName("Shielded", 2),
+            new WeightedTierName("Secure", 2.5),
+            new WeightedTierName("Walled", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsAnyArmor(item) ||
-                PoMItem.IsAccessory(item);
+                AffixItemItem.IsAnyArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -53,9 +52,8 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{Type1.GetValueFormat()}% chance to block damage";
         }
 
-        public override void UpdateEquip(Item item, PoMPlayer player)
+        public override void UpdateEquip(Item item, AffixItemPlayer player)
         {
-            //if (PoMItem.IsEquipped(item, player)) dont need this since UpdateEquip
             player.blockChance += Type1.GetValue();
         }
     }

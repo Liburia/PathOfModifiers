@@ -22,13 +22,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.5f, 0.5),
-                new TTFloat.WeightedTier(0.66f, 1.2),
-                new TTFloat.WeightedTier(0.84f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.16f, 1),
-                new TTFloat.WeightedTier(1.34f, 0.5),
-                new TTFloat.WeightedTier(1.5f, 0),
+                new TTFloat.WeightedTier(-0.5f, 0.5),
+                new TTFloat.WeightedTier(-0.333f, 1),
+                new TTFloat.WeightedTier(-0.166f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(0.166f, 1),
+                new TTFloat.WeightedTier(0.333f, 0.5),
+                new TTFloat.WeightedTier(0.5f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
@@ -41,17 +41,17 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
         {
             string plusMinus = Type1.GetValue() >= 1 ? "+" : "-";
 
-            return $"Deal {plusMinus}{Type1.GetValueFormat() - 100}% damage to low HP enemies";
+            return $"Deal {plusMinus}{Type1.GetValueFormat()}% damage to low HP enemies";
         }
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
@@ -59,14 +59,14 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
             if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= PathOfModifiers.lowHPThreshold)
             {
-                damageMultiplier += Type1.GetValue() - 1;
+                damageMultiplier += Type1.GetValue();
             }
         }
         public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
         {
             if (item == player.HeldItem && (target.statLife / (float)target.statLifeMax2) <= PathOfModifiers.lowHPThreshold)
             {
-                damageMultiplier += Type1.GetValue() - 1;
+                damageMultiplier += Type1.GetValue();
             }
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
@@ -74,14 +74,14 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
             if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= PathOfModifiers.lowHPThreshold)
             {
-                damageMultiplier += Type1.GetValue() - 1;
+                damageMultiplier += Type1.GetValue();
             }
         }
         public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
         {
             if (item == player.HeldItem && (target.statLife / (float)target.statLifeMax2) <= PathOfModifiers.lowHPThreshold)
             {
-                damageMultiplier += Type1.GetValue() - 1;
+                damageMultiplier += Type1.GetValue();
             }
         }
     }

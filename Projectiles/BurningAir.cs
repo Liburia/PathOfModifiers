@@ -69,8 +69,7 @@ namespace PathOfModifiers.Projectiles
                     Rectangle playerRect = player.getRect();
                     if (playerRect.Intersects(airRect))
                     {
-                        PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-                        pomPlayer.AddBurningAirBuff(player, projectile.damage);
+                        player.GetModPlayer<BuffPlayer>().AddBurningAirBuff(player, projectile.damage);
                     }
                 }
             }

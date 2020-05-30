@@ -21,40 +21,42 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.5f, 0.5),
-                new TTFloat.WeightedTier(0.675f, 1.2),
-                new TTFloat.WeightedTier(0.85f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.2f, 1),
-                new TTFloat.WeightedTier(1.375f, 0.5),
-                new TTFloat.WeightedTier(1.5f, 0),
+                new TTFloat.WeightedTier(-0.5f, 0.5),
+                new TTFloat.WeightedTier(-0.333f, 1),
+                new TTFloat.WeightedTier(-0.166f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(0.166f, 1),
+                new TTFloat.WeightedTier(0.333f, 0.5),
+                new TTFloat.WeightedTier(0.5f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Perfunctory", 0.5),
-            new WeightedTierName("Apathetic", 1),
-            new WeightedTierName("Tepid", 1.5),
-            new WeightedTierName("Keen", 2),
-            new WeightedTierName("Zealous", 2.5),
+            new WeightedTierName("Perfunctory", 3),
+            new WeightedTierName("Apathetic", 2),
+            new WeightedTierName("Tepid", 0.5),
+            new WeightedTierName("Keen", 0.5),
+            new WeightedTierName("Zealous", 2),
             new WeightedTierName("Fervent", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item) &&
-                PoMItem.CanCrit(item);
+                AffixItemItem.IsWeapon(item) &&
+                AffixItemItem.CanCrit(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"x{Type1.GetValueFormat(1)} critical strike chance";
+            float valueFormat = (float)Math.Round(Type1.GetValue() + 1f, 1);
+            return $"x{ valueFormat } critical strike chance";
         }
 
         public override void GetWeaponCrit(Item item, Player player, ref float multiplier)
         {
-            multiplier += Type1.GetValue() - 1;
+            float value = Type1.GetValue();
+            multiplier += value;
         }
     }
 }

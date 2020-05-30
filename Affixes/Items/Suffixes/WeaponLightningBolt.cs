@@ -53,13 +53,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.9f, 0.5),
-                new TTFloat.WeightedTier(0.93f, 1),
-                new TTFloat.WeightedTier(0.97f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.03f, 1),
-                new TTFloat.WeightedTier(1.07f, 0.5),
-                new TTFloat.WeightedTier(1.1f, 0),
+                new TTFloat.WeightedTier(-0.1f, 0.5),
+                new TTFloat.WeightedTier(-0.07f, 1),
+                new TTFloat.WeightedTier(-0.03f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(0.03f, 1),
+                new TTFloat.WeightedTier(0.07f, 0.5),
+                new TTFloat.WeightedTier(0.1f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
@@ -72,17 +72,17 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
         {
             string plusMinus = Type3.GetValue() >= 1 ? "+" : "-";
 
-            return $"{Type1.GetValueFormat()}% chance for lightning to strike for {Type2.GetValueFormat()}% damage and leave Shocked Air({plusMinus}{Type3.GetValueFormat() - 100}%)";
+            return $"{Type1.GetValueFormat()}% chance for lightning to strike for {Type2.GetValueFormat()}% damage and leave Shocked Air({plusMinus}{Type3.GetValueFormat()}%)";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

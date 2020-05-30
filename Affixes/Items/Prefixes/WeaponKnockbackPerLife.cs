@@ -21,13 +21,13 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.99f, 0.5),
-                new TTFloat.WeightedTier(0.993f, 1),
-                new TTFloat.WeightedTier(0.997f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.003f, 1),
-                new TTFloat.WeightedTier(1.007f, 0.5),
-                new TTFloat.WeightedTier(1.01f, 0),
+                new TTFloat.WeightedTier(-1f, 0.5),
+                new TTFloat.WeightedTier(-0.66f, 1),
+                new TTFloat.WeightedTier(-0.33f, 2),
+                new TTFloat.WeightedTier(0, 2),
+                new TTFloat.WeightedTier(0.33f, 1),
+                new TTFloat.WeightedTier(0.66f, 0.5),
+                new TTFloat.WeightedTier(1f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
@@ -40,21 +40,24 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item) &&
-                PoMItem.CanKnockback(item);
-        }
-
-        public override void GetWeaponKnockback(Item item, Player player, ref float multiplier)
-        {
-            multiplier += (Type1.GetValue() - 1) * ((((float)player.statLife / player.statLifeMax2) * 100) - 50);
+                AffixItemItem.IsWeapon(item) &&
+                AffixItemItem.CanKnockback(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"Up to {(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat() - 100}% knockback above 50% life and up to {(Type1.GetValue() < 1 ? '+' : '-')}{Type1.GetValueFormat() - 100}% below";
+            float value = Type1.GetValue();
+            float valueFormat = Type1.GetValueFormat();
+            return $"Up to { (value < 0 ? '-' : '+') }{ valueFormat }% knockback above 50% life and up to { (value < 0 ? '+' : '-') }{ valueFormat }% below";
+        }
+
+        public override void GetWeaponKnockback(Item item, Player player, ref float multiplier)
+        {
+            float value = Type1.GetValue();
+            multiplier += value * (((float)player.statLife / player.statLifeMax2) - 0.5f);
         }
     }
 }

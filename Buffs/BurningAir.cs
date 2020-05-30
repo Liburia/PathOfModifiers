@@ -26,8 +26,7 @@ namespace PathOfModifiers.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.isOnBurningAir = true;
+            player.GetModPlayer<BuffPlayer>().isOnBurningAir = true;
         }
     }
 }

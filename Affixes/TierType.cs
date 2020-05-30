@@ -119,7 +119,7 @@ namespace PathOfModifiers.Affixes
         public override void UpdateValue()
         {
             var value = base.GetValue();
-            Value = value + (base.GetValue(Tier + 1) - value) * TierMultiplier;
+            Value = value + ((base.GetValue(Tier + 1) - value) * TierMultiplier);
         }
     }
     /// <summary>
@@ -130,7 +130,7 @@ namespace PathOfModifiers.Affixes
         /// <summary>
         /// Whether 0 is skipped for IsRange
         /// </summary>
-        public virtual bool CanBeZero { get; }
+        public virtual bool CanBeZero { get; set; }
 
         public override float TierMultiplier { get; protected set; }
         int Value { get; set; }
@@ -146,20 +146,28 @@ namespace PathOfModifiers.Affixes
                 return base.GetValue(tier);
             }
         }
+        public int GetValueFormat()
+        {
+            int value = Math.Abs(GetValue());
+
+            return value;
+        }
 
         public override void UpdateValue()
         {
             int currentValue = base.GetValue();
             int nextValue = base.GetValue(Tier + 1);
-            float value = currentValue + (nextValue - currentValue);
+            float value = nextValue - currentValue;
 
             bool floor = currentValue < nextValue;
+            bool zeroInrange = false;
             if (!CanBeZero)
             {
                 if (floor)
                 {
                     if (currentValue < 0 && nextValue > 0)
                     {
+                        zeroInrange = true;
                         value -= 1;
                     }
                 }
@@ -167,16 +175,17 @@ namespace PathOfModifiers.Affixes
                 {
                     if (currentValue > 0 && nextValue < 0)
                     {
+                        zeroInrange = true;
                         value += 1;
                     }
                 }
             }
 
-            value *= TierMultiplier;
+            value = currentValue + (value * TierMultiplier);
 
             if (floor)
             {
-                if (!CanBeZero && value >= 0)
+                if (zeroInrange && !CanBeZero && value >= 0)
                 {
                     value += 1;
                 }
@@ -184,7 +193,7 @@ namespace PathOfModifiers.Affixes
             }
             else
             {
-                if (!CanBeZero && value <= 0)
+                if (zeroInrange && !CanBeZero && value <= 0)
                 {
                     value -= 1;
                 }

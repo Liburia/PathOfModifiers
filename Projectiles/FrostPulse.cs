@@ -43,7 +43,7 @@ namespace PathOfModifiers.Projectiles
                 ModContent.DustType<Dusts.FrostDebris>(),
                 Velocity: projectile.velocity * 0.2f,
                 Alpha: 100,
-                Scale: Main.rand.NextFloat(2.2f, 3.3f)); ;
+                Scale: Main.rand.NextFloat(2.2f, 3.3f));
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -74,11 +74,11 @@ namespace PathOfModifiers.Projectiles
 
         void Hit(NPC target)
         {
-            target.GetGlobalNPC<PoMNPC>().AddChilledBuff(target, projectile.ai[0], PathOfModifiers.ailmentDuration);
+            target.GetGlobalNPC<PoMNPC>().AddChilledBuff(target, projectile.ai[0] + 1, PathOfModifiers.ailmentDuration);
         }
         void Hit(Player target)
         {
-            target.GetModPlayer<PoMPlayer>().AddChilledBuff(target, projectile.ai[0], PathOfModifiers.ailmentDuration);
+            target.GetModPlayer<BuffPlayer>().AddChilledBuff(target, projectile.ai[0] + 1, PathOfModifiers.ailmentDuration);
         }
     }
 }

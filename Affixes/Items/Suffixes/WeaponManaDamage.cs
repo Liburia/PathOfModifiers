@@ -38,13 +38,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(1f, 3),
-                new TTFloat.WeightedTier(1.1f, 2.5),
-                new TTFloat.WeightedTier(1.2f, 2),
-                new TTFloat.WeightedTier(1.3f, 1.5),
-                new TTFloat.WeightedTier(1.4f, 1),
-                new TTFloat.WeightedTier(1.5f, 0.5),
-                new TTFloat.WeightedTier(1.6f, 0),
+                new TTFloat.WeightedTier(0f, 3),
+                new TTFloat.WeightedTier(0.1f, 2.5),
+                new TTFloat.WeightedTier(0.2f, 2),
+                new TTFloat.WeightedTier(0.3f, 1.5),
+                new TTFloat.WeightedTier(0.4f, 1),
+                new TTFloat.WeightedTier(0.5f, 0.5),
+                new TTFloat.WeightedTier(0.6f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
@@ -58,17 +58,17 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         double lastProcTime = 0;
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
         {
             string plusMinus = Type2.GetValue() >= 1 ? "" : "-";
 
-            return $"Spend {Type1.GetValueFormat()}% mana to increase damage by {plusMinus}{Type2.GetValueFormat() - 100}%";
+            return $"Spend {Type1.GetValueFormat()}% mana to increase damage by {plusMinus}{Type2.GetValueFormat()}%";
         }
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
@@ -92,7 +92,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             if (item == player.HeldItem && TryConsumeMana(player))
             {
-                damageMultiplier += Type2.GetValue() - 1;
+                damageMultiplier += Type2.GetValue();
             }
         }
 

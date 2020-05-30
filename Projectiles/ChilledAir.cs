@@ -68,8 +68,7 @@ namespace PathOfModifiers.Projectiles
                     Rectangle playerRect = player.getRect();
                     if (playerRect.Intersects(airRect))
                     {
-                        PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-                        pomPlayer.AddChilledAirBuff(player, projectile.ai[1]);
+                        player.GetModPlayer<BuffPlayer>().AddChilledAirBuff(player, projectile.ai[1] + 1);
                     }
                 }
             }
@@ -83,7 +82,7 @@ namespace PathOfModifiers.Projectiles
                     if (npcRect.Intersects(airRect))
                     {
                         PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-                        pomNPC.AddChilledAirBuff(npc, projectile.ai[1]);
+                        pomNPC.AddChilledAirBuff(npc, projectile.ai[1] + 1);
                     }
                 }
             }

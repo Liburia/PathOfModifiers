@@ -89,8 +89,7 @@ namespace PathOfModifiers.Projectiles
                         Rectangle playerRect = player.getRect();
                         if (playerRect.Intersects(airRect))
                         {
-                            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-                            pomPlayer.AddShockedAirBuff(player, projectile.ai[0]);
+                            player.GetModPlayer<BuffPlayer>().AddShockedAirBuff(player, projectile.ai[0] + 1);
                         }
                     }
                 }
@@ -104,7 +103,7 @@ namespace PathOfModifiers.Projectiles
                         if (npcRect.Intersects(airRect))
                         {
                             PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-                            pomNPC.AddShockedAirBuff(npc, projectile.ai[0]);
+                            pomNPC.AddShockedAirBuff(npc, projectile.ai[0] + 1);
                         }
                     }
                 }
@@ -262,7 +261,7 @@ namespace PathOfModifiers.Projectiles
                 Player owner = Main.player[projectile.owner];
 
                 Player player = Main.LocalPlayer;
-                if (PoMHelper.CanHitPvp(owner, player))
+                if (PoMUtil.CanHitPvp(owner, player))
                 {
                     Rectangle localRect = player.getRect();
                     if (localRect.Intersects(boltRect) || localRect.Intersects(airRect))
@@ -276,7 +275,7 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (PoMHelper.CanHitNPC(npc))
+                        if (PoMUtil.CanHitNPC(npc))
                         {
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(boltRect) || npcRect.Intersects(airRect))

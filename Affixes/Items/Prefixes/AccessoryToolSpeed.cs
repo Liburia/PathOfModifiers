@@ -8,6 +8,7 @@ using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
+using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
@@ -21,35 +22,42 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.9f, 0.5),
-                new TTFloat.WeightedTier(0.95f, 3),
-                new TTFloat.WeightedTier(1f, 3),
-                new TTFloat.WeightedTier(1.05f, 0.5),
-                new TTFloat.WeightedTier(1.1f, 0),
+                new TTFloat.WeightedTier(-0.1f, 0.5),
+                new TTFloat.WeightedTier(-0.066f, 1),
+                new TTFloat.WeightedTier(-0.033f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(0.033f, 1),
+                new TTFloat.WeightedTier(0.066f, 0.5),
+                new TTFloat.WeightedTier(0.1f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Sluggish", 4),
-            new WeightedTierName("Lazy", 1.5),
-            new WeightedTierName("Nimble", 1.5),
-            new WeightedTierName("Fleeting", 4),
+            new WeightedTierName("Sluggish", 3),
+            new WeightedTierName("Lazy", 2),
+            new WeightedTierName("Slacking", 0.5),
+            new WeightedTierName("Nimble", 0.5),
+            new WeightedTierName("Agile", 2),
+            new WeightedTierName("Frenzied", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsAccessory(item);
+                AffixItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat() - 100}% tool speed";
+            float value = Type1.GetValue();
+            float valueFormat = Type1.GetValueFormat();
+            char plusMinus = value < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueFormat }% tool speed";
         }
 
-        public override void UpdateEquip(Item item, PoMPlayer player)
+        public override void UpdateEquip(Item item, AffixItemPlayer player)
         {
-            player.pickSpeed += Type1.GetValue() - 1;
+            player.pickSpeed += Type1.GetValue();
         }
     }
 }

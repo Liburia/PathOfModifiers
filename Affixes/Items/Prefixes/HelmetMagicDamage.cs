@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
-    public class ArmorMagicDamage : AffixTiered<TTFloat>, IPrefix
+    public class HelmetMagicDamage : AffixTiered<TTFloat>, IPrefix
     {
         public override double Weight { get; } = 1;
 
@@ -21,39 +21,42 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.9f, 0.5),
-                new TTFloat.WeightedTier(0.93f, 1.2),
-                new TTFloat.WeightedTier(0.97f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.03f, 1),
-                new TTFloat.WeightedTier(1.07f, 0.5),
-                new TTFloat.WeightedTier(1.1f, 0),
+                new TTFloat.WeightedTier(-0.3f, 0.5),
+                new TTFloat.WeightedTier(-0.2f, 1),
+                new TTFloat.WeightedTier(-0.1f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(0.1f, 1),
+                new TTFloat.WeightedTier(0.2f, 0.5),
+                new TTFloat.WeightedTier(0.3f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Deranged", 4),
+            new WeightedTierName("Deranged", 3),
             new WeightedTierName("Ignorant", 2),
             new WeightedTierName("Inept", 0.5),
             new WeightedTierName("Adept", 0.5),
             new WeightedTierName("Mystic", 2),
-            new WeightedTierName("Mythical", 4),
+            new WeightedTierName("Mythical", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsHeadArmor(item);
+                AffixItemItem.IsHeadArmor(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat() - 100}% magic damage";
+            float value = Type1.GetValue();
+            float valueFormat = Type1.GetValueFormat();
+            char plusMinus = value < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueFormat }% magic damage";
         }
 
-        public override void UpdateEquip(Item item, PoMPlayer player)
+        public override void UpdateEquip(Item item, AffixItemPlayer player)
         {
-            player.magicDamage += Type1.GetValue() - 1;
+            player.player.magicDamage += Type1.GetValue();
         }
     }
 }

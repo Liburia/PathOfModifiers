@@ -47,12 +47,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Deception", 3),
         };
 
-        double lastProcTime = 0;
-
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)

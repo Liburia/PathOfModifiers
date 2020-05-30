@@ -69,15 +69,15 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Hatred", 3),
         };
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{Type1.GetValueFormat()}% chance to fire {Type2.GetValue()} Icycles for {Type3.GetValueFormat()}% damage";
+            return $"{Type1.GetValueFormat()}% chance to fire {Type2.GetValueFormat()} Icycles for {Type3.GetValueFormat()}% damage";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

@@ -21,13 +21,13 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.97f, 0.5),
-                new TTFloat.WeightedTier(0.98f, 1.2),
-                new TTFloat.WeightedTier(0.99f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.01f, 1),
-                new TTFloat.WeightedTier(1.02f, 0.5),
-                new TTFloat.WeightedTier(1.03f, 0),
+                new TTFloat.WeightedTier(-0.03f, 0.5),
+                new TTFloat.WeightedTier(-0.02f, 1),
+                new TTFloat.WeightedTier(-0.01f, 2),
+                new TTFloat.WeightedTier(0, 2),
+                new TTFloat.WeightedTier(0.01f, 1),
+                new TTFloat.WeightedTier(0.02f, 0.5),
+                new TTFloat.WeightedTier(0.03f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
@@ -40,15 +40,25 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat() - 100}% damage per player buff/debuff";
+            float value = Type1.GetValue();
+            float valueFormat = Type1.GetValueFormat();
+
+            char plusMinus = value < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueFormat }% damage per player buff/debuff";
+        }
+
+        public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float multiplier, ref float flat)
+        {
+            float value = Type1.GetValue();
+            add += value * PoMUtil.CountBuffs(player.buffType);
         }
     }
 }

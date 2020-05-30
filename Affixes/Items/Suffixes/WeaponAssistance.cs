@@ -29,15 +29,15 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
     },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("of Optimization", 0),
-            new WeightedTierName("of Efficacy", 1.5),
+            new WeightedTierName("of Optimization", 0.5),
+            new WeightedTierName("of Efficacy", 2),
             new WeightedTierName("of Productivity", 3),
         };
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)

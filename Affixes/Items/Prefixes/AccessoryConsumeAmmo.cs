@@ -21,10 +21,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0f, 4),
-                new TTFloat.WeightedTier(0.025f, 2),
-                new TTFloat.WeightedTier(0.05f, 1),
-                new TTFloat.WeightedTier(0.075f, 0.5),
+                new TTFloat.WeightedTier(0f, 3),
+                new TTFloat.WeightedTier(0.016f, 2.5),
+                new TTFloat.WeightedTier(0.033f, 2),
+                new TTFloat.WeightedTier(0.05f, 1.5),
+                new TTFloat.WeightedTier(0.066f, 1),
+                new TTFloat.WeightedTier(0.083f, 0.5),
                 new TTFloat.WeightedTier(0.1f, 0),
             },
         };
@@ -32,26 +34,31 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
             new WeightedTierName("Wasteful", 0.5),
             new WeightedTierName("Stable", 1),
+            new WeightedTierName("Frugal", 1.5),
             new WeightedTierName("Prudent", 2),
-            new WeightedTierName("Materialistic", 4),
+            new WeightedTierName("Conserving", 2.5),
+            new WeightedTierName("Materialistic", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsAccessory(item);
+                AffixItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{Type1.GetValueFormat()}% chance to not consume ammo";
+            return $"{ Type1.GetValueFormat() }% chance to not consume ammo";
         }
 
-        public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
+        public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo, ref float chanceToNotConsume)
         {
-            if (PoMItem.IsAccessoryEquipped(item, player))
-                return Main.rand.NextFloat(0, 1) > Type1.GetValue();
+            if (AffixItemItem.IsAccessoryEquipped(item, player))
+            {
+                float value = Type1.GetValue();
+                chanceToNotConsume += value;
+            }
             return true;
         }
     }

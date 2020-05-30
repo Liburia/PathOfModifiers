@@ -62,7 +62,7 @@ namespace PathOfModifiers.Projectiles
                 Player owner = Main.player[projectile.owner];
 
                 Player player = Main.LocalPlayer;
-                if (PoMHelper.CanHitPvp(owner, player))
+                if (PoMUtil.CanHitPvp(owner, player))
                 {
                     if (projectile.getRect().Intersects(player.getRect()))
                     {
@@ -76,7 +76,7 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (PoMHelper.CanHitNPC(npc))
+                        if (PoMUtil.CanHitNPC(npc))
                         {
                             if (rect.Intersects(npc.getRect()))
                             {
@@ -136,12 +136,12 @@ namespace PathOfModifiers.Projectiles
                 Player owner = Main.player[projectile.owner];
 
                 Player player = Main.LocalPlayer;
-                if (PoMHelper.CanHitPvp(owner, player))
+                if (PoMUtil.CanHitPvp(owner, player))
                 {
                     if (player.getRect().Intersects(explosionBounds))
                     {
                         player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
-                        player.GetModPlayer<PoMPlayer>().AddIgnitedBuff(player, (int)projectile.ai[0], PathOfModifiers.ailmentDuration);
+                        player.GetModPlayer<BuffPlayer>().AddIgnitedBuff(player, (int)projectile.ai[0], PathOfModifiers.ailmentDuration);
                     }
                 }
 
@@ -150,7 +150,7 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (PoMHelper.CanHitNPC(npc))
+                        if (PoMUtil.CanHitNPC(npc))
                         {
                             Rectangle npcBounds = npc.getRect();
                             if (npcBounds.Intersects(explosionBounds))

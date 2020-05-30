@@ -18,7 +18,7 @@ using PathOfModifiers.Items;
 namespace PathOfModifiers
 {
     //TODO: When item is dropped roll only on server? How it work?
-    public class PoMItem : GlobalItem
+    public class AffixItemItem : GlobalItem
     {
         public override bool CloneNewInstances => false;
 
@@ -34,7 +34,7 @@ namespace PathOfModifiers
         public int FreePrefixes => Math.Min(FreeAffixes, rarity.maxPrefixes - prefixes.Count);
         public int FreeSuffixes => Math.Min(FreeAffixes, rarity.maxSuffixes - suffixes.Count);
 
-        public PoMItem()
+        public AffixItemItem()
         {
             rarity = ((PoMDataLoader.raritiesItem?.Length ?? 0) == 0) ? new ItemNone() : PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ItemNone)]];
             affixes = new List<Affix>();
@@ -511,20 +511,23 @@ namespace PathOfModifiers
             return true;
         }
 
-        #region Affix Hooks
+        #region Item Hooks
         public override bool ConsumeAmmo(Item item, Player player)
         {
+            float chanceToNotConsume = 0;
+            bool consume = true;
             foreach (var prefix in prefixes)
             {
-                if (!prefix.ConsumeAmmo(item, player))
-                    return false;
+                if (!prefix.ConsumeAmmo(item, player, ref chanceToNotConsume))
+                    consume = false;
             }
             foreach (var suffix in suffixes)
             {
-                if (!suffix.ConsumeAmmo(item, player))
-                    return false;
+                if (!suffix.ConsumeAmmo(item, player, ref chanceToNotConsume))
+                    consume = false;
             }
-            return true;
+            consume = consume && Main.rand.NextFloat(1) > chanceToNotConsume;
+            return consume;
         }
         public override void GetWeaponCrit(Item item, Player player, ref int crit)
         {
@@ -539,16 +542,15 @@ namespace PathOfModifiers
             }
             crit = (int)Math.Round(crit * multiplier);
         }
-
         public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ModifyWeaponDamage(item, player, ref mult, ref flat);
+                prefix.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ModifyWeaponDamage(item, player, ref mult, ref flat);
+                suffix.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
             }
         }
         public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
@@ -577,6 +579,17 @@ namespace PathOfModifiers
             }
             return multiplier;
         }
+        public override void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult)
+        {
+            foreach (var prefix in prefixes)
+            {
+                prefix.ModifyManaCost(item, player, ref reduce, ref mult);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.ModifyManaCost(item, player, ref reduce, ref mult);
+            }
+        }
         public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             bool shoot = true;
@@ -594,11 +607,11 @@ namespace PathOfModifiers
         }
         public override void UpdateAccessory(Item item, Player player, bool hideVisual)
         {
-            //TODO: affix accessories
+            //UpdateEquip covers accessories
         }
         public override void UpdateEquip(Item item, Player player)
         {
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
+            AffixItemPlayer pomPlayer = player.GetModPlayer<AffixItemPlayer>();
             foreach (var prefix in prefixes)
             {
                 prefix.UpdateEquip(item, pomPlayer);
@@ -610,7 +623,7 @@ namespace PathOfModifiers
         }
         public override void UpdateInventory(Item item, Player player)
         {
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
+            AffixItemPlayer pomPlayer = player.GetModPlayer<AffixItemPlayer>();
             foreach (var prefix in prefixes)
             {
                 prefix.UpdateInventory(item, pomPlayer);
@@ -746,20 +759,24 @@ namespace PathOfModifiers
             }
         }
         #endregion
+        // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
         public bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
         {
+            float chanceToNotConsume = 0;
+            bool consume = true;
             foreach (var prefix in prefixes)
             {
-                if (!prefix.PlayerConsumeAmmo(player, item, ammo))
-                    return false;
+                if (!prefix.PlayerConsumeAmmo(player, item, ammo, ref chanceToNotConsume))
+                    consume = false;
             }
             foreach (var suffix in suffixes)
             {
-                if (!suffix.PlayerConsumeAmmo(player, item, ammo))
-                    return false;
+                if (!suffix.PlayerConsumeAmmo(player, item, ammo, ref chanceToNotConsume))
+                    consume = false;
             }
-            return true;
+            consume = consume && Main.rand.NextFloat(1) > chanceToNotConsume;
+            return consume;
         }
         public bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
@@ -811,6 +828,19 @@ namespace PathOfModifiers
             }
             damage = (int)Math.Round(damage * damageMultiplier);
         }
+        public void ModifyHitByPvp(Item item, Player player, Player attacker, ref int damage, ref bool crit)
+        {
+            float damageMultiplier = 1f;
+            foreach (var prefix in prefixes)
+            {
+                prefix.ModifyHitByPvp(item, player, attacker, ref damage, ref crit);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.ModifyHitByPvp(item, player, attacker, ref damage, ref crit);
+            }
+            damage = (int)Math.Round(damage * damageMultiplier);
+        }
         public void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
         {
             foreach (var prefix in prefixes)
@@ -820,6 +850,17 @@ namespace PathOfModifiers
             foreach (var suffix in suffixes)
             {
                 suffix.OnHitByNPC(item, player, npc, damage, crit);
+            }
+        }
+        public void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit)
+        {
+            foreach (var prefix in prefixes)
+            {
+                prefix.OnHitByPvp(item, player, attacker, damage, crit);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.OnHitByPvp(item, player, attacker, damage, crit);
             }
         }
         public void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
@@ -966,7 +1007,6 @@ namespace PathOfModifiers
 
         public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
-            //TODO: Or just use PostUpdate?
         }
         public override void PostUpdate(Item item)
         {
@@ -1081,7 +1121,7 @@ namespace PathOfModifiers
 
         public override GlobalItem Clone(Item item, Item itemClone)
         {
-            PoMItem newItem = (PoMItem)NewInstance(itemClone);
+            AffixItemItem newItem = (AffixItemItem)NewInstance(itemClone);
 
             newItem.rarity = rarity;
 

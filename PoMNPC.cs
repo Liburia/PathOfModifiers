@@ -164,7 +164,7 @@ namespace PathOfModifiers
             Player lastDamageDealerPlayer = lastDamageDealer as Player;
             if (lastDamageDealerPlayer != null)
             {
-                lastDamageDealerPlayer.GetModPlayer<PoMPlayer>().OnKillNPC(npc);
+                lastDamageDealerPlayer.GetModPlayer<AffixItemPlayer>().OnKillNPC(npc);
             }
 
             NPC lastDamageDealerNPC = lastDamageDealer as NPC;

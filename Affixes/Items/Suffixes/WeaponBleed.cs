@@ -63,18 +63,18 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("of Wounding", 3),
-            new WeightedTierName("of Harming", 2),
-            new WeightedTierName("of Laceration", 0.5),
-            new WeightedTierName("of Hemmorrhage", 0.5),
-            new WeightedTierName("of Suffering", 2),
+            new WeightedTierName("of Wounding", 0.5),
+            new WeightedTierName("of Harming", 1),
+            new WeightedTierName("of Laceration", 1.5),
+            new WeightedTierName("of Hemmorrhage", 2),
+            new WeightedTierName("of Suffering", 2.5),
             new WeightedTierName("of Agony", 3),
         };
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -121,8 +121,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, int.MaxValue);
             int duration = (int)MathHelper.Clamp(Type3.GetValue() * 60, 1, int.MaxValue);
-            PoMPlayer pomPlayer = target.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddDoTBuff(target, ModContent.GetInstance<Bleeding>(), damage, duration);
+            target.GetModPlayer<BuffPlayer>().AddDoTBuff(target, ModContent.GetInstance<Bleeding>(), damage, duration);
         }
     }
 }

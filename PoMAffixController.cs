@@ -31,7 +31,7 @@ namespace PathOfModifiers
         /// <summary>
         /// Returns a valid affix for the item or null.
         /// </summary>
-        public static Affixes.Items.Affix RollNewAffix(PoMItem pomItem, Item item)
+        public static Affixes.Items.Affix RollNewAffix(AffixItemItem pomItem, Item item)
         {
             if (pomItem.FreeAffixes <= 0)
             {
@@ -54,7 +54,7 @@ namespace PathOfModifiers
             affix.InitializeItem(pomItem);
             return affix;
         }
-        public static Affixes.Items.Affix RollNewPrefix(PoMItem pomItem, Item item)
+        public static Affixes.Items.Affix RollNewPrefix(AffixItemItem pomItem, Item item)
         {
             if (pomItem.FreePrefixes <= 0)
             {
@@ -78,7 +78,7 @@ namespace PathOfModifiers
             prefix.InitializeItem(pomItem);
             return prefix;
         }
-        public static Affixes.Items.Affix RollNewSuffix(PoMItem pomItem, Item item)
+        public static Affixes.Items.Affix RollNewSuffix(AffixItemItem pomItem, Item item)
         {
             if (pomItem.FreeSuffixes <= 0)
             {
@@ -105,7 +105,7 @@ namespace PathOfModifiers
         /// <summary>
         /// Returns a new instance of the affix based on class name
         /// </summary>
-        public static Affixes.Items.Affix GetAffix(PoMItem pomItem, string name, bool isPrefix)
+        public static Affixes.Items.Affix GetAffix(AffixItemItem pomItem, string name, bool isPrefix)
         {
             string namespaceQualifiedTypeName;
             if (isPrefix)

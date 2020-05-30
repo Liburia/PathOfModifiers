@@ -40,21 +40,24 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item) &&
-                PoMItem.CanConsumeAmmo(item);
+                AffixItemItem.IsWeapon(item) &&
+                AffixItemItem.CanConsumeAmmo(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{Type1.GetValueFormat()}% chance to not consume ammo";
+            float valueFormat = Type1.GetValueFormat();
+            return $"{ valueFormat }% chance to not consume ammo";
         }
 
-        public override bool ConsumeAmmo(Item item, Player player)
+        public override bool ConsumeAmmo(Item item, Player player, ref float chanceToNotConsume)
         {
-            return Main.rand.NextFloat(0, 1) > Type1.GetValue();
+            float value = Type1.GetValue();
+            chanceToNotConsume += value;
+            return true;
         }
     }
 }

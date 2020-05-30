@@ -12,7 +12,7 @@ using Terraria.DataStructures;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
-    public class EquipDamageTakenAndDealt : AffixTiered<TTFloat>, IPrefix
+    public class AccessoryDamageTakenAndDealt : AffixTiered<TTFloat>, IPrefix
     {
         public override double Weight { get; } = 1;
 
@@ -21,60 +21,59 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             TwoWay = false,
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
-    {
-                new TTFloat.WeightedTier(0.9f, 0.5),
-                new TTFloat.WeightedTier(0.93f, 1.2),
-                new TTFloat.WeightedTier(0.97f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(1.03f, 1),
-                new TTFloat.WeightedTier(1.07f, 0.5),
-                new TTFloat.WeightedTier(1.1f, 0),
-    },
+            {
+                new TTFloat.WeightedTier(-0.1f, 0.5),
+                new TTFloat.WeightedTier(-0.07f, 1),
+                new TTFloat.WeightedTier(-0.03f, 2),
+                new TTFloat.WeightedTier(0, 2),
+                new TTFloat.WeightedTier(0.03f, 1),
+                new TTFloat.WeightedTier(0.07f, 0.5),
+                new TTFloat.WeightedTier(0.1f, 0),
+            },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Harmony", 3),
-            new WeightedTierName("Parity", 1.5),
-            new WeightedTierName("Balance", 0.5),
-            new WeightedTierName("Tranquility", 0.5),
-            new WeightedTierName("Concord", 1.5),
-            new WeightedTierName("Tension", 3),
+            new WeightedTierName("Discordant", 3),
+            new WeightedTierName("Tense", 1.5),
+            new WeightedTierName("Balanced", 0.5),
+            new WeightedTierName("Tranquil", 0.5),
+            new WeightedTierName("Harmonic", 1.5),
+            new WeightedTierName("Concordant", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsAnyArmor(item) ||
-                PoMItem.IsAccessory(item);
+                AffixItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            string moreLess = Type1.GetValue() > 1 ? "increased" : "reduced";
-            return $"Take and deal {Type1.GetValueFormat() - 100}% {moreLess} damage";
+            char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
+            return $"Take and deal { plusMinus }{ Type1.GetValueFormat() }% damage";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (PoMItem.IsEquipped(item, player))
+            if (AffixItemItem.IsEquipped(item, player))
             {
-                damageMultiplier += Type1.GetValue() - 1;
+                damageMultiplier += Type1.GetValue();
             }
             return true;
         }
 
         public override void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit)
         {
-            if (PoMItem.IsEquipped(affixItem, player))
+            if (AffixItemItem.IsEquipped(affixItem, player))
             {
-                damageMultiplier += Type1.GetValue() - 1;
+                damageMultiplier += Type1.GetValue();
             }
         }
         public override void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (PoMItem.IsEquipped(affixItem, player))
+            if (AffixItemItem.IsEquipped(affixItem, player))
             {
-                damageMultiplier += Type1.GetValue() - 1;
+                damageMultiplier += Type1.GetValue();
             }
         }
     }

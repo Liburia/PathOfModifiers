@@ -127,7 +127,7 @@ namespace PathOfModifiers.Projectiles
                 Player owner = Main.player[projectile.owner];
 
                 Player player = Main.LocalPlayer;
-                if (PoMHelper.CanHitPvp(owner, player))
+                if (PoMUtil.CanHitPvp(owner, player))
                 {
                     if (player.getRect().Intersects(hitRect))
                     {
@@ -140,7 +140,7 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (PoMHelper.CanHitNPC(npc))
+                        if (PoMUtil.CanHitNPC(npc))
                         {
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(hitRect))

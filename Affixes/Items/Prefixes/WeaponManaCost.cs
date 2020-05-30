@@ -21,13 +21,13 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(1.5f, 0.5),
-                new TTFloat.WeightedTier(1.375f, 1.2),
-                new TTFloat.WeightedTier(1.2f, 2),
-                new TTFloat.WeightedTier(1f, 2),
-                new TTFloat.WeightedTier(0.8f, 1),
-                new TTFloat.WeightedTier(0.675f, 0.5),
-                new TTFloat.WeightedTier(0.5f, 0),
+                new TTFloat.WeightedTier(0.5f, 0.5),
+                new TTFloat.WeightedTier(0.333f, 1),
+                new TTFloat.WeightedTier(0.166f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(-0.166f, 1),
+                new TTFloat.WeightedTier(-0.333f, 0.5),
+                new TTFloat.WeightedTier(-0.5f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
@@ -40,21 +40,26 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item) &&
-                PoMItem.CanCostMana(item);
+                AffixItemItem.IsWeapon(item) &&
+                AffixItemItem.CanCostMana(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat() - 100}% mana cost";
+            float value = Type1.GetValue();
+            float valueFormat = Type1.GetValueFormat();
+
+            char plusMinus = value < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueFormat }% mana cost";
         }
 
-        public override void HoldItem(Item item, Player player)
+        public override void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult)
         {
-            player.manaCost = player.manaCost * Type1.GetValue();
+            float value = Type1.GetValue();
+            mult += value;
         }
     }
 }

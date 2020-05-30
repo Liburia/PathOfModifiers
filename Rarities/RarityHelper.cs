@@ -9,19 +9,19 @@ namespace PathOfModifiers.Rarities
     {
         public static bool CanRollWeapon(Item item)
         {
-            return PoMItem.IsWeapon(item);
+            return AffixItemItem.IsWeapon(item);
         }
         public static bool CanRollArmor(Item item)
         {
-            return PoMItem.IsAnyArmor(item);
+            return AffixItemItem.IsAnyArmor(item);
         }
         public static bool CanRollAccessory(Item item)
         {
-            return PoMItem.IsAccessory(item);
+            return AffixItemItem.IsAccessory(item);
         }
         public static bool CanRollMap(Item item)
         {
-            return PoMItem.IsMap(item);
+            return AffixItemItem.IsMap(item);
         }
         public static bool CanRollNPC(NPC npc)
         {

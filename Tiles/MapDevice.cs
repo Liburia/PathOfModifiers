@@ -73,7 +73,7 @@ namespace PathOfModifiers.Tiles
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             //Hardcoded frame coordinate values because using TileObjectData is cancer.
-            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
+            if (PoMUtil.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
                 var mapDevice = (MapDeviceTE)te;
 
@@ -122,7 +122,7 @@ namespace PathOfModifiers.Tiles
             }
 
             //TODO: (Or not to do) Hardcoded frame coordinate values because using TileObjectData is cancer.
-            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
+            if (PoMUtil.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
                 MapDeviceTE clickedMD = (MapDeviceTE)te;
                 if (clickedMD.timeLeft > 0 && IsTilePortal(clickedMD, i, j))
@@ -164,7 +164,7 @@ namespace PathOfModifiers.Tiles
 
         public override void MouseOver(int i, int j)
         {
-            if (PoMHelper.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
+            if (PoMUtil.TryGetTileEntity(i, j, 18, 18, out TileEntity te))
             {
                 var mapDevice = (MapDeviceTE)te;
 
@@ -199,7 +199,7 @@ namespace PathOfModifiers.Tiles
 
                 if (!mapDevice.mapItem.IsAir)
                 {
-                    var screenDrawOffset = PoMHelper.DrawToScreenOffset();
+                    var screenDrawOffset = PoMUtil.DrawToScreenOffset();
 
                     var itemTexture = Main.itemTexture[mapDevice.mapItem.type];
                     var itemSize = 24;
@@ -294,7 +294,7 @@ namespace PathOfModifiers.Tiles
 
                 Point tilePos = new Point(Position.X - 1 + x, Position.Y - 1 + y);
                 Tile tile = Main.tile[tilePos.X, tilePos.Y];
-                int? tileType = PoMHelper.GetTileType(tile);
+                int? tileType = PoMUtil.GetTileType(tile);
                 if (tileType.HasValue && tileType == ModContent.TileType<MapBorder>())
                 {
                     adjacentTiles.Add(new Tuple<Point, bool, bool>(tilePos, scanHoriz, scanVert));
@@ -308,7 +308,7 @@ namespace PathOfModifiers.Tiles
 
             foreach (var tilePos in adjacentTiles)
             {
-                PoMHelper.FindAdjacentBounds(tilePos.Item1, boundss, tilePos.Item2, tilePos.Item3);
+                PoMUtil.FindAdjacentBounds(tilePos.Item1, boundss, tilePos.Item2, tilePos.Item3);
             }
 
             Rectangle tileBounds = new Rectangle(Position.X, Position.Y, size.X - 1, size.Y - 1);
@@ -510,7 +510,7 @@ namespace PathOfModifiers.Tiles
                 }
                 else if (!mapItem.IsAir)
                 {
-                    PoMHelper.DropItem(new Vector2(Position.X * 16, Position.Y * 16), mapItem, 2);
+                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), mapItem, 2);
                 }
             }
             if (Main.netMode != NetmodeID.Server && MapDevice.activeMD == this)

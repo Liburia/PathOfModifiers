@@ -21,35 +21,42 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.9f, 0.5),
-                new TTFloat.WeightedTier(0.95f, 3),
-                new TTFloat.WeightedTier(1f, 3),
-                new TTFloat.WeightedTier(1.05f, 0.5),
-                new TTFloat.WeightedTier(1.1f, 0),
+                new TTFloat.WeightedTier(-0.1f, 0.5),
+                new TTFloat.WeightedTier(-0.066f, 1),
+                new TTFloat.WeightedTier(-0.033f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(0.033f, 1),
+                new TTFloat.WeightedTier(0.066f, 0.5),
+                new TTFloat.WeightedTier(0.1f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Procrastinating", 4),
-            new WeightedTierName("Leisurly", 1.5),
-            new WeightedTierName("Quick", 1.5),
-            new WeightedTierName("Fleeting", 4),
+            new WeightedTierName("Tardy", 3),
+            new WeightedTierName("Slow", 2),
+            new WeightedTierName("Leisurly", 0.5),
+            new WeightedTierName("Quick", 0.5),
+            new WeightedTierName("Swift", 2),
+            new WeightedTierName("Fleeting", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsAccessory(item);
+                AffixItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat() - 100}% movement speed";
+            float value = Type1.GetValue();
+            float valueFormat = Type1.GetValueFormat();
+            char plusMinus = value < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueFormat }% movement speed";
         }
 
-        public override void UpdateEquip(Item item, PoMPlayer player)
+        public override void UpdateEquip(Item item, AffixItemPlayer player)
         {
-            player.moveSpeed += Type1.GetValue() - 1;
+            player.moveSpeed += Type1.GetValue();
         }
     }
 }

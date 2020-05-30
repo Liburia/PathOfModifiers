@@ -21,38 +21,42 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.85f, 0.5),
-                new TTFloat.WeightedTier(0.92f, 3),
-                new TTFloat.WeightedTier(1f, 3),
-                new TTFloat.WeightedTier(1.08f, 0.5),
-                new TTFloat.WeightedTier(1.15f, 0),
+                new TTFloat.WeightedTier(-0.15f, 0.5),
+                new TTFloat.WeightedTier(-0.1f, 1),
+                new TTFloat.WeightedTier(-0.05f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(0.05f, 1),
+                new TTFloat.WeightedTier(0.1f, 0.5),
+                new TTFloat.WeightedTier(0.15f, 0),
             },
         };
 
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Perfunctory", 4),
-            new WeightedTierName("Tepid", 1.5),
-            new WeightedTierName("Keen", 1.5),
-            new WeightedTierName("Fervent", 4),
+            new WeightedTierName("Perfunctory", 3),
+            new WeightedTierName("Apathetic", 2),
+            new WeightedTierName("Tepid", 0.5),
+            new WeightedTierName("Keen", 0.5),
+            new WeightedTierName("Zealous", 2),
+            new WeightedTierName("Fervent", 3),
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsAccessory(item);
+                AffixItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"x{Type1.GetValueFormat(1)} critical strike chance";
+            return $"x{ Type1.GetValueFormat(1) } critical strike chance";
         }
 
         public override void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
         {
-            if (PoMItem.IsAccessoryEquipped(item, player))
+            if (AffixItemItem.IsAccessoryEquipped(item, player))
             {
-                multiplier += Type1.GetValue() - 1;
+                multiplier += Type1.GetValue();
             }
         }
     }

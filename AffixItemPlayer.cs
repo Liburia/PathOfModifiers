@@ -15,15 +15,69 @@ using Terraria.Net;
 
 namespace PathOfModifiers
 {
-    public class PoMPlayer : ModPlayer
+    public class AffixItemPlayer : ModPlayer
     {
-        #region Stats
-        public float meleeDamage;
-        public float magicDamage;
-        public float rangedDamage;
-        public float throwingDamage;
-        public float minionDamage;
+        public class GoldDropChanceColletion
+        {
+            public class GoldDropChance
+            {
+                public bool enabled;
+                public float chance;
+                public int amount;
+            }
 
+            public Dictionary<Affix, GoldDropChance> dict = new Dictionary<Affix, GoldDropChance>();
+
+            public void AddOrUpdate(Affix affix, float chance, int amount)
+            {
+                if (dict.TryGetValue(affix, out GoldDropChance gdc))
+                {
+                    gdc.enabled = true;
+                    gdc.chance = chance;
+                    gdc.amount = amount;
+                }
+                else
+                {
+                    dict.Add(affix, new GoldDropChance()
+                    {
+                        enabled = true,
+                        chance = chance,
+                        amount = amount,
+                    });
+                }
+            }
+            public void Clear()
+            {
+                dict.Clear();
+            }
+            public void ClearDisabled()
+            {
+                dict = dict
+                 .Where(kv => kv.Value.enabled)
+                 .ToDictionary(kv => kv.Key, kv => kv.Value);
+            }
+            public void ResetEffects()
+            {
+                foreach (var pair in dict)
+                {
+                    pair.Value.enabled = false;
+                }
+            }
+            public int Roll()
+            {
+                int totalDrop = 0;
+                foreach (var kv in dict)
+                {
+                    if (kv.Value.enabled && Main.rand.NextFloat(1f) < kv.Value.chance)
+                    {
+                        totalDrop += kv.Value.amount;
+                    }
+                }
+                return totalDrop;
+            }
+        }
+
+        #region Stats
         public float meleeSpeed;
         public float pickSpeed;
 
@@ -33,147 +87,18 @@ namespace PathOfModifiers
         public float restorationDelayTime;
 
         public float blockChance;
+
+        public float reflectMeleeDamage;
+
+        public GoldDropChanceColletion goldDropChances;
         #endregion
 
-        public Entity lastDamageDealer;
-
-        public bool isOnBurningAir;
-        public bool isIgnited;
-        public bool isOnShockedAir;
-        public bool isShocked;
-        public bool isOnChilledAir;
-        public bool isChilled;
-
-        int burningAirDps;
-        int igniteDps;
-        float shockedAirMultiplier;
-        float shockedMultiplier;
-        float chilledAirMultiplier;
-        float chilledMultiplier;
-
-        DoTInstanceCollection dotInstanceCollection = new DoTInstanceCollection();
-
-        float moveSpeedBuffMultiplier = 1;
-        public bool moveSpeedBuff = false;
-
-        int staticStrikeDamage;
-        int staticStrikeIntervalTicks;
-        int staticStrikeCurrentInterval;
-        public bool staticStrikeBuff = false;
-
-        public void AddDoTBuff(Player player, DamageOverTime buff, int dps, int durationTicks, bool syncMP = true)
-        {
-            Type dotBuffType = buff.GetType();
-            double durationMs = (durationTicks / 60f) * 1000;
-            dotInstanceCollection.AddInstance(dotBuffType, dps, durationMs);
-
-            if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                BuffPacketHandler.CSendAddDoTBuffPlayer(player.whoAmI, buff.Type, dps, durationTicks);
-            }
-        }
-        public void AddMoveSpeedBuff(Player player, float speedMultiplier, int time, bool syncMP = true)
-        {
-            moveSpeedBuffMultiplier = speedMultiplier;
-            player.AddBuff(ModContent.BuffType<MoveSpeed>(), time, true);
-
-            if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
-            {
-                BuffPacketHandler.CSendAddMoveSpeedBuffPlayer(player.whoAmI, speedMultiplier, time);
-            }
-        }
-        public void AddBurningAirBuff(Player player, int dps)
-        {
-            burningAirDps = dps;
-            player.AddBuff(ModContent.BuffType<BurningAir>(), 2, true);
-        }
-        public void AddIgnitedBuff(Player player, int dps, int durationTicks, bool syncMP = true)
-        {
-            igniteDps = dps;
-            player.AddBuff(ModContent.BuffType<Ignited>(), durationTicks, true);
-
-            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
-            {
-                BuffPacketHandler.CSendAddIgnitedBuffPlayer(player.whoAmI, dps, durationTicks);
-            }
-        }
-        public void AddShockedAirBuff(Player player, float multiplier)
-        {
-            shockedAirMultiplier = multiplier;
-            player.AddBuff(ModContent.BuffType<ShockedAir>(), 2, true);
-        }
-        public void AddShockedBuff(Player player, float multiplier, int durationTicks, bool syncMP = true)
-        {
-            shockedMultiplier = multiplier;
-            player.AddBuff(ModContent.BuffType<Shocked>(), durationTicks, true);
-
-            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
-            {
-                BuffPacketHandler.CSendAddShockedBuffPlayer(player.whoAmI, multiplier, durationTicks);
-            }
-        }
-        public void AddChilledBuff(Player player, float multiplier, int durationTicks, bool syncMP = true)
-        {
-            chilledMultiplier = multiplier;
-            player.AddBuff(ModContent.BuffType<Chilled>(), durationTicks, true);
-
-            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
-            {
-                BuffPacketHandler.CSendAddChilledBuffPlayer(player.whoAmI, multiplier, durationTicks);
-            }
-        }
-        public void AddChilledAirBuff(Player player, float multiplier)
-        {
-            chilledAirMultiplier = multiplier;
-            player.AddBuff(ModContent.BuffType<ChilledAir>(), 2, true);
-        }
-        public void AddStaticStrikeBuff(Player player, int damage, int intervalTicks, int time, bool syncMP = true)
-        {
-            if (!staticStrikeBuff)
-            {
-                staticStrikeCurrentInterval = 0;
-            }
-            staticStrikeDamage = damage;
-            staticStrikeIntervalTicks = intervalTicks;
-            player.AddBuff(ModContent.BuffType<StaticStrike>(), time, true);
-
-            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
-            {
-                BuffPacketHandler.CSendAddStaticStrikeBuffPlayer(player.whoAmI, damage, intervalTicks, time);
-            }
-        }
-
-        public void ShockModifyDamageTaken(ref int damage)
-        {
-            float totalMultiplier = 1;
-            if (isOnShockedAir)
-            {
-                totalMultiplier += shockedAirMultiplier - 1;
-            }
-            if (isShocked)
-            {
-                totalMultiplier += shockedMultiplier - 1;
-            }
-            damage = (int)Math.Round(damage * totalMultiplier);
-        }
-        public void ChillModifyDamageDealt(ref int damage)
-        {
-            float totalMultiplier = 1;
-            if (isOnChilledAir)
-            {
-                totalMultiplier += chilledAirMultiplier - 1;
-            }
-            if (isChilled)
-            {
-                totalMultiplier += chilledMultiplier - 1;
-            }
-            damage = (int)Math.Round(damage * totalMultiplier);
-        }
+        public Player lastDamageDealer;
 
         public override void Initialize()
         {
             lastDamageDealer = null;
-            dotInstanceCollection = new DoTInstanceCollection();
+            goldDropChances = new GoldDropChanceColletion();
         }
 
         public override void OnEnterWorld(Player player)
@@ -206,15 +131,14 @@ namespace PathOfModifiers
         public override bool ConsumeAmmo(Item weapon, Item ammo)
         {
             Item item;
-            PoMItem pomItem;
-            //TODO: Does this mean the affix will apply when in the inventory unless it has logic itself? Check and fix.
+            AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 item = player.inventory[i];
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 if (!pomItem.PlayerConsumeAmmo(player, item, ammo))
                     return false;
             }
@@ -224,7 +148,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 if (!pomItem.PlayerConsumeAmmo(player, item, ammo))
                     return false;
             }
@@ -233,7 +157,7 @@ namespace PathOfModifiers
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             Item item;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             float damageMultiplier = 1f;
             bool hurt = true;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -242,7 +166,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 if (!pomItem.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
             }
@@ -252,7 +176,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 if (!pomItem.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
                     hurt = false;
             }
@@ -261,6 +185,7 @@ namespace PathOfModifiers
             if (hurt)
             {
                 hurt = Main.rand.NextFloat(1) >= blockChance;
+                PoMUtil.MakeImmune(player, (int)PoMUtil.PlayerImmuneTime.Parry);
             }
 
             return hurt;
@@ -268,7 +193,7 @@ namespace PathOfModifiers
         public override void NaturalLifeRegen(ref float regen)
         {
             Item item;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             float regenMultiplier = 1;
             for (int i = 0; i < player.inventory.Length; i++)
             {
@@ -276,7 +201,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 pomItem.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -285,7 +210,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 pomItem.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
             regen = (regen * regenMultiplier) + (player.lifeRegen * regenMultiplier) - player.lifeRegen;
@@ -294,7 +219,7 @@ namespace PathOfModifiers
         public override void GetWeaponCrit(Item heldItem, ref int crit)
         {
             Item item;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             float multiplier = 1f;
             for (int i = 0; i < player.inventory.Length; i++)
             {
@@ -302,7 +227,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -311,7 +236,7 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
             }
             crit = (int)Math.Round(crit * multiplier);
@@ -322,14 +247,14 @@ namespace PathOfModifiers
             PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
 
             Item item;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 item = player.inventory[i];
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 pomItem.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -338,23 +263,22 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 pomItem.ModifyHitByNPC(item, player, npc, ref damage, ref crit);
             }
 
-            ShockModifyDamageTaken(ref damage);
         }
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
         {
             Item item;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 item = player.inventory[i];
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 pomItem.OnHitByNPC(item, player, npc, damage, crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -363,13 +287,75 @@ namespace PathOfModifiers
                 if (item.type == 0 || item.stack == 0)
                     continue;
 
-                pomItem = item.GetGlobalItem<PoMItem>();
+                pomItem = item.GetGlobalItem<AffixItemItem>();
                 pomItem.OnHitByNPC(item, player, npc, damage, crit);
+            }
+
+            if (reflectMeleeDamage > 0)
+            {
+                int reflectDamage = (int)Math.Round(damage * reflectMeleeDamage);
+                float reflectKnockback = 5;
+                int reflectDirection = npc.Center.X > player.Center.X ? 1 : -1;
+                npc.StrikeNPC(reflectDamage, reflectKnockback, reflectDirection, crit);
+            }
+        }
+        public void ModifyHitByPvp(Player attacker, ref int damage, ref bool crit)
+        {
+            Item item;
+            AffixItemItem pomItem;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                item = player.inventory[i];
+                if (item.type == 0 || item.stack == 0)
+                    continue;
+
+                pomItem = item.GetGlobalItem<AffixItemItem>();
+                pomItem.ModifyHitByPvp(item, player, attacker, ref damage, ref crit);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                item = player.armor[i];
+                if (item.type == 0 || item.stack == 0)
+                    continue;
+
+                pomItem = item.GetGlobalItem<AffixItemItem>();
+                pomItem.ModifyHitByPvp(item, player, attacker, ref damage, ref crit);
+            }
+
+        }
+        public void OnHitByPvp(Player attacker, int damage, bool crit)
+        {
+            Item item;
+            AffixItemItem pomItem;
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                item = player.inventory[i];
+                if (item.type == 0 || item.stack == 0)
+                    continue;
+
+                pomItem = item.GetGlobalItem<AffixItemItem>();
+                pomItem.OnHitByPvp(item, player, attacker, damage, crit);
+            }
+            for (int i = 0; i < player.armor.Length; i++)
+            {
+                item = player.armor[i];
+                if (item.type == 0 || item.stack == 0)
+                    continue;
+
+                pomItem = item.GetGlobalItem<AffixItemItem>();
+                pomItem.OnHitByPvp(item, player, attacker, damage, crit);
+            }
+
+
+            if (reflectMeleeDamage > 0)
+            {
+                int reflectDamage = (int)Math.Round(damage * reflectMeleeDamage);
+                int reflectDirection = attacker.Center.X > player.Center.X ? 1 : -1;
+                attacker.Hurt(PlayerDeathReason.ByPlayer(attacker.whoAmI), reflectDamage, reflectDirection, true, false, crit);
             }
         }
         public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
         {
-            ShockModifyDamageTaken(ref damage);
         }
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
         {
@@ -379,14 +365,14 @@ namespace PathOfModifiers
         public void OnKillNPC(NPC target)
         {
             Item affixItem;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 affixItem = player.inventory[i];
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerOnKillNPC(affixItem, player, target);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -395,21 +381,21 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerOnKillNPC(affixItem, player, target);
             }
         }
         public void OnKillPvp(Player target)
         {
             Item affixItem;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 affixItem = player.inventory[i];
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerOnKillPvp(affixItem, player, target);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -418,16 +404,16 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerOnKillPvp(affixItem, player, target);
             }
         }
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
-            target.GetGlobalNPC<ItemAffixNPC>().LastDamageDealer = player;
+            target.GetGlobalNPC<AffixItemNPC>().LastDamageDealer = player;
 
             Item affixItem;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             float damageMultiplier = 1f;
             float knockbackMultiplier = 1f;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -436,7 +422,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -445,21 +431,18 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
             }
             damage = (int)Math.Round(damage * damageMultiplier);
             knockback *= knockbackMultiplier;
-
-            ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
         {
-            PoMPlayer pomPlayer = target.GetModPlayer<PoMPlayer>();
-            pomPlayer.ShockModifyDamageTaken(ref damage);
+            target.GetModPlayer<AffixItemPlayer>().lastDamageDealer = player;
 
             Item affixItem;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             float damageMultiplier = 1f;
             for (int i = 0; i < player.inventory.Length; i++)
             {
@@ -467,7 +450,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -476,28 +459,28 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
             damage = (int)Math.Round(damage * damageMultiplier);
 
-            ChillModifyDamageDealt(ref damage);
+            target.GetModPlayer<AffixItemPlayer>().ModifyHitByPvp(player, ref damage, ref crit);
         }
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            target.GetGlobalNPC<ItemAffixNPC>().LastDamageDealer = player;
+            target.GetGlobalNPC<AffixItemNPC>().LastDamageDealer = player;
 
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
-                PoMItem pomItem;
+                AffixItemItem pomItem;
                 for (int i = 0; i < player.inventory.Length; i++)
                 {
                     item = player.inventory[i];
                     if (item.type == 0 || item.stack == 0)
                         continue;
 
-                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem = item.GetGlobalItem<AffixItemItem>();
                     pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
                 }
                 for (int i = 0; i < player.armor.Length; i++)
@@ -506,28 +489,26 @@ namespace PathOfModifiers
                     if (item.type == 0 || item.stack == 0)
                         continue;
 
-                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem = item.GetGlobalItem<AffixItemItem>();
                     pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
                 }
             }
-
-            ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
         {
+            target.GetModPlayer<AffixItemPlayer>().lastDamageDealer = player;
+
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
-                target.GetModPlayer<PoMPlayer>().ShockModifyDamageTaken(ref damage);
-
                 Item item;
-                PoMItem pomItem;
+                AffixItemItem pomItem;
                 for (int i = 0; i < player.inventory.Length; i++)
                 {
                     item = player.inventory[i];
                     if (item.type == 0 || item.stack == 0)
                         continue;
 
-                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem = item.GetGlobalItem<AffixItemItem>();
                     pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
                 }
                 for (int i = 0; i < player.armor.Length; i++)
@@ -536,26 +517,22 @@ namespace PathOfModifiers
                     if (item.type == 0 || item.stack == 0)
                         continue;
 
-                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem = item.GetGlobalItem<AffixItemItem>();
                     pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
                 }
             }
-
-            ChillModifyDamageDealt(ref damage);
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
-            target.GetGlobalNPC<PoMNPC>().lastDamageDealer = player;
-
             Item affixItem;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 affixItem = player.inventory[i];
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -564,23 +541,21 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
             }
         }
         public override void OnHitPvp(Item item, Player target, int damage, bool crit)
         {
-            target.GetModPlayer<PoMPlayer>().lastDamageDealer = player;
-
             Item affixItem;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
             {
                 affixItem = player.inventory[i];
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -589,25 +564,25 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 pomItem.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
             }
+
+            target.GetModPlayer<AffixItemPlayer>().OnHitByPvp(player, damage, crit);
         }
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
-            target.GetGlobalNPC<PoMNPC>().lastDamageDealer = player;
-
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
-                PoMItem pomItem;
+                AffixItemItem pomItem;
                 for (int i = 0; i < player.inventory.Length; i++)
                 {
                     item = player.inventory[i];
                     if (item.type == 0 || item.stack == 0)
                         continue;
 
-                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem = item.GetGlobalItem<AffixItemItem>();
                     pomItem.ProjOnHitNPC(item, player, proj, target, damage, knockback, crit);
                 }
                 for (int i = 0; i < player.armor.Length; i++)
@@ -616,27 +591,25 @@ namespace PathOfModifiers
                     if (item.type == 0 || item.stack == 0)
                         continue;
 
-                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem = item.GetGlobalItem<AffixItemItem>();
                     pomItem.ProjOnHitNPC(item, player, proj, target, damage, knockback, crit);
                 }
             }
         }
         public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
         {
-            target.GetModPlayer<PoMPlayer>().lastDamageDealer = player;
-
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
 
                 Item item;
-                PoMItem pomItem;
+                AffixItemItem pomItem;
                 for (int i = 0; i < player.inventory.Length; i++)
                 {
                     item = player.inventory[i];
                     if (item.type == 0 || item.stack == 0)
                         continue;
 
-                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem = item.GetGlobalItem<AffixItemItem>();
                     pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
                 }
                 for (int i = 0; i < player.armor.Length; i++)
@@ -645,7 +618,7 @@ namespace PathOfModifiers
                     if (item.type == 0 || item.stack == 0)
                         continue;
 
-                    pomItem = item.GetGlobalItem<PoMItem>();
+                    pomItem = item.GetGlobalItem<AffixItemItem>();
                     pomItem.ProjOnHitPvp(item, player, proj, target, damage, crit);
                 }
             }
@@ -653,7 +626,7 @@ namespace PathOfModifiers
         public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Item affixItem;
-            PoMItem pomItem;
+            AffixItemItem pomItem;
             bool shoot = true;
             for (int i = 0; i < player.inventory.Length; i++)
             {
@@ -661,7 +634,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 if (!pomItem.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
                     shoot = false;
             }
@@ -671,7 +644,7 @@ namespace PathOfModifiers
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<PoMItem>();
+                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
                 if (!pomItem.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
                     shoot = false;
             }
@@ -683,18 +656,12 @@ namespace PathOfModifiers
             Player lastDamageDealerPlayer = lastDamageDealer as Player;
             if (lastDamageDealerPlayer != null)
             {
-                lastDamageDealerPlayer.GetModPlayer<PoMPlayer>().OnKillPvp(player);
+                lastDamageDealerPlayer.GetModPlayer<AffixItemPlayer>().OnKillPvp(player);
             }
         }
 
         public override void ResetEffects()
         {
-            meleeDamage = 1;
-            magicDamage = 1;
-            rangedDamage = 1;
-            throwingDamage = 1;
-            minionDamage = 1;
-
             meleeSpeed = 1;
             pickSpeed = 1;
 
@@ -703,126 +670,37 @@ namespace PathOfModifiers
             potionDelayTime = 1;
             restorationDelayTime = 1;
 
+            Main.NewText(blockChance);
             blockChance = 0;
 
-            isOnBurningAir = false;
-            isIgnited = false;
-            isOnShockedAir = false;
-            isShocked = false;
-            isOnChilledAir = false;
-            isChilled = false;
+            reflectMeleeDamage = 0;
 
-            dotInstanceCollection.ResetEffects();
-
-            moveSpeedBuff = false;
-
-            staticStrikeBuff = false;
+            goldDropChances.ResetEffects();
+            if (Main.time == 0)
+            {
+                goldDropChances.ClearDisabled();
+            }
         }
         public override void PostUpdateEquips()
         {
-            if (moveSpeedBuff)
-            {
-                moveSpeed += moveSpeedBuffMultiplier - 1;
-            }
-
-            player.meleeDamage *= meleeDamage;
-            player.magicDamage *= magicDamage;
-            player.rangedDamage *= rangedDamage;
-            player.thrownDamage *= throwingDamage;
-            player.minionDamage *= minionDamage;
-
             player.meleeSpeed *= meleeSpeed;
             player.pickSpeed *= pickSpeed;
-
-            player.moveSpeed *= moveSpeed;
-            player.maxRunSpeed *= moveSpeed;
 
             player.potionDelayTime = (int)Math.Round(player.potionDelayTime * potionDelayTime);
             player.restorationDelayTime = (int)Math.Round(player.restorationDelayTime * restorationDelayTime);
         }
+        public override void PostUpdateRunSpeeds()
+        {
+            player.runAcceleration *= moveSpeed;
+            player.maxRunSpeed *= moveSpeed;
+            player.accRunSpeed *= moveSpeed;
+        }
         public override void UpdateBadLifeRegen()
         {
-            foreach (var kv in dotInstanceCollection.dotInstances)
-            {
-                Type type = kv.Key;
-                int dps = kv.Value.dps;
-                if (dps > 0)
-                {
-                    int debuffDamage = (int)Math.Round(dps * DamageOverTime.damageMultiplierHalfSecond);
-                    player.lifeRegenTime = 0;
-                    if (player.lifeRegen > 0)
-                    {
-                        player.lifeRegen = 0;
-                    }
-                    player.lifeRegen -= debuffDamage;
-
-                    //TODO: this only works with buffs from this mod; could use BuffLoader.buffs
-                    player.AddBuff(mod.BuffType(type.Name), 2, true);
-                }
-            }
-            if (isOnBurningAir && burningAirDps > 0)
-            {
-                int debuffDamage = (int)Math.Round(burningAirDps * DamageOverTime.damageMultiplierHalfSecond);
-                if (player.lifeRegen > 0)
-                {
-                    player.lifeRegen = 0;
-                }
-                player.lifeRegen -= debuffDamage;
-            }
-            if (isIgnited && igniteDps > 0)
-            {
-                int debuffDamage = (int)Math.Round(igniteDps * DamageOverTime.damageMultiplierHalfSecond);
-                if (player.lifeRegen > 0)
-                {
-                    player.lifeRegen = 0;
-                }
-                player.lifeRegen -= debuffDamage;
-            }
         }
 
         public override void PostNurseHeal(NPC nurse, int health, bool removeDebuffs, int price)
         {
-            if (removeDebuffs)
-            {
-                dotInstanceCollection.Clear();
-            }
-        }
-
-        public override void PreUpdate()
-        {
-            if (PathOfModifiers.Time % 60 == 0)
-            {
-                if (isOnBurningAir && burningAirDps < 0)
-                {
-                    int heal = Math.Abs(burningAirDps);
-                    player.statLife += heal;
-                    player.HealEffect(heal);
-                }
-                if (isIgnited && igniteDps < 0)
-                {
-                    int heal = Math.Abs(igniteDps);
-                    player.statLife += heal;
-                    player.HealEffect(heal);
-                }
-            }
-
-            if (staticStrikeBuff)
-            {
-                staticStrikeCurrentInterval++;
-
-                if (staticStrikeCurrentInterval >= staticStrikeIntervalTicks)
-                {
-                    Projectile.NewProjectile(
-                        position: player.Center,
-                        velocity: Vector2.Zero,
-                        Type: ModContent.ProjectileType<Projectiles.StaticStrike>(),
-                        Damage: staticStrikeDamage,
-                        KnockBack: 0,
-                        Owner: player.whoAmI);
-
-                    staticStrikeCurrentInterval = 0;
-                }
-            }
         }
 
         //public override TagCompound Save()

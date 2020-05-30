@@ -151,7 +151,7 @@ namespace PathOfModifiers.UI
         void MapCanPutIntoSlot(Item item, ref bool canPut)
         {
             if (canPut)
-                canPut = item.IsAir || PoMItem.IsMap(item);
+                canPut = item.IsAir || AffixItemItem.IsMap(item);
         }
         void MapItemChanged(Item oldItem, Item newItem)
         {

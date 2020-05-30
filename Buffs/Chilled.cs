@@ -31,8 +31,7 @@ namespace PathOfModifiers.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            PoMPlayer pomPlayer = player.GetModPlayer<PoMPlayer>();
-            pomPlayer.isChilled = true;
+            player.GetModPlayer<BuffPlayer>().isChilled = true;
 
             if (Main.rand.NextBool(50))
             {

@@ -71,10 +71,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -117,7 +117,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                     durationTicks = 1;
                 }
 
-                player.GetModPlayer<PoMPlayer>().AddStaticStrikeBuff(player, damage, intervalTicks, durationTicks, true);
+                player.GetModPlayer<BuffPlayer>().AddStaticStrikeBuff(player, damage, intervalTicks, durationTicks, true);
             }
         }
     }

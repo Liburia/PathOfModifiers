@@ -16,8 +16,14 @@ using Terraria.DataStructures;
 
 namespace PathOfModifiers
 {
-    public static class PoMHelper
+    public static class PoMUtil
     {
+        public enum PlayerImmuneTime
+        {
+            Parry = 30,
+            Hit = 60,
+        }
+
         public static int CountBuffs(int[] buffs)
         {
             int buffCount = 0;
@@ -353,6 +359,12 @@ namespace PathOfModifiers
         public static bool CanHitPvp(Player player, Player target)
         {
             return target.active && !target.dead && target != player && (target.team != player.team || target.team == 0) && target.hostile && player.hostile;
+        }
+
+        public static void MakeImmune(Player player, int timeFrames = (int)PlayerImmuneTime.Hit)
+        {
+            player.immuneTime = timeFrames;
+            player.immune = true;
         }
     }
 

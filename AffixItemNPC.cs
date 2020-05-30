@@ -15,7 +15,7 @@ using Terraria.Net;
 
 namespace PathOfModifiers
 {
-    public class ItemAffixNPC : GlobalNPC
+    public class AffixItemNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
 
@@ -55,7 +55,7 @@ namespace PathOfModifiers
                 Player player = LastDamageDealer as Player;
                 if (player != null)
                 {
-                    ItemAffixPlayer affixPlayer = player.GetModPlayer<ItemAffixPlayer>();
+                    AffixItemPlayer affixPlayer = player.GetModPlayer<AffixItemPlayer>();
                     int droppedGold = affixPlayer.goldDropChances.Roll();
                     if (droppedGold > 0)
                     {

@@ -70,15 +70,15 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
         {
-            return $"{Type1.GetValueFormat()}% chance to release {Type2.GetValue()} life orbs on hit that heal {Type3.GetValueFormat()}% of damage dealt";
+            return $"{Type1.GetValueFormat()}% chance to release {Type2.GetValueFormat()} life orbs on hit that heal {Type3.GetValueFormat()}% of damage dealt";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

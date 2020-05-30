@@ -72,10 +72,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
 
 
-        public override bool CanBeRolled(PoMItem pomItem, Item item)
+        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                PoMItem.IsWeapon(item);
+                AffixItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -122,8 +122,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, int.MaxValue);
             int duration = (int)MathHelper.Clamp(Type3.GetValue() * 60, 1, int.MaxValue);
-            PoMPlayer pomPlayer = target.GetModPlayer<PoMPlayer>();
-            pomPlayer.AddDoTBuff(target, ModContent.GetInstance<Poisoned>(), damage, duration);
+            target.GetModPlayer<BuffPlayer>().AddDoTBuff(target, ModContent.GetInstance<Poisoned>(), damage, duration);
         }
     }
 }

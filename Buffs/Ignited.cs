@@ -26,7 +26,7 @@ namespace PathOfModifiers.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<PoMPlayer>().isIgnited = true;
+            player.GetModPlayer<BuffPlayer>().isIgnited = true;
             CreateDust(player.position, player.width, player.height);
         }
 
