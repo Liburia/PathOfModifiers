@@ -14,7 +14,7 @@ using Terraria.DataStructures;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
-    public class ArmorBlockChance : AffixTiered<TTFloat, TTFloat, TTFloat>, ISuffix
+    public class AccessoryDodgeChance : AffixTiered<TTFloat, TTFloat, TTFloat>, ISuffix
     {
         public override double Weight { get; } = 1;
 
@@ -25,12 +25,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             Tiers = new TTFloat.WeightedTier[]
             {
                 new TTFloat.WeightedTier(0, 3),
-                new TTFloat.WeightedTier(0.025f, 2.5),
-                new TTFloat.WeightedTier(0.05f, 2),
-                new TTFloat.WeightedTier(0.075f, 1.5),
-                new TTFloat.WeightedTier(0.1f, 1),
-                new TTFloat.WeightedTier(0.125f, 0.5),
-                new TTFloat.WeightedTier(0.15f, 0),
+                new TTFloat.WeightedTier(0.016f, 2.5),
+                new TTFloat.WeightedTier(0.033f, 2),
+                new TTFloat.WeightedTier(0.05f, 1.5),
+                new TTFloat.WeightedTier(0.66f, 1),
+                new TTFloat.WeightedTier(0.66f, 0.5),
+                new TTFloat.WeightedTier(0.1f, 0),
             },
         };
         public override TTFloat Type2 { get; } = new TTFloat()
@@ -39,7 +39,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                 new TTFloat.WeightedTier(0f, 3),
+                new TTFloat.WeightedTier(0f, 3),
                 new TTFloat.WeightedTier(0.5f, 2.5),
                 new TTFloat.WeightedTier(1f, 2),
                 new TTFloat.WeightedTier(1.5f, 1.5),
@@ -64,12 +64,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("of test1", 0.5),
-            new WeightedTierName("of test2", 1),
-            new WeightedTierName("of test3", 1.5),
-            new WeightedTierName("of test4", 2),
-            new WeightedTierName("of test5", 2.5),
-            new WeightedTierName("of test6", 3),
+            new WeightedTierName("of Evasion", 0.5),
+            new WeightedTierName("of Dodging", 1),
+            new WeightedTierName("of Elusion", 1.5),
+            new WeightedTierName("of Acrobat", 2),
+            new WeightedTierName("of Blur", 2.5),
+            new WeightedTierName("of Ghost", 3),
         };
 
         double lastProcTime = 0;
@@ -82,24 +82,20 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"Gain { Type1.GetValueFormat() }% block chance for { Type2.GetValueFormat(1) }s when hit ({ Type3.GetValueFormat(1) }s CD)";
+            return $"Gain { Type1.GetValueFormat() }% Dodge chance for { Type2.GetValueFormat(1) }s when hit ({ Type3.GetValueFormat(1) }s CD)";
         }
 
-        public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
+        public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
         {
-            GainBlockChance(item, player);
-        }
-        public override void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit)
-        {
-            GainBlockChance(item, player);
+            GainDodgeChance(item, player);
         }
 
-        void GainBlockChance(Item item, Player player)
+        void GainDodgeChance(Item item, Player player)
         {
             if (AffixItemItem.IsArmorEquipped(item, player) && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProcTime) >= Type3.GetValue() * 1000)
             {
                 int durationTicks = (int)Math.Round((Type2.GetValue() * 60));
-                player.GetModPlayer<BuffPlayer>().AddBlockChanceBuff(player, Type1.GetValue(), durationTicks);
+                player.GetModPlayer<BuffPlayer>().AddDodgeChanceBuff(player, Type1.GetValue(), durationTicks);
                 lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
             }
         }

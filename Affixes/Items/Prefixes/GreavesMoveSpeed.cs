@@ -31,7 +31,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Tardy", 3),
+            new WeightedTierName("Lethargic", 3),
             new WeightedTierName("Slow", 2),
             new WeightedTierName("Leisurly", 0.5),
             new WeightedTierName("Quick", 0.5),

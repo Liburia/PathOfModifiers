@@ -22,7 +22,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             AddChilledBuffPlayer,
             AddChilledBuffNPC,
             AddStaticStrikeBuffPlayer,
-            AddBlockChanceBuffPlayer,
+            AddDodgeChanceBuffPlayer,
         }
 
         public BuffPacketHandler() : base(PacketHandlerType.Buff)
@@ -65,8 +65,8 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 case PacketType.AddStaticStrikeBuffPlayer:
                     ReceiveAddStaticStrikeBuffPlayer(reader, fromWho);
                     break;
-                case PacketType.AddBlockChanceBuffPlayer:
-                    ReceiveAddBlockChanceBuffPlayer(reader, fromWho);
+                case PacketType.AddDodgeChanceBuffPlayer:
+                    ReceiveAddDodgeChanceBuffPlayer(reader, fromWho);
                     break;
             }
         }
@@ -366,26 +366,26 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             }
         }
 
-        public static void CSendAddBlockChanceBuffPlayer(int playerID, float chance, int dutaionTicks)
+        public static void CSendAddDodgeChanceBuffPlayer(int playerID, float chance, int dutaionTicks)
         {
-            ModPacket packet = Instance.GetPacket((byte)PacketType.AddBlockChanceBuffPlayer);
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddDodgeChanceBuffPlayer);
             packet.Write((byte)playerID);
             packet.Write(chance);
             packet.Write(dutaionTicks);
             packet.Send();
         }
-        void ReceiveAddBlockChanceBuffPlayer(BinaryReader reader, int fromWho)
+        void ReceiveAddDodgeChanceBuffPlayer(BinaryReader reader, int fromWho)
         {
             byte playerID = reader.ReadByte();
             float chance = reader.ReadSingle();
             int duraionTicks = reader.ReadInt32();
 
             Player player = Main.player[playerID];
-            player.GetModPlayer<BuffPlayer>().AddBlockChanceBuff(player, chance, duraionTicks, false);
+            player.GetModPlayer<BuffPlayer>().AddDodgeChanceBuff(player, chance, duraionTicks, false);
 
             if (Main.netMode == NetmodeID.Server)
             {
-                ModPacket packet = GetPacket((byte)PacketType.AddBlockChanceBuffPlayer);
+                ModPacket packet = GetPacket((byte)PacketType.AddDodgeChanceBuffPlayer);
                 packet.Write(playerID);
                 packet.Write(chance);
                 packet.Write(duraionTicks);

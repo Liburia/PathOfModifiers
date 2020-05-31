@@ -68,7 +68,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Dissonance", 1.5),
             new WeightedTierName("of Disruption", 2),
             new WeightedTierName("of Instability", 2.5),
-            new WeightedTierName("of Discord", 3),
+            new WeightedTierName("of Volatility", 3),
         };
 
 

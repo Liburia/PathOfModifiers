@@ -49,6 +49,11 @@ namespace PathOfModifiers
             timedValueInstanceCollection = new TimedValueInstanceCollection();
         }
 
+        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        {
+            ShockModifyDamageTaken(ref damage);
+            return true;
+        }
         public override void ResetEffects()
         {
             isOnBurningAir = false;
@@ -64,14 +69,6 @@ namespace PathOfModifiers
             moveSpeedBuff = false;
 
             staticStrikeBuff = false;
-        }
-        public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
-        {
-            ShockModifyDamageTaken(ref damage);
-        }
-        public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
-        {
-            ShockModifyDamageTaken(ref damage);
         }
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
@@ -103,11 +100,11 @@ namespace PathOfModifiers
         public override void PostUpdateEquips()
         {
             var affixPlayer = player.GetModPlayer<AffixItemPlayer>();
-            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.BlockChance), out var blockChances))
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.DodgeChance), out var dodgeChances))
             {
-                foreach (var blockChance in blockChances.instances)
+                foreach (var dodgeChance in dodgeChances.instances)
                 {
-                    affixPlayer.blockChance += blockChance.value;
+                    affixPlayer.dodgeChance += dodgeChance.value;
                 }
             }
         }
@@ -275,14 +272,14 @@ namespace PathOfModifiers
                 BuffPacketHandler.CSendAddStaticStrikeBuffPlayer(player.whoAmI, damage, intervalTicks, time);
             }
         }
-        public void AddBlockChanceBuff(Player player, float chance, int durationTicks, bool syncMP = true)
+        public void AddDodgeChanceBuff(Player player, float chance, int durationTicks, bool syncMP = true)
         {
             double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.BlockChance), chance, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.DodgeChance), chance, durationMs);
 
             if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
             {
-                BuffPacketHandler.CSendAddBlockChanceBuffPlayer(player.whoAmI, chance, durationTicks);
+                BuffPacketHandler.CSendAddDodgeChanceBuffPlayer(player.whoAmI, chance, durationTicks);
             }
         }
 

@@ -24,7 +24,7 @@ namespace PathOfModifiers
 
             public class Bleed : InstanceType { }
             public class Poison : StackingType { }
-            public class BlockChance : StackingType { }
+            public class DodgeChance : StackingType { }
         }
 
         public static readonly Func<TagCompound, TimedValueInstanceCollection> DESERIALIZER = Load;
