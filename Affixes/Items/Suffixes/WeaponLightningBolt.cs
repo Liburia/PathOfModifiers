@@ -53,10 +53,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0f, 0.5),
-                new TTFloat.WeightedTier(0.025f, 1),
+                new TTFloat.WeightedTier(0f, 3),
+                new TTFloat.WeightedTier(0.025f, 2.5),
                 new TTFloat.WeightedTier(0.05f, 2),
-                new TTFloat.WeightedTier(0.075f, 2),
+                new TTFloat.WeightedTier(0.075f, 1.5),
                 new TTFloat.WeightedTier(0.1f, 1),
                 new TTFloat.WeightedTier(0.125f, 0.5),
                 new TTFloat.WeightedTier(0.15f, 0),
