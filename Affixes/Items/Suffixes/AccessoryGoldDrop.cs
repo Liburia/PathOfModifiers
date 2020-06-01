@@ -59,7 +59,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAnyArmor(item);
+                AffixItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)

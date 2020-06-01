@@ -45,7 +45,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAnyArmor(item);
+                AffixItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -69,7 +69,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void GainVelocity(Item item, Player player, Vector2 position)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player))
+            if (AffixItemItem.IsAccessoryEquipped(item, player))
             {
                 Vector2 addVelocity = (position - player.Center).SafeNormalize(Vector2.Zero) * Type1.GetValue();
                 player.velocity += addVelocity;
