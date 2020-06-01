@@ -84,16 +84,15 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 if (amount > 0)
                 {
                     player.statLife += amount;
-                    player.HealEffect(amount, false);
+                    PoMEffectHelper.Heal(player, amount);
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                    {
+                        EffectPacketHandler.CSyncHeal(player.whoAmI, amount);
+                    }
                 }
                 else
                 {
                     player.Hurt(PlayerDeathReason.ByPlayer(player.whoAmI), amount, 0, false);
-                }
-                PoMEffectHelper.Heal(player, amount);
-                if (Main.netMode == NetmodeID.MultiplayerClient)
-                {
-                    EffectPacketHandler.CSyncHeal(player.whoAmI, amount);
                 }
                 lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
             }
