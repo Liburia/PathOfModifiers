@@ -29,6 +29,8 @@ namespace PathOfModifiers
         public const int ailmentDuration = 300;
         public const float lowHPThreshold = 0.2f;
 
+        public const double tickMS = 1000 / 60d;
+
         public static string pathMapIcons = "Images/MapIcons/";
 
         public static PathOfModifiers Instance { get; private set; }

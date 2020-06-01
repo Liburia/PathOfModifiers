@@ -17,20 +17,5 @@ namespace PathOfModifiers.Buffs
             Main.buffNoTimeDisplay[Type] = false;
             canBeCleared = true;
         }
-
-        public override void Update(NPC npc, ref int buffIndex)
-        {
-            PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-            pomNPC.isShocked = true;
-
-            if (Main.rand.NextBool(20))
-            {
-                Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Dusts.Shock>(), Scale: Main.rand.NextFloat(0.3f, 0.7f));
-            }
-        }
-        public override void Update(Player player, ref int buffIndex)
-        {
-            player.GetModPlayer<BuffPlayer>().isShocked = true;
-        }
     }
 }

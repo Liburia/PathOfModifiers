@@ -156,7 +156,7 @@ namespace PathOfModifiers.Projectiles
                             if (npcBounds.Intersects(explosionBounds))
                             {
                                 owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
-                                npc.GetGlobalNPC<PoMNPC>().AddIgnitedBuff(npc, (int)projectile.ai[0], PathOfModifiers.ailmentDuration);
+                                npc.GetGlobalNPC<BuffNPC>().AddIgnitedBuff(npc, (int)projectile.ai[0], PathOfModifiers.ailmentDuration);
                             }
                         }
                     }

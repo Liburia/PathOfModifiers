@@ -25,80 +25,6 @@ namespace PathOfModifiers
 
         public Entity lastDamageDealer;
 
-        public bool isOnBurningAir;
-        public bool isIgnited;
-        public bool isOnShockedAir;
-        public bool isShocked;
-        public bool isOnChilledAir;
-        public bool isChilled;
-
-        int burningAirDps;
-        int igniteDps;
-        float shockedAirMultiplier;
-        float shockedMultiplier;
-        float chilledAirMultiplier;
-        float chilledMultiplier;
-
-        DoTInstanceCollection dotInstanceCollection = new DoTInstanceCollection();
-
-
-        public void AddDoTBuff(NPC npc, DamageOverTime buff, int dps, int durationTicks, bool syncMP = true)
-        {
-            Type dotBuffType = buff.GetType();
-            double durationMs = (durationTicks / 60f) * 1000;
-            dotInstanceCollection.AddInstance(dotBuffType, dps, durationMs);
-
-            if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                BuffPacketHandler.CSendAddDoTBuffNPC(npc.whoAmI, buff.Type, dps, durationTicks);
-            }
-        }
-        public void AddBurningAirBuff(NPC npc, int dps)
-        {
-            burningAirDps = dps;
-            npc.AddBuff(ModContent.BuffType<BurningAir>(), 2, true);
-        }
-        public void AddIgnitedBuff(NPC npc, int dps, int durationTicks, bool syncMP = true)
-        {
-            igniteDps = dps;
-            npc.AddBuff(ModContent.BuffType<Ignited>(), durationTicks, true);
-
-            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
-            {
-                BuffPacketHandler.CSendAddIgnitedBuffNPC(npc.whoAmI, dps, durationTicks);
-            }
-        }
-        public void AddShockedAirBuff(NPC npc, float multiplier)
-        {
-            shockedAirMultiplier = multiplier;
-            npc.AddBuff(ModContent.BuffType<ShockedAir>(), 2, true);
-        }
-        public void AddShockedBuff(NPC npc, float multiplier, int durationTicks, bool syncMP = true)
-        {
-            shockedMultiplier = multiplier;
-            npc.AddBuff(ModContent.BuffType<Shocked>(), durationTicks, true);
-
-            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
-            {
-                BuffPacketHandler.CSendAddShockedBuffNPC(npc.whoAmI, multiplier, durationTicks);
-            }
-        }
-        public void AddChilledAirBuff(NPC npc, float multiplier)
-        {
-            chilledAirMultiplier = multiplier;
-            npc.AddBuff(ModContent.BuffType<ChilledAir>(), 2, true);
-        }
-        public void AddChilledBuff(NPC npc, float multiplier, int durationTicks, bool syncMP = true)
-        {
-            chilledMultiplier = multiplier;
-            npc.AddBuff(ModContent.BuffType<Chilled>(), durationTicks, true);
-
-            if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
-            {
-                BuffPacketHandler.CSendAddChilledBuffNPC(npc.whoAmI, multiplier, durationTicks);
-            }
-        }
-
         public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit)
         {
             target.GetGlobalNPC<PoMNPC>().lastDamageDealer = npc;
@@ -106,57 +32,9 @@ namespace PathOfModifiers
 
         public override void ResetEffects(NPC npc)
         {
-            isOnBurningAir = false;
-            isIgnited = false;
-            isOnShockedAir = false;
-            isShocked = false;
-            isOnChilledAir = false;
-            isChilled = false;
-
-            dotInstanceCollection.ResetEffects();
         }
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
-            foreach (var kv in dotInstanceCollection.dotInstances)
-            {
-                Type type = kv.Key;
-                int dps = kv.Value.dps;
-                if (dps > 0)
-                {
-                    int debuffDamage = (int)Math.Round(dps * DamageOverTime.damageMultiplierHalfSecond);
-                    if (npc.lifeRegen > 0)
-                    {
-                        npc.lifeRegen = 0;
-                    }
-                    npc.lifeRegen -= debuffDamage;
-
-                    //TODO: this only works with buffs from this mod; could use BuffLoader.buffs
-                    npc.AddBuff(mod.BuffType(type.Name), 2, true);
-                }
-            }
-            if (isOnBurningAir && burningAirDps > 0)
-            {
-                int debuffDamage = (int)Math.Round(burningAirDps * DamageOverTime.damageMultiplierHalfSecond);
-                if (npc.lifeRegen > 0)
-                {
-                    npc.lifeRegen = 0;
-                }
-                npc.lifeRegen -= debuffDamage;
-            }
-            if (isIgnited && igniteDps > 0)
-            {
-                int debuffDamage = (int)Math.Round(igniteDps * DamageOverTime.damageMultiplierHalfSecond);
-                if (npc.lifeRegen > 0)
-                {
-                    npc.lifeRegen = 0;
-                }
-                npc.lifeRegen -= debuffDamage;
-            }
-
-            if (npc.lifeRegen < 0)
-            {
-                damage = npc.lifeRegen / -4;
-            }
         }
 
         public override void NPCLoot(NPC npc)
@@ -190,25 +68,6 @@ namespace PathOfModifiers
 
         public override void AI(NPC npc)
         {
-            if (PathOfModifiers.Time % 60 == 0)
-            {
-                if (isOnBurningAir && burningAirDps < 0)
-                {
-                    int heal = Math.Abs(burningAirDps);
-                    npc.life += heal;
-                    npc.HealEffect(heal);
-                }
-                if (isIgnited && igniteDps < 0)
-                {
-                    int heal = Math.Abs(igniteDps);
-                    npc.life += heal;
-                    npc.HealEffect(heal);
-                }
-                if (npc.life > npc.lifeMax)
-                {
-                    npc.life = npc.lifeMax;
-                }
-            }
         }
 
         public RarityNPC rarity;
@@ -288,33 +147,6 @@ namespace PathOfModifiers
             affixes.Clear();
         }
 
-        public void ShockModifyDamageTaken(ref int damage)
-        {
-            float totalMultiplier = 1;
-            if (isOnShockedAir)
-            {
-                totalMultiplier += shockedAirMultiplier - 1;
-            }
-            if (isShocked)
-            {
-                totalMultiplier += shockedMultiplier - 1;
-            }
-            damage = (int)Math.Round(damage * totalMultiplier);
-        }
-        public void ChillModifyDamageDealt(ref int damage)
-        {
-            float totalMultiplier = 1;
-            if (isOnChilledAir)
-            {
-                totalMultiplier += chilledAirMultiplier - 1;
-            }
-            if (isChilled)
-            {
-                totalMultiplier += chilledMultiplier - 1;
-            }
-            damage = (int)Math.Round(damage * totalMultiplier);
-        }
-
         public override void SetDefaults(NPC npc)
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -356,8 +188,6 @@ namespace PathOfModifiers
             {
                 affix.ModifyHitByItem(npc, player, item, ref damage, ref knockback, ref crit);
             }
-
-            ShockModifyDamageTaken(ref damage);
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
@@ -365,8 +195,6 @@ namespace PathOfModifiers
             {
                 affix.ModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
             }
-
-            ShockModifyDamageTaken(ref damage);
         }
         public override void ModifyHitPlayer(NPC npc, Player target, ref int damage, ref bool crit)
         {
@@ -374,8 +202,6 @@ namespace PathOfModifiers
             {
                 affix.ModifyHitPlayer(npc, target, ref damage, ref crit);
             }
-
-            ChillModifyDamageDealt(ref damage);
         }
         public override void ModifyHitNPC(NPC npc, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
@@ -383,8 +209,6 @@ namespace PathOfModifiers
             {
                 affix.ModifyHitNPC(npc, target, ref damage, ref knockback, ref crit);
             }
-
-            ChillModifyDamageDealt(ref damage);
         }
         public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
         {

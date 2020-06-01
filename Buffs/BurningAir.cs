@@ -18,15 +18,5 @@ namespace PathOfModifiers.Buffs
             Main.buffNoTimeDisplay[Type] = true;
             canBeCleared = false;
         }
-
-        public override void Update(NPC npc, ref int buffIndex)
-        {
-            PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-            pomNPC.isOnBurningAir = true;
-        }
-        public override void Update(Player player, ref int buffIndex)
-        {
-            player.GetModPlayer<BuffPlayer>().isOnBurningAir = true;
-        }
     }
 }

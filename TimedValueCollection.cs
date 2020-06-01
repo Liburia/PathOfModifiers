@@ -20,11 +20,19 @@ namespace PathOfModifiers
     {
         public class InstanceType
         {
-            public class StackingType { }
+            public interface IStack { }
+            public interface IGetMinValue { }
 
             public class Bleed : InstanceType { }
-            public class Poison : StackingType { }
-            public class DodgeChance : StackingType { }
+            public class Poison : InstanceType, IStack { }
+            public class Shock : InstanceType { }
+            public class ShockedAir : InstanceType { }
+            public class Ignite : InstanceType { }
+            public class BurningAir : InstanceType { }
+            public class Chill : InstanceType, IGetMinValue { }
+            public class ChilledAir : InstanceType, IGetMinValue { }
+            public class DodgeChance : InstanceType, IStack { }
+            public class MoveSpeed : InstanceType, IStack { }
         }
 
         public static readonly Func<TagCompound, TimedValueInstanceCollection> DESERIALIZER = Load;
@@ -148,13 +156,23 @@ namespace PathOfModifiers
             }
             TimedValueInstance instance = new TimedValueInstance(PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds + durationMs, value);
 
-            if (type.IsSubclassOf(typeof(InstanceType.StackingType)))
+            if (typeof(InstanceType.IStack).IsAssignableFrom(type))
             {
                 timedValueInstanceList.totalValue += value;
             }
-            else if (value > timedValueInstanceList.totalValue)
+            else if (typeof(InstanceType.IGetMinValue).IsAssignableFrom(type))
             {
-                timedValueInstanceList.totalValue = value;
+                if (value < timedValueInstanceList.totalValue)
+                {
+                    timedValueInstanceList.totalValue = value;
+                }
+            }
+            else
+            {
+                if (value > timedValueInstanceList.totalValue)
+                {
+                    timedValueInstanceList.totalValue = value;
+                }
             }
 
             //Add instance into list sorted
@@ -180,7 +198,7 @@ namespace PathOfModifiers
                 var type = kv.Key;
                 var timedValueInstanceList = kv.Value;
 
-                bool isStacking = type.IsSubclassOf(typeof(InstanceType.StackingType));
+                bool isStacking = typeof(InstanceType.IStack).IsAssignableFrom(type);
                 bool needRecount = false;
 
                 double now = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
@@ -208,10 +226,17 @@ namespace PathOfModifiers
                     }
                     else
                     {
-                        timedValueInstanceList.totalValue = timedValueInstanceList.instances.Max(x => x.value);
+                        timedValueInstanceList.totalValue =
+                            typeof(InstanceType.IGetMinValue).IsAssignableFrom(type)
+                            ? timedValueInstanceList.instances.Min(x => x.value)
+                            : timedValueInstanceList.instances.Max(x => x.value);
                     }
                 }
             }
+        }
+        public void RemoveInstances(Type type)
+        {
+            instances.Remove(type);
         }
         public void Clear()
         {

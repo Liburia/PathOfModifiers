@@ -82,7 +82,7 @@ namespace PathOfModifiers.Projectiles
                     Rectangle npcRect = npc.getRect();
                     if (npcRect.Intersects(airRect))
                     {
-                        PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
+                        BuffNPC pomNPC = npc.GetGlobalNPC<BuffNPC>();
                         pomNPC.AddBurningAirBuff(npc, projectile.damage);
                     }
                 }

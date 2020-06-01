@@ -74,11 +74,11 @@ namespace PathOfModifiers.Projectiles
 
         void Hit(NPC target)
         {
-            target.GetGlobalNPC<PoMNPC>().AddChilledBuff(target, projectile.ai[0] + 1, PathOfModifiers.ailmentDuration);
+            target.GetGlobalNPC<BuffNPC>().AddChilledBuff(target, projectile.ai[0], PathOfModifiers.ailmentDuration);
         }
         void Hit(Player target)
         {
-            target.GetModPlayer<BuffPlayer>().AddChilledBuff(target, projectile.ai[0] + 1, PathOfModifiers.ailmentDuration);
+            target.GetModPlayer<BuffPlayer>().AddChilledBuff(target, projectile.ai[0], PathOfModifiers.ailmentDuration);
         }
     }
 }

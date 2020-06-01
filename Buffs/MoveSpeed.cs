@@ -27,8 +27,6 @@ namespace PathOfModifiers.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<BuffPlayer>().moveSpeedBuff = true;
-
             for (int i = 0; i < 1; i++)
             {
                 Vector2 dustPosition = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height));

@@ -137,8 +137,8 @@ namespace PathOfModifiers.Projectiles
                         if (Main.myPlayer == projectile.owner)
                         {
                             owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
-                            PoMNPC pomNPC = npc.GetGlobalNPC<PoMNPC>();
-                            pomNPC.AddShockedBuff(npc, projectile.ai[0] + 1, PathOfModifiers.ailmentDuration, true);
+                            BuffNPC pomNPC = npc.GetGlobalNPC<BuffNPC>();
+                            pomNPC.AddShockedBuff(npc, projectile.ai[0], PathOfModifiers.ailmentDuration, true);
                         }
                         SpawnDebris(targetPosition);
                         hitEntities.Add(npc);
@@ -152,7 +152,7 @@ namespace PathOfModifiers.Projectiles
                         if (player.whoAmI == Main.myPlayer)
                         {
                             player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
-                            player.GetModPlayer<BuffPlayer>().AddShockedBuff(player, projectile.ai[0] + 1, PathOfModifiers.ailmentDuration, true);
+                            player.GetModPlayer<BuffPlayer>().AddShockedBuff(player, projectile.ai[0], PathOfModifiers.ailmentDuration, true);
                         }
                         SpawnDebris(targetPosition);
                         hitEntities.Add(player);

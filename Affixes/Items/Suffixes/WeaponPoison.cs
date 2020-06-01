@@ -115,14 +115,14 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, int.MaxValue);
             int duration = (int)MathHelper.Clamp(Type3.GetValue() * 60, 1, int.MaxValue);
-            PoMNPC pomNPC = target.GetGlobalNPC<PoMNPC>();
-            pomNPC.AddDoTBuff(target, ModContent.GetInstance<Poisoned>(), damage, duration);
+            BuffNPC pomNPC = target.GetGlobalNPC<BuffNPC>();
+            pomNPC.AddPoisonBuff(target, damage, duration);
         }
         void Bleed(Player target, int hitDamage)
         {
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, int.MaxValue);
             int duration = (int)MathHelper.Clamp(Type3.GetValue() * 60, 1, int.MaxValue);
-            target.GetModPlayer<BuffPlayer>().AddDoTBuff(target, ModContent.GetInstance<Poisoned>(), damage, duration);
+            target.GetModPlayer<BuffPlayer>().AddPoisonBuff(target, damage, duration);
         }
     }
 }

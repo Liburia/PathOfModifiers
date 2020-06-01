@@ -19,17 +19,6 @@ namespace PathOfModifiers.Buffs
             canBeCleared = true;
         }
 
-        public override void Update(NPC npc, ref int buffIndex)
-        {
-            npc.GetGlobalNPC<PoMNPC>().isIgnited = true;
-            CreateDust(npc.position, npc.width, npc.height);
-        }
-        public override void Update(Player player, ref int buffIndex)
-        {
-            player.GetModPlayer<BuffPlayer>().isIgnited = true;
-            CreateDust(player.position, player.width, player.height);
-        }
-
         void CreateDust(Vector2 position, int width, int height)
         {
             if (Main.rand.NextBool(2))

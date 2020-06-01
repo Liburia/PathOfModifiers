@@ -112,7 +112,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         void GainMoveSpeed(Player player)
         {
             int duration = (int)MathHelper.Clamp(Type2.GetValue() * 60, 1, 9999999);
-            player.GetModPlayer<BuffPlayer>().AddMoveSpeedBuff(player, Type1.GetValue() + 1, duration);
+            player.GetModPlayer<BuffPlayer>().AddMoveSpeedBuff(player, Type1.GetValue(), duration);
             lastProc = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
         }
     }
