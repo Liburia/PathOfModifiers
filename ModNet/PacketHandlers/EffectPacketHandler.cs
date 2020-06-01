@@ -13,6 +13,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         public enum PacketType
         {
             SyncHeal,
+            SyncHealMana,
             SyncCrit,
         }
 
@@ -27,7 +28,10 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             switch (packetType)
             {
                 case PacketType.SyncHeal:
-                    SReceiveSyncHeal(reader, fromWho);
+                    ReceiveSyncHeal(reader, fromWho);
+                    break;
+                case PacketType.SyncHealMana:
+                    ReceiveSyncHealMana(reader, fromWho);
                     break;
                 case PacketType.SyncCrit:
                     SReceiveSyncCrit(reader, fromWho);
@@ -42,7 +46,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             packet.Write(amount);
             packet.Send();
         }
-        void SReceiveSyncHeal(BinaryReader reader, int fromWho)
+        void ReceiveSyncHeal(BinaryReader reader, int fromWho)
         {
             int playerID = reader.ReadByte();
             int amount = reader.ReadInt32();
@@ -58,6 +62,32 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             {
                 Player player = Main.player[playerID];
                 PoMEffectHelper.Heal(player, amount);
+            }
+        }
+
+        public static void SyncHealMana(int fromWho, int amount)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.SyncHealMana);
+            packet.Write((byte)fromWho);
+            packet.Write(amount);
+            packet.Send();
+        }
+        void ReceiveSyncHealMana(BinaryReader reader, int fromWho)
+        {
+            int playerID = reader.ReadByte();
+            int amount = reader.ReadInt32();
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.SyncHealMana);
+                packet.Write((byte)playerID);
+                packet.Write(amount);
+                packet.Send(-1, fromWho);
+            }
+            else
+            {
+                Player player = Main.player[playerID];
+                PoMEffectHelper.HealMana(player, amount);
             }
         }
 

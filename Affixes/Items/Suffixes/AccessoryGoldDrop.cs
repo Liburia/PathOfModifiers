@@ -22,7 +22,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             TwoWay = false,
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
-    {
+            {
                 new TTFloat.WeightedTier(0, 3),
                 new TTFloat.WeightedTier(0.003f, 2.5),
                 new TTFloat.WeightedTier(0.007f, 2),
@@ -30,14 +30,14 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 new TTFloat.WeightedTier(0.013f, 1),
                 new TTFloat.WeightedTier(0.017f, 0.5),
                 new TTFloat.WeightedTier(0.02f, 0),
-    },
+            },
         };
         public override TTInt Type2 { get; } = new TTInt()
         {
             TwoWay = false,
             IsRange = false,
             Tiers = new TTInt.WeightedTier[]
-    {
+            {
                 new TTInt.WeightedTier(1, 3),
                 new TTInt.WeightedTier(2, 2.5),
                 new TTInt.WeightedTier(3, 2),
@@ -45,7 +45,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 new TTInt.WeightedTier(5, 1),
                 new TTInt.WeightedTier(6, 0.5),
                 new TTInt.WeightedTier(7, 0)
-    },
+            },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
             new WeightedTierName("of Gold", 0.5),

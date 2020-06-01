@@ -372,13 +372,24 @@ namespace PathOfModifiers
     {
         public static void Heal(Player player, int amount)
         {
-            player.HealEffect(amount, false);
+            CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.HealLife, amount, false, false);
             for (int i = 0; i < 7; i++)
             {
                 Vector2 dustPosition = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height));
                 Vector2 dustVelocity = new Vector2(0, -Main.rand.NextFloat(0.5f, 2.5f));
                 float dustScale = Main.rand.NextFloat(1f, 2.5f);
                 Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.HealEffect>(), dustVelocity, Scale: dustScale);
+            }
+        }
+        public static void HealMana(Player player, int amount)
+        {
+            CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height), CombatText.HealMana, amount, false, false);
+            for (int i = 0; i < 7; i++)
+            {
+                Vector2 dustPosition = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height));
+                Vector2 dustVelocity = new Vector2(0, -Main.rand.NextFloat(0.5f, 2.5f));
+                float dustScale = Main.rand.NextFloat(1f, 2.5f);
+                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.HealManaEffect>(), dustVelocity, Scale: dustScale);
             }
         }
         public static void Crit(Vector2 position, int width, int height, int howMuch = 100)

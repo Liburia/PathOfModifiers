@@ -68,7 +68,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override string GetTolltipText(Item item)
         {
             string gainLose = Type1.GetValue() > 0 ? "Gain" : "Lose";
-            return $"{ gainLose } { Type1.GetValueFormat() } life when hit ({ Type2.GetValueFormat(1) }s CD))";
+            return $"{ gainLose } { Type1.GetValueFormat() } life when hit ({ Type2.GetValueFormat(1) }s CD)";
         }
 
         public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
