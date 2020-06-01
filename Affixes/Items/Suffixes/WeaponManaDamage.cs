@@ -48,15 +48,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("of Intuition", 0.5),
-            new WeightedTierName("of Insight", 1),
-            new WeightedTierName("of Acumen", 1.5),
-            new WeightedTierName("of Ascendance", 2),
-            new WeightedTierName("of Transcendence", 2.5),
-            new WeightedTierName("of Divinity", 3),
+            new WeightedTierName("of Simplicity", 0.5),
+            new WeightedTierName("of Stupidity", 1),
+            new WeightedTierName("of Nonsense", 1.5),
+            new WeightedTierName("of Absurdity", 2),
+            new WeightedTierName("of Puerility", 2.5),
+            new WeightedTierName("of Lunacy", 3),
         };
-
-        double lastProcTime = 0;
 
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
