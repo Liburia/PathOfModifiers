@@ -64,10 +64,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
             new WeightedTierName("of Flare", 0.5),
-            new WeightedTierName("of Bursting", 1),
-            new WeightedTierName("of Bombardment", 1.5),
-            new WeightedTierName("of Eruption", 2),
-            new WeightedTierName("of Explosion", 2.5),
+            new WeightedTierName("of Scorch", 1),
+            new WeightedTierName("of Blaze", 1.5),
+            new WeightedTierName("of Salvo", 2),
+            new WeightedTierName("of Bombardment", 2.5),
             new WeightedTierName("of Phoenix", 3),
         };
 
