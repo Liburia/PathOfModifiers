@@ -2,8 +2,8 @@
 using IL.Terraria.GameContent.UI.Elements;
 using Microsoft.Xna.Framework;
 using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.Buffs;
 using PathOfModifiers.ModNet.PacketHandlers;
+using PathOfModifiers.Projectiles;
 using PathOfModifiers.Tiles;
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,12 @@ namespace PathOfModifiers
         int staticStrikeCurrentInterval;
         public bool staticStrikeBuff = false;
 
+        int moltenShellStoredDamage;
+        int moltenShellTimeLeft;
+
+        int noManaCostTimeLeft;
+        int knockbackImmunityTimeLeft;
+
         public override void Initialize()
         {
             timedValueInstanceCollection = new TimedValueInstanceCollection();
@@ -35,6 +41,13 @@ namespace PathOfModifiers
         {
             damage = ShockModifyDamageTaken(damage);
             return true;
+        }
+        public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        {
+            if (moltenShellTimeLeft > 0)
+            {
+                moltenShellStoredDamage += (int)damage;
+            }
         }
         public override void ResetEffects()
         {
@@ -69,6 +82,16 @@ namespace PathOfModifiers
             {
                 affixPlayer.moveSpeed += moveSpeeds.totalValue;
             }
+
+            if (knockbackImmunityTimeLeft > 0)
+            {
+                player.noKnockback = true;
+            }
+
+            if (moltenShellTimeLeft > 0)
+            {
+                affixPlayer.damageTaken += -0.1f;
+            }
         }
         public override void UpdateBadLifeRegen()
         {
@@ -94,7 +117,7 @@ namespace PathOfModifiers
 
             if (totalDPS > 0)
             {
-                int totalDamage = (int)Math.Round(totalDPS * DamageOverTime.damageMultiplierHalfSecond);
+                int totalDamage = (int)Math.Round(totalDPS * Buffs.DamageOverTime.damageMultiplierHalfSecond);
                 player.lifeRegenTime = 0;
                 if (player.lifeRegen > 0)
                 {
@@ -132,6 +155,31 @@ namespace PathOfModifiers
 
                     staticStrikeCurrentInterval = 0;
                 }
+            }
+
+            if (noManaCostTimeLeft > 0)
+            {
+                noManaCostTimeLeft--;
+            }
+            if (knockbackImmunityTimeLeft > 0)
+            {
+                knockbackImmunityTimeLeft--;
+            }
+            if (moltenShellTimeLeft > 0)
+            {
+                moltenShellTimeLeft--;
+
+                if (player.whoAmI == Main.myPlayer && moltenShellTimeLeft <= 0)
+                {
+                    Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<MoltenShellExplosion>(), moltenShellStoredDamage, 5, player.whoAmI, moltenShellStoredDamage / (float)player.statLifeMax2);
+                }
+            }
+        }
+        public override void ModifyManaCost(Item item, ref float reduce, ref float mult)
+        {
+            if (noManaCostTimeLeft > 0)
+            {
+                mult = -10f;
             }
         }
 
@@ -209,7 +257,7 @@ namespace PathOfModifiers
             }
             staticStrikeDamage = damage;
             staticStrikeIntervalTicks = intervalTicks;
-            player.AddBuff(ModContent.BuffType<StaticStrike>(), time, true);
+            player.AddBuff(ModContent.BuffType<Buffs.StaticStrike>(), time, true);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -223,6 +271,43 @@ namespace PathOfModifiers
             if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
             {
                 BuffPacketHandler.SendAddDodgeChanceBuffPlayer(player.whoAmI, chance, durationTicks);
+            }
+        }
+        public void AddNoManaCostBuff(Player player, int durationTicks, bool syncMP = true)
+        {
+            if (durationTicks > noManaCostTimeLeft)
+            {
+                noManaCostTimeLeft = durationTicks;
+
+                if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    BuffPacketHandler.SendAddNoManaCostBuffPlayer(player.whoAmI, durationTicks);
+                }
+            }
+
+        }
+        public void AddKnockbackImmunityBuff(Player player, int durationTicks, bool syncMP = true)
+        {
+            if (durationTicks > knockbackImmunityTimeLeft)
+            {
+                knockbackImmunityTimeLeft = durationTicks;
+
+                if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    BuffPacketHandler.SendAddKnockbackImmunityBuffPlayer(player.whoAmI, durationTicks);
+                }
+            }
+        }
+        public void AddMoltenShellBuff(Player player, int durationTicks, bool syncMP = true)
+        {
+            if (durationTicks > moltenShellTimeLeft)
+            {
+                moltenShellTimeLeft = durationTicks;
+
+                if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    BuffPacketHandler.SendAddMoltenShellBuffPlayer(player.whoAmI, durationTicks);
+                }
             }
         }
 

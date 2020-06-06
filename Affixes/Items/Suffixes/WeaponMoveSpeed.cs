@@ -63,11 +63,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
             new WeightedTierName("of Spurring", 0.5),
-            new WeightedTierName("of Hurrying", 1),
+            new WeightedTierName("of Hurry", 1),
             new WeightedTierName("of Quickening", 1.5),
-            new WeightedTierName("of Hastening", 2),
+            new WeightedTierName("of Haste", 2),
             new WeightedTierName("of Stimulation", 2.5),
-            new WeightedTierName("of Rushing", 3),
+            new WeightedTierName("of Rush", 3),
         };
 
         public uint lastProcTime = 0;

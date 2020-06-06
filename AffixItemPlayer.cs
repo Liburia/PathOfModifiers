@@ -79,6 +79,9 @@ namespace PathOfModifiers
         }
 
         #region Stats
+        public float damageTaken;
+
+        public float useSpeed;
         public float meleeSpeed;
         public float pickSpeed;
 
@@ -131,6 +134,8 @@ namespace PathOfModifiers
 
         public override bool ConsumeAmmo(Item weapon, Item ammo)
         {
+            float chanceToNotConsume = 0;
+            bool consume = true;
             Item item;
             AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -140,7 +145,7 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = item.GetGlobalItem<AffixItemItem>();
-                if (!pomItem.PlayerConsumeAmmo(player, item, ammo))
+                if (!pomItem.PlayerConsumeAmmo(player, item, ammo, ref chanceToNotConsume))
                     return false;
             }
             for (int i = 0; i < player.armor.Length; i++)
@@ -150,16 +155,17 @@ namespace PathOfModifiers
                     continue;
 
                 pomItem = item.GetGlobalItem<AffixItemItem>();
-                if (!pomItem.PlayerConsumeAmmo(player, item, ammo))
+                if (!pomItem.PlayerConsumeAmmo(player, item, ammo, ref chanceToNotConsume))
                     return false;
             }
-            return true;
+            consume = consume && Main.rand.NextFloat(1) > chanceToNotConsume;
+            return consume;
         }
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             Item item;
             AffixItemItem pomItem;
-            float damageMultiplier = 1f;
+            float damageMultiplier = damageTaken;
             bool hurt = true;
             for (int i = 0; i < player.inventory.Length; i++)
             {
@@ -240,6 +246,10 @@ namespace PathOfModifiers
             regen = (regen * regenMultiplier) + (player.lifeRegen * regenMultiplier) - player.lifeRegen;
         }
 
+        public override float UseTimeMultiplier(Item item)
+        {
+            return useSpeed;
+        }
         public override void GetWeaponCrit(Item heldItem, ref int crit)
         {
             Item item;
@@ -728,6 +738,9 @@ namespace PathOfModifiers
 
         public override void ResetEffects()
         {
+            damageTaken = 1;
+
+            useSpeed = 1;
             meleeSpeed = 1;
             pickSpeed = 1;
 

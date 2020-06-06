@@ -25,6 +25,9 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             AddChilledBuffNPC,
             AddStaticStrikeBuffPlayer,
             AddDodgeChanceBuffPlayer,
+            AddNoManaCostBuffPlayer,
+            AddKnockbackImmunityBuffPlayer,
+            AddMoltenShellBuffPlayer,
         }
 
         public BuffPacketHandler() : base(PacketHandlerType.Buff)
@@ -75,6 +78,15 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                     break;
                 case PacketType.AddDodgeChanceBuffPlayer:
                     ReceiveAddDodgeChanceBuffPlayer(reader, fromWho);
+                    break;
+                case PacketType.AddNoManaCostBuffPlayer:
+                    ReceiveAddNoManaCostBuffPlayer(reader, fromWho);
+                    break;
+                case PacketType.AddKnockbackImmunityBuffPlayer:
+                    ReceiveAddKnockbackImmunityBuffPlayer(reader, fromWho);
+                    break;
+                case PacketType.AddMoltenShellBuffPlayer:
+                    ReceiveAddMoltenShellBuffPlayer(reader, fromWho);
                     break;
             }
         }
@@ -433,6 +445,78 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                 ModPacket packet = GetPacket((byte)PacketType.AddDodgeChanceBuffPlayer);
                 packet.Write(playerID);
                 packet.Write(chance);
+                packet.Write(duraionTicks);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void SendAddNoManaCostBuffPlayer(int playerID, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddNoManaCostBuffPlayer);
+            packet.Write((byte)playerID);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddNoManaCostBuffPlayer(BinaryReader reader, int fromWho)
+        {
+            byte playerID = reader.ReadByte();
+            int duraionTicks = reader.ReadInt32();
+
+            Player player = Main.player[playerID];
+            player.GetModPlayer<BuffPlayer>().AddNoManaCostBuff(player, duraionTicks, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddNoManaCostBuffPlayer);
+                packet.Write(playerID);
+                packet.Write(duraionTicks);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void SendAddKnockbackImmunityBuffPlayer(int playerID, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddKnockbackImmunityBuffPlayer);
+            packet.Write((byte)playerID);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddKnockbackImmunityBuffPlayer(BinaryReader reader, int fromWho)
+        {
+            byte playerID = reader.ReadByte();
+            int duraionTicks = reader.ReadInt32();
+
+            Player player = Main.player[playerID];
+            player.GetModPlayer<BuffPlayer>().AddKnockbackImmunityBuff(player, duraionTicks, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddKnockbackImmunityBuffPlayer);
+                packet.Write(playerID);
+                packet.Write(duraionTicks);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void SendAddMoltenShellBuffPlayer(int playerID, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddMoltenShellBuffPlayer);
+            packet.Write((byte)playerID);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddMoltenShellBuffPlayer(BinaryReader reader, int fromWho)
+        {
+            byte playerID = reader.ReadByte();
+            int duraionTicks = reader.ReadInt32();
+
+            Player player = Main.player[playerID];
+            player.GetModPlayer<BuffPlayer>().AddMoltenShellBuff(player, duraionTicks, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddMoltenShellBuffPlayer);
+                packet.Write(playerID);
                 packet.Write(duraionTicks);
                 packet.Send(-1, fromWho);
             }

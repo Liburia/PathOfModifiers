@@ -761,9 +761,8 @@ namespace PathOfModifiers
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
-        public bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
+        public bool PlayerConsumeAmmo(Player player, Item item, Item ammo, ref float chanceToNotConsume)
         {
-            float chanceToNotConsume = 0;
             bool consume = true;
             foreach (var prefix in prefixes)
             {
@@ -775,7 +774,6 @@ namespace PathOfModifiers
                 if (!suffix.PlayerConsumeAmmo(player, item, ammo, ref chanceToNotConsume))
                     consume = false;
             }
-            consume = consume && Main.rand.NextFloat(1) > chanceToNotConsume;
             return consume;
         }
         public bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

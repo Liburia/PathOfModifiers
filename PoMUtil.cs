@@ -352,6 +352,14 @@ namespace PathOfModifiers
             return zero;
         }
 
+        public static bool IsLowHP(NPC npc)
+        {
+            return (npc.life / (float)npc.lifeMax) <= PathOfModifiers.lowHPThreshold;
+        }
+        public static bool IsLowHP(Player player)
+        {
+            return (player.statLife / (float)player.statLifeMax2) <= PathOfModifiers.lowHPThreshold;
+        }
         public static bool CanHitNPC(NPC npc)
         {
             return npc.active && !npc.townNPC;

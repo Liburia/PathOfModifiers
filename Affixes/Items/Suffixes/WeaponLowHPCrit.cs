@@ -64,14 +64,14 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         }
         public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (item == player.HeldItem && (target.statLife / (float)target.statLifeMax2) <= PathOfModifiers.lowHPThreshold)
+            if (item == player.HeldItem && PoMUtil.IsLowHP(target))
             {
                 damageMultiplier += Type1.GetValue();
             }
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
-            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
+            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target; //TODO: test with worms
             if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= PathOfModifiers.lowHPThreshold)
             {
                 damageMultiplier += Type1.GetValue();
@@ -79,7 +79,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         }
         public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (item == player.HeldItem && (target.statLife / (float)target.statLifeMax2) <= PathOfModifiers.lowHPThreshold)
+            if (item == player.HeldItem && PoMUtil.IsLowHP(target))
             {
                 damageMultiplier += Type1.GetValue();
             }
