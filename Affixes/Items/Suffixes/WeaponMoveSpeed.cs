@@ -70,8 +70,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Rushing", 3),
         };
 
-
-        double lastProc = 0;
+        public uint lastProcTime = 0;
 
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
@@ -105,7 +104,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void OnHit(Item item, Player player)
         {
-            if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProc) / 1000.0 >= Type3.GetValue())
+            if (item == player.HeldItem && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
                 GainMoveSpeed(player);
         }
 
@@ -113,7 +112,16 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             int duration = (int)MathHelper.Clamp(Type2.GetValue() * 60, 1, 9999999);
             player.GetModPlayer<BuffPlayer>().AddMoveSpeedBuff(player, Type1.GetValue(), duration);
-            lastProc = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+            lastProcTime = Main.GameUpdateCount;
+        }
+
+        public override Affix Clone()
+        {
+            var affix = (WeaponMoveSpeed)base.Clone();
+
+            affix.lastProcTime = lastProcTime;
+
+            return affix;
         }
     }
 }

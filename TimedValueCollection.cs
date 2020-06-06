@@ -113,7 +113,7 @@ namespace PathOfModifiers
             public static readonly Func<TagCompound, TimedValueInstance> DESERIALIZER = Load;
             public static TimedValueInstance Load(TagCompound tag)
             {
-                double endTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds + tag.GetDouble("remainingTime");
+                uint endTime = Main.GameUpdateCount + (uint)tag.GetInt("remainingTime");
                 float value = tag.GetFloat("value");
                 return new TimedValueInstance(endTime, value);
             }
@@ -122,7 +122,7 @@ namespace PathOfModifiers
                 TagCompound tag = new TagCompound
                 {
                     //convert to remaining time because gametime changes every launch
-                    { "remainingTime", endTime - PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds },
+                    { "remainingTime", endTime - Main.GameUpdateCount },
                     { "value", value }
                 };
                 return tag;
@@ -131,10 +131,10 @@ namespace PathOfModifiers
             /// <summary>
             /// gametime in ms
             /// </summary>
-            public readonly double endTime;
+            public readonly uint endTime;
             public readonly float value;
 
-            public TimedValueInstance(double endTime, float value)
+            public TimedValueInstance(uint endTime, float value)
             {
                 this.endTime = endTime;
                 this.value = value;
@@ -145,7 +145,7 @@ namespace PathOfModifiers
         public Dictionary<Type, TimedValueInstanceList> instances = new Dictionary<Type, TimedValueInstanceList>();
 
 
-        public void AddInstance(Type type, float value, double durationMs)
+        public void AddInstance(Type type, float value, int durationTicks)
         {
             TimedValueInstanceList timedValueInstanceList;
 
@@ -154,7 +154,7 @@ namespace PathOfModifiers
                 timedValueInstanceList = new TimedValueInstanceList();
                 instances.Add(type, timedValueInstanceList);
             }
-            TimedValueInstance instance = new TimedValueInstance(PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds + durationMs, value);
+            TimedValueInstance instance = new TimedValueInstance(Main.GameUpdateCount + (uint)durationTicks, value);
 
             if (typeof(InstanceType.IStack).IsAssignableFrom(type))
             {
@@ -201,7 +201,7 @@ namespace PathOfModifiers
                 bool isStacking = typeof(InstanceType.IStack).IsAssignableFrom(type);
                 bool needRecount = false;
 
-                double now = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+                uint now = Main.GameUpdateCount;
                 var firstNode = timedValueInstanceList.instances.First;
                 while (firstNode != null && now > firstNode.Value.endTime)
                 {

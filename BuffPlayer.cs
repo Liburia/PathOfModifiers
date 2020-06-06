@@ -137,8 +137,7 @@ namespace PathOfModifiers
 
         public void AddBleedBuff(Player player, int dps, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Bleed), dps, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Bleed), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -147,8 +146,7 @@ namespace PathOfModifiers
         }
         public void AddPoisonBuff(Player player, int dps, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Poison), dps, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Poison), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -157,8 +155,7 @@ namespace PathOfModifiers
         }
         public void AddMoveSpeedBuff(Player player, float speedBoost, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.MoveSpeed), speedBoost, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.MoveSpeed), speedBoost, durationTicks);
 
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
@@ -167,12 +164,11 @@ namespace PathOfModifiers
         }
         public void AddBurningAirBuff(Player player, int dps)
         {
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.BurningAir), dps, PathOfModifiers.tickMS);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.BurningAir), dps, 2);
         }
         public void AddIgnitedBuff(Player player, int dps, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Ignite), dps, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Ignite), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -181,12 +177,11 @@ namespace PathOfModifiers
         }
         public void AddShockedAirBuff(Player player, float multiplier)
         {
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ShockedAir), multiplier, PathOfModifiers.tickMS);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ShockedAir), multiplier, 2);
         }
         public void AddShockedBuff(Player player, float multiplier, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Shock), multiplier, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Shock), multiplier, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -195,8 +190,7 @@ namespace PathOfModifiers
         }
         public void AddChilledBuff(Player player, float multiplier, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Chill), multiplier, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Chill), multiplier, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -205,7 +199,7 @@ namespace PathOfModifiers
         }
         public void AddChilledAirBuff(Player player, float multiplier)
         {
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ChilledAir), multiplier, PathOfModifiers.tickMS);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ChilledAir), multiplier, 2);
         }
         public void AddStaticStrikeBuff(Player player, int damage, int intervalTicks, int time, bool syncMP = true)
         {
@@ -224,8 +218,7 @@ namespace PathOfModifiers
         }
         public void AddDodgeChanceBuff(Player player, float chance, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.DodgeChance), chance, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.DodgeChance), chance, durationTicks);
 
             if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
             {

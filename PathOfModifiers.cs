@@ -35,9 +35,6 @@ namespace PathOfModifiers
 
         public static PathOfModifiers Instance { get; private set; }
 
-        public static GameTime gameTime;
-        public static int Time { get; private set; }
-
         public static UserInterface modifierForgeUI;
         public static UserInterface mapDeviceUI;
 
@@ -79,8 +76,6 @@ namespace PathOfModifiers
         public override void Load()
         {
             Instance = this;
-            gameTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
-            Time = 0;
 
             AddPrefix("", new PoMPrefix());
 
@@ -105,7 +100,6 @@ namespace PathOfModifiers
         public override void Unload()
         {
             Instance = null;
-            gameTime = null;
             modifierForgeUI = null;
             mapDeviceUI = null;
             PoMDataLoader.Unload();
@@ -116,14 +110,8 @@ namespace PathOfModifiers
             ModNet.ModNet.HandlePacket(reader, whoAmI);
         }
 
-        public override void PostUpdateEverything()
-        {
-            Time++;
-        }
-
         public override void UpdateUI(GameTime gameTime)
         {
-            PathOfModifiers.gameTime = gameTime;
             modifierForgeUI?.Update(gameTime);
             mapDeviceUI?.Update(gameTime);
         }

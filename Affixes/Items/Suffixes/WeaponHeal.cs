@@ -56,8 +56,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Vermilion", 3),
         };
 
-
-        double lastCastTime = 0;
+        public uint lastProcTime = 0;
 
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
@@ -89,7 +88,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void Hit(Item item, Player player)
         {
-            if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastCastTime) / 1000.0 >= Type2.GetValue())
+            if (item == player.HeldItem && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
                 HealPlayer(player);
         }
 
@@ -102,7 +101,16 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             {
                 EffectPacketHandler.CSyncHeal(player.whoAmI, amount);
             }
-            lastCastTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+            lastProcTime = Main.GameUpdateCount;
+        }
+
+        public override Affix Clone()
+        {
+            var affix = (WeaponHeal)base.Clone();
+
+            affix.lastProcTime = lastProcTime;
+
+            return affix;
         }
     }
 }

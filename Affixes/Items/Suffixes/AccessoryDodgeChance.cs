@@ -72,7 +72,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Ghost", 3),
         };
 
-        double lastProcTime = 0;
+        public uint lastProcTime = 0;
 
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
@@ -92,12 +92,21 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void GainDodgeChance(Item item, Player player)
         {
-            if (AffixItemItem.IsAccessoryEquipped(item, player) && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProcTime) >= Type3.GetValue() * 1000)
+            if (AffixItemItem.IsAccessoryEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
             {
                 int durationTicks = (int)Math.Round((Type2.GetValue() * 60));
                 player.GetModPlayer<BuffPlayer>().AddDodgeChanceBuff(player, Type1.GetValue(), durationTicks);
-                lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+                lastProcTime = Main.GameUpdateCount;
             }
+        }
+
+        public override Affix Clone()
+        {
+            var affix = (AccessoryDodgeChance)base.Clone();
+
+            affix.lastProcTime = lastProcTime;
+
+            return affix;
         }
     }
 }

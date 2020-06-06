@@ -57,7 +57,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Concord", 3),
         };
 
-        double lastProcTime = 0;
+        public uint lastProcTime = 0;
 
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
@@ -72,13 +72,22 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (AffixItemItem.IsAccessoryEquipped(item, player) && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProcTime) >= Type2.GetValue() * 1000)
+            if (AffixItemItem.IsAccessoryEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
             {
                 damageMultiplier += Type1.GetValue();
-                lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+                lastProcTime = Main.GameUpdateCount;
             }
 
             return true;
+        }
+
+        public override Affix Clone()
+        {
+            var affix = (AccessoryDamageTaken)base.Clone();
+
+            affix.lastProcTime = lastProcTime;
+
+            return affix;
         }
     }
 }

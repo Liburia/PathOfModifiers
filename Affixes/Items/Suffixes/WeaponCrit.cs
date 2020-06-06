@@ -56,7 +56,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Planning", 3),
         };
 
-        double lastProcTime = 0;
+        public uint lastProcTime = 0;
 
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
@@ -90,14 +90,14 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void Hit(Item item, Player player, NPC target, ref float damageMultiplier)
         {
-            if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProcTime) >= Type2.GetValue() * 1000)
+            if (item == player.HeldItem && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
             {
                 Crit(target, ref damageMultiplier);
             }
         }
         void Hit(Item item, Player player, Player target, ref float damageMultiplier)
         {
-            if (item == player.HeldItem && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProcTime) >= Type2.GetValue() * 1000)
+            if (item == player.HeldItem && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
             {
                 Crit(target, ref damageMultiplier);
             }
@@ -111,7 +111,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             {
                 EffectPacketHandler.CSyncCrit(target, 50);
             }
-            lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+            lastProcTime = Main.GameUpdateCount;
         }
         void Crit(Player target, ref float damageMultiplier)
         {
@@ -121,7 +121,16 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             {
                 EffectPacketHandler.CSyncCrit(target, 50);
             }
-            lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+            lastProcTime = Main.GameUpdateCount;
+        }
+
+        public override Affix Clone()
+        {
+            var affix = (WeaponCrit)base.Clone();
+
+            affix.lastProcTime = lastProcTime;
+
+            return affix;
         }
     }
 }

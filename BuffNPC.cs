@@ -22,8 +22,7 @@ namespace PathOfModifiers
 
         public void AddBleedBuff(NPC npc, int dps, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Bleed), dps, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Bleed), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -32,8 +31,7 @@ namespace PathOfModifiers
         }
         public void AddPoisonBuff(NPC npc, int dps, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Poison), dps, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Poison), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -42,12 +40,11 @@ namespace PathOfModifiers
         }
         public void AddBurningAirBuff(NPC npc, int dps)
         {
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.BurningAir), dps, PathOfModifiers.tickMS);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.BurningAir), dps, 2);
         }
         public void AddIgnitedBuff(NPC npc, int dps, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Ignite), dps, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Ignite), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -56,12 +53,11 @@ namespace PathOfModifiers
         }
         public void AddShockedAirBuff(NPC npc, float multiplier)
         {
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ShockedAir), multiplier, PathOfModifiers.tickMS);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ShockedAir), multiplier, 2);
         }
         public void AddShockedBuff(NPC npc, float multiplier, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Shock), multiplier, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Shock), multiplier, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -70,8 +66,7 @@ namespace PathOfModifiers
         }
         public void AddChilledBuff(NPC npc, float multiplier, int durationTicks, bool syncMP = true)
         {
-            double durationMs = (durationTicks / 60f) * 1000;
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Chill), multiplier, durationMs);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Chill), multiplier, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -80,7 +75,7 @@ namespace PathOfModifiers
         }
         public void AddChilledAirBuff(NPC npc, float multiplier)
         {
-            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ChilledAir), multiplier, PathOfModifiers.tickMS);
+            timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ChilledAir), multiplier, 2);
         }
 
         public override void ResetEffects(NPC npc)

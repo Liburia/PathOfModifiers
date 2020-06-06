@@ -100,7 +100,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void SpawnNova(Item item, Player player, int damageTaken)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
+            if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
             {
                 Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<ReflectNova>(), (int)Math.Round(damageTaken * Type1.GetValue()), 0, player.whoAmI, Type2.GetValue());
 

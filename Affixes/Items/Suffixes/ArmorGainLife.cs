@@ -57,7 +57,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Life", 3),
         };
 
-        double lastProcTime = 0;
+        public uint lastProcTime = 0;
 
         public override bool CanBeRolled(AffixItemItem pomItem, Item item)
         {
@@ -78,7 +78,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void Heal(Item item, Player player)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player) && (PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds - lastProcTime) >= Type2.GetValue() * 1000)
+            if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
             {
                 int amount = Type1.GetValue();
                 if (amount > 0)
@@ -94,8 +94,17 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 {
                     player.Hurt(PlayerDeathReason.ByPlayer(player.whoAmI), amount, 0, false);
                 }
-                lastProcTime = PathOfModifiers.gameTime.TotalGameTime.TotalMilliseconds;
+                lastProcTime = Main.GameUpdateCount;
             }
+        }
+
+        public override Affix Clone()
+        {
+            var affix = (ArmorGainLife)base.Clone();
+
+            affix.lastProcTime = lastProcTime;
+
+            return affix;
         }
     }
 }
