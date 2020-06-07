@@ -238,6 +238,8 @@ namespace PathOfModifiers.ChatCommands
                     }
                     break;
             }
+
+            pomItem.UpdateName(item);
         }
     }
 }
