@@ -33,25 +33,19 @@ namespace PathOfModifiers
         /// </summary>
         public static Affixes.Items.Affix RollNewAffix(AffixItemItem pomItem, Item item)
         {
-            if (pomItem.FreeAffixes <= 0)
+            Affixes.Items.Affix affix;
+
+            float prefixChance = pomItem.FreeSuffixes > 0 ? pomItem.rarity.chanceToRollPrefixInsteadOfSuffix : 1;
+
+            if (Main.rand.NextFloat(1) < prefixChance)
             {
-                return null;
+                affix = RollNewPrefix(pomItem, item);
             }
-            Tuple<Affixes.Items.Affix, double>[] tuples = PoMDataLoader.affixesItem
-                .Where(a => a.AffixSpaceAvailable(pomItem) &&
-                    a.Weight > 0 &&
-                    a.CanBeRolled(pomItem, item) &&
-                    !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                .Select(a => new Tuple<Affixes.Items.Affix, double>(a, a.Weight))
-                .ToArray();
-            if (tuples.Length == 0)
+            else
             {
-                return null;
+                affix = RollNewSuffix(pomItem, item);
             }
-            WeightedRandom<Affixes.Items.Affix> weightedRandom = new WeightedRandom<Affixes.Items.Affix>(Main.rand, tuples);
-            Affixes.Items.Affix affix = weightedRandom;
-            affix = affix.Clone();
-            affix.InitializeItem(pomItem);
+
             return affix;
         }
         public static Affixes.Items.Affix RollNewPrefix(AffixItemItem pomItem, Item item)
