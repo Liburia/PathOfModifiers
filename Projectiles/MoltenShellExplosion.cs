@@ -22,18 +22,21 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.scale = 3f;
-            projectile.Size = new Vector2(98, 98) * 0.7f * projectile.scale;
+            projectile.scale = 5f;
+            projectile.Size = new Vector2(98, 98) * 0.2f * projectile.scale;
             projectile.timeLeft = 600;
             projectile.friendly = true;
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
+            drawHeldProjInFrontOfHeldItemAndArms = true;
         }
 
         public override void AI()
         {
+            Main.player[projectile.owner].heldProj = projectile.whoAmI;
+
             projectile.frameCounter++;
-            if (projectile.frameCounter >= 5)
+            if (projectile.frameCounter >= 3)
             {
                 projectile.frameCounter = 0;
                 projectile.frame++;
@@ -94,7 +97,7 @@ namespace PathOfModifiers.Projectiles
                 projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY),
                 sourceRectangle, drawColor, projectile.rotation, origin, projectile.scale, SpriteEffects.None, 0f);
 
-            return false;
+            return true;
         }
 
         public override bool? CanHitNPC(NPC target)

@@ -26,6 +26,7 @@ namespace PathOfModifiers
         int staticStrikeCurrentInterval;
         public bool staticStrikeBuff = false;
 
+        float moltenShellDustAngle;
         int moltenShellStoredDamage;
         int moltenShellTimeLeft;
 
@@ -91,6 +92,18 @@ namespace PathOfModifiers
             if (moltenShellTimeLeft > 0)
             {
                 affixPlayer.damageTaken += -0.1f;
+
+                if (Main.GameUpdateCount % 2 == 0)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Vector2 dustPosition = player.Center + new Vector2(0, 32).RotatedBy(moltenShellDustAngle + (2.095f * i));
+                        Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.MoltenShell>(), Velocity: Vector2.Zero, Scale: 2f);
+                        Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.FireDebris>(), Scale: 1.5f);
+                    }
+
+                    moltenShellDustAngle += 0.2f;
+                }
             }
         }
         public override void UpdateBadLifeRegen()
@@ -173,6 +186,8 @@ namespace PathOfModifiers
                 {
                     Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<MoltenShellExplosion>(), moltenShellStoredDamage, 5, player.whoAmI, moltenShellStoredDamage / (float)player.statLifeMax2);
                 }
+
+                moltenShellStoredDamage = 0;
             }
         }
         public override void ModifyManaCost(Item item, ref float reduce, ref float mult)
