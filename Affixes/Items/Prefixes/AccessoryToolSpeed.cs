@@ -52,7 +52,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             float value = Type1.GetValue();
             float valueFormat = Type1.GetValueFormat();
             char plusMinus = value < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueFormat }% tool speed";
+            return $"{ plusMinus }{ valueFormat }% pickaxe speed";
         }
 
         public override void UpdateEquip(Item item, AffixItemPlayer player)

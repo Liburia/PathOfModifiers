@@ -13,6 +13,7 @@ using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.Rarities;
 using Terraria.ID;
 using Terraria.DataStructures;
+using Newtonsoft.Json.Bson;
 
 namespace PathOfModifiers
 {

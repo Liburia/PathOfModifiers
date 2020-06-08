@@ -57,7 +57,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override void GetWeaponKnockback(Item item, Player player, ref float multiplier)
         {
             float value = Type1.GetValue();
-            multiplier += value * (((float)player.statLife / player.statLifeMax2) - 0.5f);
+            multiplier += value * (((float)player.statLife / player.statLifeMax2) - 0.5f) * 2;
         }
     }
 }

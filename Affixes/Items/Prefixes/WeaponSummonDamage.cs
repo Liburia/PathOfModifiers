@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
-    public class WeaponSummonDamage : AffixTiered<TTFloat>
+    public class WeaponSummonDamage : AffixTiered<TTFloat>, IPrefix
     {
         public override double Weight { get; } = 0.8;
 

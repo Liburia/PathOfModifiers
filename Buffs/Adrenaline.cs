@@ -10,7 +10,7 @@ namespace PathOfModifiers.Buffs
         public override void SetDefaults()
         {
             DisplayName.SetDefault(GetType().Name);
-            Description.SetDefault("'+50% damage, +50% attack speed, +30% move speed, -10% damage taken");
+            Description.SetDefault("'+50% damage, +30% attack speed, +30% move speed, -10% damage taken");
         }
 
         public override void Update(Player player, ref int buffIndex)
@@ -19,7 +19,7 @@ namespace PathOfModifiers.Buffs
 
             var affixItemPlayer = player.GetModPlayer<AffixItemPlayer>();
             affixItemPlayer.damageTaken += -0.1f;
-            affixItemPlayer.useSpeed += 0.5f;
+            affixItemPlayer.useSpeed += 0.3f;
             affixItemPlayer.moveSpeed += 0.3f;
         }
     }

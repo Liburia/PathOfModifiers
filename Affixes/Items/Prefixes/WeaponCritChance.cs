@@ -49,8 +49,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            float valueFormat = (float)Math.Round(Type1.GetValue() + 1f, 1);
-            return $"x{ valueFormat } critical strike chance";
+            return $"x{ Type1.GetValueFormat(1) * Math.Sign(Type1.GetValue()) + 1 } critical strike chance";
         }
 
         public override void GetWeaponCrit(Item item, Player player, ref float multiplier)

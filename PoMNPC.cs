@@ -149,7 +149,7 @@ namespace PathOfModifiers
 
         public override void SetDefaults(NPC npc)
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (!PathOfModifiers.disableNPCModifiers && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (dontRollNextNPC)
                 {

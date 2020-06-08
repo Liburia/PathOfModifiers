@@ -21,13 +21,13 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(-1f, 0.5),
-                new TTFloat.WeightedTier(-0.66f, 1),
-                new TTFloat.WeightedTier(-0.33f, 2),
-                new TTFloat.WeightedTier(0, 2),
-                new TTFloat.WeightedTier(0.33f, 1),
-                new TTFloat.WeightedTier(0.66f, 0.5),
-                new TTFloat.WeightedTier(1f, 0),
+                new TTFloat.WeightedTier(-0.5f, 0.5),
+                new TTFloat.WeightedTier(-0.333f, 1),
+                new TTFloat.WeightedTier(-0.166f, 2),
+                new TTFloat.WeightedTier(0f, 2),
+                new TTFloat.WeightedTier(0.166f, 1),
+                new TTFloat.WeightedTier(0.333f, 0.5),
+                new TTFloat.WeightedTier(0.5f, 0),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
@@ -57,7 +57,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override void UseTimeMultiplier(Item item, Player player, ref float multiplier)
         {
             float value = Type1.GetValue();
-            multiplier += value * (((float)player.statLife / player.statLifeMax2) - 0.5f);
+            multiplier += value * (((float)player.statLife / player.statLifeMax2) - 0.5f) * 2;
         }
     }
 }

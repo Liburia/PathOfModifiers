@@ -708,10 +708,8 @@ namespace PathOfModifiers
         }
         #endregion
         #region Projectile hooks
-        public void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
-            float damageMultiplier = 1f;
-            float knockbackMultiplier = 1f;
             foreach (var prefix in prefixes)
             {
                 prefix.ProjModifyHitNPC(item, player, projectile, target, ref damageMultiplier, ref knockbackMultiplier, ref crit, ref hitDirection);
@@ -720,12 +718,9 @@ namespace PathOfModifiers
             {
                 suffix.ProjModifyHitNPC(item, player, projectile, target, ref damageMultiplier, ref knockbackMultiplier, ref crit, ref hitDirection);
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
-            knockback *= knockbackMultiplier;
         }
-        public void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref int damage, ref bool crit)
+        public void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
         {
-            float damageMultiplier = 1f;
             foreach (var prefix in prefixes)
             {
                 prefix.ProjModifyHitPvp(item, player, projectile, target, ref damageMultiplier, ref crit);
@@ -734,7 +729,6 @@ namespace PathOfModifiers
             {
                 suffix.ProjModifyHitPvp(item, player, projectile, target, ref damageMultiplier, ref crit);
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
         }
         public void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
         {

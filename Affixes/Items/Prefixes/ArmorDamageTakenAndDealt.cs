@@ -55,7 +55,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (AffixItemItem.IsEquipped(item, player))
+            if (AffixItemItem.IsArmorEquipped(item, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
@@ -64,14 +64,28 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit)
         {
-            if (AffixItemItem.IsEquipped(affixItem, player))
+            if (AffixItemItem.IsArmorEquipped(affixItem, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
         }
         public override void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (AffixItemItem.IsEquipped(affixItem, player))
+            if (AffixItemItem.IsArmorEquipped(affixItem, player))
+            {
+                damageMultiplier += Type1.GetValue();
+            }
+        }
+        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
+        {
+            if (AffixItemItem.IsArmorEquipped(item, player))
+            {
+                damageMultiplier += Type1.GetValue();
+            }
+        }
+        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
+        {
+            if (AffixItemItem.IsArmorEquipped(item, player))
             {
                 damageMultiplier += Type1.GetValue();
             }

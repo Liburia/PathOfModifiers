@@ -25,6 +25,7 @@ namespace PathOfModifiers
         public const bool disableVanillaModifiersWeapons = true;
         public const bool disableVanillaModifiersAccessories = true;
         public const bool disableMaps = true;
+        public const bool disableNPCModifiers = true;
 
         public const int ailmentDuration = 300;
         public const float lowHPThreshold = 0.2f;

@@ -329,7 +329,7 @@ namespace PathOfModifiers
                 int reflectDamage = (int)Math.Round(damage * reflectMeleeDamage);
                 float reflectKnockback = 5;
                 int reflectDirection = npc.Center.X > player.Center.X ? 1 : -1;
-                npc.StrikeNPC(reflectDamage, reflectKnockback, reflectDirection, crit);
+                player.ApplyDamageToNPC(npc, reflectDamage, reflectKnockback, reflectDirection, crit);
             }
         }
         public void ModifyHitByPvp(Player attacker, ref int damage, ref bool crit)
@@ -550,6 +550,8 @@ namespace PathOfModifiers
             {
                 Item item;
                 AffixItemItem pomItem;
+                float damageMultiplier = 1f;
+                float knockBackMultiplier = 1f;
                 for (int i = 0; i < player.inventory.Length; i++)
                 {
                     item = player.inventory[i];
@@ -557,7 +559,7 @@ namespace PathOfModifiers
                         continue;
 
                     pomItem = item.GetGlobalItem<AffixItemItem>();
-                    pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+                    pomItem.ProjModifyHitNPC(item, player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref crit, ref hitDirection);
                 }
                 for (int i = 0; i < player.armor.Length; i++)
                 {
@@ -566,8 +568,10 @@ namespace PathOfModifiers
                         continue;
 
                     pomItem = item.GetGlobalItem<AffixItemItem>();
-                    pomItem.ProjModifyHitNPC(item, player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+                    pomItem.ProjModifyHitNPC(item, player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref crit, ref hitDirection);
                 }
+                damage = (int)Math.Round(damage * damageMultiplier);
+                knockback = (int)Math.Round(knockback * knockBackMultiplier);
             }
         }
         public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
@@ -578,6 +582,7 @@ namespace PathOfModifiers
             {
                 Item item;
                 AffixItemItem pomItem;
+                float damageMultiplier = 1f;
                 for (int i = 0; i < player.inventory.Length; i++)
                 {
                     item = player.inventory[i];
@@ -585,7 +590,7 @@ namespace PathOfModifiers
                         continue;
 
                     pomItem = item.GetGlobalItem<AffixItemItem>();
-                    pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
+                    pomItem.ProjModifyHitPvp(item, player, proj, target, ref damageMultiplier, ref crit);
                 }
                 for (int i = 0; i < player.armor.Length; i++)
                 {
@@ -594,8 +599,9 @@ namespace PathOfModifiers
                         continue;
 
                     pomItem = item.GetGlobalItem<AffixItemItem>();
-                    pomItem.ProjModifyHitPvp(item, player, proj, target, ref damage, ref crit);
+                    pomItem.ProjModifyHitPvp(item, player, proj, target, ref damageMultiplier, ref crit);
                 }
+                damage = (int)Math.Round(damage * damageMultiplier);
             }
         }
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)

@@ -60,11 +60,26 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             float value = Type1.GetValue();
             damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
         }
-
         public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
         {
             float value = Type1.GetValue();
             damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
+        }
+        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
+        {
+            if (player.HeldItem == item)
+            {
+                float value = Type1.GetValue();
+                damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
+            }
+        }
+        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
+        {
+            if (player.HeldItem == item)
+            {
+                float value = Type1.GetValue();
+                damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
+            }
         }
     }
 }
