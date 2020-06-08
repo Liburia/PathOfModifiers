@@ -16,6 +16,7 @@ namespace PathOfModifiers.Projectiles
         static readonly Point frameSize = new Point(32, 32);
         static readonly Point frameNumber = new Point(4, 4);
         const int frameTime = 3;
+        const float collisionScale = 0.85f;
 
         HashSet<Entity> hitEntities = new HashSet<Entity>();
         bool init;
@@ -70,14 +71,14 @@ namespace PathOfModifiers.Projectiles
             if (Main.netMode != NetmodeID.Server)
             {
                 Rectangle hitRect = new Rectangle(
-                    (int)(projectile.position.X - halfSize.X),
-                    (int)(projectile.position.Y - halfSize.Y),
-                    (int)halfSize.X,
-                    (int)halfSize.Y);
+                    (int)(projectile.position.X - (halfSize.X * collisionScale)),
+                    (int)(projectile.position.Y - (halfSize.Y * collisionScale)),
+                    (int)(halfSize.X * 2 * collisionScale),
+                    (int)(halfSize.Y * 2 * collisionScale));
                 Player owner = Main.player[projectile.owner];
 
                 Player player = Main.LocalPlayer;
-                if (PoMUtil.CanHitPvp(owner, player))
+                if (PoMUtil.CanHitPvp(owner, player) && !hitEntities.Contains(player))
                 {
                     if (player.getRect().Intersects(hitRect))
                     {
@@ -91,7 +92,7 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (PoMUtil.CanHitNPC(npc))
+                        if (PoMUtil.CanHitNPC(npc) && !hitEntities.Contains(npc))
                         {
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(hitRect))

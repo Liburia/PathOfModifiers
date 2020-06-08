@@ -64,7 +64,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            string plusMinus = Type2.GetValue() >= 1 ? "" : "-";
+            string plusMinus = Type2.GetValue() >= 0 ? "+" : "-";
 
             return $"Spend {Type1.GetValueFormat()}% mana to increase damage by {plusMinus}{Type2.GetValueFormat()}%";
         }

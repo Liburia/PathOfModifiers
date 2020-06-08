@@ -24,7 +24,7 @@ namespace PathOfModifiers
         int staticStrikeDamage;
         int staticStrikeIntervalTicks;
         int staticStrikeCurrentInterval;
-        public bool staticStrikeBuff = false;
+        int staticStrikeTimeLeft;
 
         float moltenShellDustAngle;
         int moltenShellStoredDamage;
@@ -53,8 +53,6 @@ namespace PathOfModifiers
         public override void ResetEffects()
         {
             timedValueInstanceCollection.ResetEffects();
-
-            staticStrikeBuff = false;
         }
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
@@ -152,22 +150,27 @@ namespace PathOfModifiers
         }
         public override void PreUpdate()
         {
-            if (staticStrikeBuff)
+            if (staticStrikeTimeLeft > 0)
             {
                 staticStrikeCurrentInterval++;
 
                 if (staticStrikeCurrentInterval >= staticStrikeIntervalTicks)
                 {
-                    Projectile.NewProjectile(
-                        position: player.Center,
-                        velocity: Vector2.Zero,
-                        Type: ModContent.ProjectileType<Projectiles.StaticStrike>(),
-                        Damage: staticStrikeDamage,
-                        KnockBack: 0,
-                        Owner: player.whoAmI);
+                    if (player.whoAmI == Main.myPlayer)
+                    {
+                        Projectile.NewProjectile(
+                            position: player.Center,
+                            velocity: Vector2.Zero,
+                            Type: ModContent.ProjectileType<StaticStrike>(),
+                            Damage: staticStrikeDamage,
+                            KnockBack: 0,
+                            Owner: player.whoAmI);
+                    }
 
                     staticStrikeCurrentInterval = 0;
                 }
+
+                staticStrikeTimeLeft--;
             }
 
             if (noManaCostTimeLeft > 0)
@@ -264,19 +267,19 @@ namespace PathOfModifiers
         {
             timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.ChilledAir), multiplier, 2);
         }
-        public void AddStaticStrikeBuff(Player player, int damage, int intervalTicks, int time, bool syncMP = true)
+        public void AddStaticStrikeBuff(Player player, int damage, int intervalTicks, int durationTicks, bool syncMP = true)
         {
-            if (!staticStrikeBuff)
+            if (staticStrikeTimeLeft <= 0)
             {
                 staticStrikeCurrentInterval = 0;
             }
             staticStrikeDamage = damage;
             staticStrikeIntervalTicks = intervalTicks;
-            player.AddBuff(ModContent.BuffType<Buffs.StaticStrike>(), time, true);
+            staticStrikeTimeLeft = durationTicks;
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
             {
-                BuffPacketHandler.SendAddStaticStrikeBuffPlayer(player.whoAmI, damage, intervalTicks, time);
+                BuffPacketHandler.SendAddStaticStrikeBuffPlayer(player.whoAmI, damage, intervalTicks, durationTicks);
             }
         }
         public void AddDodgeChanceBuff(Player player, float chance, int durationTicks, bool syncMP = true)

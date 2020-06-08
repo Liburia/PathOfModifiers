@@ -129,10 +129,10 @@ namespace PathOfModifiers.Projectiles
             if (Main.netMode != NetmodeID.Server)
             {
                 Rectangle explosionBounds = new Rectangle(
-                    (int)(projectile.position.X - explosionHalfSize.X),
-                    (int)(projectile.position.Y - explosionHalfSize.Y),
-                    (int)explosionHalfSize.X,
-                    (int)explosionHalfSize.Y);
+                    (int)(projectile.Center.X - explosionHalfSize.X),
+                    (int)(projectile.Center.Y - explosionHalfSize.Y),
+                    (int)explosionHalfSize.X * 2,
+                    (int)explosionHalfSize.Y * 2);
                 Player owner = Main.player[projectile.owner];
 
                 Player player = Main.LocalPlayer;

@@ -68,37 +68,37 @@ namespace PathOfModifiers.ChatCommands
                         else if (affix is AffixTiered<TTInt, TTFloat, TTFloat> affixTieredIFF)
                         {
                             affixTieredIFF.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredIFF.SetTierMultiplier(int.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
+                            affixTieredIFF.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTFloat, TTInt, TTFloat> affixTieredFIF)
                         {
                             affixTieredFIF.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredFIF.SetTierMultiplier(float.Parse(args[4]), int.Parse(args[6]), float.Parse(args[8]));
+                            affixTieredFIF.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTInt, TTInt, TTFloat> affixTieredIIF)
                         {
                             affixTieredIIF.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredIIF.SetTierMultiplier(int.Parse(args[4]), int.Parse(args[6]), float.Parse(args[8]));
+                            affixTieredIIF.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTFloat, TTFloat, TTInt> affixTieredFFI)
                         {
                             affixTieredFFI.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredFFI.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), int.Parse(args[8]));
+                            affixTieredFFI.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTInt, TTFloat, TTInt> affixTieredIFI)
                         {
                             affixTieredIFI.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredIFI.SetTierMultiplier(int.Parse(args[4]), float.Parse(args[6]), int.Parse(args[8]));
+                            affixTieredIFI.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTFloat, TTInt, TTInt> affixTieredFII)
                         {
                             affixTieredFII.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredFII.SetTierMultiplier(float.Parse(args[4]), int.Parse(args[6]), int.Parse(args[8]));
+                            affixTieredFII.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTInt, TTInt, TTInt> affixTieredIII)
                         {
                             affixTieredIII.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredIII.SetTierMultiplier(int.Parse(args[4]), int.Parse(args[6]), int.Parse(args[8]));
+                            affixTieredIII.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                     }
                     else if (args.Length > 5)
@@ -111,17 +111,17 @@ namespace PathOfModifiers.ChatCommands
                         else if (affix is AffixTiered<TTInt, TTFloat> affixTieredIF)
                         {
                             affixTieredIF.SetTier(int.Parse(args[3]), int.Parse(args[5]));
-                            affixTieredIF.SetTierMultiplier(int.Parse(args[4]), float.Parse(args[6]));
+                            affixTieredIF.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]));
                         }
                         else if (affix is AffixTiered<TTFloat, TTInt> affixTieredFI)
                         {
                             affixTieredFI.SetTier(int.Parse(args[3]), int.Parse(args[5]));
-                            affixTieredFI.SetTierMultiplier(float.Parse(args[4]), int.Parse(args[6]));
+                            affixTieredFI.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]));
                         }
                         else if (affix is AffixTiered<TTInt, TTInt> affixTieredII)
                         {
                             affixTieredII.SetTier(int.Parse(args[3]), int.Parse(args[5]));
-                            affixTieredII.SetTierMultiplier(int.Parse(args[4]), int.Parse(args[6]));
+                            affixTieredII.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]));
                         }
                     }
                     else if (args.Length > 3)
@@ -167,37 +167,37 @@ namespace PathOfModifiers.ChatCommands
                         else if (affix is AffixTiered<TTInt, TTFloat, TTFloat> affixTieredIFF)
                         {
                             affixTieredIFF.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredIFF.SetTierMultiplier(int.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
+                            affixTieredIFF.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTFloat, TTInt, TTFloat> affixTieredFIF)
                         {
                             affixTieredFIF.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredFIF.SetTierMultiplier(float.Parse(args[4]), int.Parse(args[6]), float.Parse(args[8]));
+                            affixTieredFIF.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTInt, TTInt, TTFloat> affixTieredIIF)
                         {
                             affixTieredIIF.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredIIF.SetTierMultiplier(int.Parse(args[4]), int.Parse(args[6]), float.Parse(args[8]));
+                            affixTieredIIF.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTFloat, TTFloat, TTInt> affixTieredFFI)
                         {
                             affixTieredFFI.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredFFI.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), int.Parse(args[8]));
+                            affixTieredFFI.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTInt, TTFloat, TTInt> affixTieredIFI)
                         {
                             affixTieredIFI.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredIFI.SetTierMultiplier(int.Parse(args[4]), float.Parse(args[6]), int.Parse(args[8]));
+                            affixTieredIFI.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTFloat, TTInt, TTInt> affixTieredFII)
                         {
                             affixTieredFII.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredFII.SetTierMultiplier(float.Parse(args[4]), int.Parse(args[6]), int.Parse(args[8]));
+                            affixTieredFII.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                         else if (affix is AffixTiered<TTInt, TTInt, TTInt> affixTieredIII)
                         {
                             affixTieredIII.SetTier(int.Parse(args[3]), int.Parse(args[5]), int.Parse(args[7]));
-                            affixTieredIII.SetTierMultiplier(int.Parse(args[4]), int.Parse(args[6]), int.Parse(args[8]));
+                            affixTieredIII.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]), float.Parse(args[8]));
                         }
                     }
                     else if (args.Length > 5)
@@ -210,17 +210,17 @@ namespace PathOfModifiers.ChatCommands
                         else if (affix is AffixTiered<TTInt, TTFloat> affixTieredIF)
                         {
                             affixTieredIF.SetTier(int.Parse(args[3]), int.Parse(args[5]));
-                            affixTieredIF.SetTierMultiplier(int.Parse(args[4]), float.Parse(args[6]));
+                            affixTieredIF.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]));
                         }
                         else if (affix is AffixTiered<TTFloat, TTInt> affixTieredFI)
                         {
                             affixTieredFI.SetTier(int.Parse(args[3]), int.Parse(args[5]));
-                            affixTieredFI.SetTierMultiplier(float.Parse(args[4]), int.Parse(args[6]));
+                            affixTieredFI.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]));
                         }
                         else if (affix is AffixTiered<TTInt, TTInt> affixTieredII)
                         {
                             affixTieredII.SetTier(int.Parse(args[3]), int.Parse(args[5]));
-                            affixTieredII.SetTierMultiplier(int.Parse(args[4]), int.Parse(args[6]));
+                            affixTieredII.SetTierMultiplier(float.Parse(args[4]), float.Parse(args[6]));
                         }
                     }
                     else if (args.Length > 3)

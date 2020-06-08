@@ -15,6 +15,7 @@ namespace PathOfModifiers.ModNet
         Map,
         Mod,
         NPC,
+        Projectile,
     }
 
     internal class ModNet
@@ -31,6 +32,7 @@ namespace PathOfModifiers.ModNet
             packetHandlers[(int)PacketHandlerType.Map] = new MapPacketHandler();
             packetHandlers[(int)PacketHandlerType.Mod] = new ModPacketHandler();
             packetHandlers[(int)PacketHandlerType.NPC] = new NPCPacketHandler();
+            packetHandlers[(int)PacketHandlerType.Projectile] = new ProjectilePacketHandler();
         }
 
         public static void HandlePacket(BinaryReader r, int fromWho)

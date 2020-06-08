@@ -43,6 +43,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 new TTInt.WeightedTier(4, 1.5),
                 new TTInt.WeightedTier(5, 1),
                 new TTInt.WeightedTier(6, 0.5),
+                new TTInt.WeightedTier(7, 0),
             },
         };
         public override TTFloat Type3 { get; } = new TTFloat()

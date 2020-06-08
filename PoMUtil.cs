@@ -14,6 +14,7 @@ using PathOfModifiers.Rarities;
 using Terraria.ID;
 using Terraria.DataStructures;
 using Newtonsoft.Json.Bson;
+using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers
 {

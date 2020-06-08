@@ -72,6 +72,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void Hit(Item item, Player player, NPC target)
         {
+            //TODO: test worms and shit
             NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
             if (item == player.HeldItem && realTarget.life >= realTarget.lifeMax)
             {

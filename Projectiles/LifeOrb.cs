@@ -4,7 +4,9 @@ using PathOfModifiers.Dusts;
 using Terraria;
 using System;
 using Terraria.ID;
+using Terraria.Enums;
 using Terraria.ModLoader;
+using PathOfModifiers.ModNet.PacketHandlers;
 
 namespace PathOfModifiers.Projectiles
 {
@@ -47,24 +49,29 @@ namespace PathOfModifiers.Projectiles
 
         public override void AI()
         {
-            if (projectile.owner == Main.myPlayer)
-            {
-                Rectangle bounds = projectile.getRect();
-                //TODO: Don't need to loop, just check the main player.
-                for (int i = 0; i < Main.maxPlayers; i++)
-                {
-                    Player player = Main.player[i];
-                    if (player.active && (i == projectile.owner || (player.team != 0 && player.team == Main.player[projectile.owner].team)) && bounds.Intersects(player.getRect()))
-                    {
-                        player.statLife += projectile.damage;
-                        player.HealEffect(projectile.damage);
-                        SpawnDebris(DebrisType.Entity);
-                        projectile.Kill();
+            Rectangle bounds = projectile.getRect();
 
-                        return;
+            if (Main.netMode != NetmodeID.Server)
+            {
+                Player player = Main.LocalPlayer;
+                if (!player.dead && (player.whoAmI == projectile.owner || (player.team != (int)Team.None && player.team == Main.player[projectile.owner].team)) && bounds.Intersects(player.getRect()))
+                {
+                    player.statLife += projectile.damage;
+                    player.HealEffect(projectile.damage);
+                    SpawnDebris(DebrisType.Entity);
+                    if (Main.netMode == NetmodeID.SinglePlayer || projectile.owner == Main.myPlayer)
+                    {
+                        projectile.Kill();
                     }
+                    else
+                    {
+                        ProjectilePacketHandler.CSendKill(projectile);
+                    }
+
+                    return;
                 }
             }
+
 
             float mag = Magnitude;
 
@@ -100,11 +107,13 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
-
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            return false;
+            SpawnDebris(DebrisType.Tile);
+
+            return true;
         }
+
         public override bool? CanHitNPC(NPC target)
         {
             return false;

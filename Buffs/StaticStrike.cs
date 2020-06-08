@@ -27,7 +27,7 @@ namespace PathOfModifiers.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<BuffPlayer>().staticStrikeBuff = true;
+            //player.GetModPlayer<BuffPlayer>().staticStrikeBuff = true;
         }
     }
 }
