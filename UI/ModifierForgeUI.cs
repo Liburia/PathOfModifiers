@@ -460,13 +460,12 @@ namespace PathOfModifiers.UI
         void ModifiedCanPutIntoSlot(Item item, ref bool canPut)
         {
             if (canPut)
-                canPut = item.IsAir || AffixItemItem.IsRollable(item);
+                canPut = (item.IsAir && !modifiedItemSlot.item.IsAir) || AffixItemItem.IsRollable(item);
         }
         void ModifierCanPutIntoSlot(Item item, ref bool canPut)
         {
-            //TODO: Actual system
             if (canPut)
-                canPut = canPut = item.IsAir || item.type == ModContent.ItemType<Items.ModifierFragment>();
+                canPut = (item.IsAir && !modifierItemSlot.item.IsAir) || item.type == ModContent.ItemType<Items.ModifierFragment>();
         }
         void ModifiedItemChange(Item oldItem, Item newItem)
         {

@@ -117,7 +117,6 @@ namespace PathOfModifiers.UI
 
                     if (IsMouseHovering)
                     {
-                        // TODO, should only need 2 of these 3 I think
                         Main.HoverItem = item.Clone();
                         Main.hoverItemName = Main.HoverItem.Name + (Main.HoverItem.modItem != null ? " [" + Main.HoverItem.modItem.mod.Name + "]" : "");
 
@@ -136,7 +135,7 @@ namespace PathOfModifiers.UI
         void MouseDown(UIMouseEvent evt, UIElement listeningElement)
         {
             Player player = Main.LocalPlayer;
-            
+
 
             if (player.itemAnimation == 0 && player.itemTime == 0 && !IsLocked() && CanPutIntoSlot(Main.mouseItem))
             {
