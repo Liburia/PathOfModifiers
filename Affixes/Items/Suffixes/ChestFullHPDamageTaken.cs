@@ -55,7 +55,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player))
+            if (AffixItemItem.IsArmorEquipped(item, player) && player.statLife == player.statLifeMax2)
             {
                 damageMultiplier += Type1.GetValue();
             }

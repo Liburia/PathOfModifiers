@@ -17,6 +17,8 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             AddPoisonBuffNPC,
             AddPoisonBuffPlayer,
             AddMoveSpeedBuffPlayer,
+            AddWeaponMoveSpeedBuffPlayer,
+            AddGreavesMoveSpeedBuffPlayer,
             AddIgnitedBuffPlayer,
             AddIgnitedBuffNPC,
             AddShockedBuffPlayer,
@@ -54,6 +56,12 @@ namespace PathOfModifiers.ModNet.PacketHandlers
                     break;
                 case PacketType.AddMoveSpeedBuffPlayer:
                     ReceiveAddMoveSpeedBuffPlayer(reader, fromWho);
+                    break;
+                case PacketType.AddWeaponMoveSpeedBuffPlayer:
+                    ReceiveAddWeaponMoveSpeedBuffPlayer(reader, fromWho);
+                    break;
+                case PacketType.AddGreavesMoveSpeedBuffPlayer:
+                    ReceiveAddGreavesMoveSpeedBuffPlayer(reader, fromWho);
                     break;
                 case PacketType.AddIgnitedBuffNPC:
                     ReceiveAddIgnitedBuffNPC(reader, fromWho);
@@ -221,6 +229,60 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             if (Main.netMode == NetmodeID.Server)
             {
                 ModPacket packet = GetPacket((byte)PacketType.AddMoveSpeedBuffPlayer);
+                packet.Write(playerID);
+                packet.Write(speedBoost);
+                packet.Write(dutaionTicks);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void SendAddWeaponMoveSpeedBuffPlayer(int playerID, float speedBoost, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddWeaponMoveSpeedBuffPlayer);
+            packet.Write((byte)playerID);
+            packet.Write(speedBoost);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddWeaponMoveSpeedBuffPlayer(BinaryReader reader, int fromWho)
+        {
+            byte playerID = reader.ReadByte();
+            float speedBoost = reader.ReadSingle();
+            int dutaionTicks = reader.ReadInt32();
+
+            Player player = Main.player[playerID];
+            player.GetModPlayer<BuffPlayer>().AddWeaponMoveSpeedBuff(player, speedBoost, dutaionTicks, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddWeaponMoveSpeedBuffPlayer);
+                packet.Write(playerID);
+                packet.Write(speedBoost);
+                packet.Write(dutaionTicks);
+                packet.Send(-1, fromWho);
+            }
+        }
+
+        public static void SendAddGreavesMoveSpeedBuffPlayer(int playerID, float speedBoost, int dutaionTicks)
+        {
+            ModPacket packet = Instance.GetPacket((byte)PacketType.AddGreavesMoveSpeedBuffPlayer);
+            packet.Write((byte)playerID);
+            packet.Write(speedBoost);
+            packet.Write(dutaionTicks);
+            packet.Send();
+        }
+        void ReceiveAddGreavesMoveSpeedBuffPlayer(BinaryReader reader, int fromWho)
+        {
+            byte playerID = reader.ReadByte();
+            float speedBoost = reader.ReadSingle();
+            int dutaionTicks = reader.ReadInt32();
+
+            Player player = Main.player[playerID];
+            player.GetModPlayer<BuffPlayer>().AddGreavesMoveSpeedBuff(player, speedBoost, dutaionTicks, false);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = GetPacket((byte)PacketType.AddGreavesMoveSpeedBuffPlayer);
                 packet.Write(playerID);
                 packet.Write(speedBoost);
                 packet.Write(dutaionTicks);

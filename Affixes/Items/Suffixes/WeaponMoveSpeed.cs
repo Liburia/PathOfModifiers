@@ -80,7 +80,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            string plusMinus = Type3.GetValue() >= 1 ? "+" : "-";
+            string plusMinus = Type3.GetValue() >= 0 ? "+" : "-";
 
             return $"Gain {plusMinus}{Type1.GetValueFormat()}% move speed on hit for {Type2.GetValueFormat(1)}s ({Type3.GetValueFormat(1)}s CD)";
         }
@@ -111,7 +111,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         void GainMoveSpeed(Player player)
         {
             int duration = (int)MathHelper.Clamp(Type2.GetValue() * 60, 1, 9999999);
-            player.GetModPlayer<BuffPlayer>().AddMoveSpeedBuff(player, Type1.GetValue(), duration);
+            player.GetModPlayer<BuffPlayer>().AddWeaponMoveSpeedBuff(player, Type1.GetValue(), duration);
             lastProcTime = Main.GameUpdateCount;
         }
 

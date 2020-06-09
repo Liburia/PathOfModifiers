@@ -49,7 +49,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"{(Type1.GetValue() < 1 ? '-' : '+')}{Type1.GetValueFormat()}% attack speed";
+            return $"{(Type1.GetValue() < 0 ? '-' : '+')}{Type1.GetValueFormat()}% attack speed";
         }
 
         public override void UseTimeMultiplier(Item item, Player player, ref float multiplier)

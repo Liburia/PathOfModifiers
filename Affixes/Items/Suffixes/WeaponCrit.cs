@@ -66,7 +66,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            string plusMinus = Type1.GetValue() >= 1 ? "+" : "-";
+            string plusMinus = Type1.GetValue() >= 0 ? "+" : "-";
 
             return $"Deal {plusMinus}{Type1.GetValueFormat()}% damage ({Type2.GetValueFormat(1)}s CD)";
         }

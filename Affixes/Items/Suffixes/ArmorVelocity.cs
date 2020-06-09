@@ -50,7 +50,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            string towardsAway = Type1.GetValue() >= 1 ? "towards" : "away from";
+            string towardsAway = Type1.GetValue() >= 0 ? "towards" : "away from";
             return $"Gain { Type1.GetValueFormat(1) } velocity { towardsAway } target when hit";
         }
 

@@ -52,7 +52,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             if (AffixItemItem.IsArmorEquipped(item, player) && PoMUtil.IsLowHP(player))
             {
-                player.AddBuff(ModContent.BuffType<Adrenaline>(), (int)Math.Round(Type1.GetValue()));
+                player.AddBuff(ModContent.BuffType<Adrenaline>(), (int)Math.Round(Type1.GetValue() * 60));
             }
         }
     }

@@ -33,6 +33,12 @@ namespace PathOfModifiers
         int noManaCostTimeLeft;
         int knockbackImmunityTimeLeft;
 
+        float weaponMoveSpeedValue;
+        float weaponMoveSpeedTimeLeft;
+
+        float greavesMoveSpeedValue;
+        float greavesMoveSpeedTimeLeft;
+
         public override void Initialize()
         {
             timedValueInstanceCollection = new TimedValueInstanceCollection();
@@ -82,9 +88,14 @@ namespace PathOfModifiers
                 affixPlayer.moveSpeed += moveSpeeds.totalValue;
             }
 
-            if (knockbackImmunityTimeLeft > 0)
+            if (greavesMoveSpeedTimeLeft > 0)
             {
-                player.noKnockback = true;
+                affixPlayer.moveSpeed += greavesMoveSpeedValue;
+            }
+
+            if (weaponMoveSpeedTimeLeft > 0)
+            {
+                affixPlayer.moveSpeed += weaponMoveSpeedValue;
             }
 
             if (moltenShellTimeLeft > 0)
@@ -102,6 +113,11 @@ namespace PathOfModifiers
 
                     moltenShellDustAngle += 0.2f;
                 }
+            }
+
+            if (knockbackImmunityTimeLeft > 0)
+            {
+                player.noKnockback = true;
             }
         }
         public override void UpdateBadLifeRegen()
@@ -173,6 +189,34 @@ namespace PathOfModifiers
                 staticStrikeTimeLeft--;
             }
 
+            if (greavesMoveSpeedTimeLeft > 0)
+            {
+                greavesMoveSpeedTimeLeft--;
+            }
+
+            if (weaponMoveSpeedTimeLeft > 0)
+            {
+                weaponMoveSpeedTimeLeft--;
+            }
+
+            if (moltenShellTimeLeft > 0)
+            {
+                moltenShellTimeLeft--;
+
+                if (player.whoAmI == Main.myPlayer && moltenShellTimeLeft <= 0)
+                {
+                    Projectile.NewProjectile(
+                        player.Center,
+                        Vector2.Zero,
+                        ModContent.ProjectileType<MoltenShellExplosion>(),
+                        moltenShellStoredDamage,
+                        5,
+                        player.whoAmI,
+                        moltenShellStoredDamage / (float)player.statLifeMax2);
+                    moltenShellStoredDamage = 0;
+                }
+            }
+
             if (noManaCostTimeLeft > 0)
             {
                 noManaCostTimeLeft--;
@@ -180,17 +224,6 @@ namespace PathOfModifiers
             if (knockbackImmunityTimeLeft > 0)
             {
                 knockbackImmunityTimeLeft--;
-            }
-            if (moltenShellTimeLeft > 0)
-            {
-                moltenShellTimeLeft--;
-
-                if (player.whoAmI == Main.myPlayer && moltenShellTimeLeft <= 0)
-                {
-                    Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<MoltenShellExplosion>(), moltenShellStoredDamage, 5, player.whoAmI, moltenShellStoredDamage / (float)player.statLifeMax2);
-                }
-
-                moltenShellStoredDamage = 0;
             }
         }
         public override void ModifyManaCost(Item item, ref float reduce, ref float mult)
@@ -226,6 +259,26 @@ namespace PathOfModifiers
             if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
             {
                 BuffPacketHandler.SendAddMoveSpeedBuffPlayer(player.whoAmI, speedBoost, durationTicks);
+            }
+        }
+        public void AddWeaponMoveSpeedBuff(Player player, float speedBoost, int durationTicks, bool syncMP = true)
+        {
+            weaponMoveSpeedValue = speedBoost;
+            weaponMoveSpeedTimeLeft = durationTicks;
+
+            if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
+            {
+                BuffPacketHandler.SendAddWeaponMoveSpeedBuffPlayer(player.whoAmI, speedBoost, durationTicks);
+            }
+        }
+        public void AddGreavesMoveSpeedBuff(Player player, float speedBoost, int durationTicks, bool syncMP = true)
+        {
+            greavesMoveSpeedValue = speedBoost;
+            greavesMoveSpeedTimeLeft = durationTicks;
+
+            if (Main.netMode != NetmodeID.SinglePlayer && syncMP)
+            {
+                BuffPacketHandler.SendAddGreavesMoveSpeedBuffPlayer(player.whoAmI, speedBoost, durationTicks);
             }
         }
         public void AddBurningAirBuff(Player player, int dps)

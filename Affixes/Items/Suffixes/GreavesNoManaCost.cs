@@ -72,7 +72,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
             {
-                player.GetModPlayer<BuffPlayer>().AddNoManaCostBuff(player, (int)Math.Round(Type1.GetValue()));
+                player.GetModPlayer<BuffPlayer>().AddNoManaCostBuff(player, (int)Math.Round(Type1.GetValue() * 60));
 
                 lastProcTime = Main.GameUpdateCount;
             }

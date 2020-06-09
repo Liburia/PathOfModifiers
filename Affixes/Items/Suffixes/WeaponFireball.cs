@@ -79,7 +79,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            string plusMinus = Type3.GetValue() >= 1 ? "+" : "-";
+            string plusMinus = Type3.GetValue() >= 0 ? "+" : "-";
 
             return $"{Type1.GetValueFormat()}% chance to fireball for {Type2.GetValueFormat()}% damage that Ignites({plusMinus}{Type3.GetValueFormat()}%)";
         }
