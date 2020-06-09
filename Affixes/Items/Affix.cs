@@ -107,7 +107,6 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, int damage, bool crit) { }
 
         public virtual void PlayerOnKillNPC(Item item, Player player, NPC target) { }
-        public virtual void PlayerOnKillPvp(Item item, Player player, Player target) { }
         #endregion
         public virtual void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
         {

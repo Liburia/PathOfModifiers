@@ -28,8 +28,8 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 new TTFloat.WeightedTier(0.016f, 2.5),
                 new TTFloat.WeightedTier(0.033f, 2),
                 new TTFloat.WeightedTier(0.05f, 1.5),
-                new TTFloat.WeightedTier(0.66f, 1),
-                new TTFloat.WeightedTier(0.66f, 0.5),
+                new TTFloat.WeightedTier(0.066f, 1),
+                new TTFloat.WeightedTier(0.084f, 0.5),
                 new TTFloat.WeightedTier(0.1f, 0),
             },
         };
@@ -95,7 +95,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             if (AffixItemItem.IsAccessoryEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
             {
                 int durationTicks = (int)Math.Round((Type2.GetValue() * 60));
-                player.GetModPlayer<BuffPlayer>().AddDodgeChanceBuff(player, Type1.GetValue(), durationTicks);
+                player.GetModPlayer<BuffPlayer>().AddDodgeChanceBuff(player, Type1.GetValue(), durationTicks, false);
                 lastProcTime = Main.GameUpdateCount;
             }
         }

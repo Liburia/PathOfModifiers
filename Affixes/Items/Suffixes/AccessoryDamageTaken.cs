@@ -67,7 +67,8 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override string GetTolltipText(Item item)
         {
-            return $"Take { Type1.GetValueFormat() }% damage ({ Type2.GetValueFormat(1) }s CD)";
+            char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
+            return $"Take { plusMinus }{ Type1.GetValueFormat() }% damage ({ Type2.GetValueFormat(1) }s CD)";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

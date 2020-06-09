@@ -97,11 +97,11 @@ namespace PathOfModifiers
         public GoldDropChanceColletion goldDropChances;
         #endregion
 
-        public Player lastDamageDealer;
+        public Player lastAttacker;
 
         public override void Initialize()
         {
-            lastDamageDealer = null;
+            lastAttacker = null;
             goldDropChances = new GoldDropChanceColletion();
         }
 
@@ -163,6 +163,15 @@ namespace PathOfModifiers
         }
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
+            if (pvp)
+            {
+                if (damageSource.SourcePlayerIndex >= 0)
+                {
+                    lastAttacker = Main.player[damageSource.SourcePlayerIndex];
+                    ModifyHitByPvp(lastAttacker, ref damage, ref crit);
+                }
+            }
+
             Item item;
             AffixItemItem pomItem;
             float damageMultiplier = damageTaken;
@@ -199,6 +208,11 @@ namespace PathOfModifiers
         }
         public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
         {
+            if (pvp)
+            {
+                OnHitByPvp(lastAttacker, (int)damage, crit);
+            }
+
             Item item;
             AffixItemItem pomItem;
             for (int i = 0; i < player.inventory.Length; i++)
@@ -387,6 +401,7 @@ namespace PathOfModifiers
                 int reflectDamage = (int)Math.Round(damage * reflectMeleeDamage);
                 int reflectDirection = attacker.Center.X > player.Center.X ? 1 : -1;
                 attacker.Hurt(PlayerDeathReason.ByPlayer(attacker.whoAmI), reflectDamage, reflectDirection, true, false, crit);
+                attacker.immune = false;
             }
         }
         public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
@@ -461,33 +476,8 @@ namespace PathOfModifiers
                 pomItem.PlayerOnKillNPC(affixItem, player, target);
             }
         }
-        public void OnKillPvp(Player target)
-        {
-            Item affixItem;
-            AffixItemItem pomItem;
-            for (int i = 0; i < player.inventory.Length; i++)
-            {
-                affixItem = player.inventory[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
-                    continue;
-
-                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
-                pomItem.PlayerOnKillPvp(affixItem, player, target);
-            }
-            for (int i = 0; i < player.armor.Length; i++)
-            {
-                affixItem = player.armor[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
-                    continue;
-
-                pomItem = affixItem.GetGlobalItem<AffixItemItem>();
-                pomItem.PlayerOnKillPvp(affixItem, player, target);
-            }
-        }
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
-            target.GetGlobalNPC<AffixItemNPC>().LastDamageDealer = player;
-
             Item affixItem;
             AffixItemItem pomItem;
             float damageMultiplier = 1f;
@@ -515,8 +505,6 @@ namespace PathOfModifiers
         }
         public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
         {
-            target.GetModPlayer<AffixItemPlayer>().lastDamageDealer = player;
-
             Item affixItem;
             AffixItemItem pomItem;
             float damageMultiplier = 1f;
@@ -539,13 +527,9 @@ namespace PathOfModifiers
                 pomItem.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
             }
             damage = (int)Math.Round(damage * damageMultiplier);
-
-            target.GetModPlayer<AffixItemPlayer>().ModifyHitByPvp(player, ref damage, ref crit);
         }
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            target.GetGlobalNPC<AffixItemNPC>().LastDamageDealer = player;
-
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
@@ -576,8 +560,6 @@ namespace PathOfModifiers
         }
         public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
         {
-            target.GetModPlayer<AffixItemPlayer>().lastDamageDealer = player;
-
             if (!(proj.modProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
@@ -735,11 +717,6 @@ namespace PathOfModifiers
 
         public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
         {
-            Player lastDamageDealerPlayer = lastDamageDealer as Player;
-            if (lastDamageDealerPlayer != null)
-            {
-                lastDamageDealerPlayer.GetModPlayer<AffixItemPlayer>().OnKillPvp(player);
-            }
         }
 
         public override void ResetEffects()

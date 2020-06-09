@@ -17,43 +17,14 @@ namespace PathOfModifiers
 {
     public class AffixItemNPC : GlobalNPC
     {
-        public override bool InstancePerEntity => true;
-
-
-        Entity lastDamageDealer;
-        int lastDamageDealerTimer;
-        public Entity LastDamageDealer
-        {
-            get => lastDamageDealer;
-            set
-            {
-                lastDamageDealer = value;
-                lastDamageDealerTimer = 0;
-            }
-        }
-
-        public override void ResetEffects(NPC npc)
-        {
-            if (LastDamageDealer != null)
-            {
-                if (lastDamageDealerTimer == 0)
-                {
-
-                    lastDamageDealer = null;
-                }
-                else
-                {
-                    lastDamageDealerTimer--;
-                }
-            }
-        }
+        public override bool InstancePerEntity => false;
 
         public override void NPCLoot(NPC npc)
         {
-            if (LastDamageDealer != null)
+            for (int i = 0; i < Main.maxPlayers; i++)
             {
-                Player player = LastDamageDealer as Player;
-                if (player != null)
+                Player player = Main.player[i];
+                if (player.active && !player.dead)
                 {
                     AffixItemPlayer affixPlayer = player.GetModPlayer<AffixItemPlayer>();
                     int droppedGold = affixPlayer.goldDropChances.Roll();

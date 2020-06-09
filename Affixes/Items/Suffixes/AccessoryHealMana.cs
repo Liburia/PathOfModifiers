@@ -67,10 +67,6 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 {
                     player.statMana += amount;
                     PoMEffectHelper.HealMana(player, amount);
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
-                    {
-                        EffectPacketHandler.CSyncHeal(player.whoAmI, amount);
-                    }
                 }
             }
         }

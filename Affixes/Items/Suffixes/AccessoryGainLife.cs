@@ -80,21 +80,18 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             if (AffixItemItem.IsAccessoryEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
             {
+                lastProcTime = Main.GameUpdateCount;
                 int amount = Type1.GetValue();
                 if (amount > 0)
                 {
                     player.statLife += amount;
                     PoMEffectHelper.Heal(player, amount);
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
-                    {
-                        EffectPacketHandler.CSyncHeal(player.whoAmI, amount);
-                    }
                 }
                 else
                 {
-                    player.Hurt(PlayerDeathReason.ByPlayer(player.whoAmI), amount, 0, false);
+                    player.immune = false;
+                    player.Hurt(PlayerDeathReason.ByPlayer(player.whoAmI), -amount, 0, false);
                 }
-                lastProcTime = Main.GameUpdateCount;
             }
         }
 

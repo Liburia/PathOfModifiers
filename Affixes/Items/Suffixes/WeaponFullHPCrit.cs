@@ -103,6 +103,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             int critDamage = (int)Math.Round(target.statLifeMax2 * Type1.GetValue());
             int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
             target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
+            target.immune = false;
             PoMEffectHelper.Crit(target.position, target.width, target.height, 100);
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {

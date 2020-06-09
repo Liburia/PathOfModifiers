@@ -95,7 +95,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
             {
                 int durationTicks = (int)Math.Round((Type2.GetValue() * 60));
-                player.GetModPlayer<BuffPlayer>().AddDodgeChanceBuff(player, Type1.GetValue(), durationTicks);
+                player.GetModPlayer<BuffPlayer>().AddDodgeChanceBuff(player, Type1.GetValue(), durationTicks, false);
                 lastProcTime = Main.GameUpdateCount;
             }
         }
