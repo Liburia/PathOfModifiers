@@ -186,13 +186,15 @@ namespace PathOfModifiers
             {
                 timedValueInstanceList.instances.AddFirst(instance);
             }
-            else if (instance.endTime > lastNode.Value.endTime)
+            else if (instance.endTime >= lastNode.Value.endTime)
             {
                 timedValueInstanceList.instances.AddAfter(lastNode, instance);
             }
         }
         public void ResetEffects()
         {
+            uint now = Main.GameUpdateCount;
+
             foreach (var kv in instances)
             {
                 var type = kv.Key;
@@ -201,9 +203,8 @@ namespace PathOfModifiers
                 bool isStacking = typeof(InstanceType.IStack).IsAssignableFrom(type);
                 bool needRecount = false;
 
-                uint now = Main.GameUpdateCount;
                 var firstNode = timedValueInstanceList.instances.First;
-                while (firstNode != null && now > firstNode.Value.endTime)
+                while (firstNode != null && now >= firstNode.Value.endTime)
                 {
                     if (isStacking)
                     {
