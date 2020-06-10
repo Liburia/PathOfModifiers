@@ -101,10 +101,6 @@ namespace PathOfModifiers
         {
             return item.melee && item.noMelee && item.shoot > -1 && item.useStyle == 5 && item.channel;
         }
-        public static bool IsUsingAmmo(Item item)
-        {
-            return item.useAmmo != AmmoID.None;
-        }
 
         public static bool IsMelee(Item item)
         {
