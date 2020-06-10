@@ -71,7 +71,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
-            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target; //TODO: test with worms
+            NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
             if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= PathOfModifiers.lowHPThreshold)
             {
                 damageMultiplier += Type1.GetValue();

@@ -89,13 +89,14 @@ namespace PathOfModifiers.Projectiles
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
-                        if (!hitNPCs[i] && PoMUtil.CanHitNPC(npc))
+                        NPC realNPC = npc.realLife >= 0 ? Main.npc[npc.realLife] : npc;
+                        if (!hitNPCs[realNPC.whoAmI] && PoMUtil.CanHitNPC(npc))
                         {
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(projectile.Hitbox))
                             {
-                                owner.ApplyDamageToNPC(npc, projectile.damage + (int)Math.Round(npc.lifeMax * projectile.ai[0]), 1, npc.direction, false);
-                                hitNPCs[i] = true;
+                                owner.ApplyDamageToNPC(npc, projectile.damage + (int)Math.Round(realNPC.lifeMax * projectile.ai[0]), 1, npc.direction, false);
+                                hitNPCs[realNPC.whoAmI] = true;
                             }
                         }
                     }

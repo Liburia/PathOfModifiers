@@ -354,6 +354,34 @@ namespace PathOfModifiers
             return zero;
         }
 
+        /// <summary>
+        /// Returns current or real life if one exists
+        /// </summary>
+        public static int GetRealLife(NPC npc)
+        {
+            if (npc.realLife >= 0)
+            {
+                return Main.npc[npc.realLife].life;
+            }
+            else
+            {
+                return npc.life;
+            }
+        }
+        /// <summary>
+        /// Returns max or real max life if one exists
+        /// </summary>
+        public static int GetRealMaxLife(NPC npc)
+        {
+            if (npc.realLife >= 0)
+            {
+                return Main.npc[npc.realLife].lifeMax;
+            }
+            else
+            {
+                return npc.lifeMax;
+            }
+        }
         public static bool IsLowHP(NPC npc)
         {
             return (npc.life / (float)npc.lifeMax) <= PathOfModifiers.lowHPThreshold;

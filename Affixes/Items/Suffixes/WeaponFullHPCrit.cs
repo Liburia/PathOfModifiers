@@ -72,42 +72,32 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void Hit(Item item, Player player, NPC target)
         {
-            //TODO: test worms and shit
             NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
             if (item == player.HeldItem && realTarget.life >= realTarget.lifeMax)
             {
-                DoDamage(player, target);
+                int critDamage = (int)Math.Round(realTarget.lifeMax * Type1.GetValue());
+                int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
+                player.ApplyDamageToNPC(target, critDamage, 0, direction, false);
+                PoMEffectHelper.Crit(target.position, target.width, target.height, 100);
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    EffectPacketHandler.CSyncCrit(target, 100);
+                }
             }
         }
         void Hit(Item item, Player player, Player target)
         {
             if (item == player.HeldItem && target.statLife >= target.statLifeMax2)
             {
-                DoDamage(player, target);
-            }
-        }
-
-        void DoDamage(Player player, NPC target)
-        {
-            int critDamage = (int)Math.Round(target.lifeMax * Type1.GetValue());
-            int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
-            player.ApplyDamageToNPC(target, critDamage, 0, direction, false);
-            PoMEffectHelper.Crit(target.position, target.width, target.height, 100);
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                EffectPacketHandler.CSyncCrit(target, 100);
-            }
-        }
-        void DoDamage(Player player, Player target)
-        {
-            int critDamage = (int)Math.Round(target.statLifeMax2 * Type1.GetValue());
-            int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
-            target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
-            target.immune = false;
-            PoMEffectHelper.Crit(target.position, target.width, target.height, 100);
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                EffectPacketHandler.CSyncCrit(target, 100);
+                int critDamage = (int)Math.Round(target.statLifeMax2 * Type1.GetValue());
+                int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
+                target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
+                target.immune = false;
+                PoMEffectHelper.Crit(target.position, target.width, target.height, 100);
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    EffectPacketHandler.CSyncCrit(target, 100);
+                }
             }
         }
     }
