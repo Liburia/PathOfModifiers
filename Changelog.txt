@@ -1,3 +1,17 @@
+v0.6.0
+Updated to TML 11.7.4.
+Added 53 new modifiers.
+Removed all placeholder suffixes.
+Removed lifesteal and manasteal affixes.
+Removed tier display from item tooltip.
+Added sprites for forge and fragments.
+Added support for sub-1% values in tooltips.
+Reduced max number of suffixes on weapons.
+Nerfed ammo consumption affixes.
+Fixed and introduced many bugs.
+Updating from a previous version will wipe all affixes and items inside modifier forges.
+
+
 v0.5.1
 Fixed minion damage multipliers not applying.
 Removed affix counts from the item name.
