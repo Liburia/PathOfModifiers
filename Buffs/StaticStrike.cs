@@ -7,7 +7,6 @@ namespace PathOfModifiers.Buffs
 {
     public class StaticStrike : ModBuff
     {
-        //TODO: Actually load it
         public override bool Autoload(ref string name, ref string texture)
         {
             texture = "Terraria/Buff_15";

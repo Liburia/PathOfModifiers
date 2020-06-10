@@ -19,7 +19,6 @@ namespace PathOfModifiers.Buffs
 
         public override void SetDefaults()
         {
-            //TODO: Need this to equal classname because I'm lazy, look at other todos for detail
             DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Taking damage over time");
             Main.debuff[Type] = true;
