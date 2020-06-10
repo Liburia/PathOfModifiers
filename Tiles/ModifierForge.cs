@@ -112,7 +112,7 @@ namespace PathOfModifiers.Tiles
             if (Main.netMode != 1)
                 Item.NewItem(new Vector2(i * 16, j * 16), mod.ItemType("ModifierForge"));
 
-            ModContent.GetInstance<MapDeviceTE>().Kill(i, j);
+            ModContent.GetInstance<ModifierForgeTE>().Kill(i, j);
         }
 
         public override bool NewRightClick(int i, int j)
