@@ -41,7 +41,7 @@ namespace PathOfModifiers.Projectiles
             if (!init)
             {
                 targetPosition = projectile.velocity;
-                projectile.velocity = (targetPosition - projectile.Center).SafeNormalize(Vector2.Zero) * 5f;
+                projectile.velocity = (targetPosition - projectile.Center).SafeNormalize(Vector2.Zero) * 8f;
                 projectile.direction = projectile.spriteDirection = projectile.velocity.X > 0f ? 1 : -1;
                 projectile.rotation = projectile.velocity.ToRotation();
                 if (projectile.spriteDirection == -1)
