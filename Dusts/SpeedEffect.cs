@@ -8,12 +8,12 @@ namespace PathOfModifiers.Dusts
     {
         const float scaleMultiplier = 0.9f;
         const int alphaAdd = 10;
-        const float removeAtAlpha = 230;
+        const float removeAtAlpha = 250;
 
         public override void OnSpawn(Dust dust)
         {
             dust.frame = new Rectangle(0, 0, 18, 3);
-            dust.alpha = 40;
+            dust.alpha = 70;
         }
 
         public override bool Update(Dust dust)
