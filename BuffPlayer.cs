@@ -166,6 +166,42 @@ namespace PathOfModifiers
         }
         public override void PreUpdate()
         {
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Bleed), out var bleeds))
+            {
+                if (bleeds.totalValue > 0)
+                {
+                    PoMEffectHelper.Bleed(player.Center);
+                }
+            }
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Poison), out var poisons))
+            {
+                if (poisons.totalValue > 0)
+                {
+                    PoMEffectHelper.Poison(player.position, player.width, player.height);
+                }
+            }
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Ignite), out var ignites))
+            {
+                if (ignites.totalValue > 0)
+                {
+                    PoMEffectHelper.Ignite(player.position, player.width, player.height);
+                }
+            }
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Shock), out var shocks))
+            {
+                if (shocks.totalValue > 0)
+                {
+                    PoMEffectHelper.Shock(player.position, player.width, player.height);
+                }
+            }
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Chill), out var chills))
+            {
+                if (chills.totalValue > 0)
+                {
+                    PoMEffectHelper.Chill(player.position, player.width, player.height);
+                }
+            }
+
             if (staticStrikeTimeLeft > 0)
             {
                 staticStrikeCurrentInterval++;
@@ -191,11 +227,21 @@ namespace PathOfModifiers
 
             if (greavesMoveSpeedTimeLeft > 0)
             {
+                if (greavesMoveSpeedValue > 0)
+                {
+                    PoMEffectHelper.MoveSpeed(player);
+                }
+
                 greavesMoveSpeedTimeLeft--;
             }
 
             if (weaponMoveSpeedTimeLeft > 0)
             {
+                if (weaponMoveSpeedTimeLeft > 0)
+                {
+                    PoMEffectHelper.MoveSpeed(player);
+                }
+
                 weaponMoveSpeedTimeLeft--;
             }
 

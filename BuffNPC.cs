@@ -120,6 +120,45 @@ namespace PathOfModifiers
             }
         }
 
+        public override void AI(NPC npc)
+        {
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Bleed), out var bleeds))
+            {
+                if (bleeds.totalValue > 0)
+                {
+                    PoMEffectHelper.Bleed(npc.Center);
+                }
+            }
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Poison), out var poisons))
+            {
+                if (poisons.totalValue > 0)
+                {
+                    PoMEffectHelper.Poison(npc.position, npc.width, npc.height);
+                }
+            }
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Ignite), out var ignites))
+            {
+                if (ignites.totalValue > 0)
+                {
+                    PoMEffectHelper.Ignite(npc.position, npc.width, npc.height);
+                }
+            }
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Shock), out var shocks))
+            {
+                if (shocks.totalValue > 0)
+                {
+                    PoMEffectHelper.Shock(npc.position, npc.width, npc.height);
+                }
+            }
+            if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Chill), out var chills))
+            {
+                if (chills.totalValue > 0)
+                {
+                    PoMEffectHelper.Chill(npc.position, npc.width, npc.height);
+                }
+            }
+        }
+
         public int ShockModifyDamageTaken(int damage)
         {
             float totalMultiplier = 1;

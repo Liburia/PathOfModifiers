@@ -392,7 +392,7 @@ namespace PathOfModifiers
         }
         public static bool CanHitNPC(NPC npc)
         {
-            return npc.active && !npc.townNPC;
+            return npc.active && !npc.townNPC && !npc.dontTakeDamage;
         }
         public static bool CanHitPvp(Player player, Player target)
         {
@@ -436,6 +436,53 @@ namespace PathOfModifiers
             for (int i = 0; i < howMany; i++)
             {
                 Dust.NewDust(position, width, height, ModContent.DustType<Dusts.LifeOrbDebris>(), newColor: new Color(1, 0.7f, 0.7f));
+            }
+        }
+        public static void Bleed(Vector2 position)
+        {
+            Dust.NewDustPerfect(position, DustID.Blood);
+        }
+        public static void Poison(Vector2 position, int width, int height)
+        {
+            int dust = Dust.NewDust(position, width, height, 46, Alpha: 150, Scale: 0.2f);
+            Main.dust[dust].noGravity = true;
+            Main.dust[dust].fadeIn = 1.9f;
+        }
+        public static void Ignite(Vector2 position, int width, int height)
+        {
+            if (Main.rand.NextBool(2))
+            {
+                Vector2 dustPosition = position + new Vector2(Main.rand.NextFloat(width), Main.rand.NextFloat(height));
+                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.FireDebris>(), new Vector2(0, Main.rand.NextFloat(-3f, -0.5f)), Alpha: 100, Scale: Main.rand.NextFloat(1f, 2f));
+            }
+        }
+        public static void Shock(Vector2 position, int width, int height)
+        {
+            if (Main.rand.NextBool(20))
+            {
+                Dust.NewDust(position, width, height, ModContent.DustType<Dusts.Shock>(), Scale: Main.rand.NextFloat(0.3f, 0.7f));
+            }
+        }
+        public static void Chill(Vector2 position, int width, int height)
+        {
+            if (Main.rand.NextBool(50))
+            {
+                Vector2 dustPosition = position + new Vector2(Main.rand.NextFloat(0, width), Main.rand.NextFloat(0, height)) + new Vector2(-14, -14);
+                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.FrostCloud>(), Vector2.Zero, 50, Color.White, Main.rand.NextFloat(0.8f, 1.6f));
+            }
+        }
+        public static void MoveSpeed(Player player)
+        {
+            if (Main.rand.NextBool(2))
+            {
+                Vector2 dustPosition = player.position + new Vector2(Main.rand.NextFloat(0, player.width), Main.rand.NextFloat(0, player.height));
+                Vector2 dustVelocity = player.velocity * 0.1f;
+                if (dustVelocity == Vector2.Zero)
+                {
+                    dustVelocity = new Vector2(1, 0) * -player.direction;
+                }
+                float dustScale = Main.rand.NextFloat(0.5f, 1.5f);
+                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.SpeedEffect>(), dustVelocity, Scale: dustScale);
             }
         }
     }
