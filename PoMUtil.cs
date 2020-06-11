@@ -392,7 +392,7 @@ namespace PathOfModifiers
         }
         public static bool CanHitNPC(NPC npc)
         {
-            return npc.active && !npc.townNPC && !npc.dontTakeDamage;
+            return npc.active && !npc.friendly && !npc.dontTakeDamage;
         }
         public static bool CanHitPvp(Player player, Player target)
         {
