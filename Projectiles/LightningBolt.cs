@@ -97,7 +97,7 @@ namespace PathOfModifiers.Projectiles
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {
                     NPC npc = Main.npc[i];
-                    if (npc.active)
+                    if (npc.active && !npc.dontTakeDamage)
                     {
                         Rectangle npcRect = npc.getRect();
                         if (npcRect.Intersects(airRect))
