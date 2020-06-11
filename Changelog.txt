@@ -1,3 +1,7 @@
+v0.6.1
+Added visuals for ailment buffs.
+Fixed Old One's Army's Portal getting destroyed by some modifiers.
+
 v0.6.0
 Updated to TML 11.7.4.
 Added 53 new modifiers.
