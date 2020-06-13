@@ -11,6 +11,7 @@ namespace PathOfModifiers.Projectiles
     public class FrostPulse : ModProjectile, INonTriggerringProjectile
     {
         const int baseTimeLeft = 600;
+        const int timeLeftAfterTileCollide = 5;
 
         public override void SetStaticDefaults()
         {
@@ -79,6 +80,19 @@ namespace PathOfModifiers.Projectiles
         void Hit(Player target)
         {
             target.GetModPlayer<BuffPlayer>().AddChilledBuff(target, projectile.ai[0], PathOfModifiers.ailmentDuration);
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            if (projectile.timeLeft > timeLeftAfterTileCollide)
+            {
+                projectile.timeLeft = timeLeftAfterTileCollide;
+            }
+
+            projectile.velocity = oldVelocity;
+            projectile.tileCollide = false;
+
+            return false;
         }
     }
 }
