@@ -9,6 +9,7 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
+using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {

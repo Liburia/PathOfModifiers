@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
 using PathOfModifiers.Buffs;
+using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -121,8 +122,16 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             float height = 512;
             Vector2 position = target.Center + Main.rand.NextVector2Circular(target.width, target.height) - new Vector2(0, height);
+
+            PlaySound(position);
+
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(position, Vector2.Zero, ModContent.ProjectileType<LightningBolt>(), damage, 0, player.whoAmI, Type3.GetValue(), height);
+        }
+
+        void PlaySound(Vector2 position)
+        {
+            Main.PlaySound(SoundID.Item94.WithVolume(1f).WithPitchVariance(0.3f), position);
         }
     }
 }

@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace PathOfModifiers.Projectiles
 {
@@ -136,6 +137,7 @@ namespace PathOfModifiers.Projectiles
                     {
                         if (Main.myPlayer == projectile.owner)
                         {
+                            PlaySound();
                             owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
                             BuffNPC pomNPC = npc.GetGlobalNPC<BuffNPC>();
                             pomNPC.AddShockedBuff(npc, projectile.ai[0], PathOfModifiers.ailmentDuration, true);
@@ -151,6 +153,7 @@ namespace PathOfModifiers.Projectiles
                     {
                         if (player.whoAmI == Main.myPlayer)
                         {
+                            PlaySound();
                             player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
                             player.GetModPlayer<BuffPlayer>().AddShockedBuff(player, projectile.ai[0], PathOfModifiers.ailmentDuration, true);
                         }
@@ -307,6 +310,11 @@ namespace PathOfModifiers.Projectiles
                 Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(3f, 6f);
                 Dust.NewDustPerfect(position, ModContent.DustType<LightningDebris>(), velocity, Scale: Main.rand.NextFloat(0.5f, 1f));
             }
+        }
+
+        void PlaySound()
+        {
+            Main.PlaySound(SoundID.Item54.WithVolume(1f).WithPitchVariance(0.3f), projectile.position);
         }
     }
 }

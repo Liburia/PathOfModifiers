@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
 using PathOfModifiers.Buffs;
+using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -118,6 +119,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void SpawnChainLightning(Player player, Entity target, int hitDamage, bool isNPC)
         {
+            PlaySound(player);
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
                 position: player.Center,
@@ -127,6 +129,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 KnockBack: 0,
                 Owner: player.whoAmI,
                 ai0: Type3.GetValue());
+        }
+
+        void PlaySound(Player player)
+        {
+            Main.PlaySound(SoundID.Item72.WithVolume(0.3f).WithPitchVariance(0.3f), player.Center);
         }
     }
 }

@@ -62,10 +62,16 @@ namespace PathOfModifiers.Projectiles
 
         public override void Kill(int timeLeft)
         {
+            PlayKillSound();
             for (int i = 0; i < 10; i++)
             {
                 Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.FrostDebris>());
             }
+        }
+
+        void PlayKillSound()
+        {
+            Main.PlaySound(SoundID.Item27.WithVolume(1f).WithPitchVariance(0.3f), projectile.Center);
         }
     }
 }

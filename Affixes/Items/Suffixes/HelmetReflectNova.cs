@@ -102,10 +102,17 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
             {
+                PlaySound(player);
+
                 Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<ReflectNova>(), (int)Math.Round(damageTaken * Type1.GetValue()), 0, player.whoAmI, Type2.GetValue());
 
                 lastProcTime = Main.GameUpdateCount;
             }
+        }
+
+        void PlaySound(Player player)
+        {
+            Main.PlaySound(SoundID.Item74.WithVolume(0.5f).WithPitchVariance(0.3f), player.Center);
         }
 
         public override Affix Clone()

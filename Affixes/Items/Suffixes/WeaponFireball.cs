@@ -9,6 +9,7 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
+using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -118,6 +119,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void SpawnFireball(Player player, Entity target, int hitDamage)
         {
+            PlaySound(player);
             Vector2 velocity = (target.Center - player.Center).SafeNormalize(Vector2.One) * Main.rand.NextFloat(5f, 15f);
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
@@ -128,6 +130,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 KnockBack: 0,
                 Owner: player.whoAmI,
                 ai0: hitDamage * Type3.GetValue());
+        }
+
+        void PlaySound(Player player)
+        {
+            Main.PlaySound(SoundID.Item20.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
         }
     }
 }

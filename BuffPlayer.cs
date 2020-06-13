@@ -249,17 +249,22 @@ namespace PathOfModifiers
             {
                 moltenShellTimeLeft--;
 
-                if (player.whoAmI == Main.myPlayer && moltenShellTimeLeft <= 0)
+                if (moltenShellTimeLeft <= 0)
                 {
-                    Projectile.NewProjectile(
-                        player.Center,
-                        Vector2.Zero,
-                        ModContent.ProjectileType<MoltenShellExplosion>(),
-                        moltenShellStoredDamage,
-                        5,
-                        player.whoAmI,
-                        moltenShellStoredDamage / (float)player.statLifeMax2);
-                    moltenShellStoredDamage = 0;
+                    PlayMoltenShellExplodeSound(player);
+
+                    if (player.whoAmI == Main.myPlayer)
+                    {
+                        Projectile.NewProjectile(
+                            player.Center,
+                            Vector2.Zero,
+                            ModContent.ProjectileType<MoltenShellExplosion>(),
+                            moltenShellStoredDamage,
+                            5,
+                            player.whoAmI,
+                            moltenShellStoredDamage / (float)player.statLifeMax2);
+                        moltenShellStoredDamage = 0;
+                    }
                 }
             }
 
@@ -370,6 +375,7 @@ namespace PathOfModifiers
         {
             if (staticStrikeTimeLeft <= 0)
             {
+                PlayGainStaticStrikeSound(player);
                 staticStrikeCurrentInterval = 0;
             }
             staticStrikeDamage = damage;
@@ -419,6 +425,8 @@ namespace PathOfModifiers
         {
             if (durationTicks > moltenShellTimeLeft)
             {
+                PlayGainMoltenShellSound(player);
+
                 moltenShellTimeLeft = durationTicks;
 
                 if (syncMP && Main.netMode == NetmodeID.MultiplayerClient)
@@ -457,6 +465,19 @@ namespace PathOfModifiers
             }
 
             return (int)Math.Round(damage * totalMultiplier);
+        }
+
+        void PlayGainStaticStrikeSound(Player player)
+        {
+            Main.PlaySound(SoundID.Item92.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+        }
+        void PlayGainMoltenShellSound(Player player)
+        {
+            Main.PlaySound(SoundID.Item45.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+        }
+        void PlayMoltenShellExplodeSound(Player player)
+        {
+            Main.PlaySound(SoundID.Item62.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
         }
     }
 }

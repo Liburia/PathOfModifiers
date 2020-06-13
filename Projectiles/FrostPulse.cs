@@ -94,5 +94,15 @@ namespace PathOfModifiers.Projectiles
 
             return false;
         }
+
+        public override void Kill(int timeLeft)
+        {
+            PlayKillSound();
+        }
+
+        void PlayKillSound()
+        {
+            Main.PlaySound(SoundID.Item21.WithVolume(1f).WithPitchVariance(0.3f), projectile.Center);
+        }
     }
 }

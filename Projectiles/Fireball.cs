@@ -126,6 +126,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void Kill(int timeLeft)
         {
+            PlaySound();
             if (Main.netMode != NetmodeID.Server)
             {
                 Rectangle explosionBounds = new Rectangle(
@@ -170,6 +171,11 @@ namespace PathOfModifiers.Projectiles
                 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.6f, 1.5f);
                 Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Smoke, velocity.X, velocity.Y, Scale: Main.rand.NextFloat(1f, 2f));
             }
+        }
+
+        void PlaySound()
+        {
+            Main.PlaySound(SoundID.Item14.WithVolume(1f).WithPitchVariance(0.3f), projectile.Center);
         }
     }
 }

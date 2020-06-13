@@ -9,6 +9,7 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
+using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -104,7 +105,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void SpawnIcycles(Player player, Entity target, int hitDamage)
         {
-            float hitDirection = (target.Center - player.Center).ToRotation();
+            PlaySound(player);
 
             int projectileNumber = Type2.GetValue();
             for (int i = 0; i < projectileNumber; i++)
@@ -113,6 +114,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 int damage = (int)MathHelper.Clamp(hitDamage * Type3.GetValue(), 1, 999999);
                 Projectile.NewProjectile(player.Center, velocity, ModContent.ProjectileType<Icicle>(), damage, 0, player.whoAmI);
             }
+        }
+
+        void PlaySound(Player player)
+        {
+            Main.PlaySound(SoundID.Item101.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
         }
     }
 }

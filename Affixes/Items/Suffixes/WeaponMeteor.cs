@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
 using PathOfModifiers.Buffs;
+using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -122,6 +123,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             float height = 768f;
             Vector2 spawnOffset = new Vector2(0, -height).RotatedBy(Main.rand.NextFloat(-0.3f, 0.3f));
             Vector2 targetPosition = target.Center + Main.rand.NextVector2Circular(target.width, target.height);
+            Vector2 spawnPosition = targetPosition + spawnOffset;
+
+            PlaySound(spawnPosition);
+
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
                 targetPosition + spawnOffset,
@@ -131,6 +136,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 0,
                 player.whoAmI,
                 ai0: hitDamage * Type3.GetValue());
+        }
+
+        void PlaySound(Vector2 position)
+        {
+            Main.PlaySound(SoundID.Item45.WithVolume(1f).WithPitchVariance(0.3f), position);
         }
     }
 }

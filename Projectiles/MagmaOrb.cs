@@ -103,11 +103,13 @@ namespace PathOfModifiers.Projectiles
 
         public override void Kill(int timeLeft)
         {
+            PlayKillSound();
             Explode();
         }
 
         void Explode()
         {
+            PlayExplodeSound();
             for (int i = 0; i < 30; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.8f, 2.5f);
@@ -153,6 +155,16 @@ namespace PathOfModifiers.Projectiles
                     Projectile.NewProjectile(projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)projectile.ai[0], 0, projectile.owner, 48f);
                 }
             }
+        }
+
+        void PlayExplodeSound()
+        {
+            Main.PlaySound(SoundID.Item73.WithVolume(1f).WithPitchVariance(0.3f), projectile.Center);
+        }
+
+        void PlayKillSound()
+        {
+            Main.PlaySound(SoundID.Item89.WithVolume(1f).WithPitchVariance(0.3f), projectile.Center);
         }
     }
 }

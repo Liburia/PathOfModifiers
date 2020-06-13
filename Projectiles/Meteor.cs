@@ -146,6 +146,7 @@ namespace PathOfModifiers.Projectiles
 
         void Explode()
         {
+            PlayExplodeSound();
             for (int i = 0; i < 30; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(1.0f, 3.5f);
@@ -193,6 +194,11 @@ namespace PathOfModifiers.Projectiles
                     Projectile.NewProjectile(projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)projectile.ai[0], 0, projectile.owner, 100f);
                 }
             }
+        }
+
+        void PlayExplodeSound()
+        {
+            Main.PlaySound(SoundID.Item74.WithVolume(1f).WithPitchVariance(0.3f), projectile.Center);
         }
     }
 }

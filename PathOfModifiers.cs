@@ -46,7 +46,8 @@ namespace PathOfModifiers
             {
                 Autoload = true,
                 AutoloadGores = true,
-                AutoloadSounds = true
+                AutoloadSounds = false,
+                AutoloadBackgrounds = true
             };
         }
 

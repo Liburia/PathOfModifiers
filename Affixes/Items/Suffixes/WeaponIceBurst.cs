@@ -9,6 +9,7 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
+using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -118,6 +119,8 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void SpawnBurst(Player player, Entity target, int hitDamage)
         {
+            PlaySound(player);
+
             int spikeCount = 5;
             float speed = 20;
             float halfArc = 0.7f;
@@ -141,6 +144,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                     ai1: i == spawnerBurst ? 1f : 0f);
                 angle += angleIncrement;
             }
+        }
+
+        void PlaySound(Player player)
+        {
+            Main.PlaySound(SoundID.Item66.WithVolume(0.5f).WithPitchVariance(0.3f), player.Center);
         }
     }
 }
