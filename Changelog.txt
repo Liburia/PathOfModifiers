@@ -1,3 +1,9 @@
+v0.6.3
+Burning Air is now capped at 1% of max life versus players.
+Added sound effects for some modifiers.
+Reduced particle effects for burning/shocked/chilled air.
+
+
 v0.6.2
 Fixed Eternia Crystal getting hit by some modifiers.
 
