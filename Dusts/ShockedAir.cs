@@ -14,7 +14,7 @@ namespace PathOfModifiers.Dusts
             public int loopCooldown;
         }
 
-        const int minAlpha = 40;
+        const int minAlpha = 60;
         const int addAlpha = 160;
         const int frameTime = 1;
         const int frameWidth = 32;
@@ -33,7 +33,7 @@ namespace PathOfModifiers.Dusts
         {
             int frameX = Main.rand.NextBool() ? frameWidth : 0;
             dust.frame = new Rectangle(frameX, 0, frameWidth, frameHeight);
-            dust.alpha = 0;
+            dust.alpha = minAlpha;
             dust.rotation = Main.rand.NextFloat(0, MathHelper.TwoPi);
             //time, currentFrame
             dust.customData = new CustomData()

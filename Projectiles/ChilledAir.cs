@@ -14,7 +14,7 @@ namespace PathOfModifiers.Projectiles
     public class ChilledAir : ModProjectile, INonTriggerringProjectile
     {
         static readonly Vector3 emittedLight = new Vector3(0.094f, 0.749f, 0.933f);
-        const float dustScarcity = 1000000;
+        const float dustScarcity = 1100000;
 
         Rectangle airRect;
         bool init;
@@ -95,7 +95,7 @@ namespace PathOfModifiers.Projectiles
             {
                 for (int i = 0; i < dusts; i++)
                 {
-                    Dust.NewDustPerfect(new Vector2(Main.rand.NextFloat(airRect.Left, airRect.Right), Main.rand.NextFloat(airRect.Bottom, airRect.Top)), ModContent.DustType<FrostCloud>(), Alpha: 100, Scale: Main.rand.NextFloat(1f, 7f));
+                    Dust.NewDustPerfect(new Vector2(Main.rand.NextFloat(airRect.Left, airRect.Right), Main.rand.NextFloat(airRect.Bottom, airRect.Top)), ModContent.DustType<FrostCloud>(), Alpha: 150, Scale: Main.rand.NextFloat(1f, 6f));
                 }
             }
 

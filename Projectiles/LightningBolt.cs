@@ -288,7 +288,7 @@ namespace PathOfModifiers.Projectiles
             }
 
             int smallerRadius = (int)(airRadius * 0.8f);
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 24; i++)
             {
                 Vector2 position = targetPosition + new Vector2(Main.rand.NextFloat(-smallerRadius, smallerRadius), Main.rand.NextFloat(-smallerRadius, smallerRadius));
                 Dust.NewDustPerfect(position, ModContent.DustType<ShockedAir>(), Scale: Main.rand.NextFloat(0.6f, 1.5f));

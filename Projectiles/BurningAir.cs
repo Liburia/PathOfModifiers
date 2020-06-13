@@ -14,7 +14,7 @@ namespace PathOfModifiers.Projectiles
     public class BurningAir : ModProjectile, INonTriggerringProjectile
     {
         static readonly Vector3 emittedLight = new Vector3(1f, 0.611f, 0f);
-        const float dustScarcity = 9200f;
+        const float dustScarcity = 10000f;
 
 
         Rectangle airRect;
@@ -96,7 +96,7 @@ namespace PathOfModifiers.Projectiles
             {
                 for (int i = 0; i < dusts; i++)
                 {
-                    Dust.NewDustPerfect(new Vector2(Main.rand.NextFloat(airRect.Left, airRect.Right), Main.rand.NextFloat(airRect.Bottom, airRect.Top)), ModContent.DustType<FireDebris>(), Alpha: 100, Velocity: new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.8f, -0.2f)), Scale: Main.rand.NextFloat(1f, 4f));
+                    Dust.NewDustPerfect(new Vector2(Main.rand.NextFloat(airRect.Left, airRect.Right), Main.rand.NextFloat(airRect.Bottom, airRect.Top)), ModContent.DustType<FireDebris>(), Alpha: 130, Velocity: new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.8f, -0.2f)), Scale: Main.rand.NextFloat(1f, 4f));
                 }
             }
 
