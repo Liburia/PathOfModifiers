@@ -76,7 +76,7 @@ namespace PathOfModifiers.Projectiles
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(projectile.Hitbox))
                             {
-                                owner.ApplyDamageToNPC(npc, projectile.damage + (int)Math.Round(realNPC.lifeMax * projectile.ai[0]), 1, npc.direction, false);
+                                owner.ApplyDamageToNPC(npc, projectile.damage + (int)Math.Round(realNPC.lifeMax * projectile.ai[0] * 0.10f), 1, npc.direction, false);
                                 hitNPCs[realNPC.whoAmI] = true;
                             }
                         }

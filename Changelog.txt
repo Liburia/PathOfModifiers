@@ -1,3 +1,9 @@
+v0.6.4
+Molten Shell now does 6 times less damage based on enemy life(was instakilling bosses in certain situations), flat damage is unchanged.
+Modifier fragment drops now scale with the killed enemy's coin value.
+Fixed bosses not dropping modifier fragments.
+Modifier fragments are now 50 times cheaper to buy.
+
 v0.6.3
 Burning Air is now capped at 1% of max life versus players.
 Added sound effects for some modifiers.

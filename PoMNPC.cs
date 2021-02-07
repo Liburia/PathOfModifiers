@@ -47,11 +47,11 @@ namespace PathOfModifiers
 
             NPC lastDamageDealerNPC = lastDamageDealer as NPC;
 
-            if (npc.lifeMax > 5 && npc.value > 0f && !npc.SpawnedFromStatue)
+            if (npc.boss || (npc.lifeMax > 5 && npc.value > 0f && !npc.SpawnedFromStatue))
             {
                 if (npc.boss || Main.rand.NextFloat(0, 1) < 0.15f)
                 {
-                    int stack = Main.rand.Next(1, 5) * (npc.boss ? 10 : 1);
+                    int stack = npc.boss ? 50 : (int)(Main.rand.Next(1, 5) * Math.Max(npc.value / 200f, 1f));
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ModifierFragment"), stack);
                 }
             }
