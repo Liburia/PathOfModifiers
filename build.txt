@@ -1,7 +1,7 @@
-author = Liburia
+﻿author = Liburia
 version = 0.6.3
 displayName = Path Of Modifiers
 includePDB = false
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
 side = Both
-homepage = https://forums.terraria.org/index.php?threads/path-of-modifiers-%E2%80%94-prefix-suffix-system-for-items.68114/
+homepage = https://forums.terraria.org/index.php?threads/path-of-modifiers-—-prefix-suffix-system-for-items.68114/
