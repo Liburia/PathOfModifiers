@@ -9,15 +9,11 @@ namespace PathOfModifiers.Buffs
         /// <summary>
         /// Multiply DPS by this to get damage per 0.5s
         /// </summary>
-        public static float damageMultiplierHalfSecond => 2.0f;
+        public const float damageMultiplierHalfSecond = 2.0f;
 
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "Terraria/Buff_20";
-            return true;
-        }
+        public override string Texture => "Terraria/Images/Buff_20";
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Taking damage over time");
@@ -25,18 +21,12 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            canBeCleared = true;
+            CanBeCleared = true;
         }
     }
     public class StackingDamageOverTime : DamageOverTime
     {
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "Terraria/Buff_20";
-            return true;
-        }
-
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Taking stacking damage over time");
@@ -44,7 +34,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = false;
             Main.buffNoTimeDisplay[Type] = false;
-            canBeCleared = true;
+            CanBeCleared = true;
         }
     }
 }

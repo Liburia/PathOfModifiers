@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -72,10 +73,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsWeapon(item);
+                ItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -123,6 +124,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             Vector2 velocity = (target.Center - player.Center).SafeNormalize(Vector2.One) * Main.rand.NextFloat(10f, 20f);
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
+                new PoMGlobals.ProjectileSource.PlayerSource(player),
                 position: player.Center,
                 velocity: velocity,
                 Type: ModContent.ProjectileType<FrostPulse>(),
@@ -134,7 +136,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void PlaySound(Player player)
         {
-            Main.PlaySound(SoundID.Item28.WithVolume(0.3f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item28.WithVolume(0.3f).WithPitchVariance(0.3f), player.Center);
         }
     }
 }

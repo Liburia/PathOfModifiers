@@ -49,9 +49,9 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         {
             byte ignoreClient = reader.ReadByte();
             int mfID = reader.ReadInt32();
-            var mf = (ModifierForgeTE)TileEntity.ByID[mfID];
-            mf.modifiedItem = ItemIO.Receive(reader, true);
-            mf.SendToClients(ignoreClient);
+            //var mf = (ModifierForgeTE)TileEntity.ByID[mfID];
+            //mf.modifiedItem = ItemIO.Receive(reader, true);
+            //mf.SendToClients(ignoreClient);
         }
 
         public static void CModifierForgeModifierItemChanged(int mapDeviceID, Item item)
@@ -66,9 +66,9 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         {
             byte ignoreClient = reader.ReadByte();
             int mfID = reader.ReadInt32();
-            var mf = (ModifierForgeTE)TileEntity.ByID[mfID];
-            mf.modifierItem = ItemIO.Receive(reader, true);
-            mf.SendToClients(ignoreClient);
+            //var mf = (ModifierForgeTE)TileEntity.ByID[mfID];
+            //mf.modifierItem = ItemIO.Receive(reader, true);
+            //mf.SendToClients(ignoreClient);
         }
     }
 }

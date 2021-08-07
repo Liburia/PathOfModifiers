@@ -43,10 +43,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Valor", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsHeadArmor(item);
+                ItemItem.IsHeadArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -57,7 +57,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player) && PoMUtil.IsLowHP(player))
+            if (ItemItem.IsArmorEquipped(item, player) && PoMUtil.IsLowHP(player))
             {
                 damageMultiplier += Type1.GetValue();
             }

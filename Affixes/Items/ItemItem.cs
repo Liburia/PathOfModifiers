@@ -14,14 +14,13 @@ using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Rarities;
 using Terraria.DataStructures;
 using PathOfModifiers.Items;
+using static Terraria.ModLoader.ModContent;
 
-namespace PathOfModifiers
+namespace PathOfModifiers.Affixes.Items
 {
     //TODO: When item is dropped roll only on server? How it work?
-    public class AffixItemItem : GlobalItem
+    public class ItemItem : GlobalItem
     {
-        public override bool CloneNewInstances => false;
-
         public override bool InstancePerEntity => true;
 
         public RarityItem rarity;
@@ -34,9 +33,21 @@ namespace PathOfModifiers
         public int FreePrefixes => Math.Min(FreeAffixes, rarity.maxPrefixes - prefixes.Count);
         public int FreeSuffixes => Math.Min(FreeAffixes, rarity.maxSuffixes - suffixes.Count);
 
-        public AffixItemItem()
+        public ItemItem()
         {
-            rarity = ((PoMDataLoader.raritiesItem?.Length ?? 0) == 0) ? new ItemNone() : PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ItemNone)]];
+            InitializeReferenceData();
+        }
+
+        public void PostLoad()
+        {
+            rarity = DataManager.Item.GetRarityRef(typeof(ItemNone));
+        }
+
+        /// <summary>
+        /// Used to deep clone the affix
+        /// </summary>
+        void InitializeReferenceData()
+        {
             affixes = new List<Affix>();
             prefixes = new List<Affix>();
             suffixes = new List<Affix>();
@@ -95,32 +106,32 @@ namespace PathOfModifiers
         }
         public static bool IsSpear(Item item)
         {
-            return item.melee && item.noMelee && item.shoot > -1 && item.useStyle == 5 && !item.channel;
+            return item.DamageType == DamageClass.Melee && item.noMelee && item.shoot > -1 && item.useStyle == 5 && !item.channel;
         }
         public static bool IsFlailOrYoyo(Item item)
         {
-            return item.melee && item.noMelee && item.shoot > -1 && item.useStyle == 5 && item.channel;
+            return item.DamageType == DamageClass.Melee && item.noMelee && item.shoot > -1 && item.useStyle == 5 && item.channel;
         }
 
         public static bool IsMelee(Item item)
         {
-            return item.melee;
+            return item.DamageType == DamageClass.Melee;
         }
         public static bool IsRanged(Item item)
         {
-            return item.ranged;
+            return item.DamageType == DamageClass.Ranged;
         }
         public static bool IsMagic(Item item)
         {
-            return item.magic;
+            return item.DamageType == DamageClass.Magic;
         }
         public static bool IsThrowing(Item item)
         {
-            return item.thrown;
+            return item.DamageType == DamageClass.Throwing;
         }
         public static bool IsSummon(Item item)
         {
-            return item.summon;
+            return item.DamageType == DamageClass.Summon;
         }
 
         public static bool IsAccessory(Item item)
@@ -151,7 +162,7 @@ namespace PathOfModifiers
 
         public static bool IsMap(Item item)
         {
-            return item.modItem is Map;
+            return item.ModItem is Map;
         }
 
 
@@ -172,7 +183,7 @@ namespace PathOfModifiers
         }
         public static bool IsAccessoryEquipped(Item item, Player player)
         {
-            for (int i = 3; i < 8 + player.extraAccessorySlots; i++)
+            for (int i = 3; i < 8 + player.GetAmountOfExtraAccessorySlotsToShow(); i++)
             {
                 if (player.armor[i] == item)
                 {
@@ -187,7 +198,7 @@ namespace PathOfModifiers
 
         public void UpdateName(Item item)
         {
-            if (rarity == null || rarity.GetType() == typeof(ItemNone))
+            if (rarity == null || rarity.GetType() == typeof(NotRollableItem))
                 item.ClearNameOverride();
             else
             {
@@ -227,7 +238,7 @@ namespace PathOfModifiers
             }
             else
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ItemNone)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(NotRollableItem));
                 return false;
             }
         }
@@ -239,7 +250,7 @@ namespace PathOfModifiers
         public void RollItem(Item item)
         {
             ClearAffixes(item);
-            rarity = PoMAffixController.RollRarity(item);
+            rarity = global::PathOfModifiers.DataManager.Item.RollRarity(item);
             RollAffixes(item);
             UpdateName(item);
         }
@@ -266,7 +277,7 @@ namespace PathOfModifiers
                 if (i >= rarity.minAffixes && Main.rand.NextFloat(0, 1) > rarity.chanceToRollAffix)
                     break;
 
-                newAffix = PoMAffixController.RollNewAffix(this, item);
+                newAffix = DataManager.Item.RollNewAffix(this, item);
                 if (newAffix == null)
                     break;
 
@@ -279,62 +290,62 @@ namespace PathOfModifiers
             bool raised = false;
             if (rarityType == typeof(WeaponCommon))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponUncommon)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(WeaponUncommon));
                 raised = true;
             }
             else if (rarityType == typeof(WeaponUncommon))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponRare)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(WeaponRare));
                 raised = true;
             }
             else if (rarityType == typeof(WeaponRare))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponEpic)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(WeaponEpic));
                 raised = true;
             }
             else if (rarityType == typeof(WeaponEpic))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponLegendary)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(WeaponLegendary));
                 raised = true;
             }
             else if (rarityType == typeof(ArmorCommon))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorUncommon)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(ArmorUncommon));
                 raised = true;
             }
             else if (rarityType == typeof(ArmorUncommon))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorRare)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(ArmorRare));
                 raised = true;
             }
             else if (rarityType == typeof(ArmorRare))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorEpic)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(ArmorEpic));
                 raised = true;
             }
             else if (rarityType == typeof(ArmorEpic))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorLegendary)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(ArmorLegendary));
                 raised = true;
             }
             else if (rarityType == typeof(AccessoryCommon))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryUncommon)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(AccessoryUncommon));
                 raised = true;
             }
             else if (rarityType == typeof(AccessoryUncommon))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryRare)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(AccessoryRare));
                 raised = true;
             }
             else if (rarityType == typeof(AccessoryRare))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryEpic)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(AccessoryEpic));
                 raised = true;
             }
             else if (rarityType == typeof(AccessoryEpic))
             {
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryLegendary)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(AccessoryLegendary));
                 raised = true;
             }
             if (raised)
@@ -347,7 +358,7 @@ namespace PathOfModifiers
         /// <param name="item"></param>
         public bool AddRandomAffix(Item item)
         {
-            Affix newAffix = PoMAffixController.RollNewAffix(this, item);
+            Affix newAffix = DataManager.Item.RollNewAffix(this, item);
             if (newAffix == null)
                 return false;
 
@@ -362,7 +373,7 @@ namespace PathOfModifiers
         /// <param name="item"></param>
         public bool AddRandomPrefix(Item item)
         {
-            Affix newPrefix = PoMAffixController.RollNewPrefix(this, item);
+            Affix newPrefix = DataManager.Item.RollNewPrefix(this, item);
             if (newPrefix == null)
                 return false;
 
@@ -377,7 +388,7 @@ namespace PathOfModifiers
         /// <param name="item"></param>
         public bool AddRandomSuffix(Item item)
         {
-            Affix newSuffix = PoMAffixController.RollNewSuffix(this, item);
+            Affix newSuffix = DataManager.Item.RollNewSuffix(this, item);
             if (newSuffix == null)
                 return false;
 
@@ -392,11 +403,11 @@ namespace PathOfModifiers
 
             Type rarityType = rarity.GetType();
             if (rarityType == typeof(WeaponUncommon) || rarityType == typeof(WeaponRare) || rarityType == typeof(WeaponEpic) || rarityType == typeof(WeaponLegendary))
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(WeaponCommon)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(WeaponCommon));
             else if (rarityType == typeof(ArmorUncommon) || rarityType == typeof(ArmorRare) || rarityType == typeof(ArmorEpic) || rarityType == typeof(ArmorLegendary))
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(ArmorCommon)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(ArmorCommon));
             else if (rarityType == typeof(AccessoryUncommon) || rarityType == typeof(AccessoryRare) || rarityType == typeof(AccessoryEpic) || rarityType == typeof(AccessoryLegendary))
-                rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[typeof(AccessoryCommon)]];
+                rarity = DataManager.Item.GetRarityRef(typeof(AccessoryCommon));
 
             UpdateName(item);
         }
@@ -496,7 +507,9 @@ namespace PathOfModifiers
 
         public override int ChoosePrefix(Item item, UnifiedRandom rand)
         {
-            return (PathOfModifiers.disableVanillaModifiersWeapons && IsWeapon(item)) || (PathOfModifiers.disableVanillaModifiersAccessories && IsAccessory(item)) ? mod.PrefixType("") : -1;
+            return (GetInstance<PoMConfigServer>().DisableVanillaPrefixesWeapons && IsWeapon(item))
+                || (GetInstance<PoMConfigServer>().DisableVanillaPrefixesAccessories && IsAccessory(item))
+                ? ModContent.PrefixType<PoMPrefix>() : -1;
         }
         public override bool ReforgePrice(Item item, ref int reforgePrice, ref bool canApplyDiscount)
         {
@@ -525,43 +538,43 @@ namespace PathOfModifiers
             consume = consume && Main.rand.NextFloat(1) > chanceToNotConsume;
             return consume;
         }
-        public override void GetWeaponCrit(Item item, Player player, ref int crit)
+        public override void ModifyWeaponCrit(Item item, Player player, ref int crit)
         {
             float multiplier = 1f;
             foreach (var prefix in prefixes)
             {
-                prefix.GetWeaponCrit(item, player, ref multiplier);
+                prefix.ModifyWeaponCrit(item, player, ref multiplier);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.GetWeaponCrit(item, player, ref multiplier);
+                suffix.ModifyWeaponCrit(item, player, ref multiplier);
             }
             crit = (int)Math.Round(crit * multiplier);
         }
-        public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
-        {
-            foreach (var prefix in prefixes)
-            {
-                prefix.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
-            }
-        }
-        public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
-        {
-            float multiplier = 1f;
-            foreach (var prefix in prefixes)
-            {
-                prefix.GetWeaponKnockback(item, player, ref multiplier);
-            }
-            foreach (var suffix in suffixes)
-            {
-                suffix.GetWeaponKnockback(item, player, ref multiplier);
-            }
-            knockback = (float)Math.Round(knockback * multiplier);
-        }
+        //public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
+        //{
+        //    foreach (var prefix in prefixes)
+        //    {
+        //        prefix.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
+        //    }
+        //    foreach (var suffix in suffixes)
+        //    {
+        //        suffix.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
+        //    }
+        //}
+        //public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
+        //{
+        //    float multiplier = 1f;
+        //    foreach (var prefix in prefixes)
+        //    {
+        //        prefix.GetWeaponKnockback(item, player, ref multiplier);
+        //    }
+        //    foreach (var suffix in suffixes)
+        //    {
+        //        suffix.GetWeaponKnockback(item, player, ref multiplier);
+        //    }
+        //    knockback = (float)Math.Round(knockback * multiplier);
+        //}
         public override float UseTimeMultiplier(Item item, Player player)
         {
             float multiplier = 1f;
@@ -586,28 +599,28 @@ namespace PathOfModifiers
                 suffix.ModifyManaCost(item, player, ref reduce, ref mult);
             }
         }
-        public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            bool shoot = true;
-            foreach (var prefix in prefixes)
-            {
-                if (!prefix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
-                    shoot = false;
-            }
-            foreach (var suffix in suffixes)
-            {
-                if (!suffix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
-                    shoot = false;
-            }
-            return shoot;
-        }
+        //public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        //{
+        //    bool shoot = true;
+        //    foreach (var prefix in prefixes)
+        //    {
+        //        if (!prefix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+        //            shoot = false;
+        //    }
+        //    foreach (var suffix in suffixes)
+        //    {
+        //        if (!suffix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+        //            shoot = false;
+        //    }
+        //    return shoot;
+        //}
         public override void UpdateAccessory(Item item, Player player, bool hideVisual)
         {
             //UpdateEquip covers accessories
         }
         public override void UpdateEquip(Item item, Player player)
         {
-            AffixItemPlayer pomPlayer = player.GetModPlayer<AffixItemPlayer>();
+            ItemPlayer pomPlayer = player.GetModPlayer<ItemPlayer>();
             foreach (var prefix in prefixes)
             {
                 prefix.UpdateEquip(item, pomPlayer);
@@ -619,7 +632,7 @@ namespace PathOfModifiers
         }
         public override void UpdateInventory(Item item, Player player)
         {
-            AffixItemPlayer pomPlayer = player.GetModPlayer<AffixItemPlayer>();
+            ItemPlayer pomPlayer = player.GetModPlayer<ItemPlayer>();
             foreach (var prefix in prefixes)
             {
                 prefix.UpdateInventory(item, pomPlayer);
@@ -640,7 +653,7 @@ namespace PathOfModifiers
                 suffix.HoldItem(item, player);
             }
         }
-        public override bool UseItem(Item item, Player player)
+        public override bool? UseItem(Item item, Player player)
         {
             foreach (var prefix in prefixes)
             {
@@ -650,7 +663,7 @@ namespace PathOfModifiers
             {
                 suffix.UseItem(item, player);
             }
-            return false;
+            return null;
         }
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {
@@ -962,20 +975,20 @@ namespace PathOfModifiers
             }
             catch (Exception e)
             {
-                mod.Logger.Error(e.ToString());
+                Mod.Logger.Error(e.ToString());
             }
         }
-        public override void OnCraft(Item item, Recipe recipe)
-        {
-            try
-            {
-                TryRollItem(item);
-            }
-            catch (Exception e)
-            {
-                mod.Logger.Error(e.ToString());
-            }
-        }
+        //public override void OnCraft(Item item, Recipe recipe)
+        //{
+        //    try
+        //    {
+        //        TryRollItem(item);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Mod.Logger.Error(e.ToString());
+        //    }
+        //}
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
@@ -987,7 +1000,7 @@ namespace PathOfModifiers
             {
                 suffix.ModifyTooltips(PathOfModifiers.Instance, item, tooltips);
             }
-            if (rarity.GetType() != typeof(ItemNone))
+            if (rarity.GetType() != typeof(ItemNone) && rarity.GetType() != typeof(NotRollableItem))
             {
                 foreach (TooltipLine line in tooltips)
                 {
@@ -1024,7 +1037,7 @@ namespace PathOfModifiers
                 }
                 catch (Exception e)
                 {
-                    mod.Logger.Error(e.ToString());
+                    Mod.Logger.Error(e.ToString());
                 }
             }
             //TODO: Add light/dust?
@@ -1039,7 +1052,7 @@ namespace PathOfModifiers
                 }
                 catch (Exception e)
                 {
-                    mod.Logger.Error(e.ToString());
+                    Mod.Logger.Error(e.ToString());
                 }
             }
         }
@@ -1074,7 +1087,7 @@ namespace PathOfModifiers
         public override void Load(Item item, TagCompound tag)
         {
             string rarityModName = tag.GetString("rarityMod");
-            Mod mod = ModLoader.GetMod(rarityModName);
+            ModLoader.TryGetMod(rarityModName, out Mod mod);
             if (mod == null)
             {
                 PathOfModifiers.Instance.Logger.Warn($"Mod '{rarityModName}' not found");
@@ -1092,7 +1105,7 @@ namespace PathOfModifiers
                 PathOfModifiers.Instance.Logger.Warn($"Rarity '{type.FullName}' is disabled");
                 return;
             }
-            rarity = PoMDataLoader.raritiesItem[PoMDataLoader.rarityItemMap[type]];
+            rarity = DataManager.Item.GetRarityRef(type);
             int affixCount = tag.GetAsInt("affixCount");
             TagCompound affixTag;
             Affix affix;
@@ -1100,7 +1113,7 @@ namespace PathOfModifiers
             {
                 affixTag = tag.GetCompound(i.ToString());
                 string affixModName = affixTag.GetString("affixMod");
-                mod = ModLoader.GetMod(affixModName);
+                ModLoader.TryGetMod(affixModName, out mod);
                 if (mod == null)
                 {
                     PathOfModifiers.Instance.Logger.Warn($"Mod '{affixModName}' not found");
@@ -1118,7 +1131,7 @@ namespace PathOfModifiers
                     PathOfModifiers.Instance.Logger.Warn($"Affix '{affixFullName}' is disabled");
                     continue;
                 }
-                affix = PoMDataLoader.affixesItem[PoMDataLoader.affixItemMap[type]].Clone();
+                affix = DataManager.Item.GetNewAffix(type);
                 affix.Load(affixTag, item);
                 AddAffix(affix, item);
             }
@@ -1127,9 +1140,8 @@ namespace PathOfModifiers
 
         public override GlobalItem Clone(Item item, Item itemClone)
         {
-            AffixItemItem newItem = (AffixItemItem)NewInstance(itemClone);
-
-            newItem.rarity = rarity;
+            ItemItem newItem = (ItemItem)base.Clone(item, itemClone);
+            newItem.InitializeReferenceData();
 
             Affix affixClone;
             foreach (Affix affix in affixes)
@@ -1146,33 +1158,33 @@ namespace PathOfModifiers
         {
             try
             {
-                writer.Write(PoMDataLoader.rarityItemMap[rarity.GetType()]);
+                writer.Write(DataManager.Item.GetRarityIndex(rarity.GetType()));
 
                 writer.Write((byte)affixes.Count);
                 Affix affix;
                 for (int i = 0; i < affixes.Count; i++)
                 {
                     affix = affixes[i];
-                    writer.Write(PoMDataLoader.affixItemMap[affix.GetType()]);
+                    writer.Write(DataManager.Item.GetAffixIndex(affix.GetType()));
                     affix.NetSend(item, writer);
                 }
             }
             catch (Exception e)
             {
-                mod.Logger.Error(e.ToString());
+                Mod.Logger.Error(e.ToString());
             }
         }
         public override void NetReceive(Item item, BinaryReader reader)
         {
             try
             {
-                rarity = PoMDataLoader.raritiesItem[reader.ReadInt32()];
+                rarity = DataManager.Item.GetRarityRef(reader.ReadInt32());
 
                 int affixCount = reader.ReadByte();
                 Affix affix;
                 for (int i = 0; i < affixCount; i++)
                 {
-                    affix = PoMDataLoader.affixesItem[reader.ReadInt32()].Clone();
+                    affix = DataManager.Item.GetNewAffix(reader.ReadInt32());
                     affix.NetReceive(item, reader);
                     AddAffix(affix, item);
                 }
@@ -1180,7 +1192,7 @@ namespace PathOfModifiers
             }
             catch (Exception e)
             {
-                mod.Logger.Error(e.ToString());
+                Mod.Logger.Error(e.ToString());
             }
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -41,10 +42,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAnyArmor(item);
+                ItemItem.IsAnyArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -55,7 +56,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsArmorEquipped(item, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
@@ -64,28 +65,28 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit)
         {
-            if (AffixItemItem.IsArmorEquipped(affixItem, player))
+            if (ItemItem.IsArmorEquipped(affixItem, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
         }
         public override void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (AffixItemItem.IsArmorEquipped(affixItem, player))
+            if (ItemItem.IsArmorEquipped(affixItem, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsArmorEquipped(item, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
         }
         public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsArmorEquipped(item, player))
             {
                 damageMultiplier += Type1.GetValue();
             }

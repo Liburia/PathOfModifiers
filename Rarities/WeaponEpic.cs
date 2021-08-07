@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Graphics;
 
 namespace PathOfModifiers.Rarities
 {
     public class WeaponEpic : RarityItem
     {
+        public WeaponEpic(Mod mod) : base(mod) { }
+
         public override double Weight { get; } = 0.2;
         public override byte minAffixes => 3;
         public override byte maxAffixes => 6;

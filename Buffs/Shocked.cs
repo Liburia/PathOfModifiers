@@ -7,7 +7,7 @@ namespace PathOfModifiers.Buffs
 {
     public class Shocked : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Damage taken is modified");
@@ -15,7 +15,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
-            canBeCleared = true;
+            CanBeCleared = true;
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Graphics;
 
 namespace PathOfModifiers.Rarities
 {
     public class WeaponLegendary : RarityItem
     {
+        public WeaponLegendary(Mod mod) : base(mod) { }
+
         public override double Weight { get; } = 0.1;
         public override byte minAffixes => 4;
         public override byte maxAffixes => 7;

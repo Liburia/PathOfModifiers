@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -33,10 +34,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAccessory(item);
+                ItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -46,9 +47,9 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ value } max minions";
         }
 
-        public override void UpdateEquip(Item item, AffixItemPlayer player)
+        public override void UpdateEquip(Item item, ItemPlayer player)
         {
-            player.player.maxMinions += Type1.GetValue();
+            player.Player.maxMinions += Type1.GetValue();
         }
     }
 }

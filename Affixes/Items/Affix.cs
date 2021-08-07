@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria.UI.Chat;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ID;
 using System.IO;
@@ -37,7 +38,7 @@ namespace PathOfModifiers.Affixes.Items
             }
         }
 
-        public bool AffixSpaceAvailable(AffixItemItem item) { return this is IPrefix ? item.FreePrefixes > 0 : item.FreeSuffixes > 0; }
+        public bool AffixSpaceAvailable(ItemItem item) { return this is IPrefix ? item.FreePrefixes > 0 : item.FreeSuffixes > 0; }
 
         public virtual double Weight => 0;
 
@@ -49,11 +50,6 @@ namespace PathOfModifiers.Affixes.Items
 
         }
 
-        public virtual void InitializeItem(AffixItemItem item)
-        {
-            RollValue();
-        }
-
         public virtual Affix Clone()
         {
             Affix newAffix = (Affix)Activator.CreateInstance(GetType());
@@ -61,17 +57,17 @@ namespace PathOfModifiers.Affixes.Items
             return newAffix;
         }
 
-        public virtual bool CanBeRolled(AffixItemItem pomItem, Item item) { return false; }
+        public virtual bool CanRoll(ItemItem pomItem, Item item) { return false; }
 
         public virtual void RollValue(bool rollTier = true) { }
         #region Item Hooks
-        public virtual void GetWeaponCrit(Item item, Player player, ref float multiplier) { }
+        public virtual void ModifyWeaponCrit(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyWeaponDamage(Item item, Player player, ref float add, ref float multiplier, ref float flat) { }
         public virtual void GetWeaponKnockback(Item item, Player player, ref float multiplier) { }
         public virtual void UseTimeMultiplier(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult) { }
-        public virtual void UpdateInventory(Item item, AffixItemPlayer player) { }
-        public virtual void UpdateEquip(Item item, AffixItemPlayer player) { }
+        public virtual void UpdateInventory(Item item, ItemPlayer player) { }
+        public virtual void UpdateEquip(Item item, ItemPlayer player) { }
         public virtual bool ConsumeAmmo(Item item, Player player, ref float chanceToNotConsume) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
         public virtual void UseItem(Item item, Player player) { }

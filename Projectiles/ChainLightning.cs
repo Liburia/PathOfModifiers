@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Dusts;
 using Terraria;
 using System;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
@@ -35,22 +36,19 @@ namespace PathOfModifiers.Projectiles
         bool justWentBack;
         bool init;
 
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("ChainLightning");
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.penetrate = 1;
-            projectile.width = 32;
-            projectile.height = 6;
-            projectile.timeLeft = jumpTimeLimit;
-            projectile.hostile = false;
-            projectile.friendly = false;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.extraUpdates = 1;
+            Projectile.penetrate = 1;
+            Projectile.width = 32;
+            Projectile.height = 6;
+            Projectile.timeLeft = jumpTimeLimit;
+            Projectile.hostile = false;
+            Projectile.friendly = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.extraUpdates = 1;
             jumpsLeft = maxJumps;
             inboundY = minVariance.Y;
         }
@@ -64,15 +62,15 @@ namespace PathOfModifiers.Projectiles
         {
             if (!init)
             {
-                nodes.AddLast(projectile.Center);
-                isNPC = projectile.velocity.X == 1;
-                target = isNPC ? (Entity)Main.npc[(int)projectile.velocity.Y] : (Entity)Main.player[(int)projectile.velocity.Y];
+                nodes.AddLast(Projectile.Center);
+                isNPC = Projectile.velocity.X == 1;
+                target = isNPC ? (Entity)Main.npc[(int)Projectile.velocity.Y] : (Entity)Main.player[(int)Projectile.velocity.Y];
                 init = true;
             }
 
             Vector2 targetPosition = target.Center;
 
-            if (projectile.position != targetPosition)
+            if (Projectile.position != targetPosition)
             {
                 float nextInboundY = Main.rand.NextFloat(0, boundHeight * 2);
                 float diff = nextInboundY - inboundY;
@@ -103,19 +101,19 @@ namespace PathOfModifiers.Projectiles
                     justWentBack = true;
                 }
 
-                Vector2 position = new Vector2(projectile.position.X + velocityX, projectile.position.Y - inboundY + nextInboundY);
+                Vector2 position = new Vector2(Projectile.position.X + velocityX, Projectile.position.Y - inboundY + nextInboundY);
                 position = position.RotatedBy((target.position - nodes.Last.Value).ToRotation(), nodes.Last.Value);
                 inboundY = nextInboundY;
 
                 if ((targetPosition - position).LengthSquared() < snapRadiusSqr)
                 {
                     position = targetPosition;
-                    projectile.timeLeft = PathOfModifiers.ailmentDuration;
+                    Projectile.timeLeft = PoMGlobals.ailmentDuration;
                 }
 
-                projectile.position = position;
+                Projectile.position = position;
 
-                nodes.AddLast(projectile.position);
+                nodes.AddLast(Projectile.position);
 
                 if (!removingNodes && nodes.Count > maxNodes)
                 {
@@ -129,18 +127,18 @@ namespace PathOfModifiers.Projectiles
             }
             else
             {
-                Player owner = Main.player[projectile.owner];
+                Player owner = Main.player[Projectile.owner];
                 if (isNPC)
                 {
                     NPC npc = (NPC)target;
                     if (PoMUtil.CanHitNPC(npc))
                     {
-                        if (Main.myPlayer == projectile.owner)
+                        if (Main.myPlayer == Projectile.owner)
                         {
                             PlaySound();
-                            owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
+                            owner.ApplyDamageToNPC(npc, Projectile.damage, 1, npc.direction, false);
                             BuffNPC pomNPC = npc.GetGlobalNPC<BuffNPC>();
-                            pomNPC.AddShockedBuff(npc, projectile.ai[0], PathOfModifiers.ailmentDuration, true);
+                            pomNPC.AddShockedBuff(npc, Projectile.ai[0], PoMGlobals.ailmentDuration, true);
                         }
                         SpawnDebris(targetPosition);
                         hitEntities.Add(npc);
@@ -154,8 +152,8 @@ namespace PathOfModifiers.Projectiles
                         if (player.whoAmI == Main.myPlayer)
                         {
                             PlaySound();
-                            player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
-                            player.GetModPlayer<BuffPlayer>().AddShockedBuff(player, projectile.ai[0], PathOfModifiers.ailmentDuration, true);
+                            player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage, player.direction, true);
+                            player.GetModPlayer<BuffPlayer>().AddShockedBuff(player, Projectile.ai[0], PoMGlobals.ailmentDuration, true);
                         }
                         SpawnDebris(targetPosition);
                         hitEntities.Add(player);
@@ -167,16 +165,16 @@ namespace PathOfModifiers.Projectiles
                     if (FindNewTarget())
                     {
                         jumpsLeft--;
-                        projectile.timeLeft = jumpTimeLimit;
+                        Projectile.timeLeft = jumpTimeLimit;
                     }
                     else
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                     }
                 }
                 else
                 {
-                    projectile.Kill();
+                    Projectile.Kill();
                 }
             }
 
@@ -189,7 +187,7 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             if (init)
             {
@@ -204,14 +202,15 @@ namespace PathOfModifiers.Projectiles
                     float drawLength = velocity.Length() + 5;
                     float rotation = velocity.ToRotation();
 
-                    Texture2D texture = Main.projectileTexture[projectile.type];
+                    Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
                     Vector2 textureHalf = new Vector2(texture.Width / 2, texture.Height / 2);
                     Rectangle destination = new Rectangle(
                         (int)(drawPositionScreen.X),
                         (int)(drawPositionScreen.Y),
                         (int)drawLength,
                         texture.Height);
-                    spriteBatch.Draw(texture, destination, null, new Color(1f, 1f, 1f, 0.9f), rotation, new Vector2(0, textureHalf.Y), SpriteEffects.None, 0);
+                    var drawData = new DrawData(texture, destination, null, new Color(1f, 1f, 1f, 0.9f), rotation, new Vector2(0, textureHalf.Y), SpriteEffects.None, 0);
+                    Main.EntitySpriteDraw(drawData);
 
                     position1 = position2;
                     position2 = position1.Next;
@@ -263,7 +262,7 @@ namespace PathOfModifiers.Projectiles
                 NPC npc = Main.npc[i];
                 if (PoMUtil.CanHitNPC(npc))
                 {
-                    float lengthSqr = (npc.Center - projectile.position).LengthSquared();
+                    float lengthSqr = (npc.Center - Projectile.position).LengthSquared();
                     if (lengthSqr < maxJumpLengthSqr && lengthSqr < minLengthSqr && !hitEntities.Contains(npc))
                     {
                         closestEntity = npc;
@@ -271,13 +270,13 @@ namespace PathOfModifiers.Projectiles
                     }
                 }
             }
-            Player owner = Main.player[projectile.owner];
+            Player owner = Main.player[Projectile.owner];
             for (int i = 0; i < Main.maxPlayers; i++)
             {
                 Player player = Main.player[i];
                 if (PoMUtil.CanHitPvp(owner, player))
                 {
-                    float lengthSqr = (player.Center - projectile.position).LengthSquared();
+                    float lengthSqr = (player.Center - Projectile.position).LengthSquared();
                     if (lengthSqr < maxJumpLengthSqr && lengthSqr < minLengthSqr && !hitEntities.Contains(player))
                     {
                         closestEntity = player;
@@ -314,7 +313,7 @@ namespace PathOfModifiers.Projectiles
 
         void PlaySound()
         {
-            Main.PlaySound(SoundID.Item54.WithVolume(1f).WithPitchVariance(0.3f), projectile.position);
+            SoundEngine.PlaySound(SoundID.Item54.WithVolume(1f).WithPitchVariance(0.3f), Projectile.position);
         }
     }
 }

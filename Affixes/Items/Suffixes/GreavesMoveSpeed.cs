@@ -75,10 +75,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         uint lastProcTime;
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsLegArmor(item);
+                ItemItem.IsLegArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -89,7 +89,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
+            if (ItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
             {
                 player.GetModPlayer<BuffPlayer>().AddGreavesMoveSpeedBuff(player, Type1.GetValue(), (int)Math.Round(Type2.GetValue() * 60), false);
 

@@ -17,55 +17,51 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Molten Shell Explosion");
-            Main.projFrames[projectile.type] = 7;
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.scale = 5f;
-            projectile.Size = new Vector2(98, 98) * 0.2f * projectile.scale;
-            projectile.timeLeft = 600;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            drawHeldProjInFrontOfHeldItemAndArms = true;
+            Main.projFrames[Projectile.type] = 7;
+            Projectile.scale = 5f;
+            Projectile.Size = new Vector2(98, 98) * 0.2f * Projectile.scale;
+            Projectile.timeLeft = 600;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            DrawHeldProjInFrontOfHeldItemAndArms = true;
         }
 
         public override void AI()
         {
-            Main.player[projectile.owner].heldProj = projectile.whoAmI;
+            Main.player[Projectile.owner].heldProj = Projectile.whoAmI;
 
-            projectile.frameCounter++;
-            if (projectile.frameCounter >= 3)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter >= 3)
             {
-                projectile.frameCounter = 0;
-                projectile.frame++;
-                if (projectile.frame > Main.projFrames[projectile.type])
+                Projectile.frameCounter = 0;
+                Projectile.frame++;
+                if (Projectile.frame > Main.projFrames[Projectile.type])
                 {
-                    projectile.Kill();
+                    Projectile.Kill();
                 }
             }
 
             for (int i = 0; i < 5; i++)
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<FireDebris>());
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FireDebris>());
 
 
             if (Main.netMode != NetmodeID.Server)
             {
-                Player owner = Main.player[projectile.owner];
+                Player owner = Main.player[Projectile.owner];
 
                 Player player = Main.LocalPlayer;
                 if (!hitPlayer && PoMUtil.CanHitPvp(owner, player))
                 {
                     Rectangle localRect = player.getRect();
-                    if (localRect.Intersects(projectile.Hitbox))
+                    if (localRect.Intersects(Projectile.Hitbox))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage + (int)Math.Round(player.statLife * projectile.ai[0]), player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage + (int)Math.Round(player.statLife * Projectile.ai[0]), player.direction, true);
                         hitPlayer = true;
                     }
                 }
 
-                if (Main.myPlayer == projectile.owner)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
@@ -74,9 +70,9 @@ namespace PathOfModifiers.Projectiles
                         if (!hitNPCs[realNPC.whoAmI] && PoMUtil.CanHitNPC(npc))
                         {
                             Rectangle npcRect = npc.getRect();
-                            if (npcRect.Intersects(projectile.Hitbox))
+                            if (npcRect.Intersects(Projectile.Hitbox))
                             {
-                                owner.ApplyDamageToNPC(npc, projectile.damage + (int)Math.Round(realNPC.lifeMax * projectile.ai[0] * 0.10f), 1, npc.direction, false);
+                                owner.ApplyDamageToNPC(npc, Projectile.damage + (int)Math.Round(realNPC.lifeMax * Projectile.ai[0] * 0.10f), 1, npc.direction, false);
                                 hitNPCs[realNPC.whoAmI] = true;
                             }
                         }
@@ -85,18 +81,19 @@ namespace PathOfModifiers.Projectiles
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            int frameHeight = texture.Height / Main.projFrames[projectile.type];
-            int startY = frameHeight * projectile.frame;
+            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
+            int frameHeight = texture.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
             Rectangle sourceRectangle = new Rectangle(0, startY, texture.Width, frameHeight);
             Vector2 origin = sourceRectangle.Size() / 2f;
 
-            Color drawColor = projectile.GetAlpha(lightColor);
-            Main.spriteBatch.Draw(texture,
-                projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY),
-                sourceRectangle, drawColor, projectile.rotation, origin, projectile.scale, SpriteEffects.None, 0f);
+            Color drawColor = Projectile.GetAlpha(lightColor);
+            var drawData = new DrawData(texture,
+                Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
+                sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(drawData);
 
             return true;
         }

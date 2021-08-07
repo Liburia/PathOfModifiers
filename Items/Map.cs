@@ -15,32 +15,31 @@ namespace PathOfModifiers.Items
         public Maps.Map map;
 
 		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Map");
-			Tooltip.SetDefault("Opens a new world.");
-		}
-		public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-			item.value = 500000;
-			item.rare = 2;
-            item.maxStack = 1;
-            item.autoReuse = false;
-            item.useAnimation = 15;
-            item.useTime = 15;
-            item.useStyle = 3;
-            item.consumable = false;
+            DisplayName.SetDefault("Map");
+            Tooltip.SetDefault("Opens a new world.");
+
+            Item.width = 32;
+            Item.height = 32;
+			Item.value = 500000;
+			Item.rare = 2;
+            Item.maxStack = 1;
+            Item.autoReuse = false;
+            Item.useAnimation = 15;
+            Item.useTime = 15;
+            Item.useStyle = 3;
+            Item.consumable = false;
         }
 
         //TODO: Remove? Should never be null; just crash.
+        //E: Can't just crash since this is called on save
         void MapNullCheck()
         {
             if (map == null)
-                map = PoMDataLoader.maps[PoMDataLoader.mapMap[typeof(Maps.Plains)]].Clone();
+                map = DataManager.Map.GetNewMap(typeof(Maps.Plains));
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             MapNullCheck();
             //if (player.whoAmI == Main.myPlayer)
@@ -53,13 +52,13 @@ namespace PathOfModifiers.Items
 
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            map.DrawIcon(spriteBatch, position, Main.itemTexture[item.type].Size(), 0, scale);
+            map.DrawIcon(spriteBatch, position, Terraria.GameContent.TextureAssets.Item[Item.type].Value.Size(), 0, scale);
         }
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
             //World drawing is different so just hardcode this.
             var iconOffset = new Vector2(0, 2);
-            map.DrawIcon(spriteBatch, item.position - Main.screenPosition + iconOffset, Main.itemTexture[item.type].Size(), rotation, scale);
+            map.DrawIcon(spriteBatch, Item.position - Main.screenPosition + iconOffset, Terraria.GameContent.TextureAssets.Item[Item.type].Value.Size(), rotation, scale);
         }
 
         public override TagCompound Save()
@@ -81,22 +80,21 @@ namespace PathOfModifiers.Items
             //PathOfModifiers.Log("5");
             TagCompound mapTag = tag.GetCompound("mapTag");
             var mapMod = mapTag.GetString("mapMod");
-            Mod mod = ModLoader.GetMod(mapMod);
+            ModLoader.TryGetMod(mapMod, out Mod mod);
             if (mod == null)
             {
-                mod.Logger.WarnFormat("Map mod \"{0}\" not found", mapMod);
+                Mod.Logger.WarnFormat("Map mod \"{0}\" not found", mapMod);
                 return;
             }
             var mapFullName = mapTag.GetString("mapFullName");
             Type type = mod.Code.GetType(mapFullName);
             if (type == null)
             {
-                mod.Logger.WarnFormat("Map \"{0}\" not found", mapFullName);
+                Mod.Logger.WarnFormat("Map \"{0}\" not found", mapFullName);
                 return;
             }
-            map = PoMDataLoader.maps[PoMDataLoader.mapMap[type]].Clone();
+            map = DataManager.Map.GetNewMap(type);
             map.Load(mapTag);
-            //PathOfModifiers.Log("6");
         }
 
         public override ModItem Clone(Item item)
@@ -116,26 +114,26 @@ namespace PathOfModifiers.Items
             try
             {
                 MapNullCheck();
-                writer.Write(PoMDataLoader.mapMap[map.GetType()]);
+                writer.Write(DataManager.Map.GetMapIndex(map.GetType()));
                 map.NetSend(writer);
             }
             catch (Exception e)
             {
-                mod.Logger.Error(e.ToString());
+                Mod.Logger.Error(e.ToString());
             }
             //PathOfModifiers.Log("10");
         }
-        public override void NetRecieve(BinaryReader reader)
+        public override void NetReceive(BinaryReader reader)
         {
             //PathOfModifiers.Log("11");
             try
             {
-                map = PoMDataLoader.maps[reader.ReadInt32()].Clone();
+                map = DataManager.Map.GetNewMap(reader.ReadInt32());
                 map.NetReceive(reader);
             }
             catch (Exception e)
             {
-                mod.Logger.Error(e.ToString());
+                Mod.Logger.Error(e.ToString());
             }
             //PathOfModifiers.Log("12");
         }

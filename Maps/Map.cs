@@ -15,6 +15,7 @@ using PathOfModifiers.Maps.Generators;
 using Terraria.ModLoader.IO;
 using Terraria.ID;
 using PathOfModifiers.ModNet.PacketHandlers;
+using ReLogic.Content;
 
 namespace PathOfModifiers.Maps
 {
@@ -49,7 +50,7 @@ namespace PathOfModifiers.Maps
     {
         public Mod mod;
 
-        public Texture2D iconTexture { get; private set; }
+        public Asset<Texture2D> iconTexture { get; private set; }
         public virtual string iconTextureName => GetType().Name;
 
         public virtual Type generatorType => typeof(Generator);
@@ -72,7 +73,7 @@ namespace PathOfModifiers.Maps
             get
             {
                 if (_generator == null)
-                    _generator = PoMDataLoader.generators[PoMDataLoader.generatorMap[generatorType]];
+                    _generator = DataManager.Map.GetGeneratorRef(generatorType);
                 return _generator;
             }
         }
@@ -86,7 +87,7 @@ namespace PathOfModifiers.Maps
         public virtual void Initialize()
         {
             if (Main.netMode != NetmodeID.Server)
-                iconTexture = mod.GetTexture($"{PathOfModifiers.pathMapIcons}{iconTextureName}");
+                iconTexture = ModContent.Request<Texture2D>($"{PoMGlobals.Path.Image.MapIcons}{iconTextureName}");
         }
 
         //Drawn the map icon on top of the map
@@ -96,7 +97,7 @@ namespace PathOfModifiers.Maps
             var iconHalfSize = iconTextureSize / 2;
             Vector2 iconPosition = mapPosition + (((mapSize - iconTextureSize) / 2 + iconHalfSize) * scale);
             spriteBatch.Draw(
-                iconTexture,
+                iconTexture.Value,
                 iconPosition,
                 null,
                 Color.Red,

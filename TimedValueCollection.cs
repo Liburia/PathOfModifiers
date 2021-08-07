@@ -1,18 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.Buffs;
-using PathOfModifiers.ModNet.PacketHandlers;
-using PathOfModifiers.Tiles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.Net;
 
 namespace PathOfModifiers
 {
@@ -36,9 +26,11 @@ namespace PathOfModifiers
         }
 
         public static readonly Func<TagCompound, TimedValueInstanceCollection> DESERIALIZER = Load;
+        /// <summary>
+        /// Load the timedValueInstances dictionary discarding non-existant types
+        /// </summary>
         public static TimedValueInstanceCollection Load(TagCompound tag)
         {
-            //Load the timedValueInstances dictionary discarding non-existant types
             var instanceTypeNames = tag.GetList<string>("instanceTypeNames");
             var instanceTypes = new List<Type>(instanceTypeNames.Count);
             var timedValueInstanceLists = tag.GetList<TimedValueInstanceList>("timedValueInstanceLists");
@@ -104,7 +96,7 @@ namespace PathOfModifiers
 
             public float totalValue;
             /// <summary>
-            /// Sorted by endtime ascending.
+            /// Sorted by endtime, ascending.
             /// </summary>
             public LinkedList<TimedValueInstance> instances = new LinkedList<TimedValueInstance>();
         }

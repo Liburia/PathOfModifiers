@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Graphics;
 
 namespace PathOfModifiers.Rarities
 {
     public class AccessoryCommon : RarityItem
     {
+        public AccessoryCommon(Mod mod) : base(mod) { }
+
         public override double Weight { get; } = 0.5;
         public override byte minAffixes => 0;
         public override byte maxAffixes => 0;

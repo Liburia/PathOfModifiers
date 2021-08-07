@@ -42,10 +42,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Magnetism", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAccessory(item);
+                ItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -69,7 +69,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void GainVelocity(Item item, Player player, Vector2 position)
         {
-            if (AffixItemItem.IsAccessoryEquipped(item, player))
+            if (ItemItem.IsAccessoryEquipped(item, player))
             {
                 Vector2 addVelocity = (position - player.Center).SafeNormalize(Vector2.Zero) * Type1.GetValue();
                 player.velocity += addVelocity;

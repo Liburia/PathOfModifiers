@@ -49,7 +49,7 @@ namespace PathOfModifiers.Affixes.NPCs.Affixes
             return true;
         }
 
-        public override void SetDefaults(PoMNPC pomNPC, NPC npc)
+        public override void SetStaticDefaults(PoMNPC pomNPC, NPC npc)
         {
             npc.lifeMax = (int)Math.Round(npc.lifeMax * Type1.GetValue());
             npc.life = (int)Math.Round(npc.life * Type1.GetValue());

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -40,11 +41,11 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsWeapon(item) &&
-                AffixItemItem.CanCrit(item);
+                ItemItem.IsWeapon(item) &&
+                ItemItem.CanCrit(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -52,7 +53,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"x{ Type1.GetValueFormat(1) * Math.Sign(Type1.GetValue()) + 1 } critical strike chance";
         }
 
-        public override void GetWeaponCrit(Item item, Player player, ref float multiplier)
+        public override void ModifyWeaponCrit(Item item, Player player, ref float multiplier)
         {
             float value = Type1.GetValue();
             multiplier += value;

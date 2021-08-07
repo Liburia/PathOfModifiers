@@ -157,7 +157,7 @@ namespace PathOfModifiers.Maps.Generators
         }
         protected void KillTile(Point pos, bool pretendMine = false, bool isMined = false, bool noItem = true, bool effectOnly = false)
         {
-            Terraria.World.Generation.WorldUtils.ClearTile(pos.X, pos.Y, true);
+            Terraria.WorldBuilding.WorldUtils.ClearTile(pos.X, pos.Y, true);
         }
         protected void PlaceWall(Point pos, int type, bool mute = true, bool force = true)
         {
@@ -167,7 +167,7 @@ namespace PathOfModifiers.Maps.Generators
         }
         protected void KillWall(Point pos, bool isMined = false)
         {
-            Terraria.World.Generation.WorldUtils.ClearWall(pos.X, pos.Y, true);
+            Terraria.WorldBuilding.WorldUtils.ClearWall(pos.X, pos.Y, true);
         }
 
         protected NPC[] SpawnPack(Pack pack, Vector2 pos, float radius, bool clearSpace)

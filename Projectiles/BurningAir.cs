@@ -22,8 +22,8 @@ namespace PathOfModifiers.Projectiles
 
         public override void AutoStaticDefaults()
         {
-            Main.projectileTexture[projectile.type] = Main.magicPixel;
-            Main.projFrames[projectile.type] = 1;
+            Terraria.GameContent.TextureAssets.Projectile[Projectile.type] = Terraria.GameContent.TextureAssets.MagicPixel;
+            Main.projFrames[Projectile.type] = 1;
             if (DisplayName.IsDefault())
                 DisplayName.SetDefault(Regex.Replace(Name, "([A-Z])", " $1").Trim());
         }
@@ -31,15 +31,11 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("BurningAir");
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.timeLeft = PathOfModifiers.ailmentDuration;
-            projectile.hostile = false;
-            projectile.friendly = false;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.timeLeft = PoMGlobals.ailmentDuration;
+            Projectile.hostile = false;
+            Projectile.friendly = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override bool ShouldUpdatePosition()
@@ -51,11 +47,11 @@ namespace PathOfModifiers.Projectiles
         {
             if (!init)
             {
-                float airRadius = projectile.ai[0];
+                float airRadius = Projectile.ai[0];
                 float airDiameter = airRadius * 2;
                 airRect = new Rectangle(
-                    (int)(projectile.position.X - airRadius),
-                    (int)(projectile.position.Y - airRadius),
+                    (int)(Projectile.position.X - airRadius),
+                    (int)(Projectile.position.Y - airRadius),
                     (int)(airDiameter),
                     (int)(airDiameter));
                 init = true;
@@ -69,7 +65,7 @@ namespace PathOfModifiers.Projectiles
                     Rectangle playerRect = player.getRect();
                     if (playerRect.Intersects(airRect))
                     {
-                        player.GetModPlayer<BuffPlayer>().AddBurningAirBuff(player, projectile.damage);
+                        player.GetModPlayer<BuffPlayer>().AddBurningAirBuff(player, Projectile.damage);
                     }
                 }
             }
@@ -83,12 +79,12 @@ namespace PathOfModifiers.Projectiles
                     if (npcRect.Intersects(airRect))
                     {
                         BuffNPC pomNPC = npc.GetGlobalNPC<BuffNPC>();
-                        pomNPC.AddBurningAirBuff(npc, projectile.damage);
+                        pomNPC.AddBurningAirBuff(npc, Projectile.damage);
                     }
                 }
             }
 
-            Lighting.AddLight(projectile.Center, emittedLight);
+            Lighting.AddLight(Projectile.Center, emittedLight);
 
             float dustsF = (airRect.Width * airRect.Height) / dustScarcity;
             int dusts = (int)Math.Ceiling(dustsF);
@@ -103,7 +99,7 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             return false;
         }

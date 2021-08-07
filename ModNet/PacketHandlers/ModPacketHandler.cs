@@ -45,12 +45,12 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         void SSendDataMaps(int toWhom)
         {
             ModPacket packet = GetPacket((byte)PacketType.SyncDataMaps);
-            PoMDataLoader.SendMaps(packet);
+            DataManager.SendDataMaps(packet);
             packet.Send(toWhom);
         }
         void CReceiveDataMaps(BinaryReader reader)
         {
-            PoMDataLoader.ReceiveDataMaps(reader);
+            DataManager.ReceiveDataMaps(reader);
         }
     }
 }

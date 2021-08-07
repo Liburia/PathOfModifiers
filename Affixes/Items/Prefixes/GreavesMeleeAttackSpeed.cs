@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -40,10 +41,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsLegArmor(item);
+                ItemItem.IsLegArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -54,7 +55,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueFormat }% melee attack speed";
         }
 
-        public override void UpdateEquip(Item item, AffixItemPlayer player)
+        public override void UpdateEquip(Item item, ItemPlayer player)
         {
             player.meleeSpeed += Type1.GetValue();
         }

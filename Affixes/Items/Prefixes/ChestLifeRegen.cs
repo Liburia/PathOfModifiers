@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -40,10 +41,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsBodyArmor(item);
+                ItemItem.IsBodyArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -56,7 +57,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override void NaturalLifeRegen(Item item, Player player, ref float regenMultiplier)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsArmorEquipped(item, player))
             {
                 regenMultiplier += Type1.GetValue();
             }

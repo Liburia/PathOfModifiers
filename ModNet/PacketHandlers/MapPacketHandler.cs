@@ -46,7 +46,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         /// </summary>
         public static void SSyncOpenedMap(Rectangle dimensions, bool closeMap = false)
         {
-            NetMessage.SendTileRange(-1, dimensions.X - 1, dimensions.Y - 1, dimensions.Width + 2, dimensions.Height + 2);
+            NetMessage.SendTileSquare(-1, dimensions.X - 1, dimensions.Y - 1, dimensions.Width + 2, dimensions.Height + 2);
 
             var mapBounds = new Rectangle(dimensions.X * 16, dimensions.Y * 16, dimensions.Width * 16, dimensions.Height * 16);
             for (int i = 0; i < Main.maxNPCs; i++)
@@ -76,8 +76,8 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         void SReceiveMapDeviceOpenMap(BinaryReader reader)
         {
             int mdID = reader.ReadInt32();
-            var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
-            mapDevice.OpenMap();
+            //var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
+            //mapDevice.OpenMap();
         }
 
         public static void CMapDeviceCloseMap(int mapDeviceID)
@@ -89,8 +89,8 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         void SReceiveMapDeviceCloseMap(BinaryReader reader)
         {
             int mdID = reader.ReadInt32();
-            var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
-            mapDevice.OpenMap();
+            //var mapDevice = (MapDeviceTE)TileEntity.ByID[mdID];
+            //mapDevice.OpenMap();
         }
 
         public static void CMapDeviceMapItemChanged(int mapDeviceID, Item item)
@@ -105,9 +105,9 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         {
             byte ignoreClient = reader.ReadByte();
             int mdID = reader.ReadInt32();
-            var md = (MapDeviceTE)TileEntity.ByID[mdID];
-            md.mapItem = ItemIO.Receive(reader, true);
-            md.SendToClients(ignoreClient);
+            //var md = (MapDeviceTE)TileEntity.ByID[mdID];
+            //md.mapItem = ItemIO.Receive(reader, true);
+            //md.SendToClients(ignoreClient);
         }
     }
 }

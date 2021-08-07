@@ -2,6 +2,7 @@
 using System;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Rarities
 {
@@ -21,6 +22,10 @@ namespace PathOfModifiers.Rarities
         public virtual float chanceToRollPrefixInsteadOfSuffix => 0.7f;
         public virtual int forgeCost => 0;
 
+        public RarityItem(Mod mod)
+        {
+            this.mod = mod;
+        }
 
         public virtual bool CanBeRolled(Item item)
         {

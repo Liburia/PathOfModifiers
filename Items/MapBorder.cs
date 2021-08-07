@@ -3,6 +3,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using PathOfModifiers;
+using static Terraria.ModLoader.ModContent;
 
 namespace PathOfModifiers.Items
 {
@@ -11,33 +12,28 @@ namespace PathOfModifiers.Items
         public override void SetStaticDefaults()
         {
             Tooltip.SetDefault("Outlines the rectangle the map will generate in.");
-        }
-
-        public override void SetDefaults()
-        {
-            item.width = 12;
-            item.height = 12;
-            item.maxStack = 999;
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.useAnimation = 5;
-            item.useTime = 5;
-            item.useStyle = 1;
-            item.consumable = true;
-            item.createTile = mod.TileType("MapBorder");
+            Item.width = 12;
+            Item.height = 12;
+            Item.maxStack = 999;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 5;
+            Item.useTime = 5;
+            Item.useStyle = 1;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<Tiles.MapBorder>();
         }
 
         public override void AddRecipes()
         {
-            if (PathOfModifiers.disableMaps)
+            if (GetInstance<PoMConfigServer>().DisableMaps)
                 return;
 
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<ModifierFragment>(), 10);
-            recipe.AddRecipeGroup("IronBar", 1);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this, 4);
-            recipe.AddRecipe();
+            CreateRecipe(4)
+                .AddIngredient(ModContent.ItemType<ModifierFragment>(), 10)
+                .AddTile(TileID.Anvils)
+                .AddRecipeGroup(RecipeGroupID.IronBar, 1)
+                .Register();
         }
     }
 }

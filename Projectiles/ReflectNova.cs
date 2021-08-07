@@ -19,72 +19,68 @@ namespace PathOfModifiers.Projectiles
 
         bool[] hitNPCs = new bool[Main.maxNPCs];
         bool hitPlayer;
-
+        
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Thorn Nova");
-            Main.projFrames[projectile.type] = 3;
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.scale = startScale;
-            projectile.Size = size * collisionScale * startScale;
-            projectile.timeLeft = 600;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Main.projFrames[Projectile.type] = 3;
+            Projectile.scale = startScale;
+            Projectile.Size = size * collisionScale * startScale;
+            Projectile.timeLeft = 600;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            int frameHeight = texture.Height / Main.projFrames[projectile.type];
-            if (projectile.scale < maxScale)
+            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
+            int frameHeight = texture.Height / Main.projFrames[Projectile.type];
+            if (Projectile.scale < maxScale)
             {
-                projectile.scale += scaleIncrease;
-                if (projectile.scale >= maxScale)
-                    projectile.scale = maxScale;
-                projectile.Size = size * collisionScale * projectile.scale;
-                projectile.position -= new Vector2(texture.Width, frameHeight) * collisionScale * scaleIncrease / 2;
+                Projectile.scale += scaleIncrease;
+                if (Projectile.scale >= maxScale)
+                    Projectile.scale = maxScale;
+                Projectile.Size = size * collisionScale * Projectile.scale;
+                Projectile.position -= new Vector2(texture.Width, frameHeight) * collisionScale * scaleIncrease / 2;
             }
             else
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
 
 
-            projectile.frameCounter++;
-            if (projectile.frameCounter >= 5)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter >= 5)
             {
-                projectile.frameCounter = 0;
-                projectile.frame++;
-                if (projectile.frame >= 3)
+                Projectile.frameCounter = 0;
+                Projectile.frame++;
+                if (Projectile.frame >= 3)
                 {
-                    projectile.frame = 0;
+                    Projectile.frame = 0;
                 }
             }
 
             for (int i = 0; i < 5; i++)
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<ReflectNovaDebris>());
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ReflectNovaDebris>());
 
 
             if (Main.netMode != NetmodeID.Server)
             {
-                Player owner = Main.player[projectile.owner];
+                Player owner = Main.player[Projectile.owner];
 
                 Player player = Main.LocalPlayer;
                 if (!hitPlayer && PoMUtil.CanHitPvp(owner, player))
                 {
                     Rectangle localRect = player.getRect();
-                    if (localRect.Intersects(projectile.Hitbox))
+                    if (localRect.Intersects(Projectile.Hitbox))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage + (int)Math.Round(player.statLife * projectile.ai[0]), player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage + (int)Math.Round(player.statLife * Projectile.ai[0]), player.direction, true);
                         hitPlayer = true;
                     }
                 }
 
-                if (Main.myPlayer == projectile.owner)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
@@ -93,9 +89,9 @@ namespace PathOfModifiers.Projectiles
                         if (!hitNPCs[realNPC.whoAmI] && PoMUtil.CanHitNPC(npc))
                         {
                             Rectangle npcRect = npc.getRect();
-                            if (npcRect.Intersects(projectile.Hitbox))
+                            if (npcRect.Intersects(Projectile.Hitbox))
                             {
-                                owner.ApplyDamageToNPC(npc, projectile.damage + (int)Math.Round(realNPC.lifeMax * projectile.ai[0]), 1, npc.direction, false);
+                                owner.ApplyDamageToNPC(npc, Projectile.damage + (int)Math.Round(realNPC.lifeMax * Projectile.ai[0]), 1, npc.direction, false);
                                 hitNPCs[realNPC.whoAmI] = true;
                             }
                         }
@@ -104,18 +100,19 @@ namespace PathOfModifiers.Projectiles
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            int frameHeight = texture.Height / Main.projFrames[projectile.type];
-            int startY = frameHeight * projectile.frame;
+            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
+            int frameHeight = texture.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
             Rectangle sourceRectangle = new Rectangle(0, startY, texture.Width, frameHeight);
             Vector2 origin = sourceRectangle.Size() / 2f;
 
-            Color drawColor = projectile.GetAlpha(lightColor);
-            Main.spriteBatch.Draw(texture,
-                projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY),
-                sourceRectangle, drawColor, projectile.rotation, origin, projectile.scale, SpriteEffects.None, 0f);
+            Color drawColor = Projectile.GetAlpha(lightColor);
+            var drawData = new DrawData(texture,
+                Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
+                sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(drawData);
 
             return false;
         }

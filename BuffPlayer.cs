@@ -10,10 +10,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Net;
+using static Terraria.ModLoader.ModContent;
 
 namespace PathOfModifiers
 {
@@ -78,7 +80,7 @@ namespace PathOfModifiers
         }
         public override void PostUpdateEquips()
         {
-            var affixPlayer = player.GetModPlayer<AffixItemPlayer>();
+            var affixPlayer = Player.GetModPlayer<ItemPlayer>();
             if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.DodgeChance), out var dodgeChances))
             {
                 affixPlayer.dodgeChance += dodgeChances.totalValue;
@@ -106,9 +108,9 @@ namespace PathOfModifiers
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        Vector2 dustPosition = player.Center + new Vector2(0, 32).RotatedBy(moltenShellDustAngle + (2.095f * i));
-                        Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.MoltenShell>(), Velocity: Vector2.Zero, Scale: 2f);
-                        Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.FireDebris>(), Scale: 1.5f);
+                        Vector2 dustPosition = Player.Center + new Vector2(0, 32).RotatedBy(moltenShellDustAngle + (2.095f * i));
+                        Dust.NewDustPerfect(dustPosition, DustType<Dusts.MoltenShell>(), Velocity: Vector2.Zero, Scale: 2f);
+                        Dust.NewDustPerfect(dustPosition, DustType<Dusts.FireDebris>(), Scale: 1.5f);
                     }
 
                     moltenShellDustAngle += 0.2f;
@@ -117,7 +119,7 @@ namespace PathOfModifiers
 
             if (knockbackImmunityTimeLeft > 0)
             {
-                player.noKnockback = true;
+                Player.noKnockback = true;
             }
         }
         public override void UpdateBadLifeRegen()
@@ -138,7 +140,7 @@ namespace PathOfModifiers
             }
             if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.BurningAir), out var burningAirs))
             {
-                int maxDps = (int)Math.Round(player.statLifeMax2 * 0.01f);
+                int maxDps = (int)Math.Round(Player.statLifeMax2 * 0.01f);
                 totalDPS += burningAirs.totalValue > maxDps ? maxDps : burningAirs.totalValue;
             }
 
@@ -146,12 +148,12 @@ namespace PathOfModifiers
             if (totalDPS > 0)
             {
                 int totalDamage = (int)Math.Round(totalDPS * Buffs.DamageOverTime.damageMultiplierHalfSecond);
-                player.lifeRegenTime = 0;
-                if (player.lifeRegen > 0)
+                Player.lifeRegenTime = 0;
+                if (Player.lifeRegen > 0)
                 {
-                    player.lifeRegen = 0;
+                    Player.lifeRegen = 0;
                 }
-                player.lifeRegen -= totalDamage;
+                Player.lifeRegen -= totalDamage;
             }
         }
         public override void PostNurseHeal(NPC nurse, int health, bool removeDebuffs, int price)
@@ -171,35 +173,35 @@ namespace PathOfModifiers
             {
                 if (bleeds.totalValue > 0)
                 {
-                    PoMEffectHelper.Bleed(player.Center);
+                    PoMEffectHelper.Bleed(Player.Center);
                 }
             }
             if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Poison), out var poisons))
             {
                 if (poisons.totalValue > 0)
                 {
-                    PoMEffectHelper.Poison(player.position, player.width, player.height);
+                    PoMEffectHelper.Poison(Player.position, Player.width, Player.height);
                 }
             }
             if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Ignite), out var ignites))
             {
                 if (ignites.totalValue > 0)
                 {
-                    PoMEffectHelper.Ignite(player.position, player.width, player.height);
+                    PoMEffectHelper.Ignite(Player.position, Player.width, Player.height);
                 }
             }
             if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Shock), out var shocks))
             {
                 if (shocks.totalValue > 0)
                 {
-                    PoMEffectHelper.Shock(player.position, player.width, player.height);
+                    PoMEffectHelper.Shock(Player.position, Player.width, Player.height);
                 }
             }
             if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Chill), out var chills))
             {
                 if (chills.totalValue > 0)
                 {
-                    PoMEffectHelper.Chill(player.position, player.width, player.height);
+                    PoMEffectHelper.Chill(Player.position, Player.width, Player.height);
                 }
             }
 
@@ -209,15 +211,16 @@ namespace PathOfModifiers
 
                 if (staticStrikeCurrentInterval >= staticStrikeIntervalTicks)
                 {
-                    if (player.whoAmI == Main.myPlayer)
+                    if (Player.whoAmI == Main.myPlayer)
                     {
                         Projectile.NewProjectile(
-                            position: player.Center,
+                            new PoMGlobals.ProjectileSource.PlayerSource(Player),
+                            position: Player.Center,
                             velocity: Vector2.Zero,
-                            Type: ModContent.ProjectileType<StaticStrike>(),
+                            Type: ProjectileType<StaticStrike>(),
                             Damage: staticStrikeDamage,
                             KnockBack: 0,
-                            Owner: player.whoAmI);
+                            Owner: Player.whoAmI);
                     }
 
                     staticStrikeCurrentInterval = 0;
@@ -230,7 +233,7 @@ namespace PathOfModifiers
             {
                 if (greavesMoveSpeedValue > 0)
                 {
-                    PoMEffectHelper.MoveSpeed(player);
+                    PoMEffectHelper.MoveSpeed(Player);
                 }
 
                 greavesMoveSpeedTimeLeft--;
@@ -240,7 +243,7 @@ namespace PathOfModifiers
             {
                 if (weaponMoveSpeedTimeLeft > 0)
                 {
-                    PoMEffectHelper.MoveSpeed(player);
+                    PoMEffectHelper.MoveSpeed(Player);
                 }
 
                 weaponMoveSpeedTimeLeft--;
@@ -252,18 +255,19 @@ namespace PathOfModifiers
 
                 if (moltenShellTimeLeft <= 0)
                 {
-                    PlayMoltenShellExplodeSound(player);
+                    PlayMoltenShellExplodeSound(Player);
 
-                    if (player.whoAmI == Main.myPlayer)
+                    if (Player.whoAmI == Main.myPlayer)
                     {
                         Projectile.NewProjectile(
-                            player.Center,
+                            new PoMGlobals.ProjectileSource.PlayerSource(Player),
+                            Player.Center,
                             Vector2.Zero,
-                            ModContent.ProjectileType<MoltenShellExplosion>(),
+                            ProjectileType<MoltenShellExplosion>(),
                             moltenShellStoredDamage,
                             5,
-                            player.whoAmI,
-                            moltenShellStoredDamage / (float)player.statLifeMax2);
+                            Player.whoAmI,
+                            moltenShellStoredDamage / (float)Player.statLifeMax2);
                         moltenShellStoredDamage = 0;
                     }
                 }
@@ -470,15 +474,15 @@ namespace PathOfModifiers
 
         void PlayGainStaticStrikeSound(Player player)
         {
-            Main.PlaySound(SoundID.Item92.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item92.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
         }
         void PlayGainMoltenShellSound(Player player)
         {
-            Main.PlaySound(SoundID.Item45.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item45.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
         }
         void PlayMoltenShellExplodeSound(Player player)
         {
-            Main.PlaySound(SoundID.Item62.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item62.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
         }
     }
 }

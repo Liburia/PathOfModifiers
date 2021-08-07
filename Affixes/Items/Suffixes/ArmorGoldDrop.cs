@@ -56,10 +56,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Midas", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAnyArmor(item);
+                ItemItem.IsAnyArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -67,9 +67,9 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"{Type1.GetValueFormat()}% chance to drop {Type2.GetValueFormat()} gold on kill";
         }
 
-        public override void UpdateEquip(Item item, AffixItemPlayer player)
+        public override void UpdateEquip(Item item, ItemPlayer player)
         {
-            player.player.GetModPlayer<AffixItemPlayer>().goldDropChances.AddOrUpdate(this, Type1.GetValue(), Type2.GetValue());
+            player.Player.GetModPlayer<ItemPlayer>().goldDropChances.AddOrUpdate(this, Type1.GetValue(), Type2.GetValue());
         }
     }
 }

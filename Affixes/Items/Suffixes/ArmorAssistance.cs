@@ -36,10 +36,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Productivity", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAnyArmor(item);
+                ItemItem.IsAnyArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -62,7 +62,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void GainBuffs(Item item, Player player)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsArmorEquipped(item, player))
             {
                 int durationTicks = (int)Math.Round(Type1.GetValue() * 60);
                 player.AddBuff(BuffID.Builder, durationTicks);

@@ -7,7 +7,7 @@ namespace PathOfModifiers.Buffs
 {
     public class ChilledAir : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Damage dealt is modified");
@@ -15,7 +15,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            canBeCleared = false;
+            CanBeCleared = false;
         }
     }
 }

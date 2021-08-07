@@ -2,6 +2,7 @@ using Terraria.ModLoader;
 using Terraria;
 using System.IO;
 using Terraria.ID;
+using PathOfModifiers.Affixes.NPCs;
 
 namespace PathOfModifiers.ModNet.PacketHandlers
 {
@@ -30,7 +31,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
             }
         }
 
-        public static void SNPCSyncAffixes(NPC npc, PoMNPC pomNPC)
+        public static void SNPCSyncAffixes(NPC npc, NPCNPC pomNPC)
         {
             ModPacket packet = Instance.GetPacket((byte)PacketType.NpcSyncAffixes);
             packet.Write(npc.whoAmI);
@@ -40,7 +41,7 @@ namespace PathOfModifiers.ModNet.PacketHandlers
         void CReceiveNPCSyncAffixes(BinaryReader reader)
         {
             var npc = Main.npc[reader.ReadInt32()];
-            var pomNPC = npc.GetGlobalNPC<PoMNPC>();
+            var pomNPC = npc.GetGlobalNPC<NPCNPC>();
             pomNPC.NetReceiveAffixes(reader, npc);
         }
     }

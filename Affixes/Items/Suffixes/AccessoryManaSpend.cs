@@ -57,10 +57,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Lunacy", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAccessory(item);
+                ItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -70,7 +70,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (AffixItemItem.IsAccessoryEquipped(item, player) && TryConsumeMana(player))
+            if (ItemItem.IsAccessoryEquipped(item, player) && TryConsumeMana(player))
             {
                 damageMultiplier += Type2.GetValue();
             }

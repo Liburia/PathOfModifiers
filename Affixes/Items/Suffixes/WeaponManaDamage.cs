@@ -56,10 +56,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Lunacy", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsWeapon(item);
+                ItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)

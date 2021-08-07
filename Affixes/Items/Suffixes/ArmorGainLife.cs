@@ -59,10 +59,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public uint lastProcTime = 0;
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAnyArmor(item);
+                ItemItem.IsAnyArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -78,7 +78,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void Heal(Item item, Player player)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
+            if (ItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
             {
                 lastProcTime = Main.GameUpdateCount;
                 int amount = Type1.GetValue();

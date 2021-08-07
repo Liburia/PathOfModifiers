@@ -1,18 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
-using System;
-using Terraria.UI.Chat;
 using Terraria;
-using System.IO;
-using PathOfModifiers.Rarities;
-using Terraria.UI;
-using Terraria.ID;
 using System.Collections.Generic;
-using PathOfModifiers.UI;
-using PathOfModifiers.Tiles;
-using Terraria.DataStructures;
-using PathOfModifiers.Buffs;
 using Terraria.Utilities;
 
 namespace PathOfModifiers
@@ -56,8 +45,8 @@ namespace PathOfModifiers
                         {
                             tiles.Add(p2);
                         }
-                        sb.Draw(Main.magicPixel, new Rectangle(p1.X, p1.Y, size1, size1), color);
-                        sb.Draw(Main.magicPixel, new Rectangle(p2.X, p2.Y, size2, size2), color);
+                        sb.Draw(Terraria.GameContent.TextureAssets.MagicPixel.Value, new Rectangle(p1.X, p1.Y, size1, size1), color);
+                        sb.Draw(Terraria.GameContent.TextureAssets.MagicPixel.Value, new Rectangle(p2.X, p2.Y, size2, size2), color);
                     }
                     for (int y = 0; y <= rec.Height; y++)
                     {
@@ -82,8 +71,8 @@ namespace PathOfModifiers
                         {
                             tiles.Add(p2);
                         }
-                        sb.Draw(Main.magicPixel, new Rectangle(p1.X, p1.Y, size1, size1), color);
-                        sb.Draw(Main.magicPixel, new Rectangle(p2.X, p2.Y, size2, size2), color);
+                        sb.Draw(Terraria.GameContent.TextureAssets.MagicPixel.Value, new Rectangle(p1.X, p1.Y, size1, size1), color);
+                        sb.Draw(Terraria.GameContent.TextureAssets.MagicPixel.Value, new Rectangle(p2.X, p2.Y, size2, size2), color);
                     }
                 }
             }
@@ -92,7 +81,7 @@ namespace PathOfModifiers
             {
                 Rectangle sourceRect = new Rectangle(0, 0, 1, 1);
                 Rectangle screenRect = new Rectangle(rect.X - (int)Main.screenPosition.X, rect.Y - (int)Main.screenPosition.Y, rect.Width, rect.Height);
-                sb.Draw(Main.magicPixel, screenRect, sourceRect, Color.Red);
+                sb.Draw(Terraria.GameContent.TextureAssets.MagicPixel.Value, screenRect, sourceRect, Color.Red);
             }
         }
     }

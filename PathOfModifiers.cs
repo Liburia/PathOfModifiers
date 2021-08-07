@@ -1,54 +1,201 @@
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System;
-using Terraria.UI.Chat;
-using Terraria;
-using System.IO;
+using PathOfModifiers.Maps;
+using PathOfModifiers.Maps.Generators;
 using PathOfModifiers.Rarities;
-using Terraria.UI;
-using Terraria.ID;
+using System;
 using System.Collections.Generic;
-using PathOfModifiers.UI;
-using PathOfModifiers.Tiles;
-using Terraria.DataStructures;
-using PathOfModifiers.Buffs;
+using System.IO;
+using System.Linq;
+using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
-using PathOfModifiers.ModNet;
-using Terraria.ModLoader.IO;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers
 {
-    class PathOfModifiers : Mod
-    {
-        //TODO: config
-        public const bool disableVanillaModifiersWeapons = true;
-        public const bool disableVanillaModifiersAccessories = true;
-        public const bool disableMaps = true;
-        public const bool disableNPCModifiers = true;
+	public class PathOfModifiers : Mod
+	{
+		public static PathOfModifiers Instance { get; private set; }
+        public PathOfModifiers() {}
 
-        public const int ailmentDuration = 300;
-        public const float lowHPThreshold = 0.2f;
-
-        public const double tickMS = 1000 / 60d;
-
-        public static string pathMapIcons = "Images/MapIcons/";
-
-        public static PathOfModifiers Instance { get; private set; }
-
-        public static UserInterface modifierForgeUI;
-        public static UserInterface mapDeviceUI;
-
-
-        public PathOfModifiers()
+        public static List<Mod> registeredMods = new();
+        public static void RegisterMod(Mod mod)
         {
-            Properties = new ModProperties()
+            registeredMods.Add(mod);
+        }
+
+        public struct PoMModData
+        {
+            public Dictionary<Type, int> affixItemMap;
+            public Affixes.Items.Affix[] affixesItem;
+            public Dictionary<Type, int> rarityItemMap;
+            public RarityItem[] raritiesItem;
+
+            public Dictionary<Type, int> affixNPCMap;
+            public Affixes.NPCs.Affix[] affixesNPC;
+            public Dictionary<Type, int> rarityNPCMap;
+            public RarityNPC[] raritiesNPC;
+
+            public Dictionary<Type, int> generatorMap;
+            public Generator[] generators;
+            public Dictionary<Type, int> mapMap;
+            public Map[] maps;
+        }
+        /// <summary>
+        /// Loads affixes and rarities from registered mods
+        /// </summary>
+        static PoMModData LoadData()
+        {
+            Dictionary<Type, int> affixItemMap = new();
+            List<Affixes.Items.Affix> affixItemList = new();
+
+            Dictionary<Type, int> rarityItemMap = new();
+            List<RarityItem> rarityItemList = new();
+
+            Dictionary<Type, int> affixNPCMap = new();
+            List<Affixes.NPCs.Affix> affixNPCList = new();
+
+            Dictionary<Type, int> rarityNPCMap = new();
+            List<RarityNPC> rarityNPCList = new();
+
+            Dictionary<Type, int>  generatorMap = new();
+            List<Generator> generatorList = new();
+
+            Dictionary<Type, int>  mapMap = new();
+            List<Map> mapList = new();
+
+            int affixItemIndex = 0;
+            int rarityItemIndex = 0;
+            int affixNPCIndex = 0;
+            int rarityNPCIndex = 0;
+            int mapIndex = 0;
+            int generatorIndex = 0;
+            Affixes.Items.Affix affixItem;
+            RarityItem rarityItem;
+            Affixes.NPCs.Affix affixNPC;
+            RarityNPC rarityNPC;
+            Generator generator;
+            Map map;
+            foreach (Mod mod in registeredMods)
             {
-                Autoload = true,
-                AutoloadGores = true,
-                AutoloadSounds = false,
-                AutoloadBackgrounds = true
+                var types = mod.Code.GetTypes().Where(t => t.IsClass && !t.IsAbstract);
+
+                foreach (Type t in types)
+                {
+                    if (t.IsDefined(typeof(DisableAffix), false))
+                    {
+                        continue;
+                    }
+                    if (t.IsSubclassOf(typeof(Affixes.Items.Affix)) || t == typeof(Affixes.Items.Affix))
+                    {
+                        affixItem = (Affixes.Items.Affix)Activator.CreateInstance(t);
+                        affixItem.mod = mod;
+                        affixItemList.Add(affixItem);
+                        affixItemMap.Add(t, affixItemIndex);
+                        //TODO:: Wont this log from the other mod. Should be logged from PoM, check all loggers
+                        mod.Logger.Debug($"Added item affix {t.FullName} with index {affixItemIndex} from mod {mod.Name}");
+                        affixItemIndex++;
+                    }
+                    else if (t.IsSubclassOf(typeof(RarityItem)) && t != typeof(RarityItem))
+                    {
+                        rarityItem = (RarityItem)Activator.CreateInstance(t, mod);
+                        rarityItemList.Add(rarityItem);
+                        rarityItemMap.Add(t, rarityItemIndex);
+                        mod.Logger.Debug($"Added item rarity {t.FullName} with index {rarityItemIndex} from mod {mod.Name}");
+                        rarityItemIndex++;
+                    }
+                    else if (t.IsSubclassOf(typeof(Affixes.NPCs.Affix)) || t == typeof(Affixes.NPCs.Affix))
+                    {
+                        affixNPC = (Affixes.NPCs.Affix)Activator.CreateInstance(t);
+                        affixNPC.mod = mod;
+                        affixNPCList.Add(affixNPC);
+                        affixNPCMap.Add(t, affixNPCIndex);
+                        mod.Logger.Debug($"Added NPC affix {t.FullName} with index {affixNPCIndex} from mod {mod.Name}");
+                        affixNPCIndex++;
+                    }
+                    else if (t.IsSubclassOf(typeof(RarityNPC)) && t != typeof(RarityNPC))
+                    {
+                        rarityNPC = (RarityNPC)Activator.CreateInstance(t);
+                        rarityNPC.mod = mod;
+                        rarityNPCList.Add(rarityNPC);
+                        rarityNPCMap.Add(t, rarityNPCIndex);
+                        mod.Logger.Debug($"Added NPC rarity {t.FullName} with index {rarityNPCIndex} from mod {mod.Name}");
+                        rarityNPCIndex++;
+                    }
+                    else if (t.IsSubclassOf(typeof(Generator)) && t != typeof(Generator))
+                    {
+                        generator = (Generator)Activator.CreateInstance(t);
+                        generator.mod = mod;
+                        generatorList.Add(generator);
+                        generatorMap.Add(t, generatorIndex);
+                        mod.Logger.Debug($"Added generator {t.FullName} with index {generatorIndex} from mod {mod.Name}");
+                        generatorIndex++;
+                    }
+                    else if (t.IsSubclassOf(typeof(Map)) && t != typeof(Map))
+                    {
+                        map = (Map)Activator.CreateInstance(t);
+                        map.mod = mod;
+                        map.Initialize();
+                        mapList.Add(map);
+                        mapMap.Add(t, mapIndex);
+                        mod.Logger.Debug($"Added map {t.FullName} with index {mapIndex} from mod {mod.Name}");
+                        mapIndex++;
+                    }
+                }
+            }
+
+            return new PoMModData
+            {
+                affixItemMap = affixItemMap,
+                affixesItem = affixItemList.ToArray(),
+
+                rarityItemMap = rarityItemMap,
+                raritiesItem = rarityItemList.ToArray(),
+
+                affixNPCMap = affixNPCMap,
+                affixesNPC = affixNPCList.ToArray(),
+
+                rarityNPCMap = rarityNPCMap,
+                raritiesNPC = rarityNPCList.ToArray(),
+
+                generatorMap = generatorMap,
+                generators = generatorList.ToArray(),
+
+                mapMap = mapMap,
+                maps = mapList.ToArray(),
             };
+        }
+
+        public override void Load()
+        {
+            Instance = this;
+
+            ModNet.ModNet.Initialize();
+            RegisterMod(this);
+        }
+        public override void PostSetupContent()
+        {
+            DataManager.Load(LoadData());
+            ModContent.GetInstance<Affixes.Items.ItemItem>().PostLoad();
+            ModContent.GetInstance<Affixes.NPCs.NPCNPC>().PostLoad();
+
+            //if (Main.netMode != 2)
+            //{
+            //    new ModifierForgeUI().Initialize();
+            //    modifierForgeUI = new UserInterface();
+            //    ModifierForgeUI.HideUI();
+
+            //    new MapDeviceUI().Initialize();
+            //    mapDeviceUI = new UserInterface();
+            //    MapDeviceUI.HideUI();
+            //}
+        }
+        public override void Unload()
+        {
+            //modifierForgeUI = null;
+            //mapDeviceUI = null;
+            DataManager.Unload();
+
+            Instance = null;
         }
 
         public override void AddRecipeGroups()
@@ -75,91 +222,9 @@ namespace PathOfModifiers
             RecipeGroup.RegisterGroup("PathOfModifiers:GoldBar", group);
         }
 
-        public override void Load()
-        {
-            Instance = this;
-
-            AddPrefix("", new PoMPrefix());
-
-            ModNet.ModNet.Initialize();
-            PoMDataLoader.RegisterMod(this);
-        }
-        public override void PostSetupContent()
-        {
-            PoMDataLoader.Initialize();
-
-            if (Main.netMode != 2)
-            {
-                new ModifierForgeUI().Initialize();
-                modifierForgeUI = new UserInterface();
-                ModifierForgeUI.HideUI();
-
-                new MapDeviceUI().Initialize();
-                mapDeviceUI = new UserInterface();
-                MapDeviceUI.HideUI();
-            }
-        }
-        public override void Unload()
-        {
-            Instance = null;
-            modifierForgeUI = null;
-            mapDeviceUI = null;
-            PoMDataLoader.Unload();
-        }
-
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             ModNet.ModNet.HandlePacket(reader, whoAmI);
-        }
-
-        public override void UpdateUI(GameTime gameTime)
-        {
-            modifierForgeUI?.Update(gameTime);
-            mapDeviceUI?.Update(gameTime);
-        }
-        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-        {
-            int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-            if (inventoryIndex != -1)
-            {
-                layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
-                    "PathOfModifiers: Modifier Forge",
-                    delegate
-                    {
-                        if (ModifierForgeUI.Instance.IsVisible)
-                        {
-                            ModifierForgeUI.Instance.Draw(Main.spriteBatch);
-                        }
-                        return true;
-                    },
-                    InterfaceScaleType.UI)
-                );
-                layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
-                    "PathOfModifiers: Map Device",
-                    delegate
-                    {
-                        if (MapDeviceUI.Instance.IsVisible)
-                        {
-                            MapDeviceUI.Instance.Draw(Main.spriteBatch);
-                        }
-                        return true;
-                    },
-                    InterfaceScaleType.UI)
-                );
-            }
-        }
-
-        public override void PreSaveAndQuit()
-        {
-            ModifierForgeUI.HideUI();
-            MapDeviceUI.HideUI();
-        }
-
-        public override void PostDrawInterface(SpriteBatch spriteBatch)
-        {
-#if DEBUG
-            PoMDebug.Draw(spriteBatch);
-#endif
         }
     }
 }

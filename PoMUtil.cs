@@ -46,7 +46,7 @@ namespace PathOfModifiers
         {
             if (!rollAffixes)
             {
-                PoMNPC.dontRollNextNPC = true;
+                Affixes.NPCs.NPCNPC.dontRollNextNPC = true;
             }
 
             int npcIndex = NPC.NewNPC(x, y, type, start, ai0, ai1, ai2, ai3, target);
@@ -321,7 +321,7 @@ namespace PathOfModifiers
 
         public static int? GetTileType(Tile tile)
         {
-            if (tile.active())
+            if (tile.IsActive)
                 return tile.type;
             else
                 return null;
@@ -384,11 +384,11 @@ namespace PathOfModifiers
         }
         public static bool IsLowHP(NPC npc)
         {
-            return (npc.life / (float)npc.lifeMax) <= PathOfModifiers.lowHPThreshold;
+            return (npc.life / (float)npc.lifeMax) <= PoMGlobals.lowHPThreshold;
         }
         public static bool IsLowHP(Player player)
         {
-            return (player.statLife / (float)player.statLifeMax2) <= PathOfModifiers.lowHPThreshold;
+            return (player.statLife / (float)player.statLifeMax2) <= PoMGlobals.lowHPThreshold;
         }
         public static bool CanHitNPC(NPC npc)
         {

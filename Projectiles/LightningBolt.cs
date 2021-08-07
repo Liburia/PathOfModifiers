@@ -7,12 +7,13 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using ReLogic.Content;
 
 namespace PathOfModifiers.Projectiles
 {
     public class LightningBolt : ModProjectile, INonTriggerringProjectile
     {
-        static Texture2D textureGlow;
+        static Asset<Texture2D> textureGlow;
 
         static readonly Vector3 emittedLight = new Vector3(1, 0.952f, 0.552f);
         static readonly Vector2 minVariance = new Vector2(8f, 16f);
@@ -36,20 +37,16 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("LightningBolt");
-            textureGlow = ModContent.GetTexture("PathOfModifiers/Projectiles/LightningBoltGlow");
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.penetrate = 1;
-            projectile.width = 32;
-            projectile.height = 6;
-            projectile.timeLeft = baseTime;
-            projectile.hostile = false;
-            projectile.friendly = false;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.extraUpdates = 1;
+            textureGlow = ModContent.Request<Texture2D>("PathOfModifiers/Projectiles/LightningBoltGlow");
+            Projectile.penetrate = 1;
+            Projectile.width = 32;
+            Projectile.height = 6;
+            Projectile.timeLeft = baseTime;
+            Projectile.hostile = false;
+            Projectile.friendly = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.extraUpdates = 1;
         }
 
         public override bool ShouldUpdatePosition()
@@ -61,19 +58,19 @@ namespace PathOfModifiers.Projectiles
         {
             if (!init)
             {
-                nodes.Add(projectile.Center);
-                targetPosition = projectile.position + new Vector2(0, projectile.ai[1]);
+                nodes.Add(Projectile.Center);
+                targetPosition = Projectile.position + new Vector2(0, Projectile.ai[1]);
                 boltRect = new Rectangle(
                     (int)boundLeft,
-                    (int)projectile.position.Y,
-                    projectile.width,
-                    (int)projectile.ai[1]);
+                    (int)Projectile.position.Y,
+                    Projectile.width,
+                    (int)Projectile.ai[1]);
                 airRect = new Rectangle(
                     (int)(targetPosition.X - airRadius),
                     (int)(targetPosition.Y - airRadius),
                     (int)(airRadius * 2),
                     (int)(airRadius * 2));
-                float halfWidth = projectile.width / 2f;
+                float halfWidth = Projectile.width / 2f;
                 boundLeft = targetPosition.X - halfWidth;
                 boundRight = targetPosition.X + halfWidth - (minVariance.X * 2);
                 init = true;
@@ -89,7 +86,7 @@ namespace PathOfModifiers.Projectiles
                         Rectangle playerRect = player.getRect();
                         if (playerRect.Intersects(airRect))
                         {
-                            player.GetModPlayer<BuffPlayer>().AddShockedAirBuff(player, projectile.ai[0]);
+                            player.GetModPlayer<BuffPlayer>().AddShockedAirBuff(player, Projectile.ai[0]);
                         }
                     }
                 }
@@ -103,7 +100,7 @@ namespace PathOfModifiers.Projectiles
                         if (npcRect.Intersects(airRect))
                         {
                             BuffNPC pomNPC = npc.GetGlobalNPC<BuffNPC>();
-                            pomNPC.AddShockedAirBuff(npc, projectile.ai[0]);
+                            pomNPC.AddShockedAirBuff(npc, Projectile.ai[0]);
                         }
                     }
                 }
@@ -112,10 +109,10 @@ namespace PathOfModifiers.Projectiles
             }
             else
             {
-                if (projectile.position != targetPosition)
+                if (Projectile.position != targetPosition)
                 {
                     float nextX = Main.rand.NextFloat(boundLeft, boundRight);
-                    float diff = nextX - projectile.position.X;
+                    float diff = nextX - Projectile.position.X;
                     if (Math.Abs(diff) < minVariance.X)
                     {
                         nextX += minVariance.X * 2;
@@ -143,18 +140,18 @@ namespace PathOfModifiers.Projectiles
                         justWentUp = true;
                     }
 
-                    Vector2 position = new Vector2(nextX, projectile.position.Y + velocityY);
+                    Vector2 position = new Vector2(nextX, Projectile.position.Y + velocityY);
 
                     if ((position.Y > targetPosition.Y ||
                         (targetPosition - position).LengthSquared() < snapRadiusSqr))
                     {
                         position = targetPosition;
-                        projectile.timeLeft = PathOfModifiers.ailmentDuration;
+                        Projectile.timeLeft = PoMGlobals.ailmentDuration;
                     }
 
-                    projectile.position = position;
+                    Projectile.position = position;
 
-                    nodes.Add(projectile.Center);
+                    nodes.Add(Projectile.Center);
 
                     foreach (var node in nodes)
                     {
@@ -171,7 +168,7 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             if (isCloud)
             {
@@ -180,15 +177,17 @@ namespace PathOfModifiers.Projectiles
             {
                 if (nodes.Count > 0)
                 {
+                    var glow = textureGlow.Value;
                     Vector2 glowPosition = nodes[0];
-                    float glowLength = projectile.ai[1];
-                    Vector2 textureHalf = new Vector2(textureGlow.Width / 2, textureGlow.Height / 2);
+                    float glowLength = Projectile.ai[1];
+                    Vector2 textureHalf = new Vector2(glow.Width / 2, glow.Height / 2);
                     Rectangle destination = new Rectangle(
                         (int)(glowPosition.X - Main.screenPosition.X),
                         (int)(glowPosition.Y - Main.screenPosition.Y),
-                        textureGlow.Width,
+                        glow.Width,
                         (int)glowLength);
-                    spriteBatch.Draw(textureGlow, destination, null, new Color(0.01f, 0.01f, 0.01f, 0.005f), 0, new Vector2(textureHalf.X, 0), SpriteEffects.None, 0);
+                    var drawData = new DrawData(glow, destination, null, new Color(0.01f, 0.01f, 0.01f, 0.005f), 0, new Vector2(textureHalf.X, 0), SpriteEffects.None, 0);
+                    Main.EntitySpriteDraw(drawData);
                 }
 
                 for (int i = 1; i < nodes.Count; i++)
@@ -202,15 +201,15 @@ namespace PathOfModifiers.Projectiles
                     float drawLength = velocity.Length() + 5;
                     float rotation = velocity.ToRotation() - MathHelper.PiOver2;
 
-                    Texture2D texture = Main.projectileTexture[projectile.type];
+                    Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
                     Vector2 textureHalf = new Vector2(texture.Width / 2, texture.Height / 2);
                     Rectangle destination = new Rectangle(
                         (int)(drawPositionScreen.X),
                         (int)(drawPositionScreen.Y),
                         texture.Width,
                         (int)drawLength);
-                    spriteBatch.Draw(texture, destination, null, new Color(1f, 1f, 1f, 0.9f), rotation, new Vector2(textureHalf.X, 0), SpriteEffects.None, 0);
-
+                    var drawData = new DrawData(texture, destination, null, new Color(1f, 1f, 1f, 0.9f), rotation, new Vector2(textureHalf.X, 0), SpriteEffects.None, 0);
+                    Main.EntitySpriteDraw(drawData);
                 }
             }
 
@@ -258,7 +257,7 @@ namespace PathOfModifiers.Projectiles
 
             if (Main.netMode != NetmodeID.Server)
             {
-                Player owner = Main.player[projectile.owner];
+                Player owner = Main.player[Projectile.owner];
 
                 Player player = Main.LocalPlayer;
                 if (PoMUtil.CanHitPvp(owner, player))
@@ -266,11 +265,11 @@ namespace PathOfModifiers.Projectiles
                     Rectangle localRect = player.getRect();
                     if (localRect.Intersects(boltRect) || localRect.Intersects(airRect))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage, player.direction, true);
                     }
                 }
 
-                if (Main.myPlayer == projectile.owner)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
@@ -280,7 +279,7 @@ namespace PathOfModifiers.Projectiles
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(boltRect) || npcRect.Intersects(airRect))
                             {
-                                owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
+                                owner.ApplyDamageToNPC(npc, Projectile.damage, 1, npc.direction, false);
                             }
                         }
                     }
@@ -294,7 +293,7 @@ namespace PathOfModifiers.Projectiles
                 Dust.NewDustPerfect(position, ModContent.DustType<ShockedAir>(), Scale: Main.rand.NextFloat(0.6f, 1.5f));
             }
             isCloud = true;
-            projectile.timeLeft = PathOfModifiers.ailmentDuration * (projectile.extraUpdates + 1);
+            Projectile.timeLeft = PoMGlobals.ailmentDuration * (Projectile.extraUpdates + 1);
         }
     }
 }

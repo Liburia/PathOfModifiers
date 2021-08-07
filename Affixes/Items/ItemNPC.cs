@@ -1,32 +1,22 @@
-﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.Buffs;
-using PathOfModifiers.ModNet.PacketHandlers;
-using PathOfModifiers.Tiles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Terraria;
-using Terraria.DataStructures;
+﻿using Terraria;
+using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Terraria.Net;
 
-namespace PathOfModifiers
+namespace PathOfModifiers.Affixes.Items
 {
-    public class AffixItemNPC : GlobalNPC
+    public class ItemNPC : GlobalNPC
     {
         public override bool InstancePerEntity => false;
 
-        public override void NPCLoot(NPC npc)
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
             for (int i = 0; i < Main.maxPlayers; i++)
             {
                 Player player = Main.player[i];
                 if (player.active && !player.dead)
                 {
-                    AffixItemPlayer affixPlayer = player.GetModPlayer<AffixItemPlayer>();
+                    ItemPlayer affixPlayer = player.GetModPlayer<ItemPlayer>();
                     int droppedGold = affixPlayer.goldDropChances.Roll();
                     if (droppedGold > 0)
                     {

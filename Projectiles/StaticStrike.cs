@@ -25,19 +25,15 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("StaticStrike");
-        }
+            Projectile.timeLeft = 30;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.penetrate = -1;
+            Projectile.alpha = 40;
+            Projectile.rotation = Main.rand.NextFloat(0, MathHelper.TwoPi);
 
-        public override void SetDefaults()
-        {
-            projectile.timeLeft = 30;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.penetrate = -1;
-            projectile.alpha = 40;
-            projectile.rotation = Main.rand.NextFloat(0, MathHelper.TwoPi);
-
-            projectile.usesLocalNPCImmunity = true;
-            projectile.localNPCHitCooldown = 20;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 20;
 
             for (int i = 0; i < 4; i++)
             {
@@ -52,42 +48,42 @@ namespace PathOfModifiers.Projectiles
                 for (int i = 0; i < 20; i++)
                 {
                     Vector2 dustVelocity = Main.rand.NextVector2CircularEdge(1, 1) * Main.rand.NextFloat(5f, 10f);
-                    Dust.NewDustPerfect(projectile.position, ModContent.DustType<Dusts.LightningDebris>(), dustVelocity, 0, Color.White, Scale: Main.rand.NextFloat(0.8f, 1.6f));
+                    Dust.NewDustPerfect(Projectile.position, ModContent.DustType<Dusts.LightningDebris>(), dustVelocity, 0, Color.White, Scale: Main.rand.NextFloat(0.8f, 1.6f));
                 }
                 init = true;
             }
 
-            projectile.frameCounter++;
-            if (projectile.frameCounter >= frameTime)
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter >= frameTime)
             {
-                projectile.frameCounter = 0;
-                projectile.frame++;
-                if (projectile.frame >= frameNumber.Y)
+                Projectile.frameCounter = 0;
+                Projectile.frame++;
+                if (Projectile.frame >= frameNumber.Y)
                 {
-                    projectile.Kill();
+                    Projectile.Kill();
                 }
             }
 
             if (Main.netMode != NetmodeID.Server)
             {
                 Rectangle hitRect = new Rectangle(
-                    (int)(projectile.position.X - (halfSize.X * collisionScale)),
-                    (int)(projectile.position.Y - (halfSize.Y * collisionScale)),
+                    (int)(Projectile.position.X - (halfSize.X * collisionScale)),
+                    (int)(Projectile.position.Y - (halfSize.Y * collisionScale)),
                     (int)(halfSize.X * 2 * collisionScale),
                     (int)(halfSize.Y * 2 * collisionScale));
-                Player owner = Main.player[projectile.owner];
+                Player owner = Main.player[Projectile.owner];
 
                 Player player = Main.LocalPlayer;
                 if (PoMUtil.CanHitPvp(owner, player) && !hitEntities.Contains(player))
                 {
                     if (player.getRect().Intersects(hitRect))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage, player.direction, true);
                         hitEntities.Add(player);
                     }
                 }
 
-                if (Main.myPlayer == projectile.owner)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
@@ -97,7 +93,7 @@ namespace PathOfModifiers.Projectiles
                             Rectangle npcRect = npc.getRect();
                             if (npcRect.Intersects(hitRect))
                             {
-                                owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
+                                owner.ApplyDamageToNPC(npc, Projectile.damage, 1, npc.direction, false);
                                 hitEntities.Add(npc);
                             }
                         }
@@ -105,38 +101,39 @@ namespace PathOfModifiers.Projectiles
                 }
             }
 
-            Lighting.AddLight(projectile.position, emittedLight);
+            Lighting.AddLight(Projectile.position, emittedLight);
 
             return false;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
             for (int i = 0; i < 4; i++)
             {
                 Rectangle sourceRectangle = new Rectangle(
                     frameSize.X * frameVariants[i],
-                    frameSize.Y * projectile.frame,
+                    frameSize.Y * Projectile.frame,
                     frameSize.X,
                     frameSize.Y);
                 Rectangle destination = new Rectangle(
-                    (int)(projectile.position.X - Main.screenPosition.X),
-                    (int)(projectile.position.Y - Main.screenPosition.Y),
+                    (int)(Projectile.position.X - Main.screenPosition.X),
+                    (int)(Projectile.position.Y - Main.screenPosition.Y),
                     (int)halfSize.X,
                     (int)halfSize.Y);
 
                 float rotation = MathHelper.PiOver2 * i;
 
-                spriteBatch.Draw(
+                var drawData = new DrawData(
                     texture,
                     destination,
                     sourceRectangle,
                     Color.White,
-                    rotation + projectile.rotation,
+                    rotation + Projectile.rotation,
                     Vector2.Zero,
                     SpriteEffects.None,
-                    0f);
+                    0);
+                Main.EntitySpriteDraw(drawData);
             }
 
             return false;

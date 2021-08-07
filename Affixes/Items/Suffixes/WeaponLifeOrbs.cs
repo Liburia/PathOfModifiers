@@ -71,10 +71,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsWeapon(item);
+                ItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -112,7 +112,9 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 Vector2 velocity = direction * Main.rand.NextFloat(5, 10);
                 Vector2 projTarget = player.Center + Main.rand.NextVector2Circular(player.width * 1.5f, player.height * 1.5f);
                 int heal = (int)MathHelper.Clamp(damage * Type3.GetValue(), 1, 999999);
-                Projectile.NewProjectile(target.Center, velocity, ModContent.ProjectileType<LifeOrb>(), heal, 0, player.whoAmI, projTarget.X, projTarget.Y);
+                Projectile.NewProjectile(
+                new PoMGlobals.ProjectileSource.PlayerSource(player),
+                target.Center, velocity, ModContent.ProjectileType<LifeOrb>(), heal, 0, player.whoAmI, projTarget.X, projTarget.Y);
             }
         }
     }

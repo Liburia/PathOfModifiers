@@ -42,12 +42,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         float baseScale = -1;
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsWeapon(item) &&
-                AffixItemItem.CanMelee(item) &&
-                (AffixItemItem.IsSwinging(item) || AffixItemItem.IsStabbing(item));
+                ItemItem.IsWeapon(item) &&
+                ItemItem.CanMelee(item) &&
+                (ItemItem.IsSwinging(item) || ItemItem.IsStabbing(item));
         }
 
         public override string GetTolltipText(Item item)

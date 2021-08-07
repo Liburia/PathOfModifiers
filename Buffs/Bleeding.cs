@@ -7,7 +7,7 @@ namespace PathOfModifiers.Buffs
 {
     public class Bleeding : DamageOverTime
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Taking damage over time");
@@ -15,7 +15,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            canBeCleared = true;
+            CanBeCleared = true;
         }
 
         public override void Update(NPC npc, ref int buffIndex)

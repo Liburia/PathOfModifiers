@@ -41,10 +41,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsWeapon(item);
+                ItemItem.IsWeapon(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -57,7 +57,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
         {
             NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
-            if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= PathOfModifiers.lowHPThreshold)
+            if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= PoMGlobals.lowHPThreshold)
             {
                 damageMultiplier += Type1.GetValue();
             }
@@ -72,7 +72,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
         {
             NPC realTarget = target.realLife >= 0 ? Main.npc[target.realLife] : target;
-            if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= PathOfModifiers.lowHPThreshold)
+            if (item == player.HeldItem && (realTarget.life / (float)realTarget.lifeMax) <= PoMGlobals.lowHPThreshold)
             {
                 damageMultiplier += Type1.GetValue();
             }

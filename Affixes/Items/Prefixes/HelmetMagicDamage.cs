@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -40,10 +41,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsHeadArmor(item);
+                ItemItem.IsHeadArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -54,9 +55,9 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueFormat }% magic damage";
         }
 
-        public override void UpdateEquip(Item item, AffixItemPlayer player)
+        public override void UpdateEquip(Item item, ItemPlayer player)
         {
-            player.player.magicDamage += Type1.GetValue();
+            player.Player.GetDamage<MagicDamageClass>() += Type1.GetValue();
         }
     }
 }

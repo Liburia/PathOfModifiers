@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,64 +16,60 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Fireball");
-            Main.projFrames[projectile.type] = 3;
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.timeLeft = baseTimeLeft;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.scale = 2f;
+            Main.projFrames[Projectile.type] = 3;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.timeLeft = baseTimeLeft;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.scale = 2f;
         }
 
         public override void AI()
         {
-            if (++projectile.frameCounter >= 4)
+            if (++Projectile.frameCounter >= 4)
             {
-                projectile.frameCounter = 0;
-                if (++projectile.frame >= 3)
+                Projectile.frameCounter = 0;
+                if (++Projectile.frame >= 3)
                 {
-                    projectile.frame = 0;
+                    Projectile.frame = 0;
                 }
             }
 
-            projectile.direction = projectile.spriteDirection = projectile.velocity.X > 0f ? 1 : -1;
-            projectile.rotation = projectile.velocity.ToRotation();
-            if (projectile.spriteDirection == -1)
+            Projectile.direction = Projectile.spriteDirection = Projectile.velocity.X > 0f ? 1 : -1;
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            if (Projectile.spriteDirection == -1)
             {
-                projectile.rotation += MathHelper.Pi;
+                Projectile.rotation += MathHelper.Pi;
             }
 
-            Vector2 position = projectile.position + new Vector2(
-                Main.rand.NextFloat(projectile.width),
-                Main.rand.NextFloat(projectile.height));
+            Vector2 position = Projectile.position + new Vector2(
+                Main.rand.NextFloat(Projectile.width),
+                Main.rand.NextFloat(Projectile.height));
             Dust.NewDustPerfect(
                 position,
                 ModContent.DustType<Dusts.FireDebris>(),
-                Velocity: projectile.velocity * 0.4f,
+                Velocity: Projectile.velocity * 0.4f,
                 Alpha: 100,
                 Scale: Main.rand.NextFloat(2f, 3f)); ;
 
             if (Main.netMode != NetmodeID.Server)
             {
-                Player owner = Main.player[projectile.owner];
+                Player owner = Main.player[Projectile.owner];
 
                 Player player = Main.LocalPlayer;
                 if (PoMUtil.CanHitPvp(owner, player))
                 {
-                    if (projectile.getRect().Intersects(player.getRect()))
+                    if (Projectile.getRect().Intersects(player.getRect()))
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                     }
                 }
 
-                if (Main.myPlayer == projectile.owner)
+                if (Main.myPlayer == Projectile.owner)
                 {
-                    Rectangle rect = projectile.getRect();
+                    Rectangle rect = Projectile.getRect();
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
                         NPC npc = Main.npc[i];
@@ -80,7 +77,7 @@ namespace PathOfModifiers.Projectiles
                         {
                             if (rect.Intersects(npc.getRect()))
                             {
-                                projectile.Kill();
+                                Projectile.Kill();
                                 break;
                             }
                         }
@@ -89,23 +86,24 @@ namespace PathOfModifiers.Projectiles
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             SpriteEffects spriteEffects = SpriteEffects.None;
-            if (projectile.spriteDirection == -1)
+            if (Projectile.spriteDirection == -1)
             {
                 spriteEffects = SpriteEffects.FlipHorizontally;
             }
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            int frameHeight = Main.projectileTexture[projectile.type].Height / Main.projFrames[projectile.type];
-            int startY = frameHeight * projectile.frame;
+            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
+            int frameHeight = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
             Rectangle sourceRectangle = new Rectangle(0, startY, texture.Width, frameHeight);
             Vector2 origin = sourceRectangle.Size() / 2f;
 
             Color drawColor = Color.White;
-            Main.spriteBatch.Draw(texture,
-                projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY),
-                sourceRectangle, drawColor, projectile.rotation, origin, projectile.scale, spriteEffects, 0f);
+            var drawData = new DrawData(texture,
+                Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
+                sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, spriteEffects, 0);
+            Main.EntitySpriteDraw(drawData);
 
             return false;
         }
@@ -130,23 +128,23 @@ namespace PathOfModifiers.Projectiles
             if (Main.netMode != NetmodeID.Server)
             {
                 Rectangle explosionBounds = new Rectangle(
-                    (int)(projectile.Center.X - explosionHalfSize.X),
-                    (int)(projectile.Center.Y - explosionHalfSize.Y),
+                    (int)(Projectile.Center.X - explosionHalfSize.X),
+                    (int)(Projectile.Center.Y - explosionHalfSize.Y),
                     (int)explosionHalfSize.X * 2,
                     (int)explosionHalfSize.Y * 2);
-                Player owner = Main.player[projectile.owner];
+                Player owner = Main.player[Projectile.owner];
 
                 Player player = Main.LocalPlayer;
                 if (PoMUtil.CanHitPvp(owner, player))
                 {
                     if (player.getRect().Intersects(explosionBounds))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(projectile.owner), projectile.damage, player.direction, true);
-                        player.GetModPlayer<BuffPlayer>().AddIgnitedBuff(player, (int)projectile.ai[0], PathOfModifiers.ailmentDuration);
+                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage, player.direction, true);
+                        player.GetModPlayer<BuffPlayer>().AddIgnitedBuff(player, (int)Projectile.ai[0], PoMGlobals.ailmentDuration);
                     }
                 }
 
-                if (Main.myPlayer == projectile.owner)
+                if (Main.myPlayer == Projectile.owner)
                 {
                     for (int i = 0; i < Main.maxNPCs; i++)
                     {
@@ -156,8 +154,8 @@ namespace PathOfModifiers.Projectiles
                             Rectangle npcBounds = npc.getRect();
                             if (npcBounds.Intersects(explosionBounds))
                             {
-                                owner.ApplyDamageToNPC(npc, projectile.damage, 1, npc.direction, false);
-                                npc.GetGlobalNPC<BuffNPC>().AddIgnitedBuff(npc, (int)projectile.ai[0], PathOfModifiers.ailmentDuration);
+                                owner.ApplyDamageToNPC(npc, Projectile.damage, 1, npc.direction, false);
+                                npc.GetGlobalNPC<BuffNPC>().AddIgnitedBuff(npc, (int)Projectile.ai[0], PoMGlobals.ailmentDuration);
                             }
                         }
                     }
@@ -167,15 +165,15 @@ namespace PathOfModifiers.Projectiles
             for (int i = 0; i < 20; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.6f, 2f);
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.FireDebris>(), velocity.X, velocity.Y, Alpha: 100, Scale: Main.rand.NextFloat(2f, 4f));
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.FireDebris>(), velocity.X, velocity.Y, Alpha: 100, Scale: Main.rand.NextFloat(2f, 4f));
                 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.6f, 1.5f);
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Smoke, velocity.X, velocity.Y, Scale: Main.rand.NextFloat(1f, 2f));
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Smoke, velocity.X, velocity.Y, Scale: Main.rand.NextFloat(1f, 2f));
             }
         }
 
         void PlaySound()
         {
-            Main.PlaySound(SoundID.Item14.WithVolume(1f).WithPitchVariance(0.3f), projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item14.WithVolume(1f).WithPitchVariance(0.3f), Projectile.Center);
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using Terraria.Graphics;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Rarities
 {
     public class ItemNone : RarityItem
     {
+        public ItemNone(Mod mod) : base(mod) { }
+
         public override double Weight { get; } = 0;
         public override byte minAffixes => 0;
         public override byte maxAffixes => 0;

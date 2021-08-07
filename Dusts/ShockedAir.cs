@@ -22,12 +22,7 @@ namespace PathOfModifiers.Dusts
         const int totalFrames = 6;
         const int loopCooldown = 20;
 
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "PathOfModifiers/Dusts/Shock";
-
-            return base.Autoload(ref name, ref texture);
-        }
+        public override string Texture => "PathOfModifiers/Dusts/Shock";
 
         public override void OnSpawn(Dust dust)
         {
@@ -49,7 +44,7 @@ namespace PathOfModifiers.Dusts
         {
             var customData = (CustomData)dust.customData;
 
-            if (customData.time >= PathOfModifiers.ailmentDuration)
+            if (customData.time >= PoMGlobals.ailmentDuration)
             {
                 dust.active = false;
             }
@@ -67,7 +62,7 @@ namespace PathOfModifiers.Dusts
             }
             else
             {
-                dust.alpha = (int)(minAlpha + (addAlpha * (customData.time / (float)PathOfModifiers.ailmentDuration)));
+                dust.alpha = (int)(minAlpha + (addAlpha * (customData.time / (float)PoMGlobals.ailmentDuration)));
 
                 if (customData.time % frameTime == 0)
                 {

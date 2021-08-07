@@ -5,20 +5,21 @@ namespace PathOfModifiers
 {
     public class PoMPrefix : ModPrefix
     {
-        public override bool Autoload(ref string name)
+        public override PrefixCategory Category { get { return PrefixCategory.Custom; } }
+
+        public PoMPrefix()
         {
-            return false;
+
+        }
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("");
         }
 
         public override bool CanRoll(Item item)
         {
             return false;
-        }
-        
-        public override PrefixCategory Category { get { return PrefixCategory.Custom; } }
-
-        public PoMPrefix()
-        {
         }
     }
 }

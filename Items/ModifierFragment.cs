@@ -10,15 +10,12 @@ namespace PathOfModifiers.Items
         {
             DisplayName.SetDefault("Modifier Fragment");
             Tooltip.SetDefault("Used to modify modifiers at a modifier forge.");
-        }
-        public override void SetDefaults()
-        {
-            item.width = 40;
-            item.height = 40;
-            item.holdStyle = 0;
-            item.value = 200;
-            item.rare = 2;
-            item.maxStack = 9999;
+            Item.width = 40;
+            Item.height = 40;
+            Item.holdStyle = 0;
+            Item.value = 200;
+            Item.rare = 2;
+            Item.maxStack = 9999;
         }
     }
 }

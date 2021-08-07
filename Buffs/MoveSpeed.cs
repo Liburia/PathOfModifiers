@@ -7,13 +7,9 @@ namespace PathOfModifiers.Buffs
 {
     public class MoveSpeed : ModBuff
     {
-        public override bool Autoload(ref string name, ref string texture)
-        {
-            texture = "Terraria/Buff_15";
-            return true;
-        }
+        public override string Texture => "Terraria/Images/Buff_15";
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("DamageDoTDebuff");
             Description.SetDefault("Taking damage over time");
@@ -21,7 +17,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
-            canBeCleared = true;
+            CanBeCleared = true;
         }
 
         public override void Update(Player player, ref int buffIndex)

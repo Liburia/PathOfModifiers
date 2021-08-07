@@ -56,10 +56,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Arctic", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAccessory(item);
+                ItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -87,16 +87,16 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void Chill(Item item, Player player, NPC target)
         {
-            if (AffixItemItem.IsAccessoryEquipped(item, player) && Main.rand.NextFloat(1f) < Type1.GetValue())
+            if (ItemItem.IsAccessoryEquipped(item, player) && Main.rand.NextFloat(1f) < Type1.GetValue())
             {
-                target.GetGlobalNPC<BuffNPC>().AddChilledBuff(target, Type2.GetValue(), PathOfModifiers.ailmentDuration);
+                target.GetGlobalNPC<BuffNPC>().AddChilledBuff(target, Type2.GetValue(), PoMGlobals.ailmentDuration);
             }
         }
         void Chill(Item item, Player player, Player target)
         {
-            if (AffixItemItem.IsAccessoryEquipped(item, player) && Main.rand.NextFloat(1f) < Type1.GetValue())
+            if (ItemItem.IsAccessoryEquipped(item, player) && Main.rand.NextFloat(1f) < Type1.GetValue())
             {
-                target.GetModPlayer<BuffPlayer>().AddChilledBuff(target, Type2.GetValue(), PathOfModifiers.ailmentDuration);
+                target.GetModPlayer<BuffPlayer>().AddChilledBuff(target, Type2.GetValue(), PoMGlobals.ailmentDuration);
             }
         }
     }

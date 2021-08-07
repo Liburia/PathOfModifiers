@@ -22,11 +22,11 @@ namespace PathOfModifiers.Affixes.NPCs
         public virtual string AddedText => string.Empty;
         public virtual double AddedTextWeight => 1;
 
-        public virtual void InitializeNPC(PoMNPC pomNPC, NPC npc)
+        public virtual void InitializeNPC(NPCNPC pomNPC, NPC npc)
         {
             RollValue();
 
-            SetDefaults(pomNPC, npc);
+            SetStaticDefaults(pomNPC, npc);
         }
 
         public virtual Affix Clone()
@@ -36,13 +36,13 @@ namespace PathOfModifiers.Affixes.NPCs
             return newAffix;
         }
 
-        public virtual bool CanBeRolled(PoMNPC pomNPC, NPC npc) { return false; }
-        public virtual bool AffixSpaceAvailable(PoMNPC npc) { return npc.FreeAffixes > 0; }
+        public virtual bool CanBeRolled(NPCNPC pomNPC, NPC npc) { return false; }
+        public virtual bool AffixSpaceAvailable(NPCNPC npc) { return npc.FreeAffixes > 0; }
 
         public virtual void RollValue(bool rollTier = true) { }
 
         #region NPC Hooks
-        public virtual void SetDefaults(PoMNPC pomNPC, NPC npc) { }
+        public virtual void SetStaticDefaults(NPCNPC pomNPC, NPC npc) { }
         public virtual bool? CanBeHitByItem(NPC npc, Player player, Item item) { return null; }
         public virtual bool? CanBeHitByProjectile(NPC npc, Projectile projectile) { return null; }
         public virtual void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit) { }

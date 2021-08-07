@@ -9,7 +9,7 @@ namespace PathOfModifiers.ModNet
 {
     public enum PacketHandlerType
     {
-        Buff,
+        Buff = 0,
         Effect,
         Item,
         Map,

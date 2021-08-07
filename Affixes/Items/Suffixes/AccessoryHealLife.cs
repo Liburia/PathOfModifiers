@@ -42,10 +42,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             new WeightedTierName("of Vermilion", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsAccessory(item);
+                ItemItem.IsAccessory(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -60,7 +60,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void Heal(Item item, Player player)
         {
-            if (AffixItemItem.IsAccessoryEquipped(item, player))
+            if (ItemItem.IsAccessoryEquipped(item, player))
             {
                 int amount = (int)MathHelper.Clamp(player.statLifeMax2 * Type1.GetValue(), 1, 9999999);
                 if (amount > 0)

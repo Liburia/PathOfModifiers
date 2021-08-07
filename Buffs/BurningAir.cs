@@ -8,7 +8,7 @@ namespace PathOfModifiers.Buffs
 {
     public class BurningAir : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault(GetType().Name);
             Description.SetDefault("Losing or restoring life over time");
@@ -16,7 +16,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            canBeCleared = false;
+            CanBeCleared = false;
         }
     }
 }

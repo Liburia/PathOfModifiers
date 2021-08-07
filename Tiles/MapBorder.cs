@@ -49,13 +49,13 @@ namespace PathOfModifiers.Tiles
             return false;
         }
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            animationFrameHeight = 90;
+            AnimationFrameHeight = 90;
 			Main.tileSolid[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = true;
-			drop = mod.ItemType("MapBorder");
+			ItemDrop = ModContent.ItemType<Items.MapBorder>();
 			AddMapEntry(new Color(100, 100, 100));
 
             activeBounds = new List<Rectangle>();
@@ -65,7 +65,7 @@ namespace PathOfModifiers.Tiles
         {
             if (IsOnActiveBounds(i, j))
             {
-                frameYOffset = animationFrameHeight;
+                frameYOffset = AnimationFrameHeight;
             }
             else
             {

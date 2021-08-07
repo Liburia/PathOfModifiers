@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
+using Terraria.Audio;
 using Terraria.ID;
 using PathOfModifiers.ModNet.PacketHandlers;
 using Terraria.DataStructures;
@@ -74,10 +75,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public uint lastProcTime = 0;
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsHeadArmor(item);
+                ItemItem.IsHeadArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -100,11 +101,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void SpawnNova(Item item, Player player, int damageTaken)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
+            if (ItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
             {
                 PlaySound(player);
 
-                Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<ReflectNova>(), (int)Math.Round(damageTaken * Type1.GetValue()), 0, player.whoAmI, Type2.GetValue());
+                Projectile.NewProjectile(
+                    new PoMGlobals.ProjectileSource.PlayerSource(player),
+                    player.Center, Vector2.Zero, ModContent.ProjectileType<ReflectNova>(), (int)Math.Round(damageTaken * Type1.GetValue()), 0, player.whoAmI, Type2.GetValue());
 
                 lastProcTime = Main.GameUpdateCount;
             }
@@ -112,7 +115,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void PlaySound(Player player)
         {
-            Main.PlaySound(SoundID.Item74.WithVolume(0.5f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item74.WithVolume(0.5f).WithPitchVariance(0.3f), player.Center);
         }
 
         public override Affix Clone()

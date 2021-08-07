@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,49 +14,47 @@ namespace PathOfModifiers.Projectiles
         const int baseTimeLeft = 600;
         const int timeLeftAfterTileCollide = 5;
 
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("FrostPulse");
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.width = 38;
-            projectile.height = 38;
-            projectile.alpha = 100;
-            projectile.timeLeft = baseTimeLeft;
-            projectile.penetrate = 20;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.usesLocalNPCImmunity = true;
+            Projectile.width = 38;
+            Projectile.height = 38;
+            Projectile.alpha = 100;
+            Projectile.timeLeft = baseTimeLeft;
+            Projectile.penetrate = 20;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.usesLocalNPCImmunity = true;
         }
 
         public override void AI()
         {
-            projectile.direction = projectile.spriteDirection = projectile.velocity.X > 0f ? 1 : -1;
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.direction = Projectile.spriteDirection = Projectile.velocity.X > 0f ? 1 : -1;
+            Projectile.rotation = Projectile.velocity.ToRotation();
 
-            Vector2 position = projectile.position + new Vector2(
-                Main.rand.NextFloat(projectile.width),
-                Main.rand.NextFloat(projectile.height));
+            Vector2 position = Projectile.position + new Vector2(
+                Main.rand.NextFloat(Projectile.width),
+                Main.rand.NextFloat(Projectile.height));
             Dust.NewDustPerfect(
                 position,
                 ModContent.DustType<Dusts.FrostDebris>(),
-                Velocity: projectile.velocity * 0.2f,
+                Velocity: Projectile.velocity * 0.2f,
                 Alpha: 100,
                 Scale: Main.rand.NextFloat(2.2f, 3.3f));
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
             Rectangle sourceRectangle = texture.Bounds;
             Vector2 origin = sourceRectangle.Size() / 2f;
 
-            Main.spriteBatch.Draw(texture,
-                projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY),
-                sourceRectangle, Color.White, projectile.rotation, origin, projectile.scale, SpriteEffects.None, 0f);
+            var drawData = new DrawData(texture,
+                Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
+                sourceRectangle, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(drawData);
 
             return false;
         }
@@ -75,22 +74,22 @@ namespace PathOfModifiers.Projectiles
 
         void Hit(NPC target)
         {
-            target.GetGlobalNPC<BuffNPC>().AddChilledBuff(target, projectile.ai[0], PathOfModifiers.ailmentDuration);
+            target.GetGlobalNPC<BuffNPC>().AddChilledBuff(target, Projectile.ai[0], PoMGlobals.ailmentDuration);
         }
         void Hit(Player target)
         {
-            target.GetModPlayer<BuffPlayer>().AddChilledBuff(target, projectile.ai[0], PathOfModifiers.ailmentDuration);
+            target.GetModPlayer<BuffPlayer>().AddChilledBuff(target, Projectile.ai[0], PoMGlobals.ailmentDuration);
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            if (projectile.timeLeft > timeLeftAfterTileCollide)
+            if (Projectile.timeLeft > timeLeftAfterTileCollide)
             {
-                projectile.timeLeft = timeLeftAfterTileCollide;
+                Projectile.timeLeft = timeLeftAfterTileCollide;
             }
 
-            projectile.velocity = oldVelocity;
-            projectile.tileCollide = false;
+            Projectile.velocity = oldVelocity;
+            Projectile.tileCollide = false;
 
             return false;
         }
@@ -102,7 +101,7 @@ namespace PathOfModifiers.Projectiles
 
         void PlayKillSound()
         {
-            Main.PlaySound(SoundID.Item21.WithVolume(1f).WithPitchVariance(0.3f), projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item21.WithVolume(1f).WithPitchVariance(0.3f), Projectile.Center);
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -41,10 +42,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsLegArmor(item);
+                ItemItem.IsLegArmor(item);
         }
 
         public override string GetTolltipText(Item item)
@@ -55,7 +56,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo, ref float chanceToNotConsume)
         {
-            if (AffixItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsArmorEquipped(item, player))
             {
                 float value = Type1.GetValue();
                 chanceToNotConsume += value;

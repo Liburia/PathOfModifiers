@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria.UI.Chat;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 using System.IO;
 using System.Collections.Generic;
@@ -39,12 +40,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             new WeightedTierName("Frenzied", 3),
         };
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsWeapon(item) &&
-                !AffixItemItem.IsSpear(item) &&
-                !AffixItemItem.IsFlailOrYoyo(item);
+                ItemItem.IsWeapon(item) &&
+                !ItemItem.IsSpear(item) &&
+                !ItemItem.IsFlailOrYoyo(item);
         }
 
         public override string GetTolltipText(Item item)

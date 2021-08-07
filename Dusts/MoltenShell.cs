@@ -13,7 +13,7 @@ namespace PathOfModifiers.Dusts
 
         public override void OnSpawn(Dust dust)
         {
-            dust.frame = Texture.Bounds;
+            dust.frame = Texture2D.Value.Bounds;
             dust.alpha = 0;
             dust.customData = 0;
         }

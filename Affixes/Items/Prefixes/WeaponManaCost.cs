@@ -40,11 +40,11 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        public override bool CanBeRolled(AffixItemItem pomItem, Item item)
+        public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                AffixItemItem.IsWeapon(item) &&
-                AffixItemItem.CanCostMana(item);
+                ItemItem.IsWeapon(item) &&
+                ItemItem.CanCostMana(item);
         }
 
         public override string GetTolltipText(Item item)

@@ -26,46 +26,42 @@ namespace PathOfModifiers.Projectiles
         const int timeToMaxAcceleration = 120;
         const float targetSizeSqr = 24 * 24;
 
-        float Magnitude => MathHelper.Clamp((float)Math.Sqrt(Math.Sqrt(projectile.damage)), 1, 999);
+        float Magnitude => MathHelper.Clamp((float)Math.Sqrt(Math.Sqrt(Projectile.damage)), 1, 999);
 
         bool isHomingOnTarget = true;
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("LifeOrb");
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.penetrate = 1;
-            projectile.width = 6;
-            projectile.height = 6;
-            projectile.timeLeft = baseTime;
-            projectile.hostile = false;
-            projectile.friendly = false;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
+            Projectile.penetrate = 1;
+            Projectile.width = 6;
+            Projectile.height = 6;
+            Projectile.timeLeft = baseTime;
+            Projectile.hostile = false;
+            Projectile.friendly = false;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
         }
 
         public override void AI()
         {
-            Rectangle bounds = projectile.getRect();
+            Rectangle bounds = Projectile.getRect();
 
             if (Main.netMode != NetmodeID.Server)
             {
                 Player player = Main.LocalPlayer;
-                if (!player.dead && (player.whoAmI == projectile.owner || (player.team != (int)Team.None && player.team == Main.player[projectile.owner].team)) && bounds.Intersects(player.getRect()))
+                if (!player.dead && (player.whoAmI == Projectile.owner || (player.team != (int)Team.None && player.team == Main.player[Projectile.owner].team)) && bounds.Intersects(player.getRect()))
                 {
-                    player.statLife += projectile.damage;
-                    player.HealEffect(projectile.damage);
+                    player.statLife += Projectile.damage;
+                    player.HealEffect(Projectile.damage);
                     SpawnDebris(DebrisType.Entity);
-                    if (Main.netMode == NetmodeID.SinglePlayer || projectile.owner == Main.myPlayer)
+                    if (Main.netMode == NetmodeID.SinglePlayer || Projectile.owner == Main.myPlayer)
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                     }
                     else
                     {
-                        ProjectilePacketHandler.CSendKill(projectile);
+                        ProjectilePacketHandler.CSendKill(Projectile);
                     }
 
                     return;
@@ -75,34 +71,34 @@ namespace PathOfModifiers.Projectiles
 
             float mag = Magnitude;
 
-            Dust.NewDustPerfect(projectile.Center, ModContent.DustType<LifeOrbTrail>(), Scale: mag);
-            Lighting.AddLight(projectile.position, emittedLight * mag);
+            Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<LifeOrbTrail>(), Scale: mag);
+            Lighting.AddLight(Projectile.position, emittedLight * mag);
 
-            projectile.rotation += 0.1f;
+            Projectile.rotation += 0.1f;
 
             Vector2 accelerationDirection;
             if (isHomingOnTarget)
             {
-                Vector2 targetPosition = new Vector2(projectile.ai[0], projectile.ai[1]);
-                Vector2 toTarget = targetPosition - projectile.Center;
+                Vector2 targetPosition = new Vector2(Projectile.ai[0], Projectile.ai[1]);
+                Vector2 toTarget = targetPosition - Projectile.Center;
 
                 if (toTarget.LengthSquared() <= targetSizeSqr)
                 {
                     isHomingOnTarget = false;
                 }
 
-                projectile.velocity *= friction;
-                accelerationDirection = (targetPosition - projectile.Center).SafeNormalize(Vector2.Zero);
+                Projectile.velocity *= friction;
+                accelerationDirection = (targetPosition - Projectile.Center).SafeNormalize(Vector2.Zero);
             }
             else
             {
-                accelerationDirection = projectile.velocity.SafeNormalize(Vector2.Zero);
+                accelerationDirection = Projectile.velocity.SafeNormalize(Vector2.Zero);
             }
-            float currentAcceleration = maxAcceleration * ((baseTime - projectile.timeLeft) / (float)timeToMaxAcceleration);
-            projectile.velocity += accelerationDirection * currentAcceleration;
+            float currentAcceleration = maxAcceleration * ((baseTime - Projectile.timeLeft) / (float)timeToMaxAcceleration);
+            Projectile.velocity += accelerationDirection * currentAcceleration;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             return false;
         }
@@ -143,29 +139,29 @@ namespace PathOfModifiers.Projectiles
                 {
                     Vector2 velocity = Main.rand.NextVector2CircularEdge(1, 1) * 2;
                     float scale = 1.2f * Magnitude;
-                    Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<LifeOrbDebris>(), velocity.X, velocity.Y, Scale: scale);
+                    Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LifeOrbDebris>(), velocity.X, velocity.Y, Scale: scale);
                 }
             }
             else if (debrisType == DebrisType.Tile)
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    float minAngle = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 0.4f;
+                    float minAngle = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 0.4f;
                     float maxAngle = minAngle + 0.8f;
                     Vector2 velocity = Main.rand.NextVector2Unit(minAngle, maxAngle) * 1.2f;
                     float scale = 1.2f * Magnitude;
-                    Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<LifeOrbDebris>(), velocity.X, velocity.Y, Scale: scale);
+                    Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LifeOrbDebris>(), velocity.X, velocity.Y, Scale: scale);
                 }
             }
             else if (debrisType == DebrisType.Entity)
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    float minAngle = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 0.2f;
+                    float minAngle = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 0.2f;
                     float maxAngle = minAngle + 0.4f;
                     Vector2 velocity = Main.rand.NextVector2Unit(minAngle, maxAngle) * 0.7f;
                     float scale = 0.7f * Magnitude;
-                    Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<LifeOrbDebris>(), velocity.X, velocity.Y, Scale: scale);
+                    Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LifeOrbDebris>(), velocity.X, velocity.Y, Scale: scale);
                 }
             }
         }

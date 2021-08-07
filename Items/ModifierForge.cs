@@ -1,40 +1,37 @@
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+//using Terraria;
+//using Terraria.ID;
+//using Terraria.ModLoader;
 
-namespace PathOfModifiers.Items
-{
-	public class ModifierForge : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Modifier Forge");
-			Tooltip.SetDefault("Used to modify modifiers.");
-		}
-		public override void SetDefaults()
-        {
-            item.width = 48;
-            item.height = 34;
-			item.value = 500000;
-			item.rare = 2;
-            item.maxStack = 99;
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = 1;
-            item.consumable = true;
-            item.createTile = mod.TileType("ModifierForge");
-        }
+//namespace PathOfModifiers.Items
+//{
+//	public class ModifierForge : ModItem
+//	{
+//		public override void SetStaticDefaults()
+//        {
+//            DisplayName.SetDefault("Modifier Forge");
+//            Tooltip.SetDefault("Used to modify modifiers.");
+//            Item.width = 48;
+//            Item.height = 34;
+//			Item.value = 500000;
+//			Item.rare = 2;
+//            Item.maxStack = 99;
+//            Item.useTurn = true;
+//            Item.autoReuse = true;
+//            Item.useAnimation = 15;
+//            Item.useTime = 10;
+//            Item.useStyle = 1;
+//            Item.consumable = true;
+//            Item.createTile = ModContent.TileType<Tiles.ModifierForge>();
+//        }
 
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "ModifierFragment", 50);
-            recipe.AddRecipeGroup("PathOfModifiers:CopperBar", 20);
-            recipe.AddRecipeGroup("IronBar", 15);
-            recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
-    }
-}
+//		public override void AddRecipes()
+//        {
+//            CreateRecipe(1)
+//                .AddIngredient(ModContent.ItemType<ModifierFragment>(), 50)
+//                .AddRecipeGroup("PathOfModifiers:CopperBar", 20)
+//                .AddRecipeGroup("IronBar", 15)
+//                .AddTile(TileID.Anvils)
+//                .Register();
+//		}
+//    }
+//}

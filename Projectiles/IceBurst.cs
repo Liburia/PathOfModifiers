@@ -17,57 +17,55 @@ namespace PathOfModifiers.Projectiles
 
         public override void AutoStaticDefaults()
         {
-            Main.projectileTexture[projectile.type] = Main.magicPixel;
-            Main.projFrames[projectile.type] = 1;
+            Terraria.GameContent.TextureAssets.Projectile[Projectile.type] = Terraria.GameContent.TextureAssets.MagicPixel;
+            Main.projFrames[Projectile.type] = 1;
             if (DisplayName.IsDefault())
                 DisplayName.SetDefault(Regex.Replace(Name, "([A-Z])", " $1").Trim());
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("FrostPulse");
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.timeLeft = baseTimeLeft;
-            projectile.penetrate = -1;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.idStaticNPCHitCooldown = 5;
-            projectile.usesIDStaticNPCImmunity = true;
+            DisplayName.SetDefault("IceBurst");
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.timeLeft = baseTimeLeft;
+            Projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.idStaticNPCHitCooldown = 5;
+            Projectile.usesIDStaticNPCImmunity = true;
         }
 
         public override void AI()
         {
-            projectile.direction = projectile.velocity.X > 0f ? 1 : -1;
-            projectile.rotation = projectile.velocity.ToRotation();
-            projectile.width += sizeAdd;
-            projectile.height += sizeAdd;
+            Projectile.direction = Projectile.velocity.X > 0f ? 1 : -1;
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.width += sizeAdd;
+            Projectile.height += sizeAdd;
 
-            if (projectile.timeLeft == spawnAirAtTime && projectile.ai[1] != 0)
+            if (Projectile.timeLeft == spawnAirAtTime && Projectile.ai[1] != 0)
             {
-                Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<ChilledAir>(), 0, 0, projectile.owner, 200f, projectile.ai[0]);
+                Projectile.NewProjectile(
+                    new ProjectileSource_ProjectileParent(Projectile),
+                    Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ChilledAir>(), 0, 0, Projectile.owner, 200f, Projectile.ai[0]);
             }
 
             for (int i = 0; i < 3; i++)
             {
-                Vector2 position = projectile.position + new Vector2(
-                    Main.rand.NextFloat(projectile.width),
-                    Main.rand.NextFloat(projectile.height));
+                Vector2 position = Projectile.position + new Vector2(
+                    Main.rand.NextFloat(Projectile.width),
+                    Main.rand.NextFloat(Projectile.height));
                 Dust.NewDustPerfect(
                     position,
                     ModContent.DustType<Dusts.FrostDebris>(),
-                    Velocity: projectile.velocity * 0.03f,
+                    Velocity: Projectile.velocity * 0.03f,
                     Alpha: 100,
                     Scale: Main.rand.NextFloat(2.2f, 3.3f));
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             return false;
         }
