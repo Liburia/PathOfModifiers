@@ -48,7 +48,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 !ItemItem.IsFlailOrYoyo(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"{(Type1.GetValue() < 0 ? '-' : '+')}{Type1.GetValueFormat()}% attack speed";
         }

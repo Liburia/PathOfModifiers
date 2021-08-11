@@ -9,11 +9,12 @@ using Terraria.ID;
 using System.IO;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using Terraria.UI;
 
 namespace PathOfModifiers.Affixes.NPCs
 {
     [DisableAffix]
-    public class Affix
+    public class Affix : IUIDrawable
     {
         public Mod mod;
         public virtual double Weight => 0;
@@ -36,7 +37,7 @@ namespace PathOfModifiers.Affixes.NPCs
             return newAffix;
         }
 
-        public virtual bool CanBeRolled(NPCNPC pomNPC, NPC npc) { return false; }
+        public virtual bool CanRoll(NPCNPC pomNPC, NPC npc) { return false; }
         public virtual bool AffixSpaceAvailable(NPCNPC npc) { return npc.FreeAffixes > 0; }
 
         public virtual void RollValue(bool rollTier = true) { }
@@ -94,5 +95,17 @@ namespace PathOfModifiers.Affixes.NPCs
 
         public virtual void AddAffix(NPC npc, bool clone) { }
         public virtual void RemoveAffix(NPC npc) { }
+
+        UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
+        {
+            Terraria.GameContent.UI.Elements.UIText text = new("Affix has no UI", 1);
+            text.IgnoresMouseInteraction = true;
+            text.Top.Set(0, 0);
+            text.Height.Set(20, 0);
+
+            parent.Append(text);
+
+            return text;
+        }
     }
 }

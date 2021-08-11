@@ -44,12 +44,12 @@ namespace PathOfModifiers.Affixes.NPCs.Affixes
         }
 
 
-        public override bool CanBeRolled(PoMNPC pomNPC, NPC npc)
+        public override bool CanRoll(NPCNPC pomNPC, NPC npc)
         {
             return true;
         }
 
-        public override void SetStaticDefaults(PoMNPC pomNPC, NPC npc)
+        public override void SetStaticDefaults(NPCNPC pomNPC, NPC npc)
         {
             npc.lifeMax = (int)Math.Round(npc.lifeMax * Type1.GetValue());
             npc.life = (int)Math.Round(npc.life * Type1.GetValue());

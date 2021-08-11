@@ -78,7 +78,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"On hit gain a buff for {Type1.GetValueFormat(1)}s that does {Type2.GetValueFormat()}% damage every {Type3.GetValueFormat(1)}s";
         }

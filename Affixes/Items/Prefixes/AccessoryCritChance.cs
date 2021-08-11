@@ -48,12 +48,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"x{ Type1.GetValueFormat(1) * Math.Sign(Type1.GetValue()) + 1 } critical strike chance";
         }
 
-        public override void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
+        public override void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
         {
             if (ItemItem.IsAccessoryEquipped(item, player))
             {

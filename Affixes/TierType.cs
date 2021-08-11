@@ -4,12 +4,15 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria.UI.Chat;
 using Terraria;
-using Terraria.ModLoader;
+using PathOfModifiers.UI;
 using Terraria.ModLoader.IO;
 using Terraria.ID;
 using System.IO;
 using System.Collections.Generic;
 using Terraria.Utilities;
+using PathOfModifiers.UI.Elements;
+using Terraria.UI;
+using Terraria.GameContent.UI.Elements;
 
 namespace PathOfModifiers.Affixes
 {
@@ -83,7 +86,7 @@ namespace PathOfModifiers.Affixes
             return Tiers[tier ?? Tier].value;
         }
     }
-    public class TTFloat : TierType<float>
+    public class TTFloat : TierType<float>, IUIDrawable
     {
         public override float TierMultiplier { get; protected set; }
         float Value { get; set; }
@@ -122,11 +125,48 @@ namespace PathOfModifiers.Affixes
             var value = base.GetValue();
             Value = value + ((base.GetValue(Tier + 1) - value) * TierMultiplier);
         }
+
+        UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
+        {
+            UIElement el = new();
+            el.Width.Set(0f, 1f);
+            parent.Append(el);
+
+            var tierRange = new UIIntRange(MaxTier - 1, Tier);
+            tierRange.Width.Set(0f, 1f);
+            el.Append(tierRange);
+
+            UIElement.ElementEvent setTier = delegate (UIElement el)
+            {
+                SetTier(tierRange.CurrentValue);
+                onChangeCallback?.Invoke();
+            };
+            tierRange.slider.OnSliderInput += setTier;
+            tierRange.OnInputFocusedChanged += setTier;
+
+            var valueRange = new UIFloatRange(0f, 1f, TierMultiplier);
+            valueRange.Top.Set(tierRange.Top.Pixels + tierRange.GetDimensions().Height + UICommon.spacing, 0f);
+            valueRange.Width.Set(0f, 1f);
+            el.Append(valueRange);
+
+            UIElement.ElementEvent setTierMultiplier = delegate (UIElement el)
+            {
+                SetTierMultiplier(valueRange.CurrentValue);
+                onChangeCallback?.Invoke();
+            };
+            valueRange.slider.OnSliderInput += setTierMultiplier;
+            valueRange.OnInputFocusedChanged += setTierMultiplier;
+
+            el.MinHeight.Set(valueRange.Top.Pixels + valueRange.GetDimensions().Height, 0f);
+            el.Recalculate();
+
+            return el;
+        }
     }
     /// <summary>
     /// When IsRange, the value is (inclusive, exclusive)
     /// </summary>
-    public class TTInt : TierType<int>
+    public class TTInt : TierType<int>, IUIDrawable
     {
         /// <summary>
         /// Whether 0 is skipped for IsRange
@@ -200,6 +240,43 @@ namespace PathOfModifiers.Affixes
                 }
                 Value = (int)Math.Ceiling(value);
             }
+        }
+
+        UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
+        {
+            UIElement el = new();
+            el.Width.Set(0f, 1f);
+            parent.Append(el);
+
+            var tierRange = new UIIntRange(MaxTier - 1, Tier);
+            tierRange.Width.Set(0f, 1f);
+
+            UIElement.ElementEvent setTier = delegate (UIElement el)
+            {
+                SetTier(tierRange.CurrentValue);
+                onChangeCallback?.Invoke();
+            };
+            tierRange.slider.OnSliderInput += setTier;
+            tierRange.OnInputFocusedChanged += setTier;
+
+            var valueRange = new UIIntRange(Tiers[Tier + 1].value - Tiers[Tier].value, Value - Tiers[Tier].value);
+            valueRange.Top.Set(tierRange.Top.Pixels + tierRange.GetDimensions().Height + UICommon.spacing, 0f);
+            valueRange.Width.Set(0f, 1f);
+            el.Append(valueRange);
+
+            UIElement.ElementEvent setTierMultiplier = delegate (UIElement el)
+            {
+                SetTierMultiplier(valueRange.CurrentValue);
+                onChangeCallback?.Invoke();
+            };
+            valueRange.slider.OnSliderInput += setTierMultiplier;
+            valueRange.OnInputFocusedChanged += setTierMultiplier;
+
+
+            el.MinHeight.Set(valueRange.Top.Pixels + valueRange.GetDimensions().Height, 0f);
+            el.Recalculate();
+
+            return el;
         }
     }
 }

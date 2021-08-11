@@ -48,7 +48,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.CanConsumeAmmo(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             float valueFormat = Type1.GetValueFormat();
             return $"{ valueFormat }% chance to not consume ammo";

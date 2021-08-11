@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAnyArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             int value = Type1.GetValueFormat();
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';

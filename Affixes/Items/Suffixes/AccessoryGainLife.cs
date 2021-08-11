@@ -65,7 +65,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             string gainLose = Type1.GetValue() > 0 ? "Gain" : "Lose";
             return $"{ gainLose } { Type1.GetValueFormat() } life when hit ({ Type2.GetValueFormat(1) }s CD)";

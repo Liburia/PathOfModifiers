@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace PathOfModifiers.UI.Elements
 {
-	internal class UIFocusInputTextField : UIElement
+	public class UIFocusInputTextField : UIElement
 	{
 		internal bool Focused = false;
 		internal string CurrentString = "";
@@ -63,8 +63,8 @@ namespace PathOfModifiers.UI.Elements
 		}
 
 		protected override void DrawSelf(SpriteBatch spriteBatch) {
-			//Rectangle hitbox = GetInnerDimensions().ToRectangle();
-			//Main.spriteBatch.Draw(TextureAssets.MagicPixel, hitbox, Color.Red * 0.6f);
+			//Rectangle hitbox = GetOuterDimensions().ToRectangle();
+			//Main.spriteBatch.Draw(Terraria.GameContent.TextureAssets.MagicPixel.Value, hitbox, Color.Red * 0.6f);
 
 			if (Focused) {
                 Terraria.GameInput.PlayerInput.WritingText = true;

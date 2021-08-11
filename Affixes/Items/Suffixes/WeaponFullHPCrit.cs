@@ -48,7 +48,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"Deal {Type1.GetValueFormat()}% of enemy HP with the first attack";
         }

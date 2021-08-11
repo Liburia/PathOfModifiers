@@ -10,11 +10,12 @@ using Terraria.ID;
 using System.IO;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using Terraria.UI;
 
 namespace PathOfModifiers.Affixes.Items
 {
     [DisableAffix]
-    public class Affix
+    public class Affix : IUIDrawable
     {
         static readonly Color prefixColor = new Color(0.25f, 1, 0.25f, 1);
         static readonly Color suffixColor = new Color(0.25f, 1, 1, 1);
@@ -62,7 +63,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void RollValue(bool rollTier = true) { }
         #region Item Hooks
         public virtual void ModifyWeaponCrit(Item item, Player player, ref float multiplier) { }
-        public virtual void ModifyWeaponDamage(Item item, Player player, ref float add, ref float multiplier, ref float flat) { }
+        public virtual void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat) { }
         public virtual void GetWeaponKnockback(Item item, Player player, ref float multiplier) { }
         public virtual void UseTimeMultiplier(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult) { }
@@ -75,7 +76,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit) { }
         public virtual void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit) { }
         public virtual void OnHitPvp(Item item, Player player, Player target, int damage, bool crit) { }
-        public virtual bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack) { return true; }
+        public virtual bool Shoot(Item item, Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) { return true; }
         #endregion
         #region Projectile Hooks
         public virtual void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection) { }
@@ -88,14 +89,14 @@ namespace PathOfModifiers.Affixes.Items
         public virtual bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource) { return true; }
         public virtual void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit) { }
         public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }
-        public virtual void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier) { }
+        public virtual void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier) { }
         public virtual void ModifyHitByNPC(Item item, Player player, NPC npc, ref float damageMultiplier, ref bool crit) { }
         public virtual void ModifyHitByPvp(Item item, Player player, Player attacker, ref float damageMultiplier, ref bool crit) { }
         public virtual void ModifyHitByProjectile(Item item, Player player, Projectile projectile, ref float damageMultiplier, ref bool crit) { }
         public virtual void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit) { }
         public virtual void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit) { }
         public virtual void OnHitByProjectile(Item item, Player player, Projectile projectile, int damage, bool crit) { }
-        public virtual bool PlayerShoot(Item affixItem, Player player, Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack) { return true; }
+        public virtual bool PlayerShoot(Item affixItem, Player player, Item item, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) { return true; }
 
         public virtual void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit) { }
         public virtual void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit) { }
@@ -106,13 +107,13 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         public virtual void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, GetType().Name, GetTolltipText(item))
+            TooltipLine line = new TooltipLine(mod, GetType().Name, GetTolltipText())
             {
                 overrideColor = Color
             };
             tooltips.Add(line);
         }
-        public virtual string GetTolltipText(Item item) { return string.Empty; }
+        public virtual string GetTolltipText() { return string.Empty; }
 
         public virtual string GetForgeText(Item item) { return string.Empty; }
 
@@ -134,5 +135,16 @@ namespace PathOfModifiers.Affixes.Items
 
         public virtual void AddAffix(Item item, bool clone) { }
         public virtual void RemoveAffix(Item item) { }
+
+        UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
+        {
+            Terraria.GameContent.UI.Elements.UIText text = new("Affix has no UI", 1);
+            text.IgnoresMouseInteraction = true;
+            text.Top.Set(0, 0);
+            text.Height.Set(20, 0);
+            parent.Append(text);
+
+            return text;
+        }
     }
 }

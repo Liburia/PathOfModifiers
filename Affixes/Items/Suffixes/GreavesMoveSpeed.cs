@@ -81,7 +81,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsLegArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
             return $"{ plusMinus }{ Type1.GetValueFormat() }% move speed for { Type2.GetValueFormat(1) }s when hit ({ Type3.GetValueFormat(1) }s CD)";

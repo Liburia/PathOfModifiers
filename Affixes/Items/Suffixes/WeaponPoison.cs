@@ -78,7 +78,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"{Type1.GetValueFormat()}% chance to Poison({Type2.GetValueFormat()}%) for {Type3.GetValueFormat(1)}s";
         }

@@ -47,7 +47,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsRanged(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             float value = Type1.GetValue();
             float valueFormat = Type1.GetValueFormat();
@@ -56,10 +56,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueFormat }% ranged damage";
         }
 
-        public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float multiplier, ref float flat)
+        public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat)
         {
             float value = Type1.GetValue();
-            add += value;
+            damage += value;
         }
     }
 }

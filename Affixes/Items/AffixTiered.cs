@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria.UI.Chat;
 using Terraria;
-using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ID;
 using System.IO;
@@ -12,6 +11,9 @@ using System.Collections.Generic;
 using Terraria.DataStructures;
 using System.Security.Policy;
 using Terraria.Utilities;
+using Terraria.UI;
+using PathOfModifiers.UI.Elements;
+using PathOfModifiers.UI;
 
 namespace PathOfModifiers.Affixes.Items
 {
@@ -39,8 +41,8 @@ namespace PathOfModifiers.Affixes.Items
     }
 
     [DisableAffix]
-    public class AffixTiered<T> : AffixTiered
-        where T : TierType
+    public class AffixTiered<T> : AffixTiered, IUIDrawable
+        where T : TierType, IUIDrawable
     {
         public virtual T Type1 { get; }
 
@@ -132,13 +134,43 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override string GetForgeText(Item item)
         {
-            return $"[T{CompoundTierText}] {GetTolltipText(item)}";
+            return $"[T{CompoundTierText}] {GetTolltipText()}";
+        }
+
+        UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
+        {
+            UIElement affixUI = new();
+            affixUI.Width.Set(0f, 1f);
+            parent.Append(affixUI);
+
+            var affixText = new UIText(GetTolltipText(), UICommon.textMedium);
+            affixText.TextColor = Color;
+            affixUI.Append(affixText);
+
+            Action onChange = delegate ()
+            {
+                affixText.SetText(GetTolltipText());
+                onChangeCallback?.Invoke();
+            };
+
+            var text = new UIText("Type 1", UICommon.textMedium);
+            text.Top.Pixels = affixText.Top.Pixels + affixText.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(text);
+
+            var ui1 = Type1.CreateUI(affixUI, onChange);
+            ui1.Top.Pixels = text.Top.Pixels + text.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(ui1);
+
+            affixUI.Height.Set(ui1.Top.Pixels + ui1.GetDimensions().Height, 0f);
+            affixUI.Recalculate();
+
+            return affixUI;
         }
     }
     [DisableAffix]
-    public class AffixTiered<T, U> : AffixTiered
-        where T : TierType
-        where U : TierType
+    public class AffixTiered<T, U> : AffixTiered, IUIDrawable
+        where T : TierType, IUIDrawable
+        where U : TierType, IUIDrawable
     {
         public virtual T Type1 { get; }
         public virtual U Type2 { get; }
@@ -250,14 +282,48 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override string GetForgeText(Item item)
         {
-            return $"[T{CompoundTierText}] {GetTolltipText(item)}";
+            return $"[T{CompoundTierText}] {GetTolltipText()}";
+        }
+
+        UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
+        {
+            UIElement affixUI = new();
+            affixUI.Width.Set(0f, 1f);
+            parent.Append(affixUI);
+
+            var affixText = new UIText(GetTolltipText(), UICommon.textMedium);
+            affixText.TextColor = Color;
+            affixUI.Append(affixText);
+
+            Action onChange = delegate ()
+            {
+                affixText.SetText(GetTolltipText());
+                onChangeCallback?.Invoke();
+            };
+
+            var text = new UIText("Type 1", UICommon.textMedium);
+            text.Top.Pixels = affixText.Top.Pixels + affixText.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(text);
+
+            var ui1 = Type1.CreateUI(affixUI, onChange);
+            ui1.Top.Pixels = text.Top.Pixels + text.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(ui1);
+
+            var ui2 = Type2.CreateUI(affixUI, onChange);
+            ui2.Top.Pixels = ui1.Top.Pixels + ui1.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(ui2);
+
+            affixUI.Height.Set(ui2.Top.Pixels + ui2.GetDimensions().Height, 0f);
+            affixUI.Recalculate();
+
+            return affixUI;
         }
     }
     [DisableAffix]
-    public class AffixTiered<T, U, O> : AffixTiered
-        where T : TierType
-        where U : TierType
-        where O : TierType
+    public class AffixTiered<T, U, O> : AffixTiered, IUIDrawable
+        where T : TierType, IUIDrawable
+        where U : TierType, IUIDrawable
+        where O : TierType, IUIDrawable
     {
         public virtual T Type1 { get; }
         public virtual U Type2 { get; }
@@ -389,7 +455,52 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override string GetForgeText(Item item)
         {
-            return $"[T{CompoundTierText}] {GetTolltipText(item)}";
+            return $"[T{CompoundTierText}] {GetTolltipText()}";
+        }
+
+        UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
+        {
+            UIElement affixUI = new();
+            affixUI.Width.Set(0f, 1f);
+            parent.Append(affixUI);
+
+            var affixText = new UIText(GetTolltipText(), UICommon.textMedium);
+            affixText.TextColor = Color;
+            affixUI.Append(affixText);
+
+            Action onChange = delegate ()
+            {
+                affixText.SetText(GetTolltipText());
+                onChangeCallback?.Invoke();
+            };
+
+            var text = new UIText("Type 1", UICommon.textMedium);
+            text.Top.Pixels = affixText.Top.Pixels + affixText.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(text);
+
+            var ui1 = Type1.CreateUI(affixUI, onChange);
+            ui1.Top.Pixels = text.Top.Pixels + text.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(ui1);
+
+            var text2 = new UIText("Type 2", UICommon.textMedium);
+            text2.Top.Pixels = ui1.Top.Pixels + ui1.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(text2);
+
+            var ui2 = Type2.CreateUI(affixUI, onChange);
+            ui2.Top.Set(text2.Top.Pixels + text2.GetDimensions().Height + UICommon.spacing, 0f);
+            affixUI.Append(ui2);
+
+            var text3 = new UIText("Type 3", UICommon.textMedium);
+            text3.Top.Pixels = ui2.Top.Pixels + ui2.GetDimensions().Height + UICommon.spacing;
+            affixUI.Append(text3);
+
+            var ui3 = Type3.CreateUI(affixUI, onChange);
+            ui3.Top.Set(text3.Top.Pixels + text3.GetDimensions().Height + UICommon.spacing, 0f);
+            affixUI.Append(ui3);
+
+            affixUI.Height.Set(ui3.Top.Pixels + ui3.GetDimensions().Height, 0f);
+
+            return affixUI;
         }
     }
 }

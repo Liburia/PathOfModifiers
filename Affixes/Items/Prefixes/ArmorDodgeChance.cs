@@ -48,7 +48,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAnyArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"{Type1.GetValueFormat()}% Dodge chance";
         }

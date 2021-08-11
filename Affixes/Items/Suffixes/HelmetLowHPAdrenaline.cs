@@ -43,7 +43,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsHeadArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"Gain Adrenaline for { Type1.GetValueFormat(1) }s when hit to low HP";
         }

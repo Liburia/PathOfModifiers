@@ -77,7 +77,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"{Type1.GetValueFormat()}% chance to release {Type2.GetValueFormat()} life orbs on hit that heal {Type3.GetValueFormat()}% of damage dealt";
         }

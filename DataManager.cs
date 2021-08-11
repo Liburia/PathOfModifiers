@@ -123,6 +123,11 @@ namespace PathOfModifiers
             }
             #endregion
             #region Data access
+            public static Affixes.Items.Affix[] GetAllAffixesRef()
+            {
+                return affixes.ToArray();
+            }
+
             public static int GetAffixIndex(Type type)
             {
                 return affixMap[type];
@@ -396,7 +401,7 @@ namespace PathOfModifiers
                 Tuple<Affixes.NPCs.Affix, double>[] tuples = affixes
                     .Where(a => a.AffixSpaceAvailable(pomNPC) &&
                         a.Weight > 0 &&
-                        a.CanBeRolled(pomNPC, npc) &&
+                        a.CanRoll(pomNPC, npc) &&
                         !pomNPC.affixes.Exists(ia => ia.GetType() == a.GetType()))
                     .Select(a => new Tuple<Affixes.NPCs.Affix, double>(a, a.Weight))
                     .ToArray();

@@ -64,7 +64,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"Heal {Type1.GetValueFormat()}% of max life on hit ({Type2.GetValueFormat(1)}s CD)";
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
@@ -18,12 +19,10 @@ namespace PathOfModifiers.UI.Elements
 				if (_isOn)
                 {
 					BackgroundColor = activeBackgroundColor;
-					SoundEngine.PlaySound(SoundID.MenuOpen);
 				}
                 else
 				{
 					BackgroundColor = defaultBackgroundColor;
-					SoundEngine.PlaySound(SoundID.MenuClose);
 				}
             }
         }
@@ -32,35 +31,24 @@ namespace PathOfModifiers.UI.Elements
 		public Color defaultBackgroundColor = UICommon.backgroundColor;
 		public Color activeBackgroundColor = UICommon.activeBackgroundColor;
 
-		public override void MouseDown(UIMouseEvent evt)
-		{
-			base.MouseDown(evt);
 
+		public override void Click(UIMouseEvent evt)
+        {
 			Toggle();
-		}
 
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            base.MouseOver(evt);
 			SoundEngine.PlaySound(SoundID.MenuTick);
+
+			base.Click(evt);
 		}
 
-        public override void MouseOut(UIMouseEvent evt)
-        {
-            base.MouseOut(evt);
-        }
+		public void SetState(bool value)
+		{
+			IsOn = value;
+		}
 
-        public void Toggle()
+		public void Toggle()
         {
 			IsOn = !IsOn;
-        }
-		public void ToggleOn()
-        {
-			IsOn = true;
-        }
-		public void ToggleOff()
-        {
-			IsOn = false;
-        }
+		}
 	}
 }

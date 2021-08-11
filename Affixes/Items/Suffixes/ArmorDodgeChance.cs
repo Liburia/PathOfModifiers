@@ -80,7 +80,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAnyArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"Gain { Type1.GetValueFormat() }% Dodge chance for { Type2.GetValueFormat(1) }s when hit ({ Type3.GetValueFormat(1) }s CD)";
         }

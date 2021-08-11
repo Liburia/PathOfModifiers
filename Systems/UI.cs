@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
 using PathOfModifiers.UI;
+using PathOfModifiers.UI.States;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -16,7 +18,7 @@ namespace PathOfModifiers.Systems
 
         static ModKeybind key_toggleDebugMenu;
         static UserInterface debugPanelInterface;
-        static DebugUIState debugUIState;
+        static DebugPanel debugUIState;
         public static void ToggleDebugPanel()
         {
             if (debugPanelInterface.CurrentState == null)
@@ -25,17 +27,23 @@ namespace PathOfModifiers.Systems
                 debugPanelInterface?.SetState(null);
         }
 
+        public EventHandler OnWorldLoaded;
+
+        public override void OnWorldLoad()
+        {
+            debugUIState?.RecreateAffixElements();
+        }
+
         public override void Load()
         {
             if (Main.netMode != NetmodeID.Server)
             {
                 key_toggleDebugMenu = KeybindLoader.RegisterKeybind(Mod, "Toggle Debug Menu", Microsoft.Xna.Framework.Input.Keys.None);
                 debugPanelInterface = new UserInterface();
-                debugUIState = new DebugUIState();
+                debugUIState = new DebugPanel();
                 debugUIState.Activate();
             }
         }
-
         public override void Unload()
         {
             key_toggleDebugMenu = null;

@@ -141,7 +141,7 @@ namespace PathOfModifiers
             if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.BurningAir), out var burningAirs))
             {
                 int maxDps = (int)Math.Round(Player.statLifeMax2 * 0.01f);
-                totalDPS += burningAirs.totalValue > maxDps ? maxDps : burningAirs.totalValue;
+                totalDPS += Math.Min(burningAirs.totalValue, maxDps);
             }
 
 

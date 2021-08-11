@@ -63,7 +63,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"Spend { Type1.GetValueFormat() }% mana to reduce damage taken by { Type2.GetValueFormat() }%";
         }

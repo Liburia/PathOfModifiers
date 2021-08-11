@@ -63,7 +63,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsBodyArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"Gain knockback immunity for { Type1.GetValueFormat(1) }s when hit ({ Type2.GetValueFormat(1) }s CD)";
         }

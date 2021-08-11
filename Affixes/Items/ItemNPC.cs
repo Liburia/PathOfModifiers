@@ -1,14 +1,11 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items
 {
     public class ItemNPC : GlobalNPC
     {
-        public override bool InstancePerEntity => false;
-
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
             for (int i = 0; i < Main.maxPlayers; i++)

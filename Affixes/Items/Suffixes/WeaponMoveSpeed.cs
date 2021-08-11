@@ -78,7 +78,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             string plusMinus = Type3.GetValue() >= 0 ? "+" : "-";
 

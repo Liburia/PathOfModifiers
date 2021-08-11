@@ -46,7 +46,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             float value = Type1.GetValue();
             float valueFormat = Type1.GetValueFormat();

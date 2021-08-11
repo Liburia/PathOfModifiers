@@ -62,7 +62,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             char plusMinus = Type2.GetValue() < 0 ? '-' : '+';
             return $"{ Type1.GetValueFormat() }% chance to Shock({ plusMinus }{ Type2.GetValueFormat() }%)";

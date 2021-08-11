@@ -46,7 +46,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             float value = Type1.GetValue();
             float valueFormat = Type1.GetValueFormat();
@@ -55,10 +55,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueFormat }% damage per player buff/debuff";
         }
 
-        public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float multiplier, ref float flat)
+        public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat)
         {
             float value = Type1.GetValue();
-            add += value * PoMUtil.CountBuffs(player.buffType);
+            damage += value * PoMUtil.CountBuffs(player.buffType);
         }
     }
 }

@@ -62,7 +62,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAnyArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"{Type1.GetValueFormat()}% chance to drop {Type2.GetValueFormat()} gold on kill";
         }

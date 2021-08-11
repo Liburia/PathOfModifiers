@@ -48,7 +48,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
             return $"Take and deal { plusMinus }{ Type1.GetValueFormat() }% damage";

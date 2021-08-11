@@ -47,7 +47,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsBodyArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
             return $"Take { plusMinus }{ Type1.GetValueFormat() }% damage on full HP";

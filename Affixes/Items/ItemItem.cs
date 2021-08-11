@@ -446,9 +446,9 @@ namespace PathOfModifiers.Affixes.Items
             UpdateName(item);
         }
 
-        public void AddAffix(Affix affix, Item item, bool clone = false)
+        public void AddAffix(Affix affix, Item item, bool isItemCloned = false)
         {
-            affix.AddAffix(item, clone);
+            affix.AddAffix(item, isItemCloned);
 
             affixes.Add(affix);
 
@@ -509,7 +509,7 @@ namespace PathOfModifiers.Affixes.Items
         {
             return (GetInstance<PoMConfigServer>().DisableVanillaPrefixesWeapons && IsWeapon(item))
                 || (GetInstance<PoMConfigServer>().DisableVanillaPrefixesAccessories && IsAccessory(item))
-                ? ModContent.PrefixType<PoMPrefix>() : -1;
+                ? PrefixType<PoMPrefix>() : -1;
         }
         public override bool ReforgePrice(Item item, ref int reforgePrice, ref bool canApplyDiscount)
         {
@@ -551,30 +551,30 @@ namespace PathOfModifiers.Affixes.Items
             }
             crit = (int)Math.Round(crit * multiplier);
         }
-        //public override void ModifyWeaponDamage(Item item, Player player, ref float add, ref float mult, ref float flat)
-        //{
-        //    foreach (var prefix in prefixes)
-        //    {
-        //        prefix.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
-        //    }
-        //    foreach (var suffix in suffixes)
-        //    {
-        //        suffix.ModifyWeaponDamage(item, player, ref add, ref mult, ref flat);
-        //    }
-        //}
-        //public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
-        //{
-        //    float multiplier = 1f;
-        //    foreach (var prefix in prefixes)
-        //    {
-        //        prefix.GetWeaponKnockback(item, player, ref multiplier);
-        //    }
-        //    foreach (var suffix in suffixes)
-        //    {
-        //        suffix.GetWeaponKnockback(item, player, ref multiplier);
-        //    }
-        //    knockback = (float)Math.Round(knockback * multiplier);
-        //}
+        public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat)
+        {
+            foreach (var prefix in prefixes)
+            {
+                prefix.ModifyWeaponDamage(item, player, ref damage, ref flat);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.ModifyWeaponDamage(item, player, ref damage, ref flat);
+            }
+        }
+        public override void ModifyWeaponKnockback(Item item, Player player, ref StatModifier knockback, ref float flat)
+        {
+            float multiplier = 1f;
+            foreach (var prefix in prefixes)
+            {
+                prefix.GetWeaponKnockback(item, player, ref multiplier);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.GetWeaponKnockback(item, player, ref multiplier);
+            }
+            knockback *= multiplier;
+        }
         public override float UseTimeMultiplier(Item item, Player player)
         {
             float multiplier = 1f;
@@ -599,21 +599,21 @@ namespace PathOfModifiers.Affixes.Items
                 suffix.ModifyManaCost(item, player, ref reduce, ref mult);
             }
         }
-        //public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        //{
-        //    bool shoot = true;
-        //    foreach (var prefix in prefixes)
-        //    {
-        //        if (!prefix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
-        //            shoot = false;
-        //    }
-        //    foreach (var suffix in suffixes)
-        //    {
-        //        if (!suffix.Shoot(item, player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
-        //            shoot = false;
-        //    }
-        //    return shoot;
-        //}
+        public override bool Shoot(Item item, Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            bool shoot = true;
+            foreach (var prefix in prefixes)
+            {
+                if (!prefix.Shoot(item, player, source, position, velocity, type, damage, knockback))
+                    shoot = false;
+            }
+            foreach (var suffix in suffixes)
+            {
+                if (!suffix.Shoot(item, player, source, position, velocity, type, damage, knockback))
+                    shoot = false;
+            }
+            return shoot;
+        }
         public override void UpdateAccessory(Item item, Player player, bool hideVisual)
         {
             //UpdateEquip covers accessories
@@ -816,15 +816,15 @@ namespace PathOfModifiers.Affixes.Items
                 suffix.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
         }
-        public void PlayerGetWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
+        public void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
+                prefix.PlayerModifyWeaponCrit(item, heldItem, player, ref multiplier);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerGetWeaponCrit(item, heldItem, player, ref multiplier);
+                suffix.PlayerModifyWeaponCrit(item, heldItem, player, ref multiplier);
             }
         }
         public void ModifyHitByNPC(Item item, Player player, NPC npc, ref float damageMultiplier, ref bool crit)
@@ -950,17 +950,17 @@ namespace PathOfModifiers.Affixes.Items
             }
         }
 
-        public bool PlayerShoot(Item affixItem, Player player, Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public bool PlayerShoot(Item affixItem, Player player, Item item, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             bool shoot = true;
             foreach (var prefix in prefixes)
             {
-                if (!prefix.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+                if (!prefix.PlayerShoot(affixItem, player, item, source, position, velocity, type, damage, knockback))
                     shoot = false;
             }
             foreach (var suffix in suffixes)
             {
-                if (!suffix.PlayerShoot(affixItem, player, item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack))
+                if (!suffix.PlayerShoot(affixItem, player, item, source, position, velocity, type, damage, knockback))
                     shoot = false;
             }
             return shoot;
@@ -978,17 +978,18 @@ namespace PathOfModifiers.Affixes.Items
                 Mod.Logger.Error(e.ToString());
             }
         }
-        //public override void OnCraft(Item item, Recipe recipe)
-        //{
-        //    try
-        //    {
-        //        TryRollItem(item);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Mod.Logger.Error(e.ToString());
-        //    }
-        //}
+        public override void OnCreate(Item item, ItemCreationContext context)
+        {
+            //TODO: does this cover all cases, if so remove all other triggers to roll the item(PostUpdate, PostDrawInInventory)
+            try
+            {
+                TryRollItem(item);
+            }
+            catch (Exception e)
+            {
+                Mod.Logger.Error(e.ToString());
+            }
+        }
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {

@@ -34,6 +34,7 @@ namespace PathOfModifiers
                 public static class UI
                 {
                     public const string CloseButton = "PathOfModifiers/UI/Elements/CloseButton";
+                    public const string AddButton = "PathOfModifiers/UI/Elements/AddButton";
                 }
 
                 public const string MapIcons = "PathOfModifiers/Images/MapIcons/";

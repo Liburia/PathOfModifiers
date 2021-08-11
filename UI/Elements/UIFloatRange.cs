@@ -14,28 +14,38 @@ namespace PathOfModifiers.UI.Elements
 {
 	internal class UIFloatRange : UIRange
 	{
-		public float current;
-        public string CurrentString => MathF.Round(current, 2).ToString();
-        protected new float min;
-        protected new float max;
-
-		public UIFloatRange(float min, float max, float sliderPosition = 0) : base(min.ToString(), max.ToString(), sliderPosition)
+		public float CurrentValue
         {
-			this.min = min;
-			this.max = max;
-            current = min;
+            get => slider.SliderPosition;
+            set
+            {
+                value = MathHelper.Clamp(value, 0f, 1f);
+                slider.SliderPosition = value;
+            }
+        }
+        public string CurrentString => MathF.Round(min + ((max - min) * CurrentValue), 2).ToString();
+
+        float min;
+        float max;
+
+		public UIFloatRange(float minLabel = 0f, float maxLabel = 1f, float sliderPosition = 0) : base(MathF.Round(minLabel, 2).ToString(), MathF.Round(maxLabel, 2).ToString(), sliderPosition)
+        {
+            CurrentValue = sliderPosition;
+            min = minLabel;
+            max = maxLabel;
+
+            input.SetText(CurrentString);
 
             OnInputFocusedChanged += delegate (UIElement el)
             {
                 if (float.TryParse(input.CurrentString, out float parsed))
                 {
-                    current = parsed;
+                    CurrentValue = parsed;
                 }
             };
 
-            slider.OnSliderChanged += delegate (UIElement el)
+            slider.OnSliderInput += delegate (UIElement el)
             {
-                current = min + ((max - min) * slider.SliderPosition);
                 input.SetText(CurrentString);
             };
         }

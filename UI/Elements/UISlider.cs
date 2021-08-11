@@ -11,7 +11,7 @@ using Terraria.UI;
 
 namespace PathOfModifiers.UI.Elements
 {
-	internal class UISlider : UIElement
+	public class UISlider : UIElement
 	{
         public const float lineOffset = 5;
         public const float lineHeight = 2;
@@ -33,12 +33,12 @@ namespace PathOfModifiers.UI.Elements
         public float lineLeft;
         public float lineWidth;
 
-        public ElementEvent OnSliderChanged;
+        public event ElementEvent OnSliderInput;
 
         public UISlider(float sliderPosition = 0f)
         {
             SliderPosition = sliderPosition;
-            Height.Set(40, 0);
+            MinHeight.Set(16f, 0);
         }
 
         public override void Recalculate()
@@ -94,7 +94,7 @@ namespace PathOfModifiers.UI.Elements
                 if (SliderPosition != newSliderPosition)
                 {
                     SliderPosition = newSliderPosition;
-                    OnSliderChanged?.Invoke(this);
+                    OnSliderInput?.Invoke(this);
                 }
             }
         }

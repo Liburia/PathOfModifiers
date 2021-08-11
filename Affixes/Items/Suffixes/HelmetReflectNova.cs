@@ -81,7 +81,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsHeadArmor(item);
         }
 
-        public override string GetTolltipText(Item item)
+        public override string GetTolltipText()
         {
             return $"Nova for { Type1.GetValueFormat() }% of damage taken + { Type2.GetValueFormat() }% of target's HP as damage when hit ({ Type3.GetValueFormat(1) }s CD)";
         }
