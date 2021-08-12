@@ -20,15 +20,14 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             TwoWay = false,
             IsRange = true,
-            Tiers = new TierType<float>.WeightedTier[]
+            Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(-0.1f, 0.5),
-                new TTFloat.WeightedTier(-0.066f, 1),
-                new TTFloat.WeightedTier(-0.033f, 2),
-                new TTFloat.WeightedTier(0f, 2),
-                new TTFloat.WeightedTier(0.033f, 1),
-                new TTFloat.WeightedTier(0.066f, 0.5),
-                new TTFloat.WeightedTier(0.1f, 0),
+                new TTFloat.WeightedTier(-0.1f, -0.066f, 0.5),
+                new TTFloat.WeightedTier(-0.066f, 0.033f, 1),
+                new TTFloat.WeightedTier(-0.033f, 0f, 2),
+                new TTFloat.WeightedTier(0f, 0.033f, 2),
+                new TTFloat.WeightedTier(0.033f, 0.066f, 1),
+                new TTFloat.WeightedTier(0.066f, 0.1f, 0.5),
             },
         };
 

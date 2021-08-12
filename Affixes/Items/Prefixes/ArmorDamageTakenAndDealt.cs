@@ -22,15 +22,14 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             TwoWay = false,
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
-    {
-                new TTFloat.WeightedTier(-0.2f, 0.5),
-                new TTFloat.WeightedTier(-0.14f, 1),
-                new TTFloat.WeightedTier(-0.07f, 2),
-                new TTFloat.WeightedTier(0, 2),
-                new TTFloat.WeightedTier(0.07f, 1),
-                new TTFloat.WeightedTier(0.14f, 0.5),
-                new TTFloat.WeightedTier(0.2f, 0),
-    },
+            {
+                new TTFloat.WeightedTier(-0.2f, -0.14f, 0.5),
+                new TTFloat.WeightedTier(-0.14f, -0.07f, 1),
+                new TTFloat.WeightedTier(-0.07f, 0, 2),
+                new TTFloat.WeightedTier(0, 0.07f, 2),
+                new TTFloat.WeightedTier(0.07f, 0.14f, 1),
+                new TTFloat.WeightedTier(0.14f, 0.2f, 0.5),
+            },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
             new WeightedTierName("Discordant", 3),

@@ -21,11 +21,10 @@ namespace PathOfModifiers.Affixes.NPCs.Affixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.5f, 0.5),
-                new TTFloat.WeightedTier(0.75f, 1),
-                new TTFloat.WeightedTier(1f, 3),
-                new TTFloat.WeightedTier(1.25f, 1),
-                new TTFloat.WeightedTier(1.5f, 0),
+                new TTFloat.WeightedTier(0.5f, 0.75f, 0.5),
+                new TTFloat.WeightedTier(0.75f, 1f, 1),
+                new TTFloat.WeightedTier(1f, 1.25f, 3),
+                new TTFloat.WeightedTier(1.25f, 1.5f, 1),
             },
         };
 

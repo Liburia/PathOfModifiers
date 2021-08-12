@@ -51,13 +51,13 @@ namespace PathOfModifiers.Affixes.NPCs
 
                 if (Type1.TwoWay)
                 {
-                    t1 = Math.Abs(t1 - (Type1.MaxTier / 2f)) * 2;
+                    t1 = Math.Abs(t1 - (Type1.MaxTiers / 2f)) * 2;
                 }
 
                 return (int)t1;
             }
         }
-        public int MaxCompoundTier => Type1.MaxTier;
+        public int MaxCompoundTier => Type1.MaxTiers;
         public int CompoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         public void SetTier(int t1, bool ignore1 = false)
@@ -143,17 +143,17 @@ namespace PathOfModifiers.Affixes.NPCs
 
                 if (Type1.TwoWay)
                 {
-                    t1 = Math.Abs(t1 - (Type1.MaxTier / 2f)) * 2;
+                    t1 = Math.Abs(t1 - (Type1.MaxTiers / 2f)) * 2;
                 }
                 if (Type2.TwoWay)
                 {
-                    t2 = Math.Abs(t2 - (Type2.MaxTier / 2f)) * 2;
+                    t2 = Math.Abs(t2 - (Type2.MaxTiers / 2f)) * 2;
                 }
 
                 return (int)(t1 + t2) / 2;
             }
         }
-        public int MaxCompoundTier => (Type1.MaxTier + Type2.MaxTier) / 2;
+        public int MaxCompoundTier => (Type1.MaxTiers + Type2.MaxTiers) / 2;
         public int CompoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         public void SetTier(int t1, int t2, bool ignore1 = false, bool ignore2 = false)
@@ -256,21 +256,21 @@ namespace PathOfModifiers.Affixes.NPCs
 
                 if (Type1.TwoWay)
                 {
-                    t1 = Math.Abs(t1 - (Type1.MaxTier / 2f)) * 2;
+                    t1 = Math.Abs(t1 - (Type1.MaxTiers / 2f)) * 2;
                 }
                 if (Type2.TwoWay)
                 {
-                    t2 = Math.Abs(t2 - (Type2.MaxTier / 2f)) * 2;
+                    t2 = Math.Abs(t2 - (Type2.MaxTiers / 2f)) * 2;
                 }
                 if (Type3.TwoWay)
                 {
-                    t3 = Math.Abs(t3 - (Type3.MaxTier / 2f)) * 2;
+                    t3 = Math.Abs(t3 - (Type3.MaxTiers / 2f)) * 2;
                 }
 
                 return (int)(t1 + t2 + t3) / 3;
             }
         }
-        public int MaxCompoundTier => (Type1.MaxTier + Type2.MaxTier + Type3.MaxTier) / 3;
+        public int MaxCompoundTier => (Type1.MaxTiers + Type2.MaxTiers + Type3.MaxTiers) / 3;
         public int CompoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         public void SetTier(int t1, int t2, int t3, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)

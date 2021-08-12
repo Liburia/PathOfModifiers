@@ -18,18 +18,16 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override TTInt Type1 { get; } = new TTInt()
         {
-            CanBeZero = false,
             TwoWay = false,
             IsRange = true,
             Tiers = new TTInt.WeightedTier[]
             {
-                new TTInt.WeightedTier(-20, 0.5),
-                new TTInt.WeightedTier(-14, 1),
-                new TTInt.WeightedTier(-7, 2),
-                new TTInt.WeightedTier(1, 2),
-                new TTInt.WeightedTier(8, 1),
-                new TTInt.WeightedTier(15, 0.5),
-                new TTInt.WeightedTier(21, 0),
+                new TTInt.WeightedTier(-20, -14, 0.5),
+                new TTInt.WeightedTier(-14, -7, 1),
+                new TTInt.WeightedTier(-7, 0, 2),
+                new TTInt.WeightedTier(1, 8, 2),
+                new TTInt.WeightedTier(8, 15, 1),
+                new TTInt.WeightedTier(15, 21, 0.5),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {

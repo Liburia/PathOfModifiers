@@ -22,13 +22,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0f, 3),
-                new TTFloat.WeightedTier(0.1f, 2.5),
-                new TTFloat.WeightedTier(0.2f, 2),
-                new TTFloat.WeightedTier(0.3f, 1.5),
-                new TTFloat.WeightedTier(0.4f, 1),
-                new TTFloat.WeightedTier(0.5f, 0.5),
-                new TTFloat.WeightedTier(0.6f, 0),
+                new TTFloat.WeightedTier(0f, 0.1f, 3),
+                new TTFloat.WeightedTier(0.1f, 0.2f, 2.5),
+                new TTFloat.WeightedTier(0.2f, 0.3f, 2),
+                new TTFloat.WeightedTier(0.3f, 0.4f, 1.5),
+                new TTFloat.WeightedTier(0.4f, 0.5f, 1),
+                new TTFloat.WeightedTier(0.5f, 0.6f, 0.5),
             },
         };
         public override TTInt Type2 { get; } = new TTInt()
@@ -37,13 +36,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = false,
             Tiers = new TTInt.WeightedTier[]
             {
-                new TTInt.WeightedTier(1, 3),
-                new TTInt.WeightedTier(2, 2.5),
-                new TTInt.WeightedTier(3, 2),
-                new TTInt.WeightedTier(4, 1.5),
-                new TTInt.WeightedTier(5, 1),
-                new TTInt.WeightedTier(6, 0.5),
-                new TTInt.WeightedTier(7, 0),
+                new TTInt.WeightedTier(1, 2, 3),
+                new TTInt.WeightedTier(2, 3, 2.5),
+                new TTInt.WeightedTier(3, 4, 2),
+                new TTInt.WeightedTier(4, 5, 1.5),
+                new TTInt.WeightedTier(5, 6, 1),
+                new TTInt.WeightedTier(6, 7, 0.5),
             },
         };
         public override TTFloat Type3 { get; } = new TTFloat()
@@ -52,13 +50,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0f, 3),
-                new TTFloat.WeightedTier(0.0016f, 2.5),
-                new TTFloat.WeightedTier(0.0033f, 2),
-                new TTFloat.WeightedTier(0.005f, 1.5),
-                new TTFloat.WeightedTier(0.0066f, 1),
-                new TTFloat.WeightedTier(0.0083f, 0.5),
-                new TTFloat.WeightedTier(0.001f, 0),
+                new TTFloat.WeightedTier(0f, 0.0016f, 3),
+                new TTFloat.WeightedTier(0.0016f, 0.0033f, 2.5),
+                new TTFloat.WeightedTier(0.0033f, 0.005f, 2),
+                new TTFloat.WeightedTier(0.005f, 0.0066f, 1.5),
+                new TTFloat.WeightedTier(0.0066f, 0.0083f, 1),
+                new TTFloat.WeightedTier(0.0083f, 0.001f, 0.5),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {

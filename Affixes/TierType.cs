@@ -26,7 +26,7 @@ namespace PathOfModifiers.Affixes
         /// Whether the value can be anything inbetween the 2 tiers or clamped to one of them
         /// </summary>
         public virtual bool IsRange { get; set; }
-        public virtual int MaxTier { get; }
+        public virtual int MaxTiers { get; }
         public virtual int TierText { get; }
         public virtual float TierMultiplier { get; protected set; }
 
@@ -54,25 +54,27 @@ namespace PathOfModifiers.Affixes
     {
         public class WeightedTier
         {
-            public T value;
+            public T min;
+            public T max;
             public double weight;
 
-            public WeightedTier(T tier, double weight)
+            public WeightedTier(T min, T max, double weight)
             {
-                this.value = tier;
+                this.min = min;
+                this.max = max;
                 this.weight = weight;
             }
         }
 
-        public override int MaxTier => Tiers.Length - 1;
-        public override int TierText => MaxTier - Tier + 1;
-
         public WeightedTier[] Tiers { get; set; }
+
+        public override int MaxTiers => Tiers.Length;
+        public override int TierText => MaxTiers - Tier;
 
         public override int RollTier()
         {
-            Tuple<int, double>[] tierWeights = new Tuple<int, double>[MaxTier];
-            for (int i = 0; i < MaxTier; i++)
+            Tuple<int, double>[] tierWeights = new Tuple<int, double>[MaxTiers];
+            for (int i = 0; i < MaxTiers; i++)
             {
                 tierWeights[i] = new Tuple<int, double>(i, Tiers[i].weight);
             }
@@ -83,12 +85,11 @@ namespace PathOfModifiers.Affixes
 
         public virtual T GetValue(int? tier = null)
         {
-            return Tiers[tier ?? Tier].value;
+            return Tiers[tier ?? Tier].min;
         }
     }
     public class TTFloat : TierType<float>, IUIDrawable
     {
-        public override float TierMultiplier { get; protected set; }
         float Value { get; set; }
 
         public override float GetValue(int? tier = null)
@@ -122,17 +123,18 @@ namespace PathOfModifiers.Affixes
 
         public override void UpdateValue()
         {
-            var value = base.GetValue();
-            Value = value + ((base.GetValue(Tier + 1) - value) * TierMultiplier);
+            var wt = Tiers[Tier];
+            Value = wt.min + ((wt.max - wt.min) * TierMultiplier);
         }
 
+        //TODO: Test that these work after changing to min/max weighted tiers
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
         {
             UIElement el = new();
             el.Width.Set(0f, 1f);
             parent.Append(el);
 
-            var tierRange = new UIIntRange(MaxTier - 1, Tier);
+            var tierRange = new UIIntRange(MaxTiers - 1, Tier);
             tierRange.Width.Set(0f, 1f);
             el.Append(tierRange);
 
@@ -168,12 +170,6 @@ namespace PathOfModifiers.Affixes
     /// </summary>
     public class TTInt : TierType<int>, IUIDrawable
     {
-        /// <summary>
-        /// Whether 0 is skipped for IsRange
-        /// </summary>
-        public virtual bool CanBeZero { get; set; }
-
-        public override float TierMultiplier { get; protected set; }
         int Value { get; set; }
 
         public override int GetValue(int? tier = null)
@@ -196,48 +192,16 @@ namespace PathOfModifiers.Affixes
 
         public override void UpdateValue()
         {
-            int currentValue = base.GetValue();
-            int nextValue = base.GetValue(Tier + 1);
-            float value = nextValue - currentValue;
+            var wt = Tiers[Tier];
 
-            bool floor = currentValue < nextValue;
-            bool zeroInrange = false;
-            if (!CanBeZero)
+            var value = wt.min + (wt.max - wt.min * TierMultiplier);
+
+            if (wt.min < wt.max)
             {
-                if (floor)
-                {
-                    if (currentValue < 0 && nextValue > 0)
-                    {
-                        zeroInrange = true;
-                        value -= 1;
-                    }
-                }
-                else
-                {
-                    if (currentValue > 0 && nextValue < 0)
-                    {
-                        zeroInrange = true;
-                        value += 1;
-                    }
-                }
-            }
-
-            value = currentValue + (value * TierMultiplier);
-
-            if (floor)
-            {
-                if (zeroInrange && !CanBeZero && value >= 0)
-                {
-                    value += 1;
-                }
                 Value = (int)Math.Floor(value);
             }
             else
             {
-                if (zeroInrange && !CanBeZero && value <= 0)
-                {
-                    value -= 1;
-                }
                 Value = (int)Math.Ceiling(value);
             }
         }
@@ -248,7 +212,7 @@ namespace PathOfModifiers.Affixes
             el.Width.Set(0f, 1f);
             parent.Append(el);
 
-            var tierRange = new UIIntRange(MaxTier - 1, Tier);
+            var tierRange = new UIIntRange(MaxTiers - 1, Tier);
             tierRange.Width.Set(0f, 1f);
 
             UIElement.ElementEvent setTier = delegate (UIElement el)
@@ -259,7 +223,8 @@ namespace PathOfModifiers.Affixes
             tierRange.slider.OnSliderInput += setTier;
             tierRange.OnInputFocusedChanged += setTier;
 
-            var valueRange = new UIIntRange(Tiers[Tier + 1].value - Tiers[Tier].value, Value - Tiers[Tier].value);
+            var wt = Tiers[Tier];
+            var valueRange = new UIIntRange(wt.max - wt.min, Value - wt.min);
             valueRange.Top.Set(tierRange.Top.Pixels + tierRange.GetDimensions().Height + UICommon.spacing, 0f);
             valueRange.Width.Set(0f, 1f);
             el.Append(valueRange);
