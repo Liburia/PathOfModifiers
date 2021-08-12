@@ -51,6 +51,9 @@ namespace PathOfModifiers.UI.States
                 affixEditingUI?.Remove();
 
                 affixEditingUI = _selectedAffix?.itemAffix.CreateUI(affixUIParent);
+
+                string name = _selectedAffix?.itemAffix.GetType().Name ?? "Affix";
+                affixName.SetText(name);
             }
         }
 
@@ -62,6 +65,7 @@ namespace PathOfModifiers.UI.States
         UIFocusInputTextField affixSearch;
         UIList<AffixListEntry> affixList;
 
+        UIText affixName;
         UIElement affixUIParent;
         UIElement affixEditingUI;
 
@@ -138,14 +142,12 @@ namespace PathOfModifiers.UI.States
                     affixHalf.MinHeight.Set(0, 1);
                     content.Append(affixHalf);
                     {
-                        UIText name = new("Affix", UICommon.textBig);
-                        name.IgnoresMouseInteraction = true;
-                        name.Top.Set(0, 0);
-                        name.HAlign = 0.5f;
-                        affixHalf.Append(name);
+                        affixName = new("Affix", UICommon.textBig);
+                        affixName.IgnoresMouseInteraction = true;
+                        affixHalf.Append(affixName);
 
                         affixUIParent = new();
-                        affixUIParent.Top.Set(name.Top.Pixels + name.GetDimensions().Height + UICommon.spacing, 0f);
+                        affixUIParent.Top.Set(affixName.Top.Pixels + affixName.GetDimensions().Height + UICommon.spacing, 0f);
                         affixUIParent.MinWidth.Set(0f, 1f);
                         affixUIParent.MinHeight.Set(500f, 0f);
                         affixHalf.Append(affixUIParent);
