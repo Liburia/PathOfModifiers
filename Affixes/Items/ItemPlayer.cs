@@ -119,31 +119,27 @@ namespace PathOfModifiers.Affixes.Items
 
         public override bool ConsumeAmmo(Item weapon, Item ammo)
         {
-            float chanceToNotConsume = 0;
             bool consume = true;
             Item item;
             ItemItem pomItem;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
-                if (!pomItem.PlayerConsumeAmmo(Player, item, ammo, ref chanceToNotConsume))
-                    return false;
+                consume = consume && pomItem.PlayerConsumeAmmo(Player, item, ammo);
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
-                if (!pomItem.PlayerConsumeAmmo(Player, item, ammo, ref chanceToNotConsume))
-                    return false;
+                consume = consume && pomItem.PlayerConsumeAmmo(Player, item, ammo);
             }
-            consume = consume && Main.rand.NextFloat(1) > chanceToNotConsume;
             return consume;
         }
 

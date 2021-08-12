@@ -1,3 +1,6 @@
+v0.7.0
+Chance to not consume ammo always stacks multiplicatively now
+
 v0.6.4
 Molten Shell now does 6 times less damage based on enemy life(was instakilling bosses in certain situations), flat damage is unchanged.
 Modifier fragment drops now scale with the killed enemy's coin value.

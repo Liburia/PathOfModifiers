@@ -69,7 +69,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult) { }
         public virtual void UpdateInventory(Item item, ItemPlayer player) { }
         public virtual void UpdateEquip(Item item, ItemPlayer player) { }
-        public virtual bool ConsumeAmmo(Item item, Player player, ref float chanceToNotConsume) { return true; }
+        public virtual bool ConsumeAmmo(Item item, Player player) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
         public virtual void UseItem(Item item, Player player) { }
         public virtual void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit) { }
@@ -85,7 +85,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit) { }
         #endregion
         #region Player Hooks
-        public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo, ref float chanceToNotConsume) { return true; }
+        public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo) { return true; }
         public virtual bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource) { return true; }
         public virtual void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit) { }
         public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }

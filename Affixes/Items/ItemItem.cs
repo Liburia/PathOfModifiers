@@ -523,19 +523,16 @@ namespace PathOfModifiers.Affixes.Items
         #region Item Hooks
         public override bool ConsumeAmmo(Item item, Player player)
         {
-            float chanceToNotConsume = 0;
+            //TODO: Test this when TML fixes the hook, and actually calls this on the item
             bool consume = true;
             foreach (var prefix in prefixes)
             {
-                if (!prefix.ConsumeAmmo(item, player, ref chanceToNotConsume))
-                    consume = false;
+                consume = consume && prefix.ConsumeAmmo(item, player);
             }
             foreach (var suffix in suffixes)
             {
-                if (!suffix.ConsumeAmmo(item, player, ref chanceToNotConsume))
-                    consume = false;
+                consume = consume && suffix.ConsumeAmmo(item, player);
             }
-            consume = consume && Main.rand.NextFloat(1) > chanceToNotConsume;
             return consume;
         }
         public override void ModifyWeaponCrit(Item item, Player player, ref int crit)
@@ -764,18 +761,16 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
-        public bool PlayerConsumeAmmo(Player player, Item item, Item ammo, ref float chanceToNotConsume)
+        public bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
         {
             bool consume = true;
             foreach (var prefix in prefixes)
             {
-                if (!prefix.PlayerConsumeAmmo(player, item, ammo, ref chanceToNotConsume))
-                    consume = false;
+                consume = consume && prefix.PlayerConsumeAmmo(player, item, ammo);
             }
             foreach (var suffix in suffixes)
             {
-                if (!suffix.PlayerConsumeAmmo(player, item, ammo, ref chanceToNotConsume))
-                    consume = false;
+                consume = consume && suffix.PlayerConsumeAmmo(player, item, ammo);
             }
             return consume;
         }
