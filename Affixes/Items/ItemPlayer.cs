@@ -161,7 +161,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -171,7 +171,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -200,7 +200,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -209,7 +209,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -224,7 +224,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -233,7 +233,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -254,7 +254,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -263,7 +263,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -280,7 +280,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -289,7 +289,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -304,7 +304,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -313,7 +313,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -336,7 +336,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -345,7 +345,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -361,7 +361,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -370,7 +370,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -394,7 +394,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -403,7 +403,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -418,7 +418,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -427,7 +427,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 item = Player.armor[i];
-                if (item.type == 0 || item.stack == 0)
+                if (item.IsAir)
                     continue;
 
                 pomItem = item.GetGlobalItem<ItemItem>();
@@ -521,7 +521,7 @@ namespace PathOfModifiers.Affixes.Items
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
                     item = Player.inventory[i];
-                    if (item.type == 0 || item.stack == 0)
+                    if (item.IsAir)
                         continue;
 
                     pomItem = item.GetGlobalItem<ItemItem>();
@@ -530,7 +530,7 @@ namespace PathOfModifiers.Affixes.Items
                 for (int i = 0; i < Player.armor.Length; i++)
                 {
                     item = Player.armor[i];
-                    if (item.type == 0 || item.stack == 0)
+                    if (item.IsAir)
                         continue;
 
                     pomItem = item.GetGlobalItem<ItemItem>();
@@ -550,7 +550,7 @@ namespace PathOfModifiers.Affixes.Items
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
                     item = Player.inventory[i];
-                    if (item.type == 0 || item.stack == 0)
+                    if (item.IsAir)
                         continue;
 
                     pomItem = item.GetGlobalItem<ItemItem>();
@@ -559,7 +559,7 @@ namespace PathOfModifiers.Affixes.Items
                 for (int i = 0; i < Player.armor.Length; i++)
                 {
                     item = Player.armor[i];
-                    if (item.type == 0 || item.stack == 0)
+                    if (item.IsAir)
                         continue;
 
                     pomItem = item.GetGlobalItem<ItemItem>();
@@ -623,7 +623,7 @@ namespace PathOfModifiers.Affixes.Items
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
                     item = Player.inventory[i];
-                    if (item.type == 0 || item.stack == 0)
+                    if (item.IsAir)
                         continue;
 
                     pomItem = item.GetGlobalItem<ItemItem>();
@@ -632,7 +632,7 @@ namespace PathOfModifiers.Affixes.Items
                 for (int i = 0; i < Player.armor.Length; i++)
                 {
                     item = Player.armor[i];
-                    if (item.type == 0 || item.stack == 0)
+                    if (item.IsAir)
                         continue;
 
                     pomItem = item.GetGlobalItem<ItemItem>();
@@ -650,7 +650,7 @@ namespace PathOfModifiers.Affixes.Items
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
                     item = Player.inventory[i];
-                    if (item.type == 0 || item.stack == 0)
+                    if (item.IsAir)
                         continue;
 
                     pomItem = item.GetGlobalItem<ItemItem>();
@@ -659,7 +659,7 @@ namespace PathOfModifiers.Affixes.Items
                 for (int i = 0; i < Player.armor.Length; i++)
                 {
                     item = Player.armor[i];
-                    if (item.type == 0 || item.stack == 0)
+                    if (item.IsAir)
                         continue;
 
                     pomItem = item.GetGlobalItem<ItemItem>();
