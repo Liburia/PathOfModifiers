@@ -22,12 +22,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0f, 0.016f, 3),
-                new TTFloat.WeightedTier(0.016f, 0.033f, 2.5),
-                new TTFloat.WeightedTier(0.033f, 0.05f, 2),
-                new TTFloat.WeightedTier(0.05f, 0.066f, 1.5),
-                new TTFloat.WeightedTier(0.066f, 0.083f, 1),
-                new TTFloat.WeightedTier(0.083f, 0.1f, 0.5),
+                new TTFloat.WeightedTier(0.01f, 0.025f, 3),
+                new TTFloat.WeightedTier(0.025f, 0.040f, 2.5),
+                new TTFloat.WeightedTier(0.040f, 0.055f, 2),
+                new TTFloat.WeightedTier(0.055f, 0.070f, 1.5),
+                new TTFloat.WeightedTier(0.070f, 0.085f, 1),
+                new TTFloat.WeightedTier(0.085f, 0.100f, 0.5),
             },
         };
 

@@ -25,9 +25,9 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0f, 2f, 3),
-                new TTFloat.WeightedTier(2f, 4f, 1.5),
-                new TTFloat.WeightedTier(4f, 6f, 0.5),
+                new TTFloat.WeightedTier(1f, 4f, 3),
+                new TTFloat.WeightedTier(4f, 7f, 1.5),
+                new TTFloat.WeightedTier(7f, 10f, 0.5),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {

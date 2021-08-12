@@ -63,7 +63,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         public override string GetTolltipText()
         {
-            return $"Restore { Type1.GetValueFormat() }% mana to increase damage taken by { Type2.GetValueFormat() }%";
+            return $"Restore { Type1.GetValueFormat() }% mana to increase damage taken by { Type2.GetValueFormat() }% when hit";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

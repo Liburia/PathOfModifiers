@@ -24,12 +24,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(0.15f, 0.1f, 0.5),
-                new TTFloat.WeightedTier(0.1f, 0.05f, 1),
-                new TTFloat.WeightedTier(0.05f, 0f, 2),
-                new TTFloat.WeightedTier(0f, -0.05f, 2),
-                new TTFloat.WeightedTier(-0.05f, -0.1f, 1),
-                new TTFloat.WeightedTier(-0.1f, -0.15f, 0.5),
+                new TTFloat.WeightedTier(0.15f, 0.11f, 0.5),
+                new TTFloat.WeightedTier(0.11f, 0.07f, 1),
+                new TTFloat.WeightedTier(0.07f, -0.03f, 2),
+                new TTFloat.WeightedTier(0.03f, -0.07f, 2),
+                new TTFloat.WeightedTier(-0.07f, -0.11f, 1),
+                new TTFloat.WeightedTier(-0.11f, -0.15f, 0.5),
             },
         };
         public override TTFloat Type2 { get; } = new TTFloat()
