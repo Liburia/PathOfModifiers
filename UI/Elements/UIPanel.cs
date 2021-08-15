@@ -12,11 +12,11 @@ namespace PathOfModifiers.UI.Elements
 {
     public class UIPanel : UIElement
 	{
-		private Asset<Texture2D> _borderTexture;
-		private Asset<Texture2D> _backgroundTexture;
+		protected Asset<Texture2D> _borderTexture;
+		protected Asset<Texture2D> _backgroundTexture;
 		public Color BorderColor = Color.Black;
 		public Color BackgroundColor = new Color(63, 82, 151) * 0.7f;
-		private bool _needsTextureLoading = true;
+		protected bool _needsTextureLoading = true;
 
 		private void LoadTextures()
 		{
@@ -53,6 +53,11 @@ namespace PathOfModifiers.UI.Elements
 				LoadTextures();
 			}
 
+			DrawPanel(spriteBatch);
+		}
+
+		protected virtual void DrawPanel(SpriteBatch spriteBatch)
+        {
 			var dims = GetDimensions();
 
 			if (_backgroundTexture != null)

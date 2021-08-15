@@ -19,7 +19,6 @@ namespace PathOfModifiers.UI.Elements
         {
             base.MouseOver(evt);
             BackgroundColor = UICommon.hoverBackgroundColor;
-			SoundEngine.PlaySound(SoundID.MenuTick);
         }
         public override void MouseOut(UIMouseEvent evt)
         {
@@ -28,9 +27,8 @@ namespace PathOfModifiers.UI.Elements
         }
         public override void Click(UIMouseEvent evt)
         {
+            base.Click(evt);
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
-        public override void MouseDown(UIMouseEvent evt) { }
-        public override void MouseUp(UIMouseEvent evt) { }
     }
 }
