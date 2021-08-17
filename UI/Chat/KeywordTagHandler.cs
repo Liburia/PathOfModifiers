@@ -42,54 +42,62 @@ namespace PathOfModifiers.UI.Chat
 			public override Color Color => new(56, 118, 29);
 			public override string Name => "Poison";
 			public override string Description => "Deals % of damage dealt per second over the duration, stacks.";
+			public static string GenerateTag() => KeywordTagHandler.GenerateTag(KeywordType.Poison);
 		}
 		public class Bleed : KeywordDefinition
 		{
 			public override Color Color => new(153, 0, 0);
 			public override string Name => "Bleed";
 			public override string Description => "Deals % of damage dealt per second over the duration";
+			public static string GenerateTag() => KeywordTagHandler.GenerateTag(KeywordType.Bleed);
 		}
 		public class Shock : KeywordDefinition
 		{
 			public override Color Color => new(241, 194, 50);
 			public override string Name => "Shock";
 			public override string Description => "Increases damage taken by % over ailment duration(5s)";
+			public static string GenerateTag() => KeywordTagHandler.GenerateTag(KeywordType.Shock);
 		}
 		public class Ignite : KeywordDefinition
 		{
 			public override Color Color => new(180, 95, 6);
 			public override string Name => "Ignite";
 			public override string Description => "Deals % of damage dealt per second over ailment duration(5s), players take up to 1% of max life per second";
+			public static string GenerateTag() => KeywordTagHandler.GenerateTag(KeywordType.Ignite);
 		}
 		public class Chill : KeywordDefinition
 		{
 			public override Color Color => new(61, 133, 198);
 			public override string Name => "Chill";
 			public override string Description => "Reduces damage dealt over ailment duration(5s)";
+			public static string GenerateTag() => KeywordTagHandler.GenerateTag(KeywordType.Chill);
 		}
 		public class Dodge : KeywordDefinition
 		{
 			public override Color Color => Color.LightGray;
 			public override string Name => "Dodge";
 			public override string Description => "Chance to avoid damage";
+			public static string GenerateTag() => KeywordTagHandler.GenerateTag(KeywordType.Dodge);
 		}
 		public class Adrenaline : KeywordDefinition
 		{
 			public override Color Color => Color.LightGray;
 			public override string Name => "Adrenaline";
 			public override string Description => "+50% damage, +30% attack speed, +30% move speed, -10% damage taken";
+			public static string GenerateTag() => KeywordTagHandler.GenerateTag(KeywordType.Adrenaline);
 		}
 		public class MoltenShell : KeywordDefinition
 		{
 			public override Color Color => Color.LightGray;
 			public override string Name => "Molten Shell";
 			public override string Description => "-10% damage taken, explodes at the end of the duration for\ntotal damage taken + (total damage taken / player max HP * 0.15)% of enemy HP";
+			public static string GenerateTag() => KeywordTagHandler.GenerateTag(KeywordType.MoltenShell);
 		}
 	}
 
 	public class KeywordTagHandler : ITagHandler
 	{
-		private class KeywordSnippet : TextSnippet
+		public class KeywordSnippet : TextSnippet
 		{
 			private Keyword.KeywordDefinition _keyword;
 
