@@ -17,8 +17,8 @@ namespace PathOfModifiers.Affixes.Items
     [DisableAffix]
     public class Affix : IUIDrawable
     {
-        static readonly Color prefixColor = new Color(0.25f, 1, 0.25f, 1);
-        static readonly Color suffixColor = new Color(0.25f, 1, 1, 1);
+        public static readonly Color prefixColor = new Color(0.25f, 1, 0.25f, 1);
+        public static readonly Color suffixColor = new Color(0.25f, 1, 1, 1);
 
         public bool IsPrefix => this is IPrefix;
         public bool IsSuffix => this is ISuffix;
