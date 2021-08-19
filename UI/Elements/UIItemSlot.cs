@@ -110,11 +110,7 @@ namespace PathOfModifiers.UI.Elements
                 if (IsMouseHovering)
                 {
                     Main.HoverItem = Item.Clone();
-                    Main.hoverItemName = Main.HoverItem.Name + (Main.HoverItem.ModItem != null ? " [" + Main.HoverItem.ModItem.Mod.Name + "]" : "");
-
-                    //	Main.hoverItemName = this.Item.name;
-                    //	Main.toolTip = Item.Clone();
-                    Main.HoverItem.SetNameOverride(Main.HoverItem.Name + (Main.HoverItem.ModItem != null ? " [" + Main.HoverItem.ModItem.Mod.Name + "]" : ""));
+                    Main.hoverItemName = Main.HoverItem.Name;
                 }
             }
         }
