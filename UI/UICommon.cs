@@ -50,40 +50,41 @@ namespace PathOfModifiers.UI
 		{
 			public static Vector2 Measure(TextSnippet[] snippets, DynamicSpriteFont font, float scale, float maxWidth)
 			{
-				float scaledMaxWidth = maxWidth / scale;
+				Vector2 characterSize = font.MeasureString(" ") * scale;
 
-				Vector2 textSize = new Vector2(0f, font.LineSpacing);
+				Vector2 textSize = new(0f, characterSize.Y);
 
 				float currentLineWidth = 0f;
 				foreach (var snippet in snippets)
 				{
-					string[] lines = Regex.Split(snippet.Text, "(\n)");
+					string[] lines = Regex.Split(snippet.Text, "\n");
 					foreach (var line in lines.Select((text, index) => (text, index)))
 					{
 						if (line.index != 0)
 						{
 							textSize.X = MathF.Max(textSize.X, currentLineWidth);
-							textSize.Y += font.LineSpacing;
+							textSize.Y += characterSize.Y;
 							currentLineWidth = 0f;
 						}
 
 						string[] words = snippet is KeywordTagHandler.KeywordSnippet
 							? new[] { line.text }
-							: Regex.Split(line.text, "( )");
+							: Regex.Split(line.text, " ");
 						for (int i = 0; i < words.Length; i++)
 						{
 							var word = words[i];
-							var wordSize = font.MeasureString(word);
-							float newLineWidth = currentLineWidth + wordSize.X;
+							var wordSize = font.MeasureString(word) * scale;
+							var spaceWidth = characterSize.X;
+							float newLineWidth = currentLineWidth + wordSize.X + spaceWidth;
 
-							if (newLineWidth <= scaledMaxWidth || currentLineWidth == 0f)
+							if (newLineWidth <= maxWidth || currentLineWidth == 0f)
 							{
 								currentLineWidth = newLineWidth;
 							}
 							else
 							{
 								textSize.X = MathF.Max(textSize.X, currentLineWidth);
-								textSize.Y += font.LineSpacing;
+								textSize.Y += characterSize.Y;
 								currentLineWidth = 0f;
 
 								i--;
@@ -94,41 +95,49 @@ namespace PathOfModifiers.UI
 
 				textSize.X = MathF.Max(textSize.X, currentLineWidth);
 
-				return textSize * scale;
+				return textSize;
 			}
 
-			public static int? Draw(SpriteBatch sb, TextSnippet[] snippets, DynamicSpriteFont font, Vector2 position, float scale, float maxWidth)
+			public static int? Draw(SpriteBatch sb, TextSnippet[] snippets, DynamicSpriteFont font, Vector2 position, float scale, float maxWidth, bool drawShadow = true)
 			{
 				int? hoveredSnippet = null;
 				var mousePos = Main.MouseScreen;
 
-				float lineSpacing = font.LineSpacing * scale;
+				Vector2 characterSize = font.MeasureString(" ") * scale;
 
 				Vector2 drawOffset = Vector2.Zero;
 
 				foreach (var s in snippets.Select((snippet, index) => (snippet, index)))
 				{
-					string[] lines = Regex.Split(s.snippet.Text, "(\n)");
+					string[] lines = Regex.Split(s.snippet.Text, "\n");
 					foreach (var line in lines.Select((text, index) => (text, index)))
 					{
 						if (line.index != 0)
 						{
 							drawOffset.X = 0f;
-							drawOffset.Y += lineSpacing;
+							drawOffset.Y += characterSize.Y;
 						}
 
 						string[] words = s.snippet is KeywordTagHandler.KeywordSnippet
 							? new[] { line.text }
-							: Regex.Split(line.text, "( )");
+							: Regex.Split(line.text, " ");
 						for (int i = 0; i < words.Length; i++)
 						{
 							var word = words[i];
 							var wordSize = font.MeasureString(word) * scale;
-							float newLineWidth = drawOffset.X + wordSize.X;
+							var spaceWidth = characterSize.X;
+							float newLineWidth = drawOffset.X + wordSize.X + spaceWidth;
 
 							if (newLineWidth <= maxWidth || drawOffset.X == 0f)
 							{
 								var drawPos = position + drawOffset;
+								if (drawShadow)
+								{
+									sb.DrawString(font, word, drawPos + Vector2.UnitX, Color.Black, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+									sb.DrawString(font, word, drawPos - Vector2.UnitX, Color.Black, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+									sb.DrawString(font, word, drawPos + Vector2.UnitY, Color.Black, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+									sb.DrawString(font, word, drawPos - Vector2.UnitY, Color.Black, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+								}
 								sb.DrawString(font, word, drawPos, s.snippet.GetVisibleColor(), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 								if (mousePos.Between(drawPos, drawPos + wordSize))
 									hoveredSnippet = s.index;
@@ -138,7 +147,7 @@ namespace PathOfModifiers.UI
 							else
 							{
 								drawOffset.X = 0f;
-								drawOffset.Y += lineSpacing;
+								drawOffset.Y += characterSize.Y;
 
 								i--;
 							}
