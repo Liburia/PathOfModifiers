@@ -130,7 +130,7 @@ namespace PathOfModifiers.UI.Elements
         /// <returns>If the insertion was successful</returns>
         public bool TryInsertItem(Item item, out Item oldItem)
         {
-            if (!((Item.IsAir) && (item.IsAir)) && CanInsertItem(item))
+            if (!((Item.IsAir) && (item.IsAir)) && (item.IsAir || CanInsertItem(item)))
             {
                 oldItem = Item;
                 Item = item;
