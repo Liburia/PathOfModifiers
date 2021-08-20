@@ -22,6 +22,10 @@ namespace PathOfModifiers.Affixes.Items
     public class ItemItem : GlobalItem
     {
         public override bool InstancePerEntity => true;
+        public override bool AppliesToEntity(Item entity, bool lateInstantiation)
+        {
+            return IsRollable(entity);
+        }
 
         public RarityItem rarity;
 
@@ -284,7 +288,12 @@ namespace PathOfModifiers.Affixes.Items
                 AddAffix(newAffix, item);
             }
         }
-        public bool RaiseRarity(Item item)
+        public bool CanRaiseRarity(Item item)
+        {
+            Type rarityType = rarity.GetType();
+            return rarityType != typeof(AccessoryLegendary) && rarityType != typeof(ArmorLegendary) && rarityType != typeof(WeaponLegendary);
+        }
+        public bool TryRaiseRarity(Item item)
         {
             Type rarityType = rarity.GetType();
             bool raised = false;

@@ -121,15 +121,16 @@ namespace PathOfModifiers.Affixes.Items
         {
             bool consume = true;
             Item item;
-            ItemItem pomItem;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                consume = consume && pomItem.PlayerConsumeAmmo(Player, item, ammo);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    consume = consume && modItem.PlayerConsumeAmmo(Player, item, ammo);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -137,8 +138,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                consume = consume && pomItem.PlayerConsumeAmmo(Player, item, ammo);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    consume = consume && modItem.PlayerConsumeAmmo(Player, item, ammo);
+                }
             }
             return consume;
         }
@@ -155,7 +158,6 @@ namespace PathOfModifiers.Affixes.Items
             }
 
             Item item;
-            ItemItem pomItem;
             float damageMultiplier = damageTaken;
             bool hurt = true;
             for (int i = 0; i < Player.inventory.Length; i++)
@@ -164,9 +166,11 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                if (!pomItem.PreHurt(item, Player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
-                    hurt = false;
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    if (!modItem.PreHurt(item, Player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
+                        hurt = false;
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -174,9 +178,11 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                if (!pomItem.PreHurt(item, Player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
-                    hurt = false;
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    if (!modItem.PreHurt(item, Player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
+                        hurt = false;
+                }
             }
             damage = (int)Math.Round(damage * damageMultiplier);
 
@@ -196,15 +202,16 @@ namespace PathOfModifiers.Affixes.Items
             }
 
             Item item;
-            ItemItem pomItem;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.PostHurt(item, Player, pvp, quiet, damage, hitDirection, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PostHurt(item, Player, pvp, quiet, damage, hitDirection, crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -212,14 +219,15 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.PostHurt(item, Player, pvp, quiet, damage, hitDirection, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PostHurt(item, Player, pvp, quiet, damage, hitDirection, crit);
+                }
             }
         }
         public override void NaturalLifeRegen(ref float regen)
         {
             Item item;
-            ItemItem pomItem;
             float regenMultiplier = 1;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
@@ -227,8 +235,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.NaturalLifeRegen(item, Player, ref regenMultiplier);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.NaturalLifeRegen(item, Player, ref regenMultiplier);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -236,8 +246,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.NaturalLifeRegen(item, Player, ref regenMultiplier);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.NaturalLifeRegen(item, Player, ref regenMultiplier);
+                }
             }
             regen = (regen * regenMultiplier) + (Player.lifeRegen * regenMultiplier) - Player.lifeRegen;
         }
@@ -249,7 +261,6 @@ namespace PathOfModifiers.Affixes.Items
         public override void ModifyWeaponCrit(Item heldItem, ref int crit)
         {
             Item item;
-            ItemItem pomItem;
             float multiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
@@ -257,8 +268,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.PlayerModifyWeaponCrit(item, heldItem, Player, ref multiplier);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyWeaponCrit(item, heldItem, Player, ref multiplier);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -266,8 +279,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.PlayerModifyWeaponCrit(item, heldItem, Player, ref multiplier);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyWeaponCrit(item, heldItem, Player, ref multiplier);
+                }
             }
             crit = (int)Math.Round(crit * multiplier);
         }
@@ -275,7 +290,6 @@ namespace PathOfModifiers.Affixes.Items
         public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
         {
             Item item;
-            ItemItem pomItem;
             float damageMultiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
@@ -283,8 +297,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.ModifyHitByNPC(item, Player, npc, ref damageMultiplier, ref crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.ModifyHitByNPC(item, Player, npc, ref damageMultiplier, ref crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -292,23 +308,26 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.ModifyHitByNPC(item, Player, npc, ref damageMultiplier, ref crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.ModifyHitByNPC(item, Player, npc, ref damageMultiplier, ref crit);
+                }
             }
             damage = (int)Math.Round(damage * damageMultiplier);
         }
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
         {
             Item item;
-            ItemItem pomItem;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.OnHitByNPC(item, Player, npc, damage, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.OnHitByNPC(item, Player, npc, damage, crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -316,8 +335,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.OnHitByNPC(item, Player, npc, damage, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.OnHitByNPC(item, Player, npc, damage, crit);
+                }
             }
 
             if (reflectMeleeDamage > 0)
@@ -331,7 +352,6 @@ namespace PathOfModifiers.Affixes.Items
         public void ModifyHitByPvp(Player attacker, ref int damage, ref bool crit)
         {
             Item item;
-            ItemItem pomItem;
             float damageMultiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
@@ -339,8 +359,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.ModifyHitByPvp(item, Player, attacker, ref damageMultiplier, ref crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.ModifyHitByPvp(item, Player, attacker, ref damageMultiplier, ref crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -348,8 +370,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.ModifyHitByPvp(item, Player, attacker, ref damageMultiplier, ref crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.ModifyHitByPvp(item, Player, attacker, ref damageMultiplier, ref crit);
+                }
             }
             damage = (int)Math.Round(damage * damageMultiplier);
 
@@ -357,15 +381,16 @@ namespace PathOfModifiers.Affixes.Items
         public void OnHitByPvp(Player attacker, int damage, bool crit)
         {
             Item item;
-            ItemItem pomItem;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.OnHitByPvp(item, Player, attacker, damage, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.OnHitByPvp(item, Player, attacker, damage, crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -373,8 +398,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.OnHitByPvp(item, Player, attacker, damage, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.OnHitByPvp(item, Player, attacker, damage, crit);
+                }
             }
 
 
@@ -389,7 +416,6 @@ namespace PathOfModifiers.Affixes.Items
         public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
         {
             Item item;
-            ItemItem pomItem;
             float damageMultiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
@@ -397,8 +423,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.ModifyHitByProjectile(item, Player, proj, ref damageMultiplier, ref crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.ModifyHitByProjectile(item, Player, proj, ref damageMultiplier, ref crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -406,23 +434,28 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.ModifyHitByProjectile(item, Player, proj, ref damageMultiplier, ref crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.ModifyHitByProjectile(item, Player, proj, ref damageMultiplier, ref crit);
+                }
             }
             damage = (int)Math.Round(damage * damageMultiplier);
         }
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
         {
             Item item;
-            ItemItem pomItem;
+            
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.OnHitByProjectile(item, Player, proj, damage, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.OnHitByProjectile(item, Player, proj, damage, crit);
+                }
+
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -430,23 +463,27 @@ namespace PathOfModifiers.Affixes.Items
                 if (item.IsAir)
                     continue;
 
-                pomItem = item.GetGlobalItem<ItemItem>();
-                pomItem.OnHitByProjectile(item, Player, proj, damage, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.OnHitByProjectile(item, Player, proj, damage, crit);
+                }
+
             }
         }
 
         public void OnKillNPC(NPC target)
         {
             Item affixItem;
-            ItemItem pomItem;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerOnKillNPC(affixItem, Player, target);
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerOnKillNPC(affixItem, Player, target);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -454,14 +491,15 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerOnKillNPC(affixItem, Player, target);
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerOnKillNPC(affixItem, Player, target);
+                }
             }
         }
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
             Item affixItem;
-            ItemItem pomItem;
             float damageMultiplier = 1f;
             float knockbackMultiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
@@ -470,8 +508,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerModifyHitNPC(affixItem, Player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyHitNPC(affixItem, Player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -479,8 +519,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerModifyHitNPC(affixItem, Player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyHitNPC(affixItem, Player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                }
             }
             damage = (int)Math.Round(damage * damageMultiplier);
             knockback *= knockbackMultiplier;
@@ -488,7 +530,6 @@ namespace PathOfModifiers.Affixes.Items
         public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
         {
             Item affixItem;
-            ItemItem pomItem;
             float damageMultiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
@@ -496,8 +537,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerModifyHitPvp(affixItem, Player, item, target, ref damageMultiplier, ref crit);
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyHitPvp(affixItem, Player, item, target, ref damageMultiplier, ref crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -505,8 +548,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerModifyHitPvp(affixItem, Player, item, target, ref damageMultiplier, ref crit);
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyHitPvp(affixItem, Player, item, target, ref damageMultiplier, ref crit);
+                }
             }
             damage = (int)Math.Round(damage * damageMultiplier);
         }
@@ -515,7 +560,6 @@ namespace PathOfModifiers.Affixes.Items
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
-                ItemItem pomItem;
                 float damageMultiplier = 1f;
                 float knockBackMultiplier = 1f;
                 for (int i = 0; i < Player.inventory.Length; i++)
@@ -524,8 +568,10 @@ namespace PathOfModifiers.Affixes.Items
                     if (item.IsAir)
                         continue;
 
-                    pomItem = item.GetGlobalItem<ItemItem>();
-                    pomItem.ProjModifyHitNPC(item, Player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref crit, ref hitDirection);
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        modItem.ProjModifyHitNPC(item, Player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref crit, ref hitDirection);
+                    }
                 }
                 for (int i = 0; i < Player.armor.Length; i++)
                 {
@@ -533,8 +579,10 @@ namespace PathOfModifiers.Affixes.Items
                     if (item.IsAir)
                         continue;
 
-                    pomItem = item.GetGlobalItem<ItemItem>();
-                    pomItem.ProjModifyHitNPC(item, Player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref crit, ref hitDirection);
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        modItem.ProjModifyHitNPC(item, Player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref crit, ref hitDirection);
+                    }
                 }
                 damage = (int)Math.Round(damage * damageMultiplier);
                 knockback = (int)Math.Round(knockback * knockBackMultiplier);
@@ -545,7 +593,6 @@ namespace PathOfModifiers.Affixes.Items
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
-                ItemItem pomItem;
                 float damageMultiplier = 1f;
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
@@ -553,8 +600,10 @@ namespace PathOfModifiers.Affixes.Items
                     if (item.IsAir)
                         continue;
 
-                    pomItem = item.GetGlobalItem<ItemItem>();
-                    pomItem.ProjModifyHitPvp(item, Player, proj, target, ref damageMultiplier, ref crit);
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        modItem.ProjModifyHitPvp(item, Player, proj, target, ref damageMultiplier, ref crit);
+                    }
                 }
                 for (int i = 0; i < Player.armor.Length; i++)
                 {
@@ -562,8 +611,10 @@ namespace PathOfModifiers.Affixes.Items
                     if (item.IsAir)
                         continue;
 
-                    pomItem = item.GetGlobalItem<ItemItem>();
-                    pomItem.ProjModifyHitPvp(item, Player, proj, target, ref damageMultiplier, ref crit);
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        modItem.ProjModifyHitPvp(item, Player, proj, target, ref damageMultiplier, ref crit);
+                    }
                 }
                 damage = (int)Math.Round(damage * damageMultiplier);
             }
@@ -571,15 +622,16 @@ namespace PathOfModifiers.Affixes.Items
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
             Item affixItem;
-            ItemItem pomItem;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerOnHitNPC(affixItem, Player, item, target, damage, knockback, crit);
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerOnHitNPC(affixItem, Player, item, target, damage, knockback, crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -587,22 +639,26 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerOnHitNPC(affixItem, Player, item, target, damage, knockback, crit);
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerOnHitNPC(affixItem, Player, item, target, damage, knockback, crit);
+                }
             }
         }
         public override void OnHitPvp(Item item, Player target, int damage, bool crit)
         {
             Item affixItem;
-            ItemItem pomItem;
+            
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerOnHitPvp(affixItem, Player, item, target, damage, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerOnHitPvp(affixItem, Player, item, target, damage, crit);
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -610,8 +666,10 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                pomItem.PlayerOnHitPvp(affixItem, Player, item, target, damage, crit);
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerOnHitPvp(affixItem, Player, item, target, damage, crit);
+                }
             }
         }
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
@@ -619,15 +677,16 @@ namespace PathOfModifiers.Affixes.Items
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
-                ItemItem pomItem;
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
                     item = Player.inventory[i];
                     if (item.IsAir)
                         continue;
 
-                    pomItem = item.GetGlobalItem<ItemItem>();
-                    pomItem.ProjOnHitNPC(item, Player, proj, target, damage, knockback, crit);
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        modItem.ProjOnHitNPC(item, Player, proj, target, damage, knockback, crit);
+                    }
                 }
                 for (int i = 0; i < Player.armor.Length; i++)
                 {
@@ -635,8 +694,10 @@ namespace PathOfModifiers.Affixes.Items
                     if (item.IsAir)
                         continue;
 
-                    pomItem = item.GetGlobalItem<ItemItem>();
-                    pomItem.ProjOnHitNPC(item, Player, proj, target, damage, knockback, crit);
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        modItem.ProjOnHitNPC(item, Player, proj, target, damage, knockback, crit);
+                    }
                 }
             }
         }
@@ -646,15 +707,16 @@ namespace PathOfModifiers.Affixes.Items
             {
 
                 Item item;
-                ItemItem pomItem;
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
                     item = Player.inventory[i];
                     if (item.IsAir)
                         continue;
 
-                    pomItem = item.GetGlobalItem<ItemItem>();
-                    pomItem.ProjOnHitPvp(item, Player, proj, target, damage, crit);
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        modItem.ProjOnHitPvp(item, Player, proj, target, damage, crit);
+                    }
                 }
                 for (int i = 0; i < Player.armor.Length; i++)
                 {
@@ -662,15 +724,16 @@ namespace PathOfModifiers.Affixes.Items
                     if (item.IsAir)
                         continue;
 
-                    pomItem = item.GetGlobalItem<ItemItem>();
-                    pomItem.ProjOnHitPvp(item, Player, proj, target, damage, crit);
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        modItem.ProjOnHitPvp(item, Player, proj, target, damage, crit);
+                    }
                 }
             }
         }
         public override bool Shoot(Item item, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Item affixItem;
-            ItemItem pomItem;
             bool shoot = true;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
@@ -678,9 +741,11 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                if (!pomItem.PlayerShoot(affixItem, Player, item, source, position, velocity, type, damage, knockback))
-                    shoot = false;
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    if (!modItem.PlayerShoot(affixItem, Player, item, source, position, velocity, type, damage, knockback))
+                        shoot = false;
+                }
             }
             for (int i = 0; i < Player.armor.Length; i++)
             {
@@ -688,9 +753,11 @@ namespace PathOfModifiers.Affixes.Items
                 if (affixItem.type == 0 || affixItem.stack == 0)
                     continue;
 
-                pomItem = affixItem.GetGlobalItem<ItemItem>();
-                if (!pomItem.PlayerShoot(affixItem, Player, item, source, position, velocity, type, damage, knockback))
-                    shoot = false;
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    if (!modItem.PlayerShoot(affixItem, Player, item, source, position, velocity, type, damage, knockback))
+                        shoot = false;
+                }
             }
             return shoot;
         }
