@@ -132,7 +132,7 @@ namespace PathOfModifiers.Affixes.Items
             SetTier(t1);
             SetTierMultiplier(tm1);
         }
-        public override string GetForgeText(Item item)
+        public override string GetForgeText()
         {
             return $"[T{CompoundTierText}] {GetTolltipText()}";
         }
@@ -280,7 +280,7 @@ namespace PathOfModifiers.Affixes.Items
             SetTier(t1, t2);
             SetTierMultiplier(tm1, tm2);
         }
-        public override string GetForgeText(Item item)
+        public override string GetForgeText()
         {
             return $"[T{CompoundTierText}] {GetTolltipText()}";
         }
@@ -453,7 +453,7 @@ namespace PathOfModifiers.Affixes.Items
             SetTier(t1, t2, t3);
             SetTierMultiplier(tm1, tm2, tm3);
         }
-        public override string GetForgeText(Item item)
+        public override string GetForgeText()
         {
             return $"[T{CompoundTierText}] {GetTolltipText()}";
         }
