@@ -132,10 +132,6 @@ namespace PathOfModifiers.Affixes.Items
             SetTier(t1);
             SetTierMultiplier(tm1);
         }
-        public override string GetForgeText()
-        {
-            return $"[T{CompoundTierText}] {GetTolltipText()}";
-        }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
         {
@@ -279,10 +275,6 @@ namespace PathOfModifiers.Affixes.Items
             float tm2 = reader.ReadSingle();
             SetTier(t1, t2);
             SetTierMultiplier(tm1, tm2);
-        }
-        public override string GetForgeText()
-        {
-            return $"[T{CompoundTierText}] {GetTolltipText()}";
         }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
@@ -452,10 +444,6 @@ namespace PathOfModifiers.Affixes.Items
             float tm3 = reader.ReadSingle();
             SetTier(t1, t2, t3);
             SetTierMultiplier(tm1, tm2, tm3);
-        }
-        public override string GetForgeText()
-        {
-            return $"[T{CompoundTierText}] {GetTolltipText()}";
         }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
