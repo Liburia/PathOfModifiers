@@ -83,11 +83,10 @@ namespace PathOfModifiers.UI.States
 
             public Constraint DataManagerAffixConstraint { get; set; }
             public Constraint ItemAffixConstraint { get; set; }
-            public Constraint TierConstraint { get; set; }
 
             public void Execute(Item item, ItemItem modItem)
             {
-                modItem.TryAddRandomAffix(item, DataManagerAffixConstraint.Then(TierConstraint));
+                modItem.TryAddRandomAffix(item, DataManagerAffixConstraint);
             }
         }
         public class ImproveRarity : IMFAction
