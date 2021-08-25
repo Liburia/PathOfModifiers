@@ -382,9 +382,11 @@ namespace PathOfModifiers.UI.States
                         itemText.MinHeight.Set(0f, 1f);
                         textSection.Append(itemText);
                         {
-                            affixTextItemName = new("Rare Beads of Annahilatikon", 0.8f);
+                            affixTextItemName = new("         Rare Beads of Annahilatikon", 0.8f);
                             affixTextItemName.TextColor = Color.Orange;
                             itemText.Append(affixTextItemName);
+
+                            float textScale = 0.7f;
 
                             affixTextList = new();
                             affixTextList.Top.Set(affixTextItemName.GetDimensions().Height + UICommon.spacing, 0f);
@@ -399,7 +401,7 @@ namespace PathOfModifiers.UI.States
                                     affixText.MaxWidth.Set(0f, 1f);
                                     affixText.TextColor = Color.Green;
                                     affixTextList.Add(affixText);
-                                    affixText.SetText($"{ Keyword.Bleed.GenerateTag() }gamepedia is soo bad on russian, literally 90% of in-game stuff just doesn't exists there as page, while fandom is 95% full", 0.7f);
+                                    affixText.SetText($"{ Keyword.Bleed.GenerateTag() }gamepedia is soo bad on russian, literally 90% of in-game stuff just doesn't exists there as page, while fandom is 95% full", textScale);
                                 }
                             }
                         }
@@ -554,7 +556,7 @@ namespace PathOfModifiers.UI.States
                 freePrefixes.SetText($"[{modItem.prefixes.Count}/{modItem.rarity.maxPrefixes}]");
                 freeSuffixes.SetText($"[{modItem.suffixes.Count}/{modItem.rarity.maxSuffixes}]");
 
-                affixTextItemName.SetText(item.Name);
+                affixTextItemName.SetText($"         {item.Name}");
                 affixTextItemName.TextColor = modItem.rarity.color;
 
                 int i = 0;
