@@ -240,7 +240,6 @@ namespace PathOfModifiers.Affixes.Items
                 ClearAffixes(item);
                 RerollRarity(item);
                 RollForRandomAffixes(item, new Constraints.None());
-                UpdateName(item);
                 return true;
             }
             else
@@ -277,6 +276,7 @@ namespace PathOfModifiers.Affixes.Items
                     }
                 }
             }
+            UpdateName(item);
         }
         /// <summary>
         /// Validly adds an affixes to the item based on rarity
@@ -298,6 +298,7 @@ namespace PathOfModifiers.Affixes.Items
                 if (!TryAddRandomAffix(item, constraint))
                     break;
             }
+            UpdateName(item);
         }
 
         public bool CanRaiseRarity(Item item)
@@ -377,7 +378,6 @@ namespace PathOfModifiers.Affixes.Items
         {
             RemoveAllAffixes(item, removeConstraint);
             RollForRandomAffixes(item, rollConstraint);
-            UpdateName(item);
         }
         /// <summary>
         /// Validly adds an affix to the item.
@@ -397,7 +397,10 @@ namespace PathOfModifiers.Affixes.Items
         {
             var constrainedAffixes = constraint.Process(affixes).ToArray();
             var affixToRemove = Main.rand.Next(constrainedAffixes);
-            return RemoveAffix(affixToRemove, item);
+            bool wasRemoved = RemoveAffix(affixToRemove, item);
+            if (wasRemoved)
+                UpdateName(item);
+            return wasRemoved;
         }
         public void RemoveAllAffixes(Item item, Constraints.Constraint constraint)
         {
@@ -406,6 +409,7 @@ namespace PathOfModifiers.Affixes.Items
             {
                 RemoveAffix(affixToRemove, item);
             }
+            UpdateName(item);
         }
         public void RollAffixTierMultipliers(Item item, Constraints.Constraint constraint)
         {
