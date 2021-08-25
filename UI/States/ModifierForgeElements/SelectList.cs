@@ -15,36 +15,32 @@ namespace PathOfModifiers.UI.States.ModifierForgeElements
 {
     class SelectList<T> : UIList<T> where T : UIToggle
     {
-        public delegate void OnEntryToggledOn(ActionListEntry entry);
+        public delegate void EntryEvent(T entry);
 
-        public T SelectedAction { get; private set; }
+        public event EntryEvent OnEntrySelected;
+
+        public T SelectedItem { get; private set; }
 
         public override void Add(T item)
         {
-            if (SelectedAction == null)
-            {
-                SelectedAction = item;
-                item.SetState(true);
-            }
-
-            item.OnClick += Item_OnClick;
+            item.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Select((T)listeningElement);
 
             base.Add(item);
         }
 
-        private void Item_OnClick(UIMouseEvent evt, UIElement listeningElement)
+        public void Select(T toggledAction)
         {
-            var toggledAction = (T)listeningElement;
-            if (toggledAction.IsOn)
-            {
-                SelectedAction.SetState(false);
+            SelectedItem?.SetState(false);
+            SelectedItem = toggledAction;
+            toggledAction.SetState(true);
 
-                SelectedAction = toggledAction;
-            }
-            else
-            {
-                toggledAction.SetState(true);
-            }
+            OnEntrySelected?.Invoke(toggledAction);
+        }
+
+        public void Deselect()
+        {
+            SelectedItem?.SetState(false);
+            SelectedItem = null;
         }
     }
 }

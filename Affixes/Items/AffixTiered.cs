@@ -18,7 +18,7 @@ using PathOfModifiers.UI;
 namespace PathOfModifiers.Affixes.Items
 {
     [DisableAffix]
-    public class AffixTiered : Affix
+    public abstract class AffixTiered : Affix
     {
         public class WeightedTierName
         {
@@ -38,6 +38,14 @@ namespace PathOfModifiers.Affixes.Items
 
         public override string AddedText => AddedTextTiered;
         public override double AddedTextWeight => AddedTextWeightTiered;
+
+        public virtual int CompoundTier => 0;
+        public virtual int MaxCompoundTier => 0;
+
+        public abstract void SetCompoundTier(int tier);
+        public abstract void ImproveCompoundTier(int by = 1);
+        public abstract void RollValue(bool rollTier = true);
+        public abstract void ImproveValue();
     }
 
     [DisableAffix]
@@ -46,7 +54,7 @@ namespace PathOfModifiers.Affixes.Items
     {
         public virtual T Type1 { get; }
 
-        public int CompoundTier
+        public override int CompoundTier
         {
             get
             {
@@ -60,7 +68,7 @@ namespace PathOfModifiers.Affixes.Items
                 return (int)t1;
             }
         }
-        public int MaxCompoundTier => Type1.MaxTiers;
+        public override int MaxCompoundTier => Type1.MaxTiers;
         public int CompoundTierText => MaxCompoundTier - CompoundTier;
 
         public void SetTier(int t1, bool ignore1 = false)
@@ -96,11 +104,34 @@ namespace PathOfModifiers.Affixes.Items
             newAffix.SetTierMultiplier(Type1.TierMultiplier);
             return newAffix;
         }
+        public override void SetCompoundTier(int tier)
+        {
+            SetTier(0);
+            ImproveCompoundTier(tier);
+        }
+        public override void ImproveCompoundTier(int by = 1)
+        {
+            int canImproveBy = Type1.MaxTiers - Type1.Tier - 1;
+            if (by < canImproveBy)
+            {
+                Type1.SetTier(Type1.Tier + by);
+            }
+            else
+            {
+                Type1.SetTier(Type1.Tier + canImproveBy);
+            }
+        }
         public override void RollValue(bool rollTier)
         {
             if (rollTier)
                 RollTier();
             RollTierMultiplier();
+        }
+        public override void ImproveValue()
+        {
+            float range1 = 1f - Type1.TierMultiplier;
+            float added1 = Main.rand.NextFloat(0f, range1);
+            Type1.SetTierMultiplier(Type1.TierMultiplier + added1);
         }
         public override void ReforgePrice(Item item, ref int price)
         {
@@ -171,7 +202,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual T Type1 { get; }
         public virtual U Type2 { get; }
 
-        public int CompoundTier
+        public override int CompoundTier
         {
             get
             {
@@ -190,7 +221,7 @@ namespace PathOfModifiers.Affixes.Items
                 return (int)(t1 + t2) / 2;
             }
         }
-        public int MaxCompoundTier => (Type1.MaxTiers + Type2.MaxTiers) / 2;
+        public override int MaxCompoundTier => (Type1.MaxTiers + Type2.MaxTiers) / 2;
         public int CompoundTierText => MaxCompoundTier - CompoundTier;
 
         public void SetTier(int t1, int t2, bool ignore1 = false, bool ignore2 = false)
@@ -234,11 +265,48 @@ namespace PathOfModifiers.Affixes.Items
             newAffix.SetTierMultiplier(Type1.TierMultiplier, Type2.TierMultiplier);
             return newAffix;
         }
+        public override void SetCompoundTier(int tier)
+        {
+            SetTier(0, 0);
+            ImproveCompoundTier(tier);
+        }
+        public override void ImproveCompoundTier(int by = 1)
+        {
+            int canImproveBy1 = Type1.MaxTiers - Type1.Tier - 1;
+            if (by < canImproveBy1)
+            {
+                Type1.SetTier(Type1.Tier + by);
+            }
+            else
+            {
+                Type1.SetTier(Type1.Tier + canImproveBy1);
+            }
+
+            int canImproveBy2 = Type2.MaxTiers - Type2.Tier - 1;
+            if (by < canImproveBy2)
+            {
+                Type2.SetTier(Type2.Tier + by);
+            }
+            else
+            {
+                Type2.SetTier(Type2.Tier + canImproveBy2);
+            }
+        }
         public override void RollValue(bool rollTier)
         {
             if (rollTier)
                 RollTier();
             RollTierMultiplier();
+        }
+        public override void ImproveValue()
+        {
+            float range1 = 1f - Type1.TierMultiplier;
+            float added1 = Main.rand.NextFloat(0f, range1);
+            Type1.SetTierMultiplier(Type1.TierMultiplier + added1);
+
+            float range2 = 1f - Type2.TierMultiplier;
+            float added2 = Main.rand.NextFloat(0f, range2);
+            Type2.SetTierMultiplier(Type2.TierMultiplier + added2);
         }
         public override void ReforgePrice(Item item, ref int price)
         {
@@ -321,7 +389,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual U Type2 { get; }
         public virtual O Type3 { get; }
 
-        public int CompoundTier
+        public override int CompoundTier
         {
             get
             {
@@ -345,7 +413,7 @@ namespace PathOfModifiers.Affixes.Items
                 return (int)(t1 + t2 + t3) / 3;
             }
         }
-        public int MaxCompoundTier => (Type1.MaxTiers + Type2.MaxTiers + Type3.MaxTiers) / 3;
+        public override int MaxCompoundTier => (Type1.MaxTiers + Type2.MaxTiers + Type3.MaxTiers) / 3;
         public int CompoundTierText => MaxCompoundTier - CompoundTier + 1;
 
         public void SetTier(int t1, int t2, int t3, bool ignore1 = false, bool ignore2 = false, bool ignore3 = false)
@@ -397,11 +465,62 @@ namespace PathOfModifiers.Affixes.Items
             newAffix.SetTierMultiplier(Type1.TierMultiplier, Type2.TierMultiplier, Type3.TierMultiplier);
             return newAffix;
         }
+        public override void SetCompoundTier(int tier)
+        {
+            SetTier(0, 0, 0);
+            ImproveCompoundTier(tier);
+        }
+        public override void ImproveCompoundTier(int by = 1)
+        {
+            int canImproveBy1 = Type1.MaxTiers - Type1.Tier - 1;
+            if (by < canImproveBy1)
+            {
+                Type1.SetTier(Type1.Tier + by);
+            }
+            else
+            {
+                Type1.SetTier(Type1.Tier + canImproveBy1);
+            }
+
+            int canImproveBy2 = Type2.MaxTiers - Type2.Tier - 1;
+            if (by < canImproveBy2)
+            {
+                Type2.SetTier(Type2.Tier + by);
+            }
+            else
+            {
+                Type2.SetTier(Type2.Tier + canImproveBy2);
+            }
+
+            int canImproveBy3 = Type3.MaxTiers - Type3.Tier - 1;
+            if (by < canImproveBy3)
+            {
+                Type3.SetTier(Type3.Tier + by);
+            }
+            else
+            {
+                Type3.SetTier(Type3.Tier + canImproveBy3);
+            }
+        }
         public override void RollValue(bool rollTier)
         {
             if (rollTier)
                 RollTier();
             RollTierMultiplier();
+        }
+        public override void ImproveValue()
+        {
+            float range1 = 1f - Type1.TierMultiplier;
+            float added1 = Main.rand.NextFloat(0f, range1);
+            Type1.SetTierMultiplier(Type1.TierMultiplier + added1);
+
+            float range2 = 1f - Type2.TierMultiplier;
+            float added2 = Main.rand.NextFloat(0f, range2);
+            Type2.SetTierMultiplier(Type2.TierMultiplier + added2);
+
+            float range3 = 1f - Type3.TierMultiplier;
+            float added3 = Main.rand.NextFloat(0f, range3);
+            Type3.SetTierMultiplier(Type3.TierMultiplier + added3);
         }
         public override void ReforgePrice(Item item, ref int price)
         {

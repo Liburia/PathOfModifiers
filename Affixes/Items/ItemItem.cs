@@ -21,6 +21,8 @@ namespace PathOfModifiers.Affixes.Items
     //TODO: When item is dropped roll only on server? How it work?
     public class ItemItem : GlobalItem
     {
+        public static string GetBaseName(Item item) => Lang.GetItemNameValue(item.type);
+
         public override bool InstancePerEntity => true;
         public override bool AppliesToEntity(Item entity, bool lateInstantiation)
         {
@@ -198,8 +200,6 @@ namespace PathOfModifiers.Affixes.Items
         }
         #endregion
 
-        public string GetBaseName(Item item) => Lang.GetItemNameValue(item.type);
-
         public void UpdateName(Item item)
         {
             if (rarity == null || rarity.GetType() == typeof(NotRollableItem))
@@ -237,7 +237,10 @@ namespace PathOfModifiers.Affixes.Items
         {
             if (IsRollable(item))
             {
-                RollItem(item);
+                ClearAffixes(item);
+                RerollRarity(item);
+                RollForRandomAffixes(item, new Constraints.None());
+                UpdateName(item);
                 return true;
             }
             else
@@ -246,48 +249,57 @@ namespace PathOfModifiers.Affixes.Items
                 return false;
             }
         }
+        public void RerollRarity(Item item, bool removeExtraAffixes = true)
+        {
+            rarity = DataManager.Item.RollRarity(item);
 
-        /// <summary>
-        /// Completely rerolls rarity and affixes.
-        /// </summary>
-        /// <param name="item"></param>
-        public void RollItem(Item item)
-        {
-            ClearAffixes(item);
-            rarity = global::PathOfModifiers.DataManager.Item.RollRarity(item);
-            RollAffixes(item);
-            UpdateName(item);
+            if (removeExtraAffixes)
+            {
+                if (prefixes.Count > rarity.maxPrefixes)
+                {
+                    for (int i = FreePrefixes; i < 0; i++)
+                    {
+                        RemoveAffix(prefixes.Last(), item);
+                    }
+                }
+                if (suffixes.Count > rarity.maxSuffixes)
+                {
+                    for (int i = FreeSuffixes; i < 0; i++)
+                    {
+                        RemoveAffix(suffixes.Last(), item);
+                    }
+                }
+                if (affixes.Count > rarity.maxAffixes)
+                {
+                    for (int i = FreeAffixes; i < 0; i++)
+                    {
+                        RemoveAffix(affixes.Last(), item);
+                    }
+                }
+            }
         }
         /// <summary>
-        /// Completely rerolls affixes.
+        /// Validly adds an affixes to the item based on rarity
         /// </summary>
         /// <param name="item"></param>
-        public void RerollAffixes(Item item)
+        public void RollForRandomAffixes(Item item, Constraints.Constraint constraint)
         {
-            ClearAffixes(item);
-            RollAffixes(item);
-            UpdateName(item);
-        }
-        /// <summary>
-        /// Validly adds affixes to the item.
-        /// </summary>
-        /// <param name="item"></param>
-        public void RollAffixes(Item item)
-        {
-            Affix newAffix;
             int freeAffixes = FreeAffixes;
             for (int i = 0; i < freeAffixes; i++)
             {
                 if (i >= rarity.minAffixes && Main.rand.NextFloat(0, 1) > rarity.chanceToRollAffix)
                     break;
 
-                newAffix = DataManager.Item.RollNewAffix(this, item);
-                if (newAffix == null)
-                    break;
+                if (FreePrefixes <= 0)
+                    constraint = constraint.Then(new Constraints.Suffixes());
+                if (FreeSuffixes <= 0)
+                    constraint = constraint.Then(new Constraints.Prefixes());
 
-                AddAffix(newAffix, item);
+                if (!TryAddRandomAffix(item, constraint))
+                    break;
             }
         }
+
         public bool CanRaiseRarity(Item item)
         {
             Type rarityType = rarity.GetType();
@@ -361,122 +373,124 @@ namespace PathOfModifiers.Affixes.Items
                 UpdateName(item);
             return raised;
         }
+        public void RerollAffixes(Item item, Constraints.Constraint removeConstraint, Constraints.Constraint rollConstraint)
+        {
+            RemoveAllAffixes(item, removeConstraint);
+            RollForRandomAffixes(item, rollConstraint);
+            UpdateName(item);
+        }
         /// <summary>
         /// Validly adds an affix to the item.
         /// </summary>
         /// <param name="item"></param>
-        public bool AddRandomAffix(Item item)
+        public bool TryAddRandomAffix(Item item, Constraints.Constraint constraint)
         {
-            Affix newAffix = DataManager.Item.RollNewAffix(this, item);
-            if (newAffix == null)
-                return false;
-
-            AddAffix(newAffix, item);
-
-            UpdateName(item);
-            return true;
-        }
-        /// <summary>
-        /// Validly adds a prefix to the item.
-        /// </summary>
-        /// <param name="item"></param>
-        public bool AddRandomPrefix(Item item)
-        {
-            Affix newPrefix = DataManager.Item.RollNewPrefix(this, item);
-            if (newPrefix == null)
-                return false;
-
-            AddAffix(newPrefix, item);
-
-            UpdateName(item);
-            return true;
-        }
-        /// <summary>
-        /// Validly adds a suffix to the item.
-        /// </summary>
-        /// <param name="item"></param>
-        public bool AddRandomSuffix(Item item)
-        {
-            Affix newSuffix = DataManager.Item.RollNewSuffix(this, item);
-            if (newSuffix == null)
-                return false;
-
-            AddAffix(newSuffix, item);
-
-            UpdateName(item);
-            return true;
-        }
-        public void RemoveAll(Item item)
-        {
-            ClearAffixes(item);
-
-            Type rarityType = rarity.GetType();
-            if (rarityType == typeof(WeaponUncommon) || rarityType == typeof(WeaponRare) || rarityType == typeof(WeaponEpic) || rarityType == typeof(WeaponLegendary))
-                rarity = DataManager.Item.GetRarityRef(typeof(WeaponCommon));
-            else if (rarityType == typeof(ArmorUncommon) || rarityType == typeof(ArmorRare) || rarityType == typeof(ArmorEpic) || rarityType == typeof(ArmorLegendary))
-                rarity = DataManager.Item.GetRarityRef(typeof(ArmorCommon));
-            else if (rarityType == typeof(AccessoryUncommon) || rarityType == typeof(AccessoryRare) || rarityType == typeof(AccessoryEpic) || rarityType == typeof(AccessoryLegendary))
-                rarity = DataManager.Item.GetRarityRef(typeof(AccessoryCommon));
-
-            UpdateName(item);
-        }
-        public void RemovePrefixes(Item item)
-        {
-            ClearPrefixes(item);
-            UpdateName(item);
-        }
-        public void RemoveSuffixes(Item item)
-        {
-            ClearSuffixes(item);
-            UpdateName(item);
-        }
-        public void RollAffixTierMultipliers(Item item)
-        {
-            foreach (Affix affix in affixes)
+            if (DataManager.Item.TryRollNewAffix(this, item, constraint, out var newAffix)
+                && TryAddAffix(newAffix, item))
             {
-                affix.RollValue(false);
+                UpdateName(item);
+                return true;
+            }
+            return false;
+        }
+        public bool TryRemoveRandomAffix(Item item, Constraints.Constraint constraint)
+        {
+            var constrainedAffixes = constraint.Process(affixes).ToArray();
+            var affixToRemove = Main.rand.Next(constrainedAffixes);
+            return RemoveAffix(affixToRemove, item);
+        }
+        public void RemoveAllAffixes(Item item, Constraints.Constraint constraint)
+        {
+            var constrainedAffixes = constraint.Process(affixes).ToArray();
+            foreach (var affixToRemove in constrainedAffixes)
+            {
+                RemoveAffix(affixToRemove, item);
+            }
+        }
+        public void RollAffixTierMultipliers(Item item, Constraints.Constraint constraint)
+        {
+            var constrainedAffixes = constraint.Process(affixes).ToArray();
+            foreach (var affix in constrainedAffixes)
+            {
+                if (affix is AffixTiered affixTiered)
+                    affixTiered.RollValue(false);
             }
             UpdateName(item);
         }
-        public void RollPrefixTierMultipliers(Item item)
+        public void ImproveRandomAffixTierMultiplier(Item item, Constraints.Constraint constraint)
         {
-            foreach (Affix prefix in prefixes)
-            {
-                prefix.RollValue(false);
-            }
+            var constrainedAffixes = constraint.Process(affixes).ToArray();
+            var affixToImprove = Main.rand.Next(constrainedAffixes);
+            (affixToImprove as AffixTiered)?.ImproveValue();
             UpdateName(item);
         }
-        public void RollSuffixTierMultipliers(Item item)
+        public void ImproveRandomAffixTier(Item item, Constraints.Constraint constraint)
         {
-            foreach (Affix suffix in suffixes)
+            var constrainedAffixes = constraint.Process(affixes).ToArray();
+            var affixToImprove = Main.rand.Next(constrainedAffixes);
+            (affixToImprove as AffixTiered)?.ImproveCompoundTier();
+            UpdateName(item);
+        }
+        public void ExchangeRandomAffix(Item item, Constraints.Constraint constraint)
+        {
+            var constrainedAffixes = constraint.Process(affixes).ToArray();
+            var affixToExchange = Main.rand.Next(constrainedAffixes);
+            if (affixToExchange is AffixTiered affixTiered)
             {
-                suffix.RollValue(false);
+                RemoveAffix(affixToExchange, item);
+
+                if (DataManager.Item.TryRollNewAffix(this, item, out var newAffix))
+                {
+                    if (newAffix is AffixTiered newAffixTiered)
+                    {
+                        float tierRatio = (float)newAffixTiered.CompoundTier / newAffixTiered.MaxCompoundTier;
+                        int newTier = (int)MathF.Round(newAffixTiered.MaxCompoundTier * tierRatio);
+                        newAffixTiered.SetCompoundTier(newTier);
+                    }
+
+                    TryAddAffix(newAffix, item);
+                }
+                else
+                {
+                    TryAddAffix(affixToExchange, item);
+                }
             }
             UpdateName(item);
         }
 
-        public void AddAffix(Affix affix, Item item, bool isItemCloned = false)
-        {
-            affix.AddAffix(item, isItemCloned);
 
-            affixes.Add(affix);
+        public bool TryAddAffix(Affix affix, Item item, bool isItemCloned = false)
+        {
+            if (FreeAffixes <= 0)
+                return false;
 
             if (affix.IsPrefix)
             {
+                if (FreePrefixes <= 0)
+                    return false;
+
                 prefixes.Add(affix);
-                return;
             }
 
             if (affix.IsSuffix)
             {
+                if (FreeSuffixes <= 0)
+                    return false;
+
                 suffixes.Add(affix);
-                return;
             }
+
+            affix.AddAffix(item, isItemCloned);
+
+            affixes.Add(affix);
+
+            return true;
         }
-        public void RemoveAffix(Affix affix, Item item)
+        public bool RemoveAffix(Affix affix, Item item)
         {
+            var wasRemoved = false;
             affix.RemoveAffix(item);
-            affixes.Remove(affix);
+            wasRemoved = affixes.Remove(affix);
             if (affix.IsPrefix)
                 prefixes.Remove(affix);
             else
@@ -484,6 +498,7 @@ namespace PathOfModifiers.Affixes.Items
                 if (affix.IsSuffix)
                     suffixes.Remove(affix);
             }
+            return wasRemoved;
         }
         public void ClearAffixes(Item item)
         {
@@ -493,24 +508,6 @@ namespace PathOfModifiers.Affixes.Items
             }
             affixes.Clear();
             prefixes.Clear();
-            suffixes.Clear();
-        }
-        public void ClearPrefixes(Item item)
-        {
-            foreach (var prefix in prefixes)
-            {
-                prefix.RemoveAffix(item);
-                affixes.Remove(prefix);
-            }
-            prefixes.Clear();
-        }
-        public void ClearSuffixes(Item item)
-        {
-            foreach (var suffix in suffixes)
-            {
-                suffix.RemoveAffix(item);
-                affixes.Remove(suffix);
-            }
             suffixes.Clear();
         }
 
@@ -1138,7 +1135,7 @@ namespace PathOfModifiers.Affixes.Items
                 }
                 affix = DataManager.Item.GetNewAffix(type);
                 affix.Load(affixTag, item);
-                AddAffix(affix, item);
+                TryAddAffix(affix, item);
             }
             UpdateName(item);
         }
@@ -1152,7 +1149,7 @@ namespace PathOfModifiers.Affixes.Items
             foreach (Affix affix in affixes)
             {
                 affixClone = affix.Clone();
-                newItem.AddAffix(affixClone, item, true);
+                newItem.TryAddAffix(affixClone, item, true);
             }
             newItem.UpdateName(itemClone);
 
@@ -1191,7 +1188,7 @@ namespace PathOfModifiers.Affixes.Items
                 {
                     affix = DataManager.Item.GetNewAffix(reader.ReadInt32());
                     affix.NetReceive(item, reader);
-                    AddAffix(affix, item);
+                    TryAddAffix(affix, item);
                 }
                 UpdateName(item);
             }

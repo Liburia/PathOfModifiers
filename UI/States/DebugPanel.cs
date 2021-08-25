@@ -185,7 +185,7 @@ namespace PathOfModifiers.UI.States
                             if (!IsAffixOnItem(affix, modItem, out var itemAffix))
                             {
                                 itemAffix = entry.affix.Clone();
-                                modItem.AddAffix(itemAffix, HeldItem);
+                                modItem.TryAddAffix(itemAffix, HeldItem);
                                 FilterAffixList();
                             }
 

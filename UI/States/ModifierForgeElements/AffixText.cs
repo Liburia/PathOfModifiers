@@ -16,7 +16,7 @@ using Terraria.Localization;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace PathOfModifiers.UI.Elements
+namespace PathOfModifiers.UI.States.ModifierForgeElements
 {
 	public class AffixText : UIElement
 	{

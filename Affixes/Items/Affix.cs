@@ -59,8 +59,6 @@ namespace PathOfModifiers.Affixes.Items
         }
 
         public virtual bool CanRoll(ItemItem pomItem, Item item) { return false; }
-
-        public virtual void RollValue(bool rollTier = true) { }
         #region Item Hooks
         public virtual void ModifyWeaponCrit(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat) { }

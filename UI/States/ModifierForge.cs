@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System.Linq;
@@ -15,98 +15,167 @@ using Terraria.ModLoader;
 using PathOfModifiers.UI.States.ModifierForgeElements;
 using PathOfModifiers.UI.Chat;
 using Terraria.ID;
+using Terraria.Audio;
+using PathOfModifiers.Affixes.Items.Constraints;
 
 namespace PathOfModifiers.UI.States
 {
-    enum AffixConstraint
+    interface IMFSelectable
     {
-        Any,
-        Prefix,
-        Suffix,
+        string Name { get; }
+        string Description { get; }
+        int Cost { get; }
     }
-    enum TierConstraint
+    interface IMFAction : IMFSelectable
     {
-        Any,
-        Highest,
-        Lowest,
-    }
-
-    interface IMFAction
-    {
-        string Text { get; }
-
-        void Execute(ItemItem item);
+        void Execute(Item item, ItemItem modItem);
     }
     interface IMFAffixConstraint
     {
-        AffixConstraint AffixConstraint { get; set; }
+        Constraint ItemAffixConstraint { get; set; }
+        Constraint DataManagerAffixConstraint { get; set; }
     }
     interface IMFTierConstraint
     {
-        TierConstraint TierConstraint { get; set; }
+        Constraint TierConstraint { get; set; }
     }
     class Action
     {
-        public class Add : IMFAction, IMFAffixConstraint
-        {
-            public string Text => "Add";
-
-            AffixConstraint IMFAffixConstraint.AffixConstraint { get; set; }
-
-            public void Execute(ItemItem item)
-            {
-            }
-        }
-        public class Remove : IMFAction, IMFAffixConstraint, IMFTierConstraint
-        {
-            public string Text => "Remove";
-
-            public AffixConstraint AffixConstraint { get; set; }
-            public TierConstraint TierConstraint { get; set; }
-
-            public void Execute(ItemItem item)
-            {
-            }
-        }
         public class Roll : IMFAction, IMFAffixConstraint, IMFTierConstraint
         {
-            public string Text => "Roll";
+            public string Name => "Roll";
+            public string Description => "Reroll existing affixes into new ones";
+            public int Cost => 1;
 
-            public AffixConstraint AffixConstraint { get; set; }
-            public TierConstraint TierConstraint { get; set; }
+            public Constraint DataManagerAffixConstraint { get; set; }
+            public Constraint ItemAffixConstraint { get; set; }
+            public Constraint TierConstraint { get; set; }
 
-            public void Execute(ItemItem item)
+            public void Execute(Item item, ItemItem modItem)
             {
+                if (TierConstraint is None)
+                {
+                    modItem.RerollAffixes(item, ItemAffixConstraint.Then(TierConstraint), DataManagerAffixConstraint);
+                }
+                else
+                {
+                    modItem.TryRemoveRandomAffix(item, ItemAffixConstraint);
+                    modItem.TryAddRandomAffix(item, DataManagerAffixConstraint);
+                }
             }
         }
-        public class Roll2 : IMFAction, IMFAffixConstraint, IMFTierConstraint
+        public class RollRarity : IMFAction
         {
-            public string Text => "Roll2";
+            public string Name => "Roll rarity";
+            public string Description => "Randomly choose a rarity for the item\nIf lower — remove affixes until item fits into the new rarity";
+            public int Cost => 1;
 
-            public AffixConstraint AffixConstraint { get; set; }
-            public TierConstraint TierConstraint { get; set; }
-
-            public void Execute(ItemItem item)
+            public void Execute(Item item, ItemItem modItem)
             {
+                modItem.RerollRarity(item);
             }
         }
-        public class Roll3 : IMFAction, IMFAffixConstraint, IMFTierConstraint
+        public class Add : IMFAction, IMFAffixConstraint
         {
-            public string Text => "Roll3";
+            public string Name => "Add";
+            public string Description => "Add a random affix to the item";
+            public int Cost => 10;
 
-            public AffixConstraint AffixConstraint { get; set; }
-            public TierConstraint TierConstraint { get; set; }
+            public Constraint DataManagerAffixConstraint { get; set; }
+            public Constraint ItemAffixConstraint { get; set; }
+            public Constraint TierConstraint { get; set; }
 
-            public void Execute(ItemItem item)
+            public void Execute(Item item, ItemItem modItem)
             {
+                modItem.TryAddRandomAffix(item, DataManagerAffixConstraint.Then(TierConstraint));
             }
+        }
+        public class ImproveRarity : IMFAction
+        {
+            public string Name => "Improve rarity";
+            public string Description => "Raises the rarity once";
+            public int Cost => 100;
+
+            public void Execute(Item item, ItemItem modItem)
+            {
+                modItem.TryRaiseRarity(item);
+            }
+        }
+    }
+    abstract class SelectableConstraint : IMFSelectable
+    {
+        public abstract string Name { get; }
+        public abstract string Description { get; }
+        public abstract int Cost { get; }
+        public abstract Constraint Constraint { get; }
+    }
+    class AffixConstraint
+    {
+        public class Any : SelectableConstraint
+        {
+            public override string Name => "Any";
+            public override string Description => "Can affect all affixes";
+            public override int Cost => 1;
+            public override Constraint Constraint => new None();
+        }
+        public class Prefix : SelectableConstraint
+        {
+            public override string Name => "Prefix";
+            public override string Description => "Can affect prefixes only";
+            public override int Cost => 5;
+            public override Constraint Constraint => new Prefixes();
+        }
+        public class Suffix : SelectableConstraint
+        {
+            public override string Name => "Suffix";
+            public override string Description => "Can affect suffixes only";
+            public override int Cost => 5;
+            public override Constraint Constraint => new Suffixes();
+        }
+    }
+    class TierConstraint
+    {
+        public class Any : SelectableConstraint
+        {
+            public override string Name => "Any";
+            public override string Description => "Can affect all affixes";
+            public override int Cost => 1;
+            public override Constraint Constraint => new None();
+        }
+        public class Highest : SelectableConstraint
+        {
+            public override string Name => "Highest";
+            public override string Description => "Only affects the affix with the highest tier";
+            public override int Cost => 5;
+            public override Constraint Constraint => new HighestTier();
+        }
+        public class Lowest : SelectableConstraint
+        {
+            public override string Name => "Lowest";
+            public override string Description => "Only affects the affix with the lowest tier";
+            public override int Cost => 5;
+            public override Constraint Constraint => new LowestTier();
         }
     }
 
 
     class ModifierForge : UIState
 	{
+        public static bool IsOpen => Systems.UI.IsModifierForgeOpen;
+        public static void Open(Tiles.ModifierForgeTE forge) => Systems.UI.OpenModifierForge(forge);
+        public static void Close() => Systems.UI.CloseModifierForge();
+
         UIDraggablePanel panel;
+
+        SelectList<ActionListEntry> actionList;
+        ActionListEntry improveRarity;
+
+        SelectList<ConstraintListEntry<SelectableConstraint>> affixConstraintList;
+
+        SelectList<ConstraintListEntry<SelectableConstraint>> tierConstraintList;
+
+        UIItemSlot itemSlot;
+        FragmentCost fragmentCostText;
 
         UIText freeAffixes;
         UIText freePrefixes;
@@ -133,7 +202,7 @@ namespace PathOfModifiers.UI.States
                 UIImageButton closePanelX = new(ModContent.Request<Texture2D>(PoMGlobals.Path.Image.UI.CloseButton, ReLogic.Content.AssetRequestMode.ImmediateLoad));
 				closePanelX.Top.Set(0f, 0f);
 				closePanelX.Left.Set(650f, 0f);
-				closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Systems.UI.ToggleModifierForgeState();
+				closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Systems.UI.CloseModifierForge();
 				panel.Append(closePanelX);
 
                 UIElement content = new();
@@ -147,59 +216,59 @@ namespace PathOfModifiers.UI.States
                     actionSection.MinHeight.Set(0f, 0.4f);
                     content.Append(actionSection);
                     {
-                        SelectList<ActionListEntry> actionList = new();
+                        actionList = new();
                         actionList.MinWidth.Set(0f, 0.24f);
                         actionList.MinHeight.Set(0f, 1f);
                         actionList.ListPadding = 0f;
+                        actionList.OnEntrySelected += OnActionSelected;
                         actionSection.Append(actionList);
                         {
-                            ActionListEntry add = new(new Action.Add());
-                            actionList.Add(add);
-
-                            ActionListEntry remove = new(new Action.Remove());
-                            actionList.Add(remove);
-
                             ActionListEntry roll = new(new Action.Roll());
                             actionList.Add(roll);
 
-                            ActionListEntry roll2 = new(new Action.Roll2());
-                            actionList.Add(roll2);
+                            ActionListEntry add = new(new Action.Add());
+                            actionList.Add(add);
 
-                            ActionListEntry roll3 = new(new Action.Roll3());
-                            actionList.Add(roll3);
+                            ActionListEntry rollRarity = new(new Action.RollRarity());
+                            actionList.Add(rollRarity);
+
+                            improveRarity = new(new Action.ImproveRarity());
+                            actionList.Add(improveRarity);
                         }
 
-                        SelectList<ConstraintListEntry<AffixConstraint>> affixConstraintList = new();
+                        affixConstraintList = new();
                         affixConstraintList.Left.Set(0f, actionList.MinWidth.Percent + 0.01f);
                         affixConstraintList.MinWidth.Set(0f, 0.24f);
                         affixConstraintList.MinHeight.Set(0f, 1f);
                         affixConstraintList.ListPadding = 0f;
+                        affixConstraintList.OnEntrySelected += (ConstraintListEntry<SelectableConstraint> entry) => UpdateCost();
                         actionSection.Append(affixConstraintList);
                         {
-                            ConstraintListEntry<AffixConstraint> any = new("Any", AffixConstraint.Any);
+                            ConstraintListEntry<SelectableConstraint> any = new("Any", new AffixConstraint.Any());
                             affixConstraintList.Add(any);
 
-                            ConstraintListEntry<AffixConstraint> prefix = new("Prefix", AffixConstraint.Prefix);
+                            ConstraintListEntry<SelectableConstraint> prefix = new("Prefix", new AffixConstraint.Prefix());
                             affixConstraintList.Add(prefix);
 
-                            ConstraintListEntry<AffixConstraint> suffix = new("Suffix", AffixConstraint.Suffix);
+                            ConstraintListEntry<SelectableConstraint> suffix = new("Suffix", new AffixConstraint.Suffix());
                             affixConstraintList.Add(suffix);
                         }
 
-                        SelectList<ConstraintListEntry<TierConstraint>> tierConstraintList = new();
+                        tierConstraintList = new();
                         tierConstraintList.Left.Set(0f, affixConstraintList.Left.Percent + affixConstraintList.MinWidth.Percent + 0.01f);
                         tierConstraintList.MinWidth.Set(0f, 0.24f);
                         tierConstraintList.MinHeight.Set(0f, 1f);
                         tierConstraintList.ListPadding = 0f;
+                        tierConstraintList.OnEntrySelected += (ConstraintListEntry<SelectableConstraint> entry) => UpdateCost();
                         actionSection.Append(tierConstraintList);
                         {
-                            ConstraintListEntry<TierConstraint> any = new("Any", TierConstraint.Any);
+                            ConstraintListEntry<SelectableConstraint> any = new("Any", new TierConstraint.Any());
                             tierConstraintList.Add(any);
 
-                            ConstraintListEntry<TierConstraint> highest = new("Highest", TierConstraint.Highest);
+                            ConstraintListEntry<SelectableConstraint> highest = new("Highest", new TierConstraint.Highest());
                             tierConstraintList.Add(highest);
 
-                            ConstraintListEntry<TierConstraint> lowest = new("Lowest", TierConstraint.Lowest);
+                            ConstraintListEntry<SelectableConstraint> lowest = new("Lowest", new TierConstraint.Lowest());
                             tierConstraintList.Add(lowest);
                         }
 
@@ -213,7 +282,7 @@ namespace PathOfModifiers.UI.States
                             UIItemSlot fragment = new();
                             fragment.MinWidth.Set(75f, 0f);
                             fragment.MinHeight.Set(fragment.MinWidth.Pixels, 0f);
-                            var fragmentTexture = ModContent.Request<Texture2D>($"PathOfModifiers/Items/ModifierFragment");
+                            var fragmentTexture = ModContent.Request<Texture2D>("PathOfModifiers/Items/ModifierFragment");
                             fragment.CanInsertItem = (Item item) => item.type == ModContent.ItemType<Items.ModifierFragment>();
                             fragment.OnDrawGhostItem += delegate (SpriteBatch sb, Vector2 position, float scale)
                             {
@@ -221,43 +290,53 @@ namespace PathOfModifiers.UI.States
                             };
                             actionParent.Append(fragment);
 
-                            UIItemSlot item = new();
-                            item.MinWidth.Set(fragment.MinWidth.Pixels, 0f);
-                            item.MinHeight.Set(fragment.MinWidth.Pixels, 0f);
-                            item.Left.Set(-fragment.MinWidth.Pixels, 1f);
+                            itemSlot = new();
+                            itemSlot.MinWidth.Set(fragment.MinWidth.Pixels, 0f);
+                            itemSlot.MinHeight.Set(fragment.MinWidth.Pixels, 0f);
+                            itemSlot.Left.Set(-fragment.MinWidth.Pixels, 1f);
                             var itemTexture = ModContent.Request<Texture2D>($"Terraria/Images/Item_{ ItemID.GoldBroadsword }");
-                            item.CanInsertItem = (Item item) => ItemItem.IsRollable(item);
-                            item.OnDrawGhostItem += delegate (SpriteBatch sb, Vector2 position, float scale)
+                            itemSlot.CanInsertItem = (Item item) => item.TryGetGlobalItem<ItemItem>(out var _);
+                            itemSlot.OnDrawGhostItem += delegate (SpriteBatch sb, Vector2 position, float scale)
                             {
                                 sb.Draw(itemTexture.Value, position, null, Color.White * 0.3f, 0f, itemTexture.Size() / 2f, scale, SpriteEffects.None, 0f);
                             };
-                            item.OnItemInserted += delegate (Item item)
-                            {
-                                UpdateItemText(item);
-                            };
-                            actionParent.Append(item);
+                            itemSlot.OnItemChanged += OnItemChanged;
+                            actionParent.Append(itemSlot);
 
-                            UIButton reforge = new();
-                            reforge.HAlign = 0.5f;
-                            reforge.Top.Set(0f, 0.6f);
-                            reforge.MinHeight.Set(0f, 0.4f);
-                            reforge.MinWidth.Set(0f, 1f);
-                            actionParent.Append(reforge);
+                            UIButton forge = new();
+                            forge.HAlign = 0.5f;
+                            forge.Top.Set(0f, 0.6f);
+                            forge.MinHeight.Set(0f, 0.4f);
+                            forge.MinWidth.Set(0f, 1f);
+                            forge.OnClick += OnForgeClicked;
+                            actionParent.Append(forge);
                             {
-                                UIText text = new("Forge", 0.9f, true);
+                                UIElement cost = new();
+                                cost.MinWidth.Set(0f, 1f);
+                                cost.MinHeight.Set(0f, 0.3f);
+                                forge.Append(cost);
+                                {
+                                    fragmentCostText = new("654456", 0.35f, true);
+                                    fragmentCostText.HAlign = 0.5f;
+                                    fragmentCostText.VAlign = 0.5f;
+                                    fragmentCostText.IgnoresMouseInteraction = true;
+                                    cost.Append(fragmentCostText);
+                                }
+
+                                UIText text = new("Forge", 0.55f, true);
+                                text.Top.Set(cost.GetOuterDimensions().Height + UICommon.spacing * 2f, 0f);
                                 text.HAlign = 0.5f;
-                                text.VAlign = 0.5f;
                                 text.IgnoresMouseInteraction = true;
-                                reforge.Append(text);
+                                forge.Append(text);
                             }
                         }
                     }
 
                     UIElement textSection = new();
                     textSection.HAlign = 0.5f;
-                    textSection.Top.Set(0f, 0.5f);
+                    textSection.Top.Set(0f, 0.43f);
                     textSection.MinWidth.Set(0f, 0.9f);
-                    textSection.MinHeight.Set(0f, 0.5f);
+                    textSection.MinHeight.Set(0f, 0.57f);
                     content.Append(textSection);
                     {
                         UIElement freeAffixSection = new();
@@ -327,6 +406,139 @@ namespace PathOfModifiers.UI.States
                     }
                 }
 			}
+
+            OnItemChanged(new Item());
+        }
+
+        private void OnForgeClicked(UIMouseEvent evt, UIElement listeningElement)
+        {
+            var action = actionList.SelectedItem.action;
+            var affixConstraint = affixConstraintList.SelectedItem?.constraint;
+            var tierConstraint = tierConstraintList.SelectedItem?.constraint;
+
+            if (action != null)
+            {
+                if (action is IMFAffixConstraint affixAction)
+                {
+                    affixAction.DataManagerAffixConstraint = affixConstraint.Constraint;
+                    affixAction.ItemAffixConstraint = affixConstraint.Constraint;
+                }
+                if (action is IMFTierConstraint tierAction)
+                {
+                    tierAction.TierConstraint = tierConstraint.Constraint;
+                }
+
+                var item = itemSlot.Item;
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    action.Execute(item, modItem);
+
+                    PopupText.NewText(PopupTextContext.ItemReforge, item, item.stack, true, false);
+                    SoundEngine.PlaySound(SoundID.Item37, -1, -1);
+                    //UI.States.ModifierForge.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
+                    //SendModifiedItemToServer();
+                    //SendModifierItemToServer();
+
+                    UpdateItemText(itemSlot.Item);
+                }
+            }
+        }
+
+        void OnActionSelected(ActionListEntry entry)
+        {
+            bool isActioAffixConstrained = entry.action is IMFAffixConstraint;
+            foreach (var constraint in affixConstraintList)
+            {
+                constraint.IsEnabled = isActioAffixConstrained;
+            }
+
+            if (isActioAffixConstrained)
+            {
+                foreach (var constraint in affixConstraintList)
+                {
+                    if (constraint.IsEnabled)
+                    {
+                        affixConstraintList.Select(constraint);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                affixConstraintList.Deselect();
+            }
+
+            bool isActioTierConstrained = entry.action is IMFTierConstraint;
+            foreach (var constraint in tierConstraintList)
+            {
+                constraint.IsEnabled = isActioTierConstrained;
+            }
+
+            if (isActioTierConstrained)
+            {
+                foreach (var constraint in tierConstraintList)
+                {
+                    if (constraint.IsEnabled)
+                    {
+                        tierConstraintList.Select(constraint);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                tierConstraintList.Deselect();
+            }
+
+            UpdateCost();
+        }
+
+        void OnItemChanged(Item item)
+        {
+            bool isItemValid = item.TryGetGlobalItem<ItemItem>(out var modItem);
+            foreach (var action in actionList)
+            {
+                action.IsEnabled = isItemValid;
+            }
+            foreach (var constraint in affixConstraintList)
+            {
+                constraint.IsEnabled = false;
+            }
+            foreach (var constraint in tierConstraintList)
+            {
+                constraint.IsEnabled = false;
+            }
+            actionList.Deselect();
+            affixConstraintList.Deselect();
+            tierConstraintList.Deselect();
+
+            if (isItemValid)
+            {
+                improveRarity.IsEnabled = modItem.CanRaiseRarity(item);
+
+                foreach (var action in actionList)
+                {
+                    if (action.IsEnabled)
+                    {
+                        actionList.Select(action);
+                        break;
+                    }
+                }
+            }
+            UpdateCost();
+            UpdateItemText(item);
+        }
+
+        void UpdateCost()
+        {
+            ItemItem modItem = null;
+            itemSlot.Item?.TryGetGlobalItem(out modItem);
+            int newCost = modItem?.rarity.forgeCost ?? 0;
+            newCost *= actionList.SelectedItem?.action.Cost ?? 0;
+            newCost *= affixConstraintList.SelectedItem?.constraint.Cost ?? 1;
+            newCost *= tierConstraintList.SelectedItem?.constraint.Cost ?? 1;
+
+            fragmentCostText.SetText(newCost.ToString());
         }
 
         void UpdateItemText(Item item)
@@ -343,6 +555,7 @@ namespace PathOfModifiers.UI.States
                 freeSuffixes.SetText($"[{modItem.suffixes.Count}/{modItem.rarity.maxSuffixes}]");
 
                 affixTextItemName.SetText(item.Name);
+                affixTextItemName.TextColor = modItem.rarity.color;
 
                 int i = 0;
                 for (; i < modItem.prefixes.Count; i++)
@@ -353,7 +566,7 @@ namespace PathOfModifiers.UI.States
                     var text = affixTextList._items[i];
 
                     text.TextColor = prefix.Color;
-                    text.SetText(prefix.GetTolltipText());
+                    text.SetText(prefix.GetForgeText());
                 }
                 int j = 0;
                 for (; j < modItem.suffixes.Count; j++)
@@ -365,7 +578,7 @@ namespace PathOfModifiers.UI.States
                     var text = affixTextList._items[textIndex];
 
                     text.TextColor = suffix.Color;
-                    text.SetText(suffix.GetTolltipText());
+                    text.SetText(suffix.GetForgeText());
                 }
 
                 affixTextList.Recalculate();
@@ -376,7 +589,7 @@ namespace PathOfModifiers.UI.States
                 freePrefixes.SetText("[0/0]");
                 freeSuffixes.SetText("[0/0]");
 
-                affixTextItemName.SetText("No item");
+                affixTextItemName.SetText("No valid item");
             }
         }
     }

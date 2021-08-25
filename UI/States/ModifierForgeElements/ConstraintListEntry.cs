@@ -14,9 +14,20 @@ using Terraria.UI;
 namespace PathOfModifiers.UI.States.ModifierForgeElements
 {
     class ConstraintListEntry<T> : UIToggle
+		where T : SelectableConstraint
     {
 		UIText _text;
 		public T constraint;
+
+		private bool _isEnabled = true;
+		public bool IsEnabled
+		{
+			get => _isEnabled;
+			set
+			{
+				_isEnabled = value;
+			}
+		}
 
 		public ConstraintListEntry(string text, T constraint) : base()
 		{
@@ -31,9 +42,27 @@ namespace PathOfModifiers.UI.States.ModifierForgeElements
 			Append(_text);
 
 			this.constraint = constraint;
-        }
+		}
 
-        protected override void DrawPanel(SpriteBatch spriteBatch)
+		public override void Update(GameTime gameTime)
+		{
+			base.Update(gameTime);
+
+			if (IsMouseHovering)
+			{
+				Main.instance.MouseText(constraint.Description);
+			}
+		}
+
+		public override void Click(UIMouseEvent evt)
+		{
+			if (IsEnabled)
+			{
+				base.Click(evt);
+			}
+		}
+
+		protected override void DrawPanel(SpriteBatch spriteBatch)
 		{
 			var dims = GetDimensions();
 			int x = (int)dims.X;
@@ -53,6 +82,12 @@ namespace PathOfModifiers.UI.States.ModifierForgeElements
 			//vert border
 			spriteBatch.Draw(texture.Value, new Rectangle(x, y, 2, height), source, BorderColor);
 			spriteBatch.Draw(texture.Value, new Rectangle(x + width - 2, y, 2, height), source, BorderColor);
+
+			if (!IsEnabled)
+			{
+				//Disabled overlay
+				spriteBatch.Draw(texture.Value, new Rectangle(x + 1, y + 1, width - 2, height - 2), source, UICommon.disabledOverlayColor);
+			}
 		}
 	}
 }

@@ -22,8 +22,9 @@ namespace PathOfModifiers.UI
 		public readonly static Color backgroundColor = new Color(63, 82, 151) * 0.7f;
 		public readonly static Color hoverBackgroundColor = new Color(63, 82, 151) * 0.9f;
 		public readonly static Color activeBackgroundColor = Color.Yellow * 0.7f;
+		public readonly static Color disabledOverlayColor = Color.Black * 0.7f;
 
-        public static class Panel
+		public static class Panel
 		{
 			public const int cornerSize = 12;
 			public const int barSize = 4;

@@ -141,13 +141,13 @@ namespace PathOfModifiers.UI.Elements
 				Utils.DrawBorderString(spriteBatch, _visibleText, pos, _color, num);
 		}
 
-		private void VerifyTextState()
+		protected void VerifyTextState()
 		{
 			if ((object)_lastTextReference != Text)
 				InternalSetText(_text, _textScale, _isLarge);
 		}
 
-		private void InternalSetText(object text, float textScale, bool large)
+		protected void InternalSetText(object text, float textScale, bool large)
 		{
 			DynamicSpriteFont dynamicSpriteFont = large ? FontAssets.DeathText.Value : FontAssets.MouseText.Value;
 			_text = text;

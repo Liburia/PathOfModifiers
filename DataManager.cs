@@ -136,7 +136,7 @@ namespace PathOfModifiers
             {
                 Affixes.Items.Affix affix = affixes[index];
                 affix = affix.Clone();
-                affix.RollValue();
+                (affix as Affixes.Items.AffixTiered)?.RollValue();
                 return affix;
             }
             public static Affixes.Items.Affix GetNewAffix(Type type)
@@ -171,73 +171,42 @@ namespace PathOfModifiers
                 RarityItem rarity = weightedRandom;
                 return rarity;
             }
-            /// <summary>
-            /// Returns a valid affix for the item or null.
-            /// </summary>
-            public static Affixes.Items.Affix RollNewAffix(Affixes.Items.ItemItem pomItem, Terraria.Item item)
+            public static bool TryRollNewAffix(Affixes.Items.ItemItem pomItem, Terraria.Item item, out Affixes.Items.Affix affix)
             {
-                Affixes.Items.Affix affix;
-
                 float prefixChance = pomItem.FreeSuffixes > 0 ? pomItem.rarity.chanceToRollPrefixInsteadOfSuffix : 1;
 
+                Affixes.Items.Constraints.Constraint constraint;
                 if (Main.rand.NextFloat(1) < prefixChance)
                 {
-                    affix = RollNewPrefix(pomItem, item);
+                    constraint = new Affixes.Items.Constraints.Prefixes();
                 }
                 else
                 {
-                    affix = RollNewSuffix(pomItem, item);
+                    constraint = new Affixes.Items.Constraints.Suffixes();
                 }
 
-                return affix;
+                return TryRollNewAffix(pomItem, item, constraint, out affix);
             }
-            public static Affixes.Items.Affix RollNewPrefix(Affixes.Items.ItemItem pomItem, Terraria.Item item)
+            public static bool TryRollNewAffix(Affixes.Items.ItemItem pomItem, Terraria.Item item, Affixes.Items.Constraints.Constraint constraint, out Affixes.Items.Affix affix)
             {
-                if (pomItem.FreePrefixes <= 0)
-                {
-                    return null;
-                }
-                Tuple<Affixes.Items.Affix, double>[] tuples = affixes
+                var constrainedAffixes = affixes
                     .Where(a => a.AffixSpaceAvailable(pomItem) &&
                         a.Weight > 0 &&
                         a.CanRoll(pomItem, item) &&
-                        a is Affixes.IPrefix &&
-                        !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                    .Select(a => new Tuple<Affixes.Items.Affix, double>(a, a.Weight))
-                    .ToArray();
+                        !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()));
+                constrainedAffixes = constraint.Process(constrainedAffixes);
+
+                var tuples = constrainedAffixes.Select(a => new Tuple<Affixes.Items.Affix, double>(a, a.Weight)).ToArray();
                 if (tuples.Length == 0)
                 {
-                    return null;
+                    affix = null;
+                    return false;
                 }
                 WeightedRandom<Affixes.Items.Affix> weightedRandom = new(Main.rand, tuples);
-                Affixes.Items.Affix prefix = weightedRandom;
-                prefix = prefix.Clone();
-                prefix.RollValue();
-                return prefix;
-            }
-            public static Affixes.Items.Affix RollNewSuffix(Affixes.Items.ItemItem pomItem, Terraria.Item item)
-            {
-                if (pomItem.FreeSuffixes <= 0)
-                {
-                    return null;
-                }
-                Tuple<Affixes.Items.Affix, double>[] tuples = affixes
-                    .Where(a => a.AffixSpaceAvailable(pomItem) &&
-                        a.Weight > 0 &&
-                        a.CanRoll(pomItem, item) &&
-                        a is Affixes.ISuffix &&
-                        !pomItem.affixes.Exists(ia => ia.GetType() == a.GetType()))
-                    .Select(a => new Tuple<Affixes.Items.Affix, double>(a, a.Weight))
-                    .ToArray();
-                if (tuples.Length == 0)
-                {
-                    return null;
-                }
-                WeightedRandom<Affixes.Items.Affix> weightedRandom = new(Main.rand, tuples);
-                Affixes.Items.Affix suffix = weightedRandom;
-                suffix = suffix.Clone();
-                suffix.RollValue();
-                return suffix;
+                affix = weightedRandom.Get().Clone();
+                (affix as Affixes.Items.AffixTiered)?.RollValue();
+
+                return true;
             }
             #endregion
         }

@@ -28,15 +28,17 @@ namespace PathOfModifiers.Systems
                 debugPanelInterface?.SetState(null);
         }
 
-        static ModKeybind key_toggleModifierForgeMenu;
         static UserInterface modifierForgeInterface;
         static ModifierForge modifierForgeState;
-        public static void ToggleModifierForgeState()
+        public static bool IsModifierForgeOpen => modifierForgeInterface.CurrentState != null;
+        public static void OpenModifierForge(Tiles.ModifierForgeTE forge)
         {
-            if (modifierForgeInterface.CurrentState == null)
-                modifierForgeInterface?.SetState(modifierForgeState);
-            else
-                modifierForgeInterface?.SetState(null);
+            modifierForgeInterface?.SetState(modifierForgeState);
+            Main.playerInventory = true;
+        }
+        public static void CloseModifierForge()
+        {
+            modifierForgeInterface?.SetState(null);
         }
 
         public EventHandler OnWorldLoaded;
@@ -58,7 +60,6 @@ namespace PathOfModifiers.Systems
                 debugUIState = new DebugPanel();
                 debugUIState.Activate();
 
-                key_toggleModifierForgeMenu = KeybindLoader.RegisterKeybind(Mod, "Toggle Modifier Forge", Microsoft.Xna.Framework.Input.Keys.None);
                 modifierForgeInterface = new UserInterface();
                 modifierForgeState = new ModifierForge();
                 modifierForgeState.Activate();
@@ -70,7 +71,6 @@ namespace PathOfModifiers.Systems
             debugPanelInterface = null;
             debugUIState = null;
 
-            key_toggleModifierForgeMenu = null;
             modifierForgeInterface = null;
             modifierForgeState = null;
         }
@@ -83,8 +83,6 @@ namespace PathOfModifiers.Systems
                 ToggleDebugPanel();
             debugPanelInterface?.Update(gameTime);
 
-            if (key_toggleModifierForgeMenu.JustPressed)
-                ToggleModifierForgeState();
             modifierForgeInterface?.Update(gameTime);
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)

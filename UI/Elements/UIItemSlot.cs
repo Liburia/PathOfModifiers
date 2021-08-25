@@ -31,7 +31,7 @@ namespace PathOfModifiers.UI.Elements
         }
 
         public CheckDelegate CanInsertItem;
-        public event ChangedDelegate OnItemInserted;
+        public event ChangedDelegate OnItemChanged;
         public event Action<SpriteBatch, Vector2, float> OnDrawGhostItem;
 
         public UIItemSlot()
@@ -135,7 +135,7 @@ namespace PathOfModifiers.UI.Elements
                 oldItem = Item;
                 Item = item;
 
-                OnItemInserted?.Invoke(item);
+                OnItemChanged?.Invoke(item);
 
                 SoundEngine.PlaySound(SoundID.Grab);
 
