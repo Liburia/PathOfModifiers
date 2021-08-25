@@ -255,6 +255,13 @@ namespace PathOfModifiers.Affixes.Items
 
             if (removeExtraAffixes)
             {
+                if (affixes.Count > rarity.maxAffixes)
+                {
+                    for (int i = FreeAffixes; i < 0; i++)
+                    {
+                        RemoveAffix(affixes.Last(), item);
+                    }
+                }
                 if (prefixes.Count > rarity.maxPrefixes)
                 {
                     for (int i = FreePrefixes; i < 0; i++)
@@ -267,13 +274,6 @@ namespace PathOfModifiers.Affixes.Items
                     for (int i = FreeSuffixes; i < 0; i++)
                     {
                         RemoveAffix(suffixes.Last(), item);
-                    }
-                }
-                if (affixes.Count > rarity.maxAffixes)
-                {
-                    for (int i = FreeAffixes; i < 0; i++)
-                    {
-                        RemoveAffix(affixes.Last(), item);
                     }
                 }
             }
