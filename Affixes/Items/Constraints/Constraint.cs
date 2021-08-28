@@ -30,8 +30,7 @@ namespace PathOfModifiers.Affixes.Items.Constraints
 
             foreach (var c in nextConstraints)
             {
-                c.Process(output);
-
+                output = c.Process(output);
             }
 
             return output;
