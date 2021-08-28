@@ -166,7 +166,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public override string GetForgeText()
         {
-            return $"      { UI.Chat.TierTagHandler.GenerateTag(Type1.TierText.ToString()) } { GetAffixText(true) }";
+            return $"      { UI.Chat.TierTagHandler.GenerateTag(Type1.TierText, Type1.MaxTiers) } { GetAffixText(true) }";
         }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
@@ -352,7 +352,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public override string GetForgeText()
         {
-            return $"   { UI.Chat.TierTagHandler.GenerateTag(Type1.TierText.ToString()) }{ UI.Chat.TierTagHandler.GenerateTag(Type2.TierText.ToString()) } { GetAffixText(true) }";
+            return $"   { UI.Chat.TierTagHandler.GenerateTag(Type1.TierText, Type1.MaxTiers) }{ UI.Chat.TierTagHandler.GenerateTag(Type2.TierText, Type2.MaxTiers) } { GetAffixText(true) }";
         }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
@@ -577,7 +577,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public override string GetForgeText()
         {
-            return $"{ UI.Chat.TierTagHandler.GenerateTag(Type1.TierText.ToString()) }{ UI.Chat.TierTagHandler.GenerateTag(Type2.TierText.ToString()) }{ UI.Chat.TierTagHandler.GenerateTag(Type3.TierText.ToString()) } { GetAffixText(true) }";
+            return $"{ UI.Chat.TierTagHandler.GenerateTag(Type1.TierText, Type1.MaxTiers) }{ UI.Chat.TierTagHandler.GenerateTag(Type2.TierText, Type2.MaxTiers) }{ UI.Chat.TierTagHandler.GenerateTag(Type3.TierText, Type3.MaxTiers) } { GetAffixText(true) }";
         }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
