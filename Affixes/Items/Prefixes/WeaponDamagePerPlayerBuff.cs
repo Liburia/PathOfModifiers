@@ -24,8 +24,8 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 new TTFloat.WeightedTier(-0.04f, -0.03f, 0.5),
                 new TTFloat.WeightedTier(-0.03f, -0.02f, 1),
                 new TTFloat.WeightedTier(-0.02f, -0.01f, 2),
-                new TTFloat.WeightedTier(0.01f, 0.01f, 2),
-                new TTFloat.WeightedTier(0.02f, 0.02f, 1),
+                new TTFloat.WeightedTier(0.01f, 0.02f, 2),
+                new TTFloat.WeightedTier(0.02f, 0.03f, 1),
                 new TTFloat.WeightedTier(0.03f, 0.04f, 0.5),
             },
         };
