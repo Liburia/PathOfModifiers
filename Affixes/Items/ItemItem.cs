@@ -396,11 +396,18 @@ namespace PathOfModifiers.Affixes.Items
         public bool TryRemoveRandomAffix(Item item, Constraints.Constraint constraint)
         {
             var constrainedAffixes = constraint.Process(affixes).ToArray();
-            var affixToRemove = Main.rand.Next(constrainedAffixes);
-            bool wasRemoved = RemoveAffix(affixToRemove, item);
-            if (wasRemoved)
-                UpdateName(item);
-            return wasRemoved;
+            if (constrainedAffixes.Length > 0)
+            {
+                var affixToRemove = Main.rand.Next(constrainedAffixes);
+                bool wasRemoved = RemoveAffix(affixToRemove, item);
+                if (wasRemoved)
+                    UpdateName(item);
+                return wasRemoved;
+            }
+            else
+            {
+                return false;
+            }
         }
         public void RemoveAllAffixes(Item item, Constraints.Constraint constraint)
         {
@@ -424,21 +431,21 @@ namespace PathOfModifiers.Affixes.Items
         public void ImproveRandomAffixTierMultiplier(Item item, Constraints.Constraint constraint)
         {
             var constrainedAffixes = constraint.Process(affixes).ToArray();
-            var affixToImprove = Main.rand.Next(constrainedAffixes);
+            var affixToImprove = constrainedAffixes.Length > 0 ? Main.rand.Next(constrainedAffixes) : null;
             (affixToImprove as AffixTiered)?.ImproveValue();
             UpdateName(item);
         }
         public void ImproveRandomAffixTier(Item item, Constraints.Constraint constraint)
         {
             var constrainedAffixes = constraint.Process(affixes).ToArray();
-            var affixToImprove = Main.rand.Next(constrainedAffixes);
+            var affixToImprove = constrainedAffixes.Length > 0 ? Main.rand.Next(constrainedAffixes) : null;
             (affixToImprove as AffixTiered)?.ImproveCompoundTier();
             UpdateName(item);
         }
         public void ExchangeRandomAffix(Item item, Constraints.Constraint constraint)
         {
             var constrainedAffixes = constraint.Process(affixes).ToArray();
-            var affixToExchange = Main.rand.Next(constrainedAffixes);
+            var affixToExchange = constrainedAffixes.Length > 0 ? Main.rand.Next(constrainedAffixes) : null;
             if (affixToExchange is AffixTiered affixTiered)
             {
                 RemoveAffix(affixToExchange, item);
@@ -447,7 +454,7 @@ namespace PathOfModifiers.Affixes.Items
                 {
                     if (newAffix is AffixTiered newAffixTiered)
                     {
-                        float tierRatio = (float)newAffixTiered.CompoundTier / newAffixTiered.MaxCompoundTier;
+                        float tierRatio = (float)affixTiered.CompoundTier / newAffixTiered.MaxCompoundTier;
                         int newTier = (int)MathF.Round(newAffixTiered.MaxCompoundTier * tierRatio);
                         newAffixTiered.SetCompoundTier(newTier);
                     }
@@ -458,8 +465,8 @@ namespace PathOfModifiers.Affixes.Items
                 {
                     TryAddAffix(affixToExchange, item);
                 }
+                UpdateName(item);
             }
-            UpdateName(item);
         }
 
 
