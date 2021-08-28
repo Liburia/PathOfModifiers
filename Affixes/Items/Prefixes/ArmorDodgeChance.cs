@@ -47,9 +47,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAnyArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"{Type1.GetValueFormat()}% Dodge chance";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            return $"{ valueRange1 }% Dodge chance";
         }
 
         public override void UpdateEquip(Item item, ItemPlayer player)

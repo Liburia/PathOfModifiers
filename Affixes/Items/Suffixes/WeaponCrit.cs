@@ -62,11 +62,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
             string plusMinus = Type1.GetValue() >= 0 ? "+" : "-";
-
-            return $"Deal {plusMinus}{Type1.GetValueFormat()}% damage ({Type2.GetValueFormat(1)}s CD)";
+            return $"Deal { plusMinus }{ valueRange1 }% damage ({ valueRange2 }s CD)";
         }
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)

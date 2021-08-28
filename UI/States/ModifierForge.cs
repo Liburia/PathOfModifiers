@@ -400,7 +400,7 @@ namespace PathOfModifiers.UI.States
                                     affixText.MaxWidth.Set(0f, 1f);
                                     affixText.TextColor = Color.Green;
                                     affixTextList.Add(affixText);
-                                    affixText.SetText($"{ Keyword.Bleed.GenerateTag() }gamepedia is soo bad on russian, literally 90% of in-game stuff just doesn't exists there as page, while fandom is 95% full", textScale);
+                                    affixText.SetText($"{ Keyword.GetTextOrTag(KeywordType.Bleed) }gamepedia is soo bad on russian, literally 90% of in-game stuff just doesn't exists there as page, while fandom is 95% full", textScale);
                                 }
                             }
                         }

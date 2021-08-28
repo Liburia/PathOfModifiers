@@ -47,12 +47,11 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsBodyArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            float value = Type1.GetValue();
-            float valueFormat = Type1.GetValueFormat();
-            char plusMinus = value < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueFormat }% received damage";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueRange1 }% received damage";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

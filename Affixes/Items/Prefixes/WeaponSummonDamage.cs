@@ -46,13 +46,11 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsSummon(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            float value = Type1.GetValue();
-            float valueFormat = Type1.GetValueFormat();
-
-            char plusMinus = value < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueFormat }% summon damage";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueRange1 }% summon damage";
         }
 
         public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat)

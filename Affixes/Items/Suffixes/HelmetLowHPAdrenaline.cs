@@ -12,6 +12,7 @@ using Terraria.ID;
 using PathOfModifiers.ModNet.PacketHandlers;
 using Terraria.DataStructures;
 using PathOfModifiers.Buffs;
+using PathOfModifiers.UI.Chat;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -42,9 +43,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsHeadArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"Gain Adrenaline for { Type1.GetValueFormat(1) }s when hit to low HP";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
+            return $"Gain { Keyword.GetTextOrTag(KeywordType.Adrenaline, useChatTags) } for { valueRange1 }s when hit to low HP";
         }
 
         public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)

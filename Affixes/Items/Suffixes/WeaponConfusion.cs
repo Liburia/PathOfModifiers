@@ -51,9 +51,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"{Type1.GetValueFormat()}% chance to confuse enemy for {Type2.GetValueFormat(1)}s";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
+            return $"{ valueRange1 }% chance to confuse enemy for { valueRange2 }s";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

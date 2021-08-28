@@ -74,9 +74,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"{Type1.GetValueFormat()}% chance to release {Type2.GetValueFormat()} life orbs on hit that heal {Type3.GetValueFormat()}% of damage dealt";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
+            var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(), Type3.GetMinValueFormat(), Type3.GetMaxValueFormat(), useChatTags);
+            return $"{ valueRange1 }% chance to release { valueRange2 } life orbs on hit that heal { valueRange3 }% of damage dealt";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

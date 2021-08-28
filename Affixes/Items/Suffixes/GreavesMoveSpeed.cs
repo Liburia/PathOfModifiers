@@ -78,10 +78,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsLegArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
+            var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(1), Type3.GetMinValueFormat(1), Type3.GetMaxValueFormat(1), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ Type1.GetValueFormat() }% move speed for { Type2.GetValueFormat(1) }s when hit ({ Type3.GetValueFormat(1) }s CD)";
+            return $"{ plusMinus }{ valueRange1 }% move speed for { valueRange2 }s when hit ({ valueRange3 }s CD)";
         }
 
         public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)

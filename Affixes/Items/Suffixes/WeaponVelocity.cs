@@ -45,10 +45,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
             string towardsAway = Type1.GetValue() >= 0 ? "towards" : "away from";
-            return $"Gain {Type1.GetValueFormat(1)} velocity {towardsAway} target on hit";
+            return $"Gain { valueRange1 } velocity { towardsAway } target on hit";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

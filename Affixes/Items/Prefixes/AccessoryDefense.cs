@@ -47,11 +47,11 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            int value = Type1.GetValueFormat();
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ value } defense";
+            return $"{ plusMinus }{ valueRange1 } defense";
         }
 
         public override void UpdateEquip(Item item, ItemPlayer player)

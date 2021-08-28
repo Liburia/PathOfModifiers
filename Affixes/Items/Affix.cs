@@ -105,15 +105,15 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         public virtual void ModifyTooltips(Mod mod, Item item, List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, GetType().Name, GetTolltipText())
+            TooltipLine line = new TooltipLine(mod, GetType().Name, GetAffixText())
             {
                 overrideColor = Color
             };
             tooltips.Add(line);
         }
-        public virtual string GetTolltipText() { return string.Empty; }
+        public virtual string GetAffixText(bool useChatTags = false) { return string.Empty; }
 
-        public virtual string GetForgeText() { return GetTolltipText(); }
+        public virtual string GetForgeText() { return GetAffixText(); }
 
         public virtual void Save(TagCompound tag, Item item)
         {

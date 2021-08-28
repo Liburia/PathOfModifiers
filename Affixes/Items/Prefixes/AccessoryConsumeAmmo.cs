@@ -47,9 +47,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"{ Type1.GetValueFormat() }% chance to not consume ammo";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            return $"{ valueRange1 }% chance to not consume ammo";
         }
 
         public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo)

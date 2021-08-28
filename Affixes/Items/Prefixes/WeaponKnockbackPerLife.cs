@@ -46,11 +46,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.CanKnockback(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            float value = Type1.GetValue();
-            float valueFormat = Type1.GetValueFormat();
-            return $"Up to { (value < 0 ? '-' : '+') }{ valueFormat }% knockback above 50% life and up to { (value < 0 ? '+' : '-') }{ valueFormat }% below";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            string plusMinus1 = Type1.GetValue() >= 0 ? "+" : "-";
+            string plusMinus2 = Type1.GetValue() >= 0 ? "-" : "+";
+            return $"Up to { plusMinus1 }{ valueRange1 }% knockback above 50% life and up to { plusMinus2 }{ valueRange1 }% below";
         }
 
         public override void GetWeaponKnockback(Item item, Player player, ref float multiplier)

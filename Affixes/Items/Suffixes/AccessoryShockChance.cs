@@ -10,6 +10,7 @@ using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
 using Terraria.ID;
 using PathOfModifiers.ModNet.PacketHandlers;
+using PathOfModifiers.UI.Chat;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -60,10 +61,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type2.GetValue() < 0 ? '-' : '+';
-            return $"{ Type1.GetValueFormat() }% chance to Shock({ plusMinus }{ Type2.GetValueFormat() }%)";
+            return $"{ valueRange1 }% chance to { Keyword.GetTextOrTag(KeywordType.Shock, useChatTags) }({ plusMinus }{ valueRange2 }%)";
         }
 
         public override void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, int damage, float knockback, bool crit)

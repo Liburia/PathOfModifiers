@@ -60,9 +60,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"{Type1.GetValueFormat()}% chance to drop {Type2.GetValueFormat()} gold on kill";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
+            return $"{ valueRange1 }% chance to drop { valueRange2 } gold on kill";
         }
 
         public override void UpdateEquip(Item item, ItemPlayer player)

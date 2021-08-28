@@ -61,9 +61,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsLegArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"No mana cost for { Type1.GetValueFormat(1) }s when hit ({ Type2.GetValueFormat(1) }s CD)";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
+            return $"No mana cost for { valueRange1 }s when hit ({ valueRange2 }s CD)";
         }
 
         public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)

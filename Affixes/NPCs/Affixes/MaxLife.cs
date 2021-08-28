@@ -39,7 +39,7 @@ namespace PathOfModifiers.Affixes.NPCs.Affixes
         public string GetTolltipText(Item item)
         {
             string increasedReduced = Type1.GetValue() >= 1 ? "increased" : "reduced";
-            return $"{Type1.GetValueFormat()}% {increasedReduced} life";
+            return $"{Type1.GetCurrentValueFormat()}% {increasedReduced} life";
         }
 
 

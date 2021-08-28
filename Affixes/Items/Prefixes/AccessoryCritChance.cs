@@ -47,9 +47,13 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"x{ Type1.GetValueFormat(1) * Math.Sign(Type1.GetValue()) + 1 } critical strike chance";
+            var current = Type1.GetCurrentValueFormat(1) * Math.Sign(Type1.GetValue()) + 1;
+            var min = Type1.GetMinValueFormat(1) * Math.Sign(Type1.GetValue()) + 1;
+            var max = Type1.GetMaxValueFormat(1) * Math.Sign(Type1.GetValue()) + 1;
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(current, min, max, useChatTags);
+            return $"x{ valueRange1 } critical strike chance";
         }
 
         public override void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)

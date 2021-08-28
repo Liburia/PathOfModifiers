@@ -103,9 +103,9 @@ namespace PathOfModifiers.Affixes
                 return base.GetValue(tier);
             }
         }
-        public float GetValueFormat(float multiplyBy = 100, bool round = true, float decimalsIfSmallerThan = 10f, int decimalPlaces = 2)
+        public float FormatValue(float valueToFormat, float multiplyBy = 100, bool round = true, float decimalsIfSmallerThan = 10f, int decimalPlaces = 2)
         {
-            float value = Math.Abs(GetValue() * multiplyBy);
+            float value = Math.Abs(valueToFormat * multiplyBy);
 
             if (round)
             {
@@ -120,6 +120,9 @@ namespace PathOfModifiers.Affixes
 
             return value;
         }
+        public float GetCurrentValueFormat(float multiplyBy = 100, bool round = true, float decimalsIfSmallerThan = 10f, int decimalPlaces = 2) => FormatValue(GetValue(), multiplyBy, round, decimalsIfSmallerThan, decimalPlaces);
+        public float GetMinValueFormat(float multiplyBy = 100, bool round = true, float decimalsIfSmallerThan = 10f, int decimalPlaces = 2) => FormatValue(Tiers[Tier].min, multiplyBy, round, decimalsIfSmallerThan, decimalPlaces);
+        public float GetMaxValueFormat(float multiplyBy = 100, bool round = true, float decimalsIfSmallerThan = 10f, int decimalPlaces = 2) => FormatValue(Tiers[Tier].max, multiplyBy, round, decimalsIfSmallerThan, decimalPlaces);
 
         public override void UpdateValue()
         {
@@ -183,18 +186,19 @@ namespace PathOfModifiers.Affixes
                 return base.GetValue(tier);
             }
         }
-        public int GetValueFormat()
+        public int FormatValue(int valueToFormat)
         {
-            int value = Math.Abs(GetValue());
-
-            return value;
+            return Math.Abs(valueToFormat);
         }
+        public int GetCurrentValueFormat() => FormatValue(GetValue());
+        public int GetMinValueFormat() => FormatValue(Tiers[Tier].min);
+        public int GetMaxValueFormat() => FormatValue(Tiers[Tier].max);
 
         public override void UpdateValue()
         {
             var wt = Tiers[Tier];
 
-            var value = wt.min + (wt.max - wt.min * TierMultiplier);
+            var value = wt.min + ((wt.max - wt.min) * TierMultiplier);
 
             if (wt.min < wt.max)
             {
@@ -214,6 +218,7 @@ namespace PathOfModifiers.Affixes
 
             var tierRange = new UIIntRange(MaxTiers - 1, Tier);
             tierRange.Width.Set(0f, 1f);
+            el.Append(tierRange);
 
             UIElement.ElementEvent setTier = delegate (UIElement el)
             {
@@ -224,7 +229,7 @@ namespace PathOfModifiers.Affixes
             tierRange.OnInputFocusedChanged += setTier;
 
             var wt = Tiers[Tier];
-            var valueRange = new UIIntRange(wt.max - wt.min, Value - wt.min);
+            var valueRange = new UIFloatRange(0f, 1f, TierMultiplier);
             valueRange.Top.Set(tierRange.Top.Pixels + tierRange.GetDimensions().Height + UICommon.spacing, 0f);
             valueRange.Width.Set(0f, 1f);
             el.Append(valueRange);

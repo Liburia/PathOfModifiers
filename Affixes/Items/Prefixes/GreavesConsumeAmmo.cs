@@ -47,10 +47,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsLegArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            float valueFormat = Type1.GetValueFormat();
-            return $"{ valueFormat }% chance to not consume ammo";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            return $"{ valueRange1 }% chance to not consume ammo";
         }
 
         public override bool PlayerConsumeAmmo(Player player, Item item, Item ammo)

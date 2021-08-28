@@ -47,10 +47,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsBodyArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            float valueFormat = Type1.GetValueFormat();
-            return $"{valueFormat}% melee damage reflected";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            return $"{ valueRange1 }% melee damage reflected";
         }
 
         public override void UpdateEquip(Item item, ItemPlayer player)

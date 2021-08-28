@@ -41,9 +41,10 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAnyArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"Gain assistance buffs when hit for {Type1.GetValueFormat(1)}s";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
+            return $"Gain assistance buffs when hit for { valueRange1 }s";
         }
 
         public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)

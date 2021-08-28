@@ -47,10 +47,11 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsAccessory(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"Take and deal { plusMinus }{ Type1.GetValueFormat() }% damage";
+            return $"Take and deal { plusMinus }{ valueRange1 }% damage";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

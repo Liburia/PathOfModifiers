@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
 using PathOfModifiers.Buffs;
+using PathOfModifiers.UI.Chat;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -75,9 +76,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"{Type1.GetValueFormat()}% chance to Poison({Type2.GetValueFormat()}%) for {Type3.GetValueFormat(1)}s";
+            var valueRange1 = ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
+            var valueRange3 = ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(1), Type3.GetMinValueFormat(1), Type3.GetMaxValueFormat(1), useChatTags);
+            return $"{ valueRange1 }% chance to { Keyword.GetTextOrTag(KeywordType.Poison, useChatTags) }({ valueRange2 }%) for { valueRange3 }s";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

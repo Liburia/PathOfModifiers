@@ -77,11 +77,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
+            var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(), Type3.GetMinValueFormat(), Type3.GetMaxValueFormat(), useChatTags);
             string plusMinus = Type3.GetValue() >= 0 ? "+" : "-";
-
-            return $"{Type1.GetValueFormat()}% chance for lightning to strike for {Type2.GetValueFormat()}% damage and leave Shocked Air({plusMinus}{Type3.GetValueFormat()}%)";
+            return $"{ valueRange1 }% chance for lightning to strike for { valueRange2 }% damage and leave Shocked Air({ plusMinus }{ valueRange3 }%)";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)

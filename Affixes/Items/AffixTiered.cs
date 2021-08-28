@@ -166,7 +166,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public override string GetForgeText()
         {
-            return $"      [{ Type1.TierText }] { GetTolltipText() }";
+            return $"      { UI.Chat.TierTagHandler.GenerateTag(Type1.TierText.ToString()) } { GetAffixText(true) }";
         }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
@@ -175,13 +175,13 @@ namespace PathOfModifiers.Affixes.Items
             affixUI.Width.Set(0f, 1f);
             parent.Append(affixUI);
 
-            var affixText = new UIText(GetTolltipText(), UICommon.textMedium);
+            var affixText = new UIText(GetAffixText(), UICommon.textMedium);
             affixText.TextColor = Color;
             affixUI.Append(affixText);
 
             Action onChange = delegate ()
             {
-                affixText.SetText(GetTolltipText());
+                affixText.SetText(GetAffixText());
                 onChangeCallback?.Invoke();
             };
 
@@ -352,7 +352,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public override string GetForgeText()
         {
-            return $"   [{ Type1.TierText }][{ Type2.TierText }] { GetTolltipText() }";
+            return $"   { UI.Chat.TierTagHandler.GenerateTag(Type1.TierText.ToString()) }{ UI.Chat.TierTagHandler.GenerateTag(Type2.TierText.ToString()) } { GetAffixText(true) }";
         }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
@@ -361,13 +361,13 @@ namespace PathOfModifiers.Affixes.Items
             affixUI.Width.Set(0f, 1f);
             parent.Append(affixUI);
 
-            var affixText = new UIText(GetTolltipText(), UICommon.textMedium);
+            var affixText = new UIText(GetAffixText(), UICommon.textMedium);
             affixText.TextColor = Color;
             affixUI.Append(affixText);
 
             Action onChange = delegate ()
             {
-                affixText.SetText(GetTolltipText());
+                affixText.SetText(GetAffixText());
                 onChangeCallback?.Invoke();
             };
 
@@ -577,7 +577,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public override string GetForgeText()
         {
-            return $"[{ Type1.TierText }][{ Type2.TierText }][{ Type3.TierText }] { GetTolltipText() }";
+            return $"{ UI.Chat.TierTagHandler.GenerateTag(Type1.TierText.ToString()) }{ UI.Chat.TierTagHandler.GenerateTag(Type2.TierText.ToString()) }{ UI.Chat.TierTagHandler.GenerateTag(Type3.TierText.ToString()) } { GetAffixText(true) }";
         }
 
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
@@ -586,13 +586,13 @@ namespace PathOfModifiers.Affixes.Items
             affixUI.Width.Set(0f, 1f);
             parent.Append(affixUI);
 
-            var affixText = new UIText(GetTolltipText(), UICommon.textMedium);
+            var affixText = new UIText(GetAffixText(), UICommon.textMedium);
             affixText.TextColor = Color;
             affixUI.Append(affixText);
 
             Action onChange = delegate ()
             {
-                affixText.SetText(GetTolltipText());
+                affixText.SetText(GetAffixText());
                 onChangeCallback?.Invoke();
             };
 

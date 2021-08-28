@@ -9,6 +9,7 @@ using System.IO;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using PathOfModifiers.Projectiles;
+using PathOfModifiers.UI.Chat;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -61,9 +62,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsBodyArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"Gain Molten Shell for { Type1.GetValueFormat(1) }s when hit ({ Type2.GetValueFormat(1) }s CD)";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
+            return $"Gain { Keyword.GetTextOrTag(KeywordType.MoltenShell, useChatTags) } for { valueRange1 }s when hit ({ valueRange2 }s CD)";
         }
 
         public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)

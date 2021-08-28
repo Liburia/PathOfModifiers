@@ -47,9 +47,11 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 !ItemItem.IsFlailOrYoyo(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"{(Type1.GetValue() < 0 ? '-' : '+')}{Type1.GetValueFormat()}% attack speed";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            string plusMinus = Type1.GetValue() >= 0 ? "+" : "-";
+            return $"{ plusMinus }{ valueRange1 }% attack speed";
         }
 
         public override void UseTimeMultiplier(Item item, Player player, ref float multiplier)

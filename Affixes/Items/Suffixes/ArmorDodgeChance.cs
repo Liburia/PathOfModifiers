@@ -11,6 +11,7 @@ using PathOfModifiers.Projectiles;
 using Terraria.ID;
 using PathOfModifiers.ModNet.PacketHandlers;
 using Terraria.DataStructures;
+using PathOfModifiers.UI.Chat;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -77,9 +78,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsAnyArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            return $"Gain { Type1.GetValueFormat() }% Dodge chance for { Type2.GetValueFormat(1) }s when hit ({ Type3.GetValueFormat(1) }s CD)";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
+            var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(1), Type3.GetMinValueFormat(1), Type3.GetMaxValueFormat(1), useChatTags);
+            return $"Gain { valueRange1 }% { Keyword.GetTextOrTag(KeywordType.Dodge, useChatTags) } chance for { valueRange2 }s when hit ({ valueRange3 }s CD)";
         }
 
         public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)

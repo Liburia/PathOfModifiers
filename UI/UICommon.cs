@@ -56,9 +56,9 @@ namespace PathOfModifiers.UI
 				Vector2 textSize = new(0f, characterSize.Y);
 
 				float currentLineWidth = 0f;
-				foreach (var snippet in snippets)
+				foreach (var s in snippets.Select((snippet, index) => (snippet, index)))
 				{
-					string[] lines = Regex.Split(snippet.Text, "\n");
+					string[] lines = Regex.Split(s.snippet.Text, "\n");
 					foreach (var line in lines.Select((text, index) => (text, index)))
 					{
 						if (line.index != 0)
@@ -68,15 +68,14 @@ namespace PathOfModifiers.UI
 							currentLineWidth = 0f;
 						}
 
-						string[] words = snippet is KeywordTagHandler.KeywordSnippet
+						string[] words = s.snippet is KeywordTagHandler.KeywordSnippet
 							? new[] { line.text }
-							: Regex.Split(line.text, " ");
+							: Regex.Split(line.text, "( )");
 						for (int i = 0; i < words.Length; i++)
 						{
 							var word = words[i];
 							var wordSize = font.MeasureString(word) * scale;
-							var spaceWidth = characterSize.X;
-							float newLineWidth = currentLineWidth + wordSize.X + spaceWidth;
+							float newLineWidth = currentLineWidth + wordSize.X;
 
 							if (newLineWidth <= maxWidth || currentLineWidth == 0f)
 							{
@@ -121,13 +120,12 @@ namespace PathOfModifiers.UI
 
 						string[] words = s.snippet is KeywordTagHandler.KeywordSnippet
 							? new[] { line.text }
-							: Regex.Split(line.text, " ");
+							: Regex.Split(line.text, "( )");
 						for (int i = 0; i < words.Length; i++)
 						{
 							var word = words[i];
 							var wordSize = font.MeasureString(word) * scale;
-							var spaceWidth = characterSize.X;
-							float newLineWidth = drawOffset.X + wordSize.X + spaceWidth;
+							float newLineWidth = drawOffset.X + wordSize.X;
 
 							if (newLineWidth <= maxWidth || drawOffset.X == 0f)
 							{

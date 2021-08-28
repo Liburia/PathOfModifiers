@@ -45,13 +45,11 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
                 ItemItem.IsWeapon(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
-            float value = Type1.GetValue();
-            float valueFormat = Type1.GetValueFormat();
-
-            char plusMinus = value < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueFormat }% damage per enemy buff/debuff";
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
+            return $"{ plusMinus }{ valueRange1 }% damage per enemy buff/debuff";
         }
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)

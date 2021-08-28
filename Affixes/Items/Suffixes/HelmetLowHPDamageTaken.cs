@@ -48,10 +48,11 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 ItemItem.IsHeadArmor(item);
         }
 
-        public override string GetTolltipText()
+        public override string GetAffixText(bool useChatTags = false)
         {
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"Take { plusMinus }{ Type1.GetValueFormat() }% damage on low HP";
+            return $"Take { plusMinus }{ valueRange1 }% damage on low HP";
         }
 
         public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
