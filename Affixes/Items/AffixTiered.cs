@@ -111,15 +111,8 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override void ImproveCompoundTier(int by = 1)
         {
-            int canImproveBy = Type1.MaxTiers - Type1.Tier - 1;
-            if (by < canImproveBy)
-            {
-                Type1.SetTier(Type1.Tier + by);
-            }
-            else
-            {
-                Type1.SetTier(Type1.Tier + canImproveBy);
-            }
+            int canImproveBy1 = Type1.MaxTiers - Type1.Tier - 1;
+            Type1.SetTier(Type1.Tier + Math.Min(by, canImproveBy1));
         }
         public override void RollValue(bool rollTier)
         {
@@ -278,24 +271,10 @@ namespace PathOfModifiers.Affixes.Items
         public override void ImproveCompoundTier(int by = 1)
         {
             int canImproveBy1 = Type1.MaxTiers - Type1.Tier - 1;
-            if (by < canImproveBy1)
-            {
-                Type1.SetTier(Type1.Tier + by);
-            }
-            else
-            {
-                Type1.SetTier(Type1.Tier + canImproveBy1);
-            }
+            Type1.SetTier(Type1.Tier + Math.Min(by, canImproveBy1));
 
             int canImproveBy2 = Type2.MaxTiers - Type2.Tier - 1;
-            if (by < canImproveBy2)
-            {
-                Type2.SetTier(Type2.Tier + by);
-            }
-            else
-            {
-                Type2.SetTier(Type2.Tier + canImproveBy2);
-            }
+            Type2.SetTier(Type2.Tier + Math.Min(by, canImproveBy2));
         }
         public override void RollValue(bool rollTier)
         {
@@ -483,34 +462,13 @@ namespace PathOfModifiers.Affixes.Items
         public override void ImproveCompoundTier(int by = 1)
         {
             int canImproveBy1 = Type1.MaxTiers - Type1.Tier - 1;
-            if (by < canImproveBy1)
-            {
-                Type1.SetTier(Type1.Tier + by);
-            }
-            else
-            {
-                Type1.SetTier(Type1.Tier + canImproveBy1);
-            }
+            Type1.SetTier(Type1.Tier + Math.Min(by, canImproveBy1));
 
             int canImproveBy2 = Type2.MaxTiers - Type2.Tier - 1;
-            if (by < canImproveBy2)
-            {
-                Type2.SetTier(Type2.Tier + by);
-            }
-            else
-            {
-                Type2.SetTier(Type2.Tier + canImproveBy2);
-            }
+            Type2.SetTier(Type2.Tier + Math.Min(by, canImproveBy2));
 
             int canImproveBy3 = Type3.MaxTiers - Type3.Tier - 1;
-            if (by < canImproveBy3)
-            {
-                Type3.SetTier(Type3.Tier + by);
-            }
-            else
-            {
-                Type3.SetTier(Type3.Tier + canImproveBy3);
-            }
+            Type3.SetTier(Type3.Tier + Math.Min(by, canImproveBy3));
         }
         public override void RollValue(bool rollTier)
         {
