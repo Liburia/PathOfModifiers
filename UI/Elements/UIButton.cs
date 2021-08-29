@@ -10,6 +10,18 @@ namespace PathOfModifiers.UI.Elements
 {
 	internal class UIButton : UIPanel
 	{
+        bool _isEnabled = true;
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                _isEnabled = value;
+
+                BackgroundColor = value ? UICommon.backgroundColor : UICommon.disabledOverlayColor;
+            }
+        }
+
         public UIButton()
         {
             BackgroundColor = UICommon.backgroundColor;
@@ -17,18 +29,27 @@ namespace PathOfModifiers.UI.Elements
 
         public override void MouseOver(UIMouseEvent evt)
         {
-            base.MouseOver(evt);
-            BackgroundColor = UICommon.hoverBackgroundColor;
+            if (IsEnabled)
+            {
+                base.MouseOver(evt);
+                BackgroundColor = UICommon.hoverBackgroundColor;
+            }
         }
         public override void MouseOut(UIMouseEvent evt)
         {
-            base.MouseOut(evt);
-            BackgroundColor = UICommon.backgroundColor;
+            if (IsEnabled)
+            {
+                base.MouseOut(evt);
+                BackgroundColor = UICommon.backgroundColor;
+            }
         }
         public override void Click(UIMouseEvent evt)
         {
-            base.Click(evt);
-            SoundEngine.PlaySound(SoundID.MenuTick);
+            if (IsEnabled)
+            {
+                base.Click(evt);
+                SoundEngine.PlaySound(SoundID.MenuTick);
+            }
         }
     }
 }
