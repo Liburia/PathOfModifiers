@@ -263,7 +263,10 @@ namespace PathOfModifiers.UI.States
         SelectList<ConstraintListEntry<SelectableConstraint>> tierConstraintList;
 
         UIItemSlot itemSlot;
+        UIItemSlot fragmentSlot;
+        UIButton forgeButton;
         FragmentCost fragmentCostText;
+        int currentCost;
 
         UIText freeAffixes;
         UIText freePrefixes;
@@ -353,7 +356,11 @@ namespace PathOfModifiers.UI.States
                         affixConstraintList.MinWidth.Set(0f, 0.22f);
                         affixConstraintList.MinHeight.Set(0f, 1f);
                         affixConstraintList.ListPadding = 0f;
-                        affixConstraintList.OnEntrySelected += (ConstraintListEntry<SelectableConstraint> entry) => UpdateCost();
+                        affixConstraintList.OnEntrySelected += delegate (ConstraintListEntry<SelectableConstraint> entry)
+                        {
+                            UpdateCost();
+                            UpdateForgeButton();
+                        };
                         actionSection.Append(affixConstraintList);
                         {
                             ConstraintListEntry<SelectableConstraint> any = new("Any", new AffixConstraint.Any());
@@ -371,7 +378,11 @@ namespace PathOfModifiers.UI.States
                         tierConstraintList.MinWidth.Set(0f, 0.22f);
                         tierConstraintList.MinHeight.Set(0f, 1f);
                         tierConstraintList.ListPadding = 0f;
-                        tierConstraintList.OnEntrySelected += (ConstraintListEntry<SelectableConstraint> entry) => UpdateCost();
+                        tierConstraintList.OnEntrySelected += delegate (ConstraintListEntry<SelectableConstraint> entry)
+                        {
+                            UpdateCost();
+                            UpdateForgeButton();
+                        };
                         actionSection.Append(tierConstraintList);
                         {
                             ConstraintListEntry<SelectableConstraint> any = new("Any", new TierConstraint.Any());
@@ -391,21 +402,26 @@ namespace PathOfModifiers.UI.States
                         actionSection.Append(actionParent);
                         {
 
-                            UIItemSlot fragment = new();
-                            fragment.MinWidth.Set(75f, 0f);
-                            fragment.MinHeight.Set(fragment.MinWidth.Pixels, 0f);
+                            fragmentSlot = new();
+                            fragmentSlot.MinWidth.Set(75f, 0f);
+                            fragmentSlot.MinHeight.Set(fragmentSlot.MinWidth.Pixels, 0f);
                             var fragmentTexture = ModContent.Request<Texture2D>("PathOfModifiers/Items/ModifierFragment");
-                            fragment.CanInsertItem = (Item item) => item.type == ModContent.ItemType<Items.ModifierFragment>();
-                            fragment.OnDrawGhostItem += delegate (SpriteBatch sb, Vector2 position, float scale)
+                            fragmentSlot.CanInsertItem = (Item item) => item.type == ModContent.ItemType<Items.ModifierFragment>();
+                            fragmentSlot.OnDrawGhostItem += delegate (SpriteBatch sb, Vector2 position, float scale)
                             {
                                 sb.Draw(fragmentTexture.Value, position, null, Color.White * 0.3f, 0f, fragmentTexture.Size() / 2f, scale, SpriteEffects.None, 0f);
                             };
-                            actionParent.Append(fragment);
+                            fragmentSlot.OnItemChanged += delegate (Item item)
+                            {
+                                UpdateCost();
+                                UpdateForgeButton();
+                            };
+                            actionParent.Append(fragmentSlot);
 
                             itemSlot = new();
-                            itemSlot.MinWidth.Set(fragment.MinWidth.Pixels, 0f);
-                            itemSlot.MinHeight.Set(fragment.MinWidth.Pixels, 0f);
-                            itemSlot.Left.Set(-fragment.MinWidth.Pixels, 1f);
+                            itemSlot.MinWidth.Set(fragmentSlot.MinWidth.Pixels, 0f);
+                            itemSlot.MinHeight.Set(fragmentSlot.MinWidth.Pixels, 0f);
+                            itemSlot.Left.Set(-fragmentSlot.MinWidth.Pixels, 1f);
                             var itemTexture = ModContent.Request<Texture2D>($"Terraria/Images/Item_{ ItemID.GoldBroadsword }");
                             itemSlot.CanInsertItem = (Item item) => item.TryGetGlobalItem<ItemItem>(out var _);
                             itemSlot.OnDrawGhostItem += delegate (SpriteBatch sb, Vector2 position, float scale)
@@ -415,18 +431,18 @@ namespace PathOfModifiers.UI.States
                             itemSlot.OnItemChanged += OnItemChanged;
                             actionParent.Append(itemSlot);
 
-                            UIButton forge = new();
-                            forge.HAlign = 0.5f;
-                            forge.Top.Set(0f, 0.6f);
-                            forge.MinHeight.Set(0f, 0.4f);
-                            forge.MinWidth.Set(0f, 1f);
-                            forge.OnClick += OnForgeClicked;
-                            actionParent.Append(forge);
+                            forgeButton = new();
+                            forgeButton.HAlign = 0.5f;
+                            forgeButton.Top.Set(0f, 0.6f);
+                            forgeButton.MinHeight.Set(0f, 0.4f);
+                            forgeButton.MinWidth.Set(0f, 1f);
+                            forgeButton.OnClick += OnForgeClicked;
+                            actionParent.Append(forgeButton);
                             {
                                 UIElement cost = new();
                                 cost.MinWidth.Set(0f, 1f);
                                 cost.MinHeight.Set(0f, 0.3f);
-                                forge.Append(cost);
+                                forgeButton.Append(cost);
                                 {
                                     fragmentCostText = new("654456", 0.35f, true);
                                     fragmentCostText.HAlign = 0.5f;
@@ -439,7 +455,7 @@ namespace PathOfModifiers.UI.States
                                 text.Top.Set(cost.GetOuterDimensions().Height + UICommon.spacing * 2f, 0f);
                                 text.HAlign = 0.5f;
                                 text.IgnoresMouseInteraction = true;
-                                forge.Append(text);
+                                forgeButton.Append(text);
                             }
                         }
                     }
@@ -542,9 +558,12 @@ namespace PathOfModifiers.UI.States
                     tierAction.TierConstraint = tierConstraint.Constraint;
                 }
 
+                UpdateCost();
                 var item = itemSlot.Item;
-                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem) && (!fragmentSlot.Item?.IsAir ?? false) && fragmentSlot.Item.stack >= currentCost)
                 {
+                    fragmentSlot.Item.stack -= System.Math.Min(fragmentSlot.Item.stack, currentCost);
+
                     action.Execute(item, modItem);
 
                     PopupText.NewText(PopupTextContext.ItemReforge, item, item.stack, true, false);
@@ -605,6 +624,7 @@ namespace PathOfModifiers.UI.States
             }
 
             UpdateCost();
+            UpdateForgeButton();
         }
 
         void OnItemChanged(Item item)
@@ -640,6 +660,7 @@ namespace PathOfModifiers.UI.States
                 }
             }
             UpdateCost();
+            UpdateForgeButton();
             UpdateItemText(item);
         }
 
@@ -647,12 +668,16 @@ namespace PathOfModifiers.UI.States
         {
             ItemItem modItem = null;
             itemSlot.Item?.TryGetGlobalItem(out modItem);
-            int newCost = modItem?.rarity.forgeCost ?? 0;
-            newCost *= actionList.SelectedItem?.action.Cost ?? 0;
-            newCost *= affixConstraintList.SelectedItem?.constraint.Cost ?? 1;
-            newCost *= tierConstraintList.SelectedItem?.constraint.Cost ?? 1;
+            currentCost = modItem?.rarity.forgeCost ?? 0;
+            currentCost *= actionList.SelectedItem?.action.Cost ?? 0;
+            currentCost *= affixConstraintList.SelectedItem?.constraint.Cost ?? 1;
+            currentCost *= tierConstraintList.SelectedItem?.constraint.Cost ?? 1;
+        }
+        void UpdateForgeButton()
+        {
+            fragmentCostText.SetText(currentCost.ToString());
 
-            fragmentCostText.SetText(newCost.ToString());
+            forgeButton.IsEnabled = currentCost <= GetCurrentFragmentCount() && (!itemSlot.Item?.IsAir ?? false);
         }
 
         void UpdateItemText(Item item)
@@ -705,6 +730,11 @@ namespace PathOfModifiers.UI.States
 
                 affixTextItemName.SetText("No valid item");
             }
+        }
+
+        int GetCurrentFragmentCount()
+        {
+            return fragmentSlot.Item?.stack ?? 0;
         }
     }
 }
