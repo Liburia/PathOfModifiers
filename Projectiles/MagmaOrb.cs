@@ -22,6 +22,9 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("MagmaOrb");
+        }
+        public override void SetDefaults()
+        {
             Projectile.width = 28;
             Projectile.height = 28;
             Projectile.timeLeft = baseTimeLeft;

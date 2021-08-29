@@ -24,6 +24,9 @@ namespace PathOfModifiers.Projectiles
         {
             DisplayName.SetDefault("Thorn Nova");
             Main.projFrames[Projectile.type] = 3;
+        }
+        public override void SetDefaults()
+        {
             Projectile.scale = startScale;
             Projectile.Size = size * collisionScale * startScale;
             Projectile.timeLeft = 600;

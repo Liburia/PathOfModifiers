@@ -30,6 +30,9 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("ChilledAir");
+        }
+        public override void SetDefaults()
+        {
             Projectile.timeLeft = PoMGlobals.ailmentDuration;
             Projectile.hostile = false;
             Projectile.friendly = false;

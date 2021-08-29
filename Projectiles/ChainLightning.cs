@@ -40,6 +40,10 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("ChainLightning");
+        }
+
+        public override void SetDefaults()
+        {
             Projectile.penetrate = 1;
             Projectile.width = 32;
             Projectile.height = 6;

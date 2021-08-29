@@ -11,10 +11,13 @@ namespace PathOfModifiers.Items
         {
             DisplayName.SetDefault("Map Device");
             Tooltip.SetDefault("Used to open other worlds.");
+        }
+        public override void SetDefaults()
+        {
             Item.width = 64;
             Item.height = 64;
-			Item.value = 500000;
-			Item.rare = 2;
+            Item.value = 500000;
+            Item.rare = 2;
             Item.maxStack = 99;
             Item.useTurn = true;
             Item.autoReuse = true;
@@ -25,7 +28,7 @@ namespace PathOfModifiers.Items
             //Item.createTile = ModContent.TileType<Tiles.MapDevice>();
         }
 
-		public override void AddRecipes()
+        public override void AddRecipes()
 		{
             if (GetInstance<PoMConfigServer>().DisableMaps)
                 return;

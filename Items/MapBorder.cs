@@ -12,6 +12,9 @@ namespace PathOfModifiers.Items
         public override void SetStaticDefaults()
         {
             Tooltip.SetDefault("Outlines the rectangle the map will generate in.");
+        }
+        public override void SetDefaults()
+        {
             Item.width = 12;
             Item.height = 12;
             Item.maxStack = 999;

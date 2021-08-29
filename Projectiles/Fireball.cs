@@ -16,6 +16,9 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Fireball");
+        }
+        public override void SetDefaults()
+        {
             Main.projFrames[Projectile.type] = 3;
             Projectile.width = 8;
             Projectile.height = 8;

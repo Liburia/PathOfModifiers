@@ -18,6 +18,9 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("FrostPulse");
+        }
+        public override void SetDefaults()
+        {
             Projectile.width = 38;
             Projectile.height = 38;
             Projectile.alpha = 100;

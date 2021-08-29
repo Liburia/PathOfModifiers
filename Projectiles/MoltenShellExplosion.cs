@@ -18,6 +18,9 @@ namespace PathOfModifiers.Projectiles
         {
             DisplayName.SetDefault("Molten Shell Explosion");
             Main.projFrames[Projectile.type] = 7;
+        }
+        public override void SetDefaults()
+        {
             Projectile.scale = 5f;
             Projectile.Size = new Vector2(98, 98) * 0.2f * Projectile.scale;
             Projectile.timeLeft = 600;

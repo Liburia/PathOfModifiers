@@ -25,6 +25,9 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("StaticStrike");
+        }
+        public override void SetDefaults()
+        {
             Projectile.timeLeft = 30;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;

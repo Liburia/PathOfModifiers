@@ -24,6 +24,9 @@ namespace PathOfModifiers.Projectiles
         {
             DisplayName.SetDefault("Meteor");
             Main.projFrames[Projectile.type] = 2;
+        }
+        public override void SetDefaults()
+        {
             flameTexture = ModContent.Request<Texture2D>("PathOfModifiers/Projectiles/MeteorFlame");
             Projectile.width = 22;
             Projectile.height = 24;

@@ -31,6 +31,10 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("BurningAir");
+        }
+
+        public override void SetDefaults()
+        {
             Projectile.timeLeft = PoMGlobals.ailmentDuration;
             Projectile.hostile = false;
             Projectile.friendly = false;

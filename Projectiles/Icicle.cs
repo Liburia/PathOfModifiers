@@ -17,6 +17,9 @@ namespace PathOfModifiers.Projectiles
         {
             DisplayName.SetDefault("Icicle");
             Main.projFrames[Projectile.type] = 5;
+        }
+        public override void SetDefaults()
+        {
             Projectile.damage = 10;
             Projectile.width = 13;
             Projectile.height = 13;

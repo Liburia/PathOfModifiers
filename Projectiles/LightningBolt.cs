@@ -37,6 +37,9 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("LightningBolt");
+        }
+        public override void SetDefaults()
+        {
             textureGlow = ModContent.Request<Texture2D>("PathOfModifiers/Projectiles/LightningBoltGlow");
             Projectile.penetrate = 1;
             Projectile.width = 32;

@@ -33,6 +33,9 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("LifeOrb");
+        }
+        public override void SetDefaults()
+        {
             Projectile.penetrate = 1;
             Projectile.width = 6;
             Projectile.height = 6;

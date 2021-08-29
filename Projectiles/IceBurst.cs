@@ -26,6 +26,9 @@ namespace PathOfModifiers.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("IceBurst");
+        }
+        public override void SetDefaults()
+        {
             Projectile.width = 32;
             Projectile.height = 32;
             Projectile.timeLeft = baseTimeLeft;

@@ -18,11 +18,14 @@ namespace PathOfModifiers.Items
         {
             DisplayName.SetDefault("Map");
             Tooltip.SetDefault("Opens a new world.");
+        }
 
+        public override void SetDefaults()
+        {
             Item.width = 32;
             Item.height = 32;
-			Item.value = 500000;
-			Item.rare = 2;
+            Item.value = 500000;
+            Item.rare = 2;
             Item.maxStack = 1;
             Item.autoReuse = false;
             Item.useAnimation = 15;
