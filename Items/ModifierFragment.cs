@@ -18,7 +18,7 @@ namespace PathOfModifiers.Items
             Item.holdStyle = 0;
             Item.value = 200;
             Item.rare = 2;
-            Item.maxStack = 9999;
+            Item.maxStack = 99999;
         }
     }
 }
