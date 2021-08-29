@@ -454,7 +454,7 @@ namespace PathOfModifiers.Affixes.Items
                 {
                     if (newAffix is AffixTiered newAffixTiered)
                     {
-                        float tierRatio = (float)affixTiered.CompoundTier / newAffixTiered.MaxCompoundTier;
+                        float tierRatio = (float)affixTiered.CompoundTier / affixTiered.MaxCompoundTier;
                         int newTier = (int)MathF.Round(newAffixTiered.MaxCompoundTier * tierRatio);
                         newAffixTiered.SetCompoundTier(newTier);
                     }
