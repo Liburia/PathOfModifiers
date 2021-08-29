@@ -89,6 +89,35 @@ namespace PathOfModifiers.UI.States
                 modItem.TryAddRandomAffix(item, DataManagerAffixConstraint);
             }
         }
+        public class RemoveAll : IMFAction, IMFAffixConstraint
+        {
+            public string Name => "Remove all";
+            public string Description => "Remove all affixes";
+            public int Cost => 5;
+
+            public Constraint DataManagerAffixConstraint { get; set; }
+            public Constraint ItemAffixConstraint { get; set; }
+
+            public void Execute(Item item, ItemItem modItem)
+            {
+                modItem.RemoveAllAffixes(item, ItemAffixConstraint);
+            }
+        }
+        public class RollValues : IMFAction, IMFAffixConstraint, IMFTierConstraint
+        {
+            public string Name => "Roll values";
+            public string Description => "Reroll affix values within their tier";
+            public int Cost => 5;
+
+            public Constraint DataManagerAffixConstraint { get; set; }
+            public Constraint ItemAffixConstraint { get; set; }
+            public Constraint TierConstraint { get; set; }
+
+            public void Execute(Item item, ItemItem modItem)
+            {
+                modItem.RollAffixTierMultipliers(item, ItemAffixConstraint.Then(TierConstraint));
+            }
+        }
         public class ImproveRarity : IMFAction
         {
             public string Name => "Improve rarity";
@@ -98,6 +127,66 @@ namespace PathOfModifiers.UI.States
             public void Execute(Item item, ItemItem modItem)
             {
                 modItem.TryRaiseRarity(item);
+            }
+        }
+        public class Remove : IMFAction, IMFAffixConstraint, IMFTierConstraint
+        {
+            public string Name => "Remove";
+            public string Description => "Remove a random affix";
+            public int Cost => 50;
+
+            public Constraint DataManagerAffixConstraint { get; set; }
+            public Constraint ItemAffixConstraint { get; set; }
+            public Constraint TierConstraint { get; set; }
+
+            public void Execute(Item item, ItemItem modItem)
+            {
+                modItem.TryRemoveRandomAffix(item, ItemAffixConstraint.Then(TierConstraint));
+            }
+        }
+        public class Exchange : IMFAction, IMFAffixConstraint, IMFTierConstraint
+        {
+            public string Name => "Exchange";
+            public string Description => "Change an affix into a random one, keeping the tier";
+            public int Cost => 50;
+
+            public Constraint DataManagerAffixConstraint { get; set; }
+            public Constraint ItemAffixConstraint { get; set; }
+            public Constraint TierConstraint { get; set; }
+
+            public void Execute(Item item, ItemItem modItem)
+            {
+                modItem.ExchangeRandomAffix(item, ItemAffixConstraint.Then(TierConstraint));
+            }
+        }
+        public class ImproveValue : IMFAction, IMFAffixConstraint, IMFTierConstraint
+        {
+            public string Name => "Improve value";
+            public string Description => "Improve value of a random affix within its tier";
+            public int Cost => 50;
+
+            public Constraint DataManagerAffixConstraint { get; set; }
+            public Constraint ItemAffixConstraint { get; set; }
+            public Constraint TierConstraint { get; set; }
+
+            public void Execute(Item item, ItemItem modItem)
+            {
+                modItem.ImproveRandomAffixTierMultiplier(item, ItemAffixConstraint.Then(TierConstraint));
+            }
+        }
+        public class ImproveTier : IMFAction, IMFAffixConstraint, IMFTierConstraint
+        {
+            public string Name => "Improve tier";
+            public string Description => "Improve tier of a random affix";
+            public int Cost => 500;
+
+            public Constraint DataManagerAffixConstraint { get; set; }
+            public Constraint ItemAffixConstraint { get; set; }
+            public Constraint TierConstraint { get; set; }
+
+            public void Execute(Item item, ItemItem modItem)
+            {
+                modItem.ImproveRandomAffixTier(item, ItemAffixConstraint.Then(TierConstraint));
             }
         }
     }
@@ -144,16 +233,16 @@ namespace PathOfModifiers.UI.States
         public class Highest : SelectableConstraint
         {
             public override string Name => "Highest";
-            public override string Description => "Only affects the affix with the highest tier";
+            public override string Description => "Only affects the affix with the highest relative tier\nTier 2/3 is higher than 3/6. In case of multiple — averages";
             public override int Cost => 5;
-            public override Constraint Constraint => new HighestTier();
+            public override Constraint Constraint => new LowestTier();  //Reversed because displayed tier is inverse of real tier
         }
         public class Lowest : SelectableConstraint
         {
             public override string Name => "Lowest";
-            public override string Description => "Only affects the affix with the lowest tier";
+            public override string Description => "Only affects the affix with the lowest tier\nTier 3/6 is lower than 2/3. In case of multiple — averages";
             public override int Cost => 5;
-            public override Constraint Constraint => new LowestTier();
+            public override Constraint Constraint => new HighestTier();
         }
     }
 
@@ -215,9 +304,15 @@ namespace PathOfModifiers.UI.States
                     actionSection.MinHeight.Set(0f, 0.4f);
                     content.Append(actionSection);
                     {
+                        UIScrollbar actionListScrollBar = new();
+                        actionListScrollBar.Left.Set(0f, 0.22f);
+                        actionListScrollBar.MinHeight.Set(0f, 1f);
+                        actionSection.Append(actionListScrollBar);
+
                         actionList = new();
-                        actionList.MinWidth.Set(0f, 0.24f);
+                        actionList.MinWidth.Set(0f, 0.22f);
                         actionList.MinHeight.Set(0f, 1f);
+                        actionList.SetScrollbar(actionListScrollBar);
                         actionList.ListPadding = 0f;
                         actionList.OnEntrySelected += OnActionSelected;
                         actionSection.Append(actionList);
@@ -225,19 +320,37 @@ namespace PathOfModifiers.UI.States
                             ActionListEntry roll = new(new Action.Roll());
                             actionList.Add(roll);
 
-                            ActionListEntry add = new(new Action.Add());
-                            actionList.Add(add);
-
                             ActionListEntry rollRarity = new(new Action.RollRarity());
                             actionList.Add(rollRarity);
 
+                            ActionListEntry add = new(new Action.Add());
+                            actionList.Add(add);
+
+                            ActionListEntry removeAll = new(new Action.RemoveAll());
+                            actionList.Add(removeAll);
+
+                            ActionListEntry rollValues = new(new Action.RollValues());
+                            actionList.Add(rollValues);
+
                             improveRarity = new(new Action.ImproveRarity());
                             actionList.Add(improveRarity);
+
+                            ActionListEntry remove = new(new Action.Remove());
+                            actionList.Add(remove);
+
+                            ActionListEntry exchange = new(new Action.Exchange());
+                            actionList.Add(exchange);
+
+                            ActionListEntry improveValue = new(new Action.ImproveValue());
+                            actionList.Add(improveValue);
+
+                            ActionListEntry improveTier = new(new Action.ImproveTier());
+                            actionList.Add(improveTier);
                         }
 
                         affixConstraintList = new();
-                        affixConstraintList.Left.Set(0f, actionList.MinWidth.Percent + 0.01f);
-                        affixConstraintList.MinWidth.Set(0f, 0.24f);
+                        affixConstraintList.Left.Set(0f, actionList.MinWidth.Percent + 0.03f);
+                        affixConstraintList.MinWidth.Set(0f, 0.22f);
                         affixConstraintList.MinHeight.Set(0f, 1f);
                         affixConstraintList.ListPadding = 0f;
                         affixConstraintList.OnEntrySelected += (ConstraintListEntry<SelectableConstraint> entry) => UpdateCost();
@@ -254,8 +367,8 @@ namespace PathOfModifiers.UI.States
                         }
 
                         tierConstraintList = new();
-                        tierConstraintList.Left.Set(0f, affixConstraintList.Left.Percent + affixConstraintList.MinWidth.Percent + 0.01f);
-                        tierConstraintList.MinWidth.Set(0f, 0.24f);
+                        tierConstraintList.Left.Set(0f, affixConstraintList.Left.Percent + affixConstraintList.MinWidth.Percent + 0.03f);
+                        tierConstraintList.MinWidth.Set(0f, 0.22f);
                         tierConstraintList.MinHeight.Set(0f, 1f);
                         tierConstraintList.ListPadding = 0f;
                         tierConstraintList.OnEntrySelected += (ConstraintListEntry<SelectableConstraint> entry) => UpdateCost();
@@ -272,7 +385,7 @@ namespace PathOfModifiers.UI.States
                         }
 
                         UIElement actionParent = new();
-                        actionParent.Left.Set(0f, tierConstraintList.Left.Percent + tierConstraintList.MinWidth.Percent + 0.01f);
+                        actionParent.Left.Set(0f, tierConstraintList.Left.Percent + tierConstraintList.MinWidth.Percent + 0.03f);
                         actionParent.MinWidth.Set(0f, 0.24f);
                         actionParent.MinHeight.Set(0f, 1f);
                         actionSection.Append(actionParent);

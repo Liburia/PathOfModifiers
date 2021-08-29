@@ -34,7 +34,7 @@ namespace PathOfModifiers.UI.States.ModifierForgeElements
 
 			SetPadding(0f);
 
-			_text = new(action.Name);
+			_text = new(action.Name, 0.75f);
 			_text.HAlign = 0.5f;
 			_text.VAlign = 0.5f;
 			Append(_text);
