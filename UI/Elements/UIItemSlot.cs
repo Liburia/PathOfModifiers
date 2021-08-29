@@ -36,7 +36,7 @@ namespace PathOfModifiers.UI.Elements
 
         public UIItemSlot()
         {
-            Item = null;
+            Item = new Item();
             _texture = Terraria.GameContent.TextureAssets.InventoryBack9;
             CanInsertItem = (Item _) => true;
         }
@@ -119,7 +119,7 @@ namespace PathOfModifiers.UI.Elements
         {
             base.Click(evt);
 
-            if (TryInsertItem(Main.mouseItem, out var oldItem))
+            if (TryInsertItem(Main.mouseItem, true, out var oldItem))
             {
                 Main.mouseItem = oldItem;
             }
@@ -128,22 +128,27 @@ namespace PathOfModifiers.UI.Elements
         /// <param name="item">Item to insert</param>
         /// <param name="oldItem">Item that was replaced if successful</param>
         /// <returns>If the insertion was successful</returns>
-        public bool TryInsertItem(Item item, out Item oldItem)
+        public bool TryInsertItem(Item item, bool playSound, out Item oldItem)
         {
-            if (!((Item.IsAir) && (item.IsAir)) && (item.IsAir || CanInsertItem(item)))
+            if (!(Item.IsAir && item.IsAir) && (item.IsAir || CanInsertItem(item)))
             {
                 oldItem = Item;
                 Item = item;
 
                 OnItemChanged?.Invoke(item);
 
-                SoundEngine.PlaySound(SoundID.Grab);
+                if (playSound)
+                    SoundEngine.PlaySound(SoundID.Grab);
 
                 return true;
             }
 
             oldItem = null;
             return false;
+        }
+        public void SetItem(Item item)
+        {
+            Item = item;
         }
     }
 }

@@ -17,6 +17,7 @@ using PathOfModifiers.UI.Chat;
 using Terraria.ID;
 using Terraria.Audio;
 using PathOfModifiers.Affixes.Items.Constraints;
+using PathOfModifiers.Tiles;
 
 namespace PathOfModifiers.UI.States
 {
@@ -235,7 +236,7 @@ namespace PathOfModifiers.UI.States
             public override string Name => "Highest";
             public override string Description => "Only affects the affix with the highest relative tier\nTier 2/3 is higher than 3/6. In case of multiple — averages";
             public override int Cost => 5;
-            public override Constraint Constraint => new LowestTier();  //Reversed because displayed tier is inverse of real tier
+            public override Constraint Constraint => new LowestTier();  //Opposite because displayed tier is inverse of real tier
         }
         public class Lowest : SelectableConstraint
         {
@@ -250,8 +251,21 @@ namespace PathOfModifiers.UI.States
     class ModifierForge : UIState
 	{
         public static bool IsOpen => Systems.UI.IsModifierForgeOpen;
-        public static void Open(Tiles.ModifierForgeTE forge) => Systems.UI.OpenModifierForge(forge);
+
+        public static void Open(ModifierForgeTE forge) => Systems.UI.OpenModifierForge(forge);
         public static void Close() => Systems.UI.CloseModifierForge();
+
+        ModifierForgeTE currentForgeTE;
+        public ModifierForgeTE CurrentForgeTE {
+            get => currentForgeTE;
+            set
+            {
+                currentForgeTE = value;
+                Tiles.ModifierForge.activeForge = value;
+                itemSlot.TryInsertItem(CurrentForgeTE?.ModifiedItem ?? new Item(), false, out _);
+                fragmentSlot.TryInsertItem(CurrentForgeTE?.ModifierItem ?? new Item(), false, out _);
+            }
+        }
 
         UIDraggablePanel panel;
 
@@ -415,6 +429,7 @@ namespace PathOfModifiers.UI.States
                             {
                                 UpdateCost();
                                 UpdateForgeButton();
+                                SyncFragmentWithForge();
                             };
                             actionParent.Append(fragmentSlot);
 
@@ -540,6 +555,22 @@ namespace PathOfModifiers.UI.States
             OnItemChanged(new Item());
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            if (IsOpen)
+            {
+                Player player = Main.LocalPlayer;
+                Point playerPos = player.MountedCenter.ToTileCoordinates();
+                //TODO: Don't hardcode TE size?
+                if (playerPos.X < Tiles.ModifierForge.activeForge.Position.X - Player.tileRangeX || playerPos.X > Tiles.ModifierForge.activeForge.Position.X + Player.tileRangeX + 2 ||
+                    playerPos.Y < Tiles.ModifierForge.activeForge.Position.Y - Player.tileRangeY || playerPos.Y > Tiles.ModifierForge.activeForge.Position.Y + Player.tileRangeY + 1)
+                {
+                    Close();
+                }
+            }
+        }
+
         private void OnForgeClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             var action = actionList.SelectedItem.action;
@@ -568,9 +599,9 @@ namespace PathOfModifiers.UI.States
 
                     PopupText.NewText(PopupTextContext.ItemReforge, item, item.stack, true, false);
                     SoundEngine.PlaySound(SoundID.Item37, -1, -1);
-                    //UI.States.ModifierForge.SetItemSlots(modifiedItem.Clone(), modifierItem.Clone());
-                    //SendModifiedItemToServer();
-                    //SendModifierItemToServer();
+
+                    SyncFragmentWithForge();
+                    SyncItemWithForge();
 
                     UpdateItemText(itemSlot.Item);
                 }
@@ -662,6 +693,7 @@ namespace PathOfModifiers.UI.States
             UpdateCost();
             UpdateForgeButton();
             UpdateItemText(item);
+            SyncItemWithForge();
         }
 
         void UpdateCost()
@@ -735,6 +767,15 @@ namespace PathOfModifiers.UI.States
         int GetCurrentFragmentCount()
         {
             return fragmentSlot.Item?.stack ?? 0;
+        }
+
+        void SyncFragmentWithForge()
+        {
+            CurrentForgeTE?.UpdateModifierItem(fragmentSlot.Item.Clone());
+        }
+        void SyncItemWithForge()
+        {
+            CurrentForgeTE?.UpdateModifiedItem(itemSlot.Item.Clone());
         }
     }
 }

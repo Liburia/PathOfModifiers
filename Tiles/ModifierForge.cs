@@ -75,9 +75,9 @@ namespace PathOfModifiers.Tiles
             {
                 var forge = (ModifierForgeTE)te;
 
-                if (forge.modifierItem.ModItem is ModifierFragment)
+                if (forge.ModifierItem.ModItem is ModifierFragment)
                 {
-                    if (forge.modifiedItem.IsAir)
+                    if (forge.ModifiedItem.IsAir)
                     {
                         //Filled but not active
                         frameYOffset = AnimationFrameHeight;
@@ -177,11 +177,11 @@ namespace PathOfModifiers.Tiles
             {
                 var forge = (ModifierForgeTE)te;
 
-                if (!forge.modifiedItem.IsAir)
+                if (!forge.ModifiedItem.IsAir)
                 {
                     var screenDrawOffset = PoMUtil.DrawToScreenOffset();
 
-                    var itemTexture = Terraria.GameContent.TextureAssets.Item[forge.modifiedItem.type].Value;
+                    var itemTexture = Terraria.GameContent.TextureAssets.Item[forge.ModifiedItem.type].Value;
                     var itemWidth = 24;
                     var itemHeight = (int)(itemWidth * (itemTexture.Height / (float)itemTexture.Width));
                     var itemScale = itemWidth / (float)itemTexture.Width;
@@ -203,7 +203,7 @@ namespace PathOfModifiers.Tiles
             if (TileEntity.ByPosition.TryGetValue(forgePos, out TileEntity te))
             {
                 var forge = (ModifierForgeTE)te;
-                if (!forge.modifiedItem.IsAir && forge.modifierItem.ModItem is ModifierFragment)
+                if (!forge.ModifiedItem.IsAir && forge.ModifierItem.ModItem is ModifierFragment)
                 {
                     emitLight = true;
                 }
@@ -226,229 +226,41 @@ namespace PathOfModifiers.Tiles
 
     public class ModifierForgeTE : PoMTileEntity
     {
-        public enum ForgeAction
+        Item modifiedItem = new();
+        Item modifierItem = new();
+
+        public Item ModifiedItem => modifiedItem;
+        public Item ModifierItem => modifierItem;
+
+        public void UpdateModifiedItem(Item item)
         {
-            Reforge = 0,
-            Rarify = 1,
-            AddAffix = 2,
-            AddPrefix = 3,
-            AddSuffix = 4,
-            RemoveAll = 5,
-            RemovePrefixes = 6,
-            RemoveSuffixes = 7,
-            RollAffixes = 8,
-            RollPrefixes = 9,
-            RollSuffixes = 10,
+            item ??= new Item();
+            modifiedItem = item;
+            SendModifiedItemToServer();
         }
-
-        public Item modifiedItem = new Item();
-        public Item modifierItem = new Item();
-
-        int[] forgeActionCostMultipliers = { 1, 50, 10, 15, 15, 5, 15, 15, 5, 15, 15 };
-
-        /// <summary>
-        /// Sets <see cref="cost"/>.
-        /// </summary>
-        /// <param name="action"></param>
-        public int CalculateCost(ForgeAction action)
+        public void UpdateModifierItem(Item item)
         {
-            if (modifiedItem == null || modifierItem == null || modifiedItem.IsAir || modifierItem.IsAir)
-                return 0;
-            ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-            return pomItem.rarity.forgeCost * forgeActionCostMultipliers[(int)action];
+            item ??= new Item();
+            modifierItem = item;
+            SendModifierItemToServer();
         }
-
-        public bool CanForge(int cost)
-        {
-            return !modifiedItem.IsAir && !modifierItem.IsAir && modifierItem.stack >= cost && ItemLoader.PreReforge(modifiedItem);
-        }
-
-
-        /// <summary>
-        /// Vanilla reforge
-        /// </summary>
-        //public void Reforge()
-        //{
-        //    int cost = CalculateCost(ForgeAction.Reforge);
-        //    if (CanForge(cost))
-        //    {
-        //        bool favorited = modifiedItem.favorited;
-        //        int stack = modifiedItem.stack;
-
-        //        Item reforgedItem = new Item();
-        //        reforgedItem.netDefaults(modifiedItem.netID);
-        //        reforgedItem = reforgedItem.CloneWithModdedDataFrom(modifiedItem);
-        //        reforgedItem.Prefix(-2);
-
-        //        modifiedItem = reforgedItem;
-        //        modifiedItem.position.X = Main.player[Main.myPlayer].position.X + (float)(Main.player[Main.myPlayer].width / 2) - (float)(modifiedItem.width / 2);
-        //        modifiedItem.position.Y = Main.player[Main.myPlayer].position.Y + (float)(Main.player[Main.myPlayer].height / 2) - (float)(modifiedItem.height / 2);
-        //        modifiedItem.favorited = favorited;
-        //        modifiedItem.stack = stack;
-
-        //        modifierItem.stack -= cost;
-
-        //        ItemLoader.PostReforge(modifiedItem);
-        //        PostForge(modifiedItem, modifierItem);
-        //    }
-        //}
-        //public void RerollAffixes()
-        //{
-        //    int cost = CalculateCost(ForgeAction.Reforge);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        pomItem.RerollAffixes(modifiedItem);
-        //        modifierItem.stack -= cost;
-
-        //        PostForge(modifiedItem, modifierItem);
-        //    }
-        //}
-        //public void Rarify()
-        //{
-        //    int cost = CalculateCost(ForgeAction.Rarify);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        if (pomItem.RaiseRarity(modifiedItem))
-        //        {
-        //            modifierItem.stack -= cost;
-
-        //            PostForge(modifiedItem, modifierItem);
-        //        }
-        //    }
-        //}
-        //public void AddAffix()
-        //{
-        //    int cost = CalculateCost(ForgeAction.AddAffix);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        if (pomItem.AddRandomAffix(modifiedItem))
-        //        {
-        //            modifierItem.stack -= cost;
-
-        //            PostForge(modifiedItem, modifierItem);
-        //        }
-        //    }
-        //}
-        //public void AddPrefix()
-        //{
-        //    int cost = CalculateCost(ForgeAction.AddPrefix);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        if (pomItem.AddRandomPrefix(modifiedItem))
-        //        {
-        //            modifierItem.stack -= cost;
-
-        //            PostForge(modifiedItem, modifierItem);
-        //        }
-        //    }
-        //}
-        //public void AddSuffix()
-        //{
-        //    int cost = CalculateCost(ForgeAction.AddSuffix);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        if (pomItem.AddRandomSuffix(modifiedItem))
-        //        {
-        //            modifierItem.stack -= cost;
-
-        //            PostForge(modifiedItem, modifierItem);
-        //        }
-        //    }
-        //}
-        //public void RemoveAll()
-        //{
-        //    int cost = CalculateCost(ForgeAction.RemoveAll);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        pomItem.RemoveAll(modifiedItem);
-        //        modifierItem.stack -= cost;
-
-        //        PostForge(modifiedItem, modifierItem);
-        //    }
-        //}
-        //public void RemovePrefixes()
-        //{
-        //    int cost = CalculateCost(ForgeAction.RemovePrefixes);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        pomItem.RemovePrefixes(modifiedItem);
-        //        modifierItem.stack -= cost;
-
-        //        PostForge(modifiedItem, modifierItem);
-        //    }
-        //}
-        //public void RemoveSuffixes()
-        //{
-        //    int cost = CalculateCost(ForgeAction.RemoveSuffixes);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        pomItem.RemoveSuffixes(modifiedItem);
-        //        modifierItem.stack -= cost;
-
-        //        PostForge(modifiedItem, modifierItem);
-        //    }
-        //}
-        //public void RollAffixes()
-        //{
-        //    int cost = CalculateCost(ForgeAction.RollAffixes);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        pomItem.RollAffixTierMultipliers(modifiedItem);
-        //        modifierItem.stack -= cost;
-
-        //        PostForge(modifiedItem, modifierItem);
-        //    }
-        //}
-        //public void RollPrefixes()
-        //{
-        //    int cost = CalculateCost(ForgeAction.RollPrefixes);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        pomItem.RollPrefixTierMultipliers(modifiedItem);
-        //        modifierItem.stack -= cost;
-
-        //        PostForge(modifiedItem, modifierItem);
-        //    }
-        //}
-        //public void RollSuffixes()
-        //{
-        //    int cost = CalculateCost(ForgeAction.RollSuffixes);
-        //    if (CanForge(cost))
-        //    {
-        //        ItemItem pomItem = modifiedItem.GetGlobalItem<ItemItem>();
-        //        pomItem.RollSuffixTierMultipliers(modifiedItem);
-        //        modifierItem.stack -= cost;
-
-        //        PostForge(modifiedItem, modifierItem);
-        //    }
-        //}
 
         public void SendModifiedItemToServer()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ItemPacketHandler.CModifierForgeModifiedItemChanged(ID, modifiedItem);
+                ItemPacketHandler.CModifierForgeModifiedItemChanged(ID, ModifiedItem);
         }
         public void SendModifierItemToServer()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ItemPacketHandler.CModifierForgeModifierItemChanged(ID, modifierItem);
+                ItemPacketHandler.CModifierForgeModifierItemChanged(ID, ModifierItem);
         }
 
         public override void NetSend(BinaryWriter writer)
         {
             //PathOfModifiers.Log($"NetSend{Main.netMode}");
-            ItemIO.Send(modifiedItem, writer, true);
-            ItemIO.Send(modifierItem, writer, true);
+            ItemIO.Send(ModifiedItem, writer, true);
+            ItemIO.Send(ModifierItem, writer, true);
         }
         public override void NetReceive(BinaryReader reader)
         {
@@ -468,8 +280,8 @@ namespace PathOfModifiers.Tiles
         {
             //PathOfModifiers.Log($"Save{Main.netMode}");
             TagCompound tag = new TagCompound();
-            tag.Set("modifiedItem", ItemIO.Save(modifiedItem));
-            tag.Set("modifierItem", ItemIO.Save(modifierItem));
+            tag.Set("modifiedItem", ItemIO.Save(ModifiedItem));
+            tag.Set("modifierItem", ItemIO.Save(ModifierItem));
             return tag;
         }
         public override void Load(TagCompound tag)
@@ -501,13 +313,13 @@ namespace PathOfModifiers.Tiles
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                if (!modifiedItem.IsAir)
+                if (!ModifiedItem.IsAir)
                 {
-                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifiedItem, 2);
+                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), ModifiedItem, 2);
                 }
-                if (!modifierItem.IsAir)
+                if (!ModifierItem.IsAir)
                 {
-                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), modifierItem, 2);
+                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), ModifierItem, 2);
                 }
             }
 

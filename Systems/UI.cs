@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -33,12 +34,16 @@ namespace PathOfModifiers.Systems
         public static bool IsModifierForgeOpen => modifierForgeInterface.CurrentState != null;
         public static void OpenModifierForge(Tiles.ModifierForgeTE forge)
         {
+            modifierForgeState.CurrentForgeTE = forge;
             modifierForgeInterface?.SetState(modifierForgeState);
             Main.playerInventory = true;
+            SoundEngine.PlaySound(SoundID.MenuOpen);
         }
         public static void CloseModifierForge()
         {
+            modifierForgeState.CurrentForgeTE = null;
             modifierForgeInterface?.SetState(null);
+            SoundEngine.PlaySound(SoundID.MenuClose);
         }
 
         public EventHandler OnWorldLoaded;
