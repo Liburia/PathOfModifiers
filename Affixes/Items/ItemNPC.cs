@@ -1,26 +1,60 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
+using Terraria.GameContent.ItemDropRules;
+using System.Collections.Generic;
 
 namespace PathOfModifiers.Affixes.Items
 {
     public class ItemNPC : GlobalNPC
     {
-        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        class GoldDropRule : IItemDropRule
         {
-            for (int i = 0; i < Main.maxPlayers; i++)
+            public List<IItemDropRuleChainAttempt> ChainedRules
             {
-                Player player = Main.player[i];
-                if (player.active && !player.dead)
+                get;
+                private set;
+            }
+
+            public GoldDropRule()
+            {
+                ChainedRules = new List<IItemDropRuleChainAttempt>();
+            }
+
+            public bool CanDrop(DropAttemptInfo info) => true;
+
+            public void ReportDroprates(List<DropRateInfo> drops, DropRateInfoChainFeed ratesInfo) { }
+
+            public ItemDropAttemptResult TryDroppingItem(DropAttemptInfo info)
+            {
+                ItemDropAttemptResult result = default;
+                int totalGoldToDrop = 0;
+                for (int i = 0; i < Main.maxPlayers; i++)
                 {
-                    ItemPlayer affixPlayer = player.GetModPlayer<ItemPlayer>();
-                    int droppedGold = affixPlayer.goldDropChances.Roll();
-                    if (droppedGold > 0)
+                    Player player = Main.player[i];
+                    if (player.active && !player.dead)
                     {
-                        Item.NewItem(npc.position, npc.width, npc.height, ItemID.GoldCoin, droppedGold);
+                        ItemPlayer affixPlayer = player.GetModPlayer<ItemPlayer>();
+                        totalGoldToDrop += affixPlayer.goldDropChances.Roll();
                     }
                 }
+                if (totalGoldToDrop > 0)
+                {
+                    CommonCode.DropItemFromNPC(info.npc, ItemID.GoldCoin, totalGoldToDrop);
+                    result.State = ItemDropAttemptResultState.Success;
+                }
+                else
+                {
+                    result.State = ItemDropAttemptResultState.FailedRandomRoll;
+                }
+
+                return result;
             }
+        }
+
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            npcLoot.Add(new GoldDropRule());
         }
     }
 }
