@@ -125,22 +125,30 @@ namespace PathOfModifiers.Affixes.NPCs
             affixes.Clear();
         }
 
+        bool isContentSetup = false;
+        public override void SetStaticDefaults()
+        {
+            isContentSetup = true;
+        }
         public override void SetDefaults(NPC npc)
         {
-            if (!GetInstance<PoMConfigServer>().DisableNPCModifiers && Main.netMode != NetmodeID.MultiplayerClient)
+            if (isContentSetup)
             {
-                if (dontRollNextNPC)
+                if (!GetInstance<PoMConfigServer>().DisableNPCModifiers && Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    dontRollNextNPC = false;
-                }
-                else
-                {
-                    RollNPC(npc);
-                    InitializeNPC(npc);
-                    UpdateName(npc);
+                    if (dontRollNextNPC)
+                    {
+                        dontRollNextNPC = false;
+                    }
+                    else
+                    {
+                        RollNPC(npc);
+                        InitializeNPC(npc);
+                        UpdateName(npc);
 
-                    if (Main.netMode == NetmodeID.Server)
-                        NPCPacketHandler.SNPCSyncAffixes(npc, this);
+                        if (Main.netMode == NetmodeID.Server)
+                            NPCPacketHandler.SNPCSyncAffixes(npc, this);
+                    }
                 }
             }
         }
