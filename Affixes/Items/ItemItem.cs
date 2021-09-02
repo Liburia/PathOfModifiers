@@ -31,18 +31,13 @@ namespace PathOfModifiers.Affixes.Items
 
         public RarityItem rarity;
 
-        public List<Affix> affixes;
-        public List<Affix> prefixes;
-        public List<Affix> suffixes;
+        public List<Affix> affixes = new();
+        public List<Affix> prefixes = new();
+        public List<Affix> suffixes = new();
 
         public int FreeAffixes => rarity.maxAffixes - affixes.Count;
         public int FreePrefixes => Math.Min(FreeAffixes, rarity.maxPrefixes - prefixes.Count);
         public int FreeSuffixes => Math.Min(FreeAffixes, rarity.maxSuffixes - suffixes.Count);
-
-        public ItemItem()
-        {
-            InitializeReferenceData();
-        }
 
         public void PostLoad()
         {
@@ -54,9 +49,9 @@ namespace PathOfModifiers.Affixes.Items
         /// </summary>
         void InitializeReferenceData()
         {
-            affixes = new List<Affix>();
-            prefixes = new List<Affix>();
-            suffixes = new List<Affix>();
+            affixes = new();
+            prefixes = new();
+            suffixes = new();
         }
 
         #region Item conditions
