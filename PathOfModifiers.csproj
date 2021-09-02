@@ -6,6 +6,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="D:\SSD WINDOWS\Documents\Projects\Terraria\tModLoader-1.4-beta1\src\tModLoader\Terraria\Terraria.csproj" />
