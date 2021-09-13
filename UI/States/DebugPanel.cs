@@ -231,7 +231,7 @@ namespace PathOfModifiers.UI.States
                                 (!onItemFilterToggle.IsOn && entry.affix.AffixSpaceAvailable(modItem)))
                             && (string.IsNullOrEmpty(affixSearch.CurrentString)
                                 || entry.affix.GetType().Name.Contains(affixSearch.CurrentString, StringComparison.CurrentCultureIgnoreCase));
-                    }).ToArray();
+                    }).OrderBy((entry) => entry.affix.GetType().Name).ToArray();
 
                 if (selectFirstAffixOnItem)
                     SelectedAffix = null;
