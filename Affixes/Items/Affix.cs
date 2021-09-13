@@ -63,7 +63,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ModifyWeaponCrit(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat) { }
         public virtual void GetWeaponKnockback(Item item, Player player, ref float multiplier) { }
-        public virtual void UseTimeMultiplier(Item item, Player player, ref float multiplier) { }
+        public virtual void UseSpeedMultiplier(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult) { }
         public virtual void UpdateInventory(Item item, ItemPlayer player) { }
         public virtual void UpdateEquip(Item item, ItemPlayer player) { }

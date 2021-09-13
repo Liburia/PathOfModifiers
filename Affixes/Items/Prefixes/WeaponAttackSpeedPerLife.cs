@@ -55,7 +55,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"Up to { plusMinus1 }{ valueRange1 }% attack speed above 50% life and up to { plusMinus2 }{ valueRange1 }% below";
         }
 
-        public override void UseTimeMultiplier(Item item, Player player, ref float multiplier)
+        public override void UseSpeedMultiplier(Item item, Player player, ref float multiplier)
         {
             float value = Type1.GetValue();
             multiplier += value * (((float)player.statLife / player.statLifeMax2) - 0.5f) * 2;

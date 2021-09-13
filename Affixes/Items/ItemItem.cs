@@ -584,16 +584,16 @@ namespace PathOfModifiers.Affixes.Items
             }
             knockback *= multiplier;
         }
-        public override float UseTimeMultiplier(Item item, Player player)
+        public override float UseSpeedMultiplier(Item item, Player player)
         {
             float multiplier = 1f;
             foreach (var prefix in prefixes)
             {
-                prefix.UseTimeMultiplier(item, player, ref multiplier);
+                prefix.UseSpeedMultiplier(item, player, ref multiplier);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.UseTimeMultiplier(item, player, ref multiplier);
+                suffix.UseSpeedMultiplier(item, player, ref multiplier);
             }
             return multiplier;
         }

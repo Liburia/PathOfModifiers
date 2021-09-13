@@ -254,7 +254,7 @@ namespace PathOfModifiers.Affixes.Items
             regen = (regen * regenMultiplier) + (Player.lifeRegen * regenMultiplier) - Player.lifeRegen;
         }
 
-        public override float UseTimeMultiplier(Item item)
+        public override float UseSpeedMultiplier(Item item)
         {
             return useSpeed;
         }

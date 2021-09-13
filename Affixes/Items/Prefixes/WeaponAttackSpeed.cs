@@ -54,7 +54,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueRange1 }% attack speed";
         }
 
-        public override void UseTimeMultiplier(Item item, Player player, ref float multiplier)
+        public override void UseSpeedMultiplier(Item item, Player player, ref float multiplier)
         {
             multiplier += Type1.GetValue();
         }
