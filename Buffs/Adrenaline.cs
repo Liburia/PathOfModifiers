@@ -16,7 +16,7 @@ namespace PathOfModifiers.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetDamage<GenericDamageClass>() *= 0.5f;
+            player.GetDamage<GenericDamageClass>() *= 1.5f;
 
             var affixItemPlayer = player.GetModPlayer<ItemPlayer>();
             affixItemPlayer.damageTaken += -0.1f;
