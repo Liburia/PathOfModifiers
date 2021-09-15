@@ -188,8 +188,11 @@ namespace PathOfModifiers.Affixes.Items
 
             if (hurt)
             {
-                hurt = Main.rand.NextFloat(1) >= dodgeChance;
-                PoMUtil.MakeImmune(Player, (int)PoMUtil.PlayerImmuneTime.Parry);
+                if (Main.rand.NextFloat(1) < dodgeChance)
+                {
+                    hurt = false;
+                    PoMUtil.MakeImmune(Player, (int)PoMUtil.PlayerImmuneTime.Parry);
+                }
             }
 
             return hurt;
