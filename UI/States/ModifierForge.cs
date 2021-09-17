@@ -603,6 +603,10 @@ namespace PathOfModifiers.UI.States
                     SyncFragmentWithForge();
                     SyncItemWithForge();
 
+
+                    UpdateCost();
+                    UpdateForgeButton();
+
                     UpdateItemText(itemSlot.Item);
                 }
             }
