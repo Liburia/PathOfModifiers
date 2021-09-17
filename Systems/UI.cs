@@ -50,19 +50,23 @@ namespace PathOfModifiers.Systems
 
         public override void OnWorldLoad()
         {
-            debugUIState?.RecreateAffixElements();
+            if (Main.netMode != NetmodeID.Server)
+            {
+                debugUIState?.RecreateAffixElements();
+            }
         }
 
         public override void Load()
         {
+            //TODO: Remove keybinds? Only allow in debug build?
+            key_toggleDebugMenu = KeybindLoader.RegisterKeybind(Mod, "Toggle Debug Menu", Microsoft.Xna.Framework.Input.Keys.None);
+
             if (Main.netMode != NetmodeID.Server)
             {
                 Terraria.UI.Chat.ChatManager.Register<KeywordTagHandler>(new string[1] { "pomkw" });
                 Terraria.UI.Chat.ChatManager.Register<TierTagHandler>(new string[1] { "pomtier" });
                 Terraria.UI.Chat.ChatManager.Register<ValueRangeTagHandler>(new string[1] { "pomvr" });
 
-                //TODO: Remove keybinds? Only allow in debug build?
-                key_toggleDebugMenu = KeybindLoader.RegisterKeybind(Mod, "Toggle Debug Menu", Microsoft.Xna.Framework.Input.Keys.None);
                 debugPanelInterface = new UserInterface();
                 debugUIState = new DebugPanel();
                 debugUIState.Activate();

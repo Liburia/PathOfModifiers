@@ -299,14 +299,16 @@ namespace PathOfModifiers.Tiles
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
         {
-            //Main.NewText("i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
-            if (Main.netMode == 1)
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 NetMessage.SendTileSquare(Main.myPlayer, i + 1, j, 3);
-                NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
+                NetMessage.SendData(MessageID.TileEntityPlacement, -1, -1, null, i, j, Type);
                 return -1;
             }
-            return Place(i, j);
+            else
+            {
+                return Place(i, j);
+            }
         }
 
         public override void OnKill()

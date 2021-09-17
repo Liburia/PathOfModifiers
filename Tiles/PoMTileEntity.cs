@@ -13,7 +13,7 @@ using Terraria.ObjectData;
 
 namespace PathOfModifiers.Tiles
 {
-    public class PoMTileEntity : ModTileEntity
+    public abstract class PoMTileEntity : ModTileEntity
     {
         public override bool ValidTile(int i, int j) { return false; }
 
