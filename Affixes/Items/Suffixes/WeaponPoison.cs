@@ -27,8 +27,8 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 new TTFloat.WeightedTier(0.10f, 0.25f, 3),
                 new TTFloat.WeightedTier(0.25f, 0.40f, 2.5),
                 new TTFloat.WeightedTier(0.40f, 0.55f, 2),
-                new TTFloat.WeightedTier(0.55f, 0.75f, 1.5),
-                new TTFloat.WeightedTier(0.75f, 0.85f, 1),
+                new TTFloat.WeightedTier(0.55f, 0.70f, 1.5),
+                new TTFloat.WeightedTier(0.70f, 0.85f, 1),
                 new TTFloat.WeightedTier(0.85f, 1.0f, 0.5),
             },
         };
