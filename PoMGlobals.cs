@@ -22,7 +22,7 @@ namespace PathOfModifiers
     public static class PoMGlobals
     {
         public const int ailmentDuration = 300;
-        public const float lowHPThreshold = 0.2f;
+        public const float lowHPThreshold = 0.5f;
 
         public const double tickMS = 1000 / 60d;
 
