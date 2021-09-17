@@ -66,7 +66,9 @@ namespace PathOfModifiers.Affixes.Items
         }
         public static bool CanCrit(Item item)
         {
-            return item.crit > 0;
+            //Why the fuck does 0 crit equal to 4% actual crit
+            //return item.crit > 0;
+            return item.DamageType.Type != DamageClass.Summon.Type;
         }
         public static bool CanKnockback(Item item)
         {
