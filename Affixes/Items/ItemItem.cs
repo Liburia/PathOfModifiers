@@ -641,6 +641,18 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override void UpdateInventory(Item item, Player player)
         {
+            if (rarity == null || rarity.GetType() == typeof(ItemNone))
+            {
+                try
+                {
+                    TryRollItem(item);
+                }
+                catch (Exception e)
+                {
+                    Mod.Logger.Error(e.ToString());
+                }
+            }
+
             ItemPlayer pomPlayer = player.GetModPlayer<ItemPlayer>();
             foreach (var prefix in prefixes)
             {
@@ -985,9 +997,9 @@ namespace PathOfModifiers.Affixes.Items
                 Mod.Logger.Error(e.ToString());
             }
         }
+        //On craft
         public override void OnCreate(Item item, ItemCreationContext context)
         {
-            //TODO: does this cover all cases, if so remove all other triggers to roll the item(PostUpdate, PostDrawInInventory)
             try
             {
                 TryRollItem(item);
@@ -1052,17 +1064,6 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override void PostDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            if (Main.npcShop == 0 && (rarity == null || rarity.GetType() == typeof(ItemNone)))
-            {
-                try
-                {
-                    TryRollItem(item);
-                }
-                catch (Exception e)
-                {
-                    Mod.Logger.Error(e.ToString());
-                }
-            }
         }
         public override void MeleeEffects(Item item, Player player, Rectangle hitbox)
         {
