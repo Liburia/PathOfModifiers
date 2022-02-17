@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using PathOfModifiers;
+using Terraria.ID;
 
 namespace PathOfModifiers.Buffs
 {
@@ -21,7 +22,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            CanBeCleared = true;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
         }
     }
     public class StackingDamageOverTime : DamageOverTime
@@ -34,7 +35,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = false;
             Main.buffNoTimeDisplay[Type] = false;
-            CanBeCleared = true;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
         }
     }
 }

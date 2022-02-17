@@ -16,7 +16,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            CanBeCleared = false;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = false;
         }
     }
 }

@@ -1,20 +1,16 @@
-using System;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Items;
 using PathOfModifiers.ModNet.PacketHandlers;
-using PathOfModifiers.UI;
+using System.IO;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
-using Terraria.Audio;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ObjectData;
-using PathOfModifiers.Affixes.Items;
 
 namespace PathOfModifiers.Tiles
 {
@@ -181,7 +177,7 @@ namespace PathOfModifiers.Tiles
                 {
                     var screenDrawOffset = PoMUtil.DrawToScreenOffset();
 
-                    var itemTexture = Terraria.GameContent.TextureAssets.Item[forge.ModifiedItem.type].Value;
+                    var itemTexture = PoMUtil.GetItemTexture(forge.ModifiedItem.type).Value;
                     var itemWidth = 24;
                     var itemHeight = (int)(itemWidth * (itemTexture.Height / (float)itemTexture.Width));
                     var itemScale = itemWidth / (float)itemTexture.Width;
@@ -224,7 +220,7 @@ namespace PathOfModifiers.Tiles
         }
     }
 
-    public class ModifierForgeTE : PoMTileEntity
+    public class ModifierForgeTE : ModTileEntity
     {
         Item modifiedItem = new();
         Item modifierItem = new();
@@ -232,28 +228,45 @@ namespace PathOfModifiers.Tiles
         public Item ModifiedItem => modifiedItem;
         public Item ModifierItem => modifierItem;
 
-        public void UpdateModifiedItem(Item item)
+        public void SetItem(Item item, bool updateUI = true)
         {
             item ??= new Item();
             modifiedItem = item;
-            SendModifiedItemToServer();
+            if (updateUI && Main.netMode != NetmodeID.Server && ModifierForge.activeForge == this)
+            {
+                UI.States.ModifierForge.UpdateItemsFromForge();
+            }
         }
-        public void UpdateModifierItem(Item item)
+        public void SetFragment(Item item, bool updateUI = true)
         {
             item ??= new Item();
             modifierItem = item;
-            SendModifierItemToServer();
+            if (updateUI && Main.netMode != NetmodeID.Server && ModifierForge.activeForge == this)
+            {
+                UI.States.ModifierForge.UpdateItemsFromForge();
+            }
         }
 
-        public void SendModifiedItemToServer()
+        public void SendItemToServer()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ItemPacketHandler.CModifierForgeModifiedItemChanged(ID, ModifiedItem);
+                ItemPacketHandler.CModifierForgeItemChanged(ID, ModifiedItem);
         }
-        public void SendModifierItemToServer()
+        public void SendFragmentToServer()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
-                ItemPacketHandler.CModifierForgeModifierItemChanged(ID, ModifierItem);
+                ItemPacketHandler.CModifierForgeFragmentChanged(ID, ModifierItem);
+        }
+
+        public void SendItemToClients(int ignoreClient)
+        {
+            if (Main.netMode == NetmodeID.Server)
+                ItemPacketHandler.SModifierForgeItemChanged(ID, ModifiedItem, ignoreClient);
+        }
+        public void SendFragmentToClients(int ignoreClient)
+        {
+            if (Main.netMode == NetmodeID.Server)
+                ItemPacketHandler.SModifierForgeFragmentChanged(ID, ModifierItem, ignoreClient);
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -265,36 +278,27 @@ namespace PathOfModifiers.Tiles
         public override void NetReceive(BinaryReader reader)
         {
             //PathOfModifiers.Log($"NetReceive{Main.netMode}");
-            modifiedItem = ItemIO.Receive(reader, true);
-            modifierItem = ItemIO.Receive(reader, true);
-            if (Main.netMode != 2)
-            {
-                if (ModifierForge.activeForge?.Position == Position)
-                {
-                    UI.States.ModifierForge.Open(this);
-                }
-            }
+            SetItem(ItemIO.Receive(reader, true), true);
+            SetFragment(ItemIO.Receive(reader, true), true);
         }
 
-        public override TagCompound Save()
+        public override void SaveData(TagCompound tag)
         {
             //PathOfModifiers.Log($"Save{Main.netMode}");
-            TagCompound tag = new TagCompound();
             tag.Set("modifiedItem", ItemIO.Save(ModifiedItem));
             tag.Set("modifierItem", ItemIO.Save(ModifierItem));
-            return tag;
         }
-        public override void Load(TagCompound tag)
+        public override void LoadData(TagCompound tag)
         {
             //PathOfModifiers.Log($"Load{Main.netMode}");
-            modifiedItem = ItemIO.Load(tag.GetCompound("modifiedItem"));
-            modifierItem = ItemIO.Load(tag.GetCompound("modifierItem"));
+            SetItem(ItemIO.Load(tag.GetCompound("modifiedItem")), true);
+            SetFragment(ItemIO.Load(tag.GetCompound("modifierItem")), true);
         }
 
-        public override bool ValidTile(int i, int j)
+        public override bool IsTileValidForEntity(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.IsActive && tile.type == ModContent.TileType<ModifierForge>();
+            return tile.HasTile && tile.TileType == ModContent.TileType<ModifierForge>();
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)

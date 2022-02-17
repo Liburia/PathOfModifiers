@@ -117,7 +117,7 @@ namespace PathOfModifiers.Maps.Generators
                     {
                         Vector2 vTilePos = (direction * j) + (direction90 * k);
                         Point tilePos = new Point(dimensions.X + (int)Math.Round(pos.X + vTilePos.X), dimensions.Y + (int)Math.Round(pos.Y + vTilePos.Y));
-                        if (dimensions.Contains(tilePos) && (!replace || patchSettings.replaceTiles.Contains(Main.tile[tilePos.X, tilePos.Y].type)))
+                        if (dimensions.Contains(tilePos) && (!replace || patchSettings.replaceTiles.Contains(Main.tile[tilePos.X, tilePos.Y].TileType)))
                         {
                             PlaceTile(tilePos, patchSettings.type);
                         }

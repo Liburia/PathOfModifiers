@@ -62,7 +62,7 @@ namespace PathOfModifiers.UI.Elements
             }
             else
             {
-                var itemTexture = Terraria.GameContent.TextureAssets.Item[Item.type].Value;
+                var itemTexture = PoMUtil.GetItemTexture(Item.type).Value;
                 Rectangle itemsource = (Main.itemAnimations[Item.type] == null) ? itemTexture.Frame() : Main.itemAnimations[Item.type].GetFrame(itemTexture);
 
                 Color newColor = Color.White;

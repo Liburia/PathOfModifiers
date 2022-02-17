@@ -15,6 +15,8 @@ using Terraria.ID;
 using Terraria.DataStructures;
 using Newtonsoft.Json.Bson;
 using PathOfModifiers.ModNet.PacketHandlers;
+using ReLogic.Content;
+using Terraria.GameContent;
 
 namespace PathOfModifiers
 {
@@ -37,6 +39,13 @@ namespace PathOfModifiers
                 }
             }
             return buffCount;
+        }
+
+        public static Asset<Texture2D> GetItemTexture(int id)
+        {
+            Main.instance.LoadItem(id);
+
+            return TextureAssets.Item[id];
         }
 
         /// <summary>
@@ -297,7 +306,7 @@ namespace PathOfModifiers
         {
 
             Tile tile = Main.tile[startPos.X, startPos.Y];
-            int type = tile.type;
+            int type = tile.TileType;
 
             Line line = new Line(startPos, startPos);
             direction = new Point(Math.Sign(direction.X), Math.Sign(direction.Y));
@@ -321,8 +330,8 @@ namespace PathOfModifiers
 
         public static int? GetTileType(Tile tile)
         {
-            if (tile.IsActive)
-                return tile.type;
+            if (tile.HasTile)
+                return tile.TileType;
             else
                 return null;
         }
@@ -335,8 +344,8 @@ namespace PathOfModifiers
             var tile = Main.tile[i, j];
 
             var tePos = new Point16(
-                i - (tile.frameX / coordinateFrameWidth),
-                j - (tile.frameY / coordinateFrameHeight));
+                i - (tile.TileFrameX / coordinateFrameWidth),
+                j - (tile.TileFrameY / coordinateFrameHeight));
             return TileEntity.ByPosition.TryGetValue(tePos, out te);
         }
 

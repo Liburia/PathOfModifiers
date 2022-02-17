@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using PathOfModifiers;
 using Microsoft.Xna.Framework;
+using Terraria.ID;
 
 namespace PathOfModifiers.Buffs
 {
@@ -15,7 +16,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            CanBeCleared = true;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
         }
 
         public override void Update(NPC npc, ref int buffIndex)

@@ -3,12 +3,23 @@
   <Import Project="../tModLoaderDev.targets" />
   <PropertyGroup>
     <AssemblyName>PathOfModifiers</AssemblyName>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;3270</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;3270</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\SSD WINDOWS\Documents\Projects\Terraria\tModLoader-1.4-beta1\src\tModLoader\Terraria\Terraria.csproj" />
+    <ProjectReference Include="D:\SSD WINDOWS\Documents\Projects\Terraria\tModLoader\src\tModLoader\Terraria\Terraria.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FNA">
+      <HintPath>F:\Steam\steamapps\common\tModLoader\Libraries\FNA\1.0.0\FNA.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

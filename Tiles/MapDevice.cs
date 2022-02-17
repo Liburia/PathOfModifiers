@@ -482,7 +482,7 @@
 //        public override bool ValidTile(int i, int j)
 //        {
 //            Tile tile = Main.tile[i, j];
-//            return tile.IsActive && tile.type == ModContent.TileType<MapDevice>();
+//            return tile.HasTile && tile.type == ModContent.TileType<MapDevice>();
 //        }
 
 //        //Passing true when registering the hook makes these i, j the top left tile

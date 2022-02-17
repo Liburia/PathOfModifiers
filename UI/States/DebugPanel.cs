@@ -17,8 +17,16 @@ using PathOfModifiers.UI.States.DebugElements;
 
 namespace PathOfModifiers.UI.States
 {
-	class DebugPanel : UIState
+    public class DebugPanel : UIState
 	{
+        public static void Toggle()
+        {
+            if (Systems.UI.DebugPanelInterface.CurrentState == null)
+                Systems.UI.DebugPanelInterface?.SetState(Systems.UI.DebugUIState);
+            else
+                Systems.UI.DebugPanelInterface?.SetState(null);
+        }
+
         Item _heldItem = new Item();
         Item HeldItem
         {
@@ -87,7 +95,7 @@ namespace PathOfModifiers.UI.States
                 UIImageButton closePanelX = new(ModContent.Request<Texture2D>(PoMGlobals.Path.Image.UI.CloseButton, ReLogic.Content.AssetRequestMode.ImmediateLoad));
 				closePanelX.Top.Set(0, 0);
 				closePanelX.Left.Set(550, 0);
-				closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Systems.UI.ToggleDebugPanel();
+				closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Toggle();
 				panel.Append(closePanelX);
 
                 UIElement content = new();

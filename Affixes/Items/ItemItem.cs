@@ -535,17 +535,17 @@ namespace PathOfModifiers.Affixes.Items
         }
 
         #region Item Hooks
-        public override bool ConsumeAmmo(Item item, Player player)
+        public override bool CanConsumeAmmo(Item weapon, Player player)
         {
             //TODO: Test this when TML fixes the hook, and actually calls this on the item
             bool consume = true;
             foreach (var prefix in prefixes)
             {
-                consume = consume && prefix.ConsumeAmmo(item, player);
+                consume = consume && prefix.CanConsumeAmmo(weapon, player);
             }
             foreach (var suffix in suffixes)
             {
-                consume = consume && suffix.ConsumeAmmo(item, player);
+                consume = consume && suffix.CanConsumeAmmo(weapon, player);
             }
             return consume;
         }
@@ -775,7 +775,7 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
-        public bool PlayerConsumeAmmo(Player player, Item item, Item ammo)
+        public bool PlayerCanConsumeAmmo(Player player, Item item, Item ammo)
         {
             bool consume = true;
             foreach (var prefix in prefixes)
@@ -1071,13 +1071,11 @@ namespace PathOfModifiers.Affixes.Items
             //TODO: add light/dust?
         }
 
-        public override bool NeedsSaving(Item item)
+        public override void SaveData(Item item, TagCompound tag)
         {
-            return rarity != null;
-        }
-        public override TagCompound Save(Item item)
-        {
-            TagCompound tag = new TagCompound();
+            if (rarity == null)
+                return;
+
             tag.Set("rarityMod", rarity.mod.Name);
             tag.Set("rarityFullName", rarity.GetType().FullName);
             tag.Set("affixCount", affixes.Count);
@@ -1092,9 +1090,8 @@ namespace PathOfModifiers.Affixes.Items
                 affix.Save(affixTag, item);
                 tag.Set(i.ToString(), affixTag);
             }
-            return tag;
         }
-        public override void Load(Item item, TagCompound tag)
+        public override void LoadData(Item item, TagCompound tag)
         {
             string rarityModName = tag.GetString("rarityMod");
             ModLoader.TryGetMod(rarityModName, out Mod mod);

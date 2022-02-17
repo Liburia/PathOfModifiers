@@ -16,7 +16,7 @@ namespace PathOfModifiers.Buffs
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            CanBeCleared = true;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
         }
 
         void CreateDust(Vector2 position, int width, int height)

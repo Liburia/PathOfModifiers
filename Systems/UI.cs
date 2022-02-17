@@ -19,32 +19,14 @@ namespace PathOfModifiers.Systems
         GameTime _lastUpdateUiGameTime;
 
         static ModKeybind key_toggleDebugMenu;
-        static UserInterface debugPanelInterface;
-        static DebugPanel debugUIState;
-        public static void ToggleDebugPanel()
-        {
-            if (debugPanelInterface.CurrentState == null)
-                debugPanelInterface?.SetState(debugUIState);
-            else
-                debugPanelInterface?.SetState(null);
-        }
 
-        static UserInterface modifierForgeInterface;
-        static ModifierForge modifierForgeState;
-        public static bool IsModifierForgeOpen => modifierForgeInterface.CurrentState != null;
-        public static void OpenModifierForge(Tiles.ModifierForgeTE forge)
-        {
-            modifierForgeState.CurrentForgeTE = forge;
-            modifierForgeInterface?.SetState(modifierForgeState);
-            Main.playerInventory = true;
-            SoundEngine.PlaySound(SoundID.MenuOpen);
-        }
-        public static void CloseModifierForge()
-        {
-            modifierForgeState.CurrentForgeTE = null;
-            modifierForgeInterface?.SetState(null);
-            SoundEngine.PlaySound(SoundID.MenuClose);
-        }
+        public static UserInterface DebugPanelInterface { get; private set; }
+        public static DebugPanel DebugUIState { get; private set; }
+
+        public static UserInterface ModifierForgeInterface { get; private set; }
+        public static ModifierForge ModifierForgeState { get; private set; }
+        public static bool IsModifierForgeOpen => ModifierForgeInterface.CurrentState != null;
+
 
         public EventHandler OnWorldLoaded;
 
@@ -52,7 +34,16 @@ namespace PathOfModifiers.Systems
         {
             if (Main.netMode != NetmodeID.Server)
             {
-                debugUIState?.RecreateAffixElements();
+                DebugUIState?.RecreateAffixElements();
+            }
+        }
+
+        public override void OnWorldUnload()
+        {
+            if (Main.netMode != NetmodeID.Server)
+            {
+                ModifierForgeState.CurrentForgeTE = null;
+                ModifierForgeInterface.SetState(null);
             }
         }
 
@@ -67,23 +58,23 @@ namespace PathOfModifiers.Systems
                 Terraria.UI.Chat.ChatManager.Register<TierTagHandler>(new string[1] { "pomtier" });
                 Terraria.UI.Chat.ChatManager.Register<ValueRangeTagHandler>(new string[1] { "pomvr" });
 
-                debugPanelInterface = new UserInterface();
-                debugUIState = new DebugPanel();
-                debugUIState.Activate();
+                DebugPanelInterface = new UserInterface();
+                DebugUIState = new DebugPanel();
+                DebugUIState.Activate();
 
-                modifierForgeInterface = new UserInterface();
-                modifierForgeState = new ModifierForge();
-                modifierForgeState.Activate();
+                ModifierForgeInterface = new UserInterface();
+                ModifierForgeState = new ModifierForge();
+                ModifierForgeState.Activate();
             }
         }
         public override void Unload()
         {
             key_toggleDebugMenu = null;
-            debugPanelInterface = null;
-            debugUIState = null;
+            DebugPanelInterface = null;
+            DebugUIState = null;
 
-            modifierForgeInterface = null;
-            modifierForgeState = null;
+            ModifierForgeInterface = null;
+            ModifierForgeState = null;
         }
 
         public override void UpdateUI(GameTime gameTime)
@@ -91,10 +82,10 @@ namespace PathOfModifiers.Systems
             _lastUpdateUiGameTime = gameTime;
 
             if (key_toggleDebugMenu.JustPressed)
-                ToggleDebugPanel();
-            debugPanelInterface?.Update(gameTime);
+                DebugPanel.Toggle();
+            DebugPanelInterface?.Update(gameTime);
 
-            modifierForgeInterface?.Update(gameTime);
+            ModifierForgeInterface?.Update(gameTime);
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
@@ -105,9 +96,9 @@ namespace PathOfModifiers.Systems
                     "PathOfModifiers: Debug Panel",
                     delegate
                     {
-                        if (_lastUpdateUiGameTime != null && debugPanelInterface?.CurrentState != null)
+                        if (_lastUpdateUiGameTime != null && DebugPanelInterface?.CurrentState != null)
                         {
-                            debugPanelInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+                            DebugPanelInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
                         }
                         return true;
                     },
@@ -117,9 +108,9 @@ namespace PathOfModifiers.Systems
                     "PathOfModifiers: Modifier Forge",
                     delegate
                     {
-                        if (_lastUpdateUiGameTime != null && modifierForgeInterface?.CurrentState != null)
+                        if (_lastUpdateUiGameTime != null && ModifierForgeInterface?.CurrentState != null)
                         {
-                            modifierForgeInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
+                            ModifierForgeInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
                         }
                         return true;
                     },

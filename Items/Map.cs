@@ -64,11 +64,10 @@ namespace PathOfModifiers.Items
             map.DrawIcon(spriteBatch, Item.position - Main.screenPosition + iconOffset, Terraria.GameContent.TextureAssets.Item[Item.type].Value.Size(), rotation, scale);
         }
 
-        public override TagCompound Save()
+        public override void SaveData(TagCompound tag)
         {
             //PathOfModifiers.Log("3");
             MapNullCheck();
-            TagCompound tag = new TagCompound();
             TagCompound mapTag;
             mapTag = new TagCompound();
             mapTag.Set("mapMod", map.mod.Name);
@@ -76,9 +75,8 @@ namespace PathOfModifiers.Items
             map.Save(mapTag);
             tag.Set("mapTag", mapTag);
             //PathOfModifiers.Log("4");
-            return tag;
         }
-        public override void Load(TagCompound tag)
+        public override void LoadData(TagCompound tag)
         {
             //PathOfModifiers.Log("5");
             TagCompound mapTag = tag.GetCompound("mapTag");

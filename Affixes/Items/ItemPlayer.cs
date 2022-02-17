@@ -117,7 +117,7 @@ namespace PathOfModifiers.Affixes.Items
             //MapBorder.ClearActiveBounds();
         }
 
-        public override bool ConsumeAmmo(Item weapon, Item ammo)
+        public override bool CanConsumeAmmo(Item weapon, Item ammo)
         {
             bool consume = true;
             Item item;
@@ -129,7 +129,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    consume = consume && modItem.PlayerConsumeAmmo(Player, item, ammo);
+                    consume = consume && modItem.PlayerCanConsumeAmmo(Player, item, ammo);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -140,7 +140,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    consume = consume && modItem.PlayerConsumeAmmo(Player, item, ammo);
+                    consume = consume && modItem.PlayerCanConsumeAmmo(Player, item, ammo);
                 }
             }
             return consume;

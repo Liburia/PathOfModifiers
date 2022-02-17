@@ -67,7 +67,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult) { }
         public virtual void UpdateInventory(Item item, ItemPlayer player) { }
         public virtual void UpdateEquip(Item item, ItemPlayer player) { }
-        public virtual bool ConsumeAmmo(Item item, Player player) { return true; }
+        public virtual bool CanConsumeAmmo(Item item, Player player) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
         public virtual void UseItem(Item item, Player player) { }
         public virtual void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit) { }

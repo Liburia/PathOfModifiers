@@ -248,12 +248,34 @@ namespace PathOfModifiers.UI.States
     }
 
 
-    class ModifierForge : UIState
+    public class ModifierForge : UIState
 	{
         public static bool IsOpen => Systems.UI.IsModifierForgeOpen;
 
-        public static void Open(ModifierForgeTE forge) => Systems.UI.OpenModifierForge(forge);
-        public static void Close() => Systems.UI.CloseModifierForge();
+        public static void Open(ModifierForgeTE forge)
+        {
+            Systems.UI.ModifierForgeState.CurrentForgeTE = forge;
+            Systems.UI.ModifierForgeInterface?.SetState(Systems.UI.ModifierForgeState);
+            Main.playerInventory = true;
+            SoundEngine.PlaySound(SoundID.MenuOpen);
+        }
+        public static void Close()
+        {
+            Systems.UI.ModifierForgeState.CurrentForgeTE = null;
+            Systems.UI.ModifierForgeInterface?.SetState(null);
+            SoundEngine.PlaySound(SoundID.MenuClose);
+        }
+        public static void UpdateItemsFromForge()
+        {
+            var state = Systems.UI.ModifierForgeState;
+            var forge = state.currentForgeTE;
+            var item = forge.ModifiedItem.Clone();
+            state.itemSlot.SetItem(item);
+            state.fragmentSlot.SetItem(forge.ModifierItem.Clone());
+            state.UpdateCost();
+            state.UpdateForgeButton();
+            state.UpdateItemText(item);
+        }
 
         ModifierForgeTE currentForgeTE;
         public ModifierForgeTE CurrentForgeTE {
@@ -307,7 +329,7 @@ namespace PathOfModifiers.UI.States
                 UIImageButton closePanelX = new(ModContent.Request<Texture2D>(PoMGlobals.Path.Image.UI.CloseButton, ReLogic.Content.AssetRequestMode.ImmediateLoad));
 				closePanelX.Top.Set(0f, 0f);
 				closePanelX.Left.Set(650f, 0f);
-				closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Systems.UI.CloseModifierForge();
+				closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Close();
 				panel.Append(closePanelX);
 
                 UIElement content = new();
@@ -773,13 +795,15 @@ namespace PathOfModifiers.UI.States
             return fragmentSlot.Item?.stack ?? 0;
         }
 
-        void SyncFragmentWithForge()
-        {
-            CurrentForgeTE?.UpdateModifierItem(fragmentSlot.Item.Clone());
-        }
         void SyncItemWithForge()
         {
-            CurrentForgeTE?.UpdateModifiedItem(itemSlot.Item.Clone());
+            CurrentForgeTE?.SetItem(itemSlot.Item.Clone(), false);
+            CurrentForgeTE?.SendItemToServer();
+        }
+        void SyncFragmentWithForge()
+        {
+            CurrentForgeTE?.SetFragment(fragmentSlot.Item.Clone(), false);
+            CurrentForgeTE?.SendFragmentToServer();
         }
     }
 }
