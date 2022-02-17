@@ -132,10 +132,29 @@ namespace PathOfModifiers.UI.Elements
         {
             if (!(Item.IsAir && item.IsAir) && (item.IsAir || CanInsertItem(item)))
             {
-                oldItem = Item;
-                Item = item;
+                if (Item.type == item.type &&  Item.stack < Item.maxStack)
+                {
+                    int canTransfer = Item.maxStack - Item.stack;
+                    int toTransfer = Math.Min(item.stack, canTransfer);
+                    item.stack -= toTransfer;
+                    Item.stack += toTransfer;
 
-                OnItemChanged?.Invoke(item);
+                    if (item.stack == 0)
+                    {
+                        oldItem = new Item();
+                    }
+                    else
+                    {
+                        oldItem = item;
+                    }
+                }
+                else
+                {
+                    oldItem = Item;
+                    Item = item;
+                }
+
+                OnItemChanged?.Invoke(Item);
 
                 if (playSound)
                     SoundEngine.PlaySound(SoundID.Grab);
