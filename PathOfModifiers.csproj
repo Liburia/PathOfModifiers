@@ -16,9 +16,4 @@
   <ItemGroup>
     <ProjectReference Include="D:\SSD WINDOWS\Documents\Projects\Terraria\tModLoader\src\tModLoader\Terraria\Terraria.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="FNA">
-      <HintPath>F:\Steam\steamapps\common\tModLoader\Libraries\FNA\1.0.0\FNA.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>
