@@ -1,8 +1,8 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
+﻿using System.Collections.Generic;
+using Terraria;
 using Terraria.GameContent.ItemDropRules;
-using System.Collections.Generic;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items
 {

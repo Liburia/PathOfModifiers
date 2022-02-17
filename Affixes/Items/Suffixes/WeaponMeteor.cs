@@ -1,18 +1,10 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System;
-using System.Linq;
+﻿using Microsoft.Xna.Framework;
+using PathOfModifiers.Projectiles;
+using PathOfModifiers.UI.Chat;
 using Terraria;
 using Terraria.Audio;
-using Terraria.Utilities;
-using System.IO;
-using System.Collections.Generic;
-using Terraria.ModLoader.IO;
-using PathOfModifiers.Projectiles;
-using PathOfModifiers.Buffs;
 using Terraria.ID;
-using PathOfModifiers.UI.Chat;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -130,7 +122,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player), 
+                new PoMGlobals.ProjectileSource.PlayerSource(player),
                 targetPosition + spawnOffset,
                 targetPosition,
                 ModContent.ProjectileType<Meteor>(),

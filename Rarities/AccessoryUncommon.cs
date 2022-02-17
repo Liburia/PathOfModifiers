@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.Graphics;
 
 namespace PathOfModifiers.Rarities
 {

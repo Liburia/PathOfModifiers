@@ -1,12 +1,11 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Dusts;
-using Terraria;
-using System;
-using Terraria.ID;
-using Terraria.Enums;
-using Terraria.ModLoader;
 using PathOfModifiers.ModNet.PacketHandlers;
+using System;
+using Terraria;
+using Terraria.Enums;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Projectiles
 {

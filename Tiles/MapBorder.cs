@@ -1,14 +1,11 @@
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
-using PathOfModifiers;
-using Terraria.ID;
-using System.Collections.Generic;
-using Terraria.DataStructures;
 
 namespace PathOfModifiers.Tiles
 {
-	public class MapBorder : ModTile
+    public class MapBorder : ModTile
     {
         static List<Rectangle> activeBounds;
 
@@ -52,11 +49,11 @@ namespace PathOfModifiers.Tiles
         public override void SetStaticDefaults()
         {
             AnimationFrameHeight = 90;
-			Main.tileSolid[Type] = true;
-			Main.tileBlockLight[Type] = true;
-			Main.tileLighted[Type] = true;
-			ItemDrop = ModContent.ItemType<Items.MapBorder>();
-			AddMapEntry(new Color(100, 100, 100));
+            Main.tileSolid[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            Main.tileLighted[Type] = true;
+            ItemDrop = ModContent.ItemType<Items.MapBorder>();
+            AddMapEntry(new Color(100, 100, 100));
 
             activeBounds = new List<Rectangle>();
         }

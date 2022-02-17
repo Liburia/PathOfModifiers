@@ -1,7 +1,5 @@
-using Terraria.ModLoader;
-using Terraria;
 using System.IO;
-using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.ModNet.PacketHandlers
 {

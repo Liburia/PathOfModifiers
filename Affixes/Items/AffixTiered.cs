@@ -1,19 +1,10 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
+﻿using PathOfModifiers.UI;
+using PathOfModifiers.UI.Elements;
 using System;
-using Terraria.UI.Chat;
+using System.IO;
 using Terraria;
 using Terraria.ModLoader.IO;
-using Terraria.ID;
-using System.IO;
-using System.Collections.Generic;
-using Terraria.DataStructures;
-using System.Security.Policy;
-using Terraria.Utilities;
 using Terraria.UI;
-using PathOfModifiers.UI.Elements;
-using PathOfModifiers.UI;
 
 namespace PathOfModifiers.Affixes.Items
 {

@@ -1,27 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using ReLogic.Graphics;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.UI;
-using Terraria.UI.Chat;
 
 namespace PathOfModifiers.UI.States.ModifierForgeElements
 {
-	public class FragmentCost : UIText
-	{
-		public FragmentCost(string text, float textScale = 1f, bool large = false) : base(text, textScale, large) { }
+    public class FragmentCost : UIText
+    {
+        public FragmentCost(string text, float textScale = 1f, bool large = false) : base(text, textScale, large) { }
         public FragmentCost(LocalizedText text, float textScale = 1f, bool large = false) : base(text, textScale, large) { }
 
         public override void Recalculate()

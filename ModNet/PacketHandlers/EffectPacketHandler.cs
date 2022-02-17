@@ -1,8 +1,7 @@
-using Terraria.ModLoader;
-using Terraria;
 using System.IO;
+using Terraria;
 using Terraria.ID;
-using Microsoft.Xna.Framework;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.ModNet.PacketHandlers
 {

@@ -1,20 +1,19 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using PathOfModifiers;
-using System.IO;
-using System;
 using Terraria.ModLoader.IO;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace PathOfModifiers.Items
 {
-	public class Map : ModItem
-	{
+    public class Map : ModItem
+    {
         public Maps.Map map;
 
-		public override void SetStaticDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Map");
             Tooltip.SetDefault("Opens a new world.");
@@ -108,10 +107,10 @@ namespace PathOfModifiers.Items
             //PathOfModifiers.Log("8");
             return newMap;
         }
-        
+
         public override void NetSend(BinaryWriter writer)
         {
-           // PathOfModifiers.Log("9");
+            // PathOfModifiers.Log("9");
             try
             {
                 MapNullCheck();

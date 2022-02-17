@@ -1,7 +1,7 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Dusts;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -19,7 +19,7 @@ namespace PathOfModifiers.Projectiles
 
         bool[] hitNPCs = new bool[Main.maxNPCs];
         bool hitPlayer;
-        
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Thorn Nova");

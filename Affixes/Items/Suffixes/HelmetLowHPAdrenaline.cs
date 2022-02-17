@@ -1,18 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria.ModLoader;
-using System;
-using System.Linq;
-using Terraria;
-using Terraria.Utilities;
-using System.IO;
-using System.Collections.Generic;
-using Terraria.ModLoader.IO;
-using PathOfModifiers.Projectiles;
-using Terraria.ID;
-using PathOfModifiers.ModNet.PacketHandlers;
-using Terraria.DataStructures;
-using PathOfModifiers.Buffs;
+﻿using PathOfModifiers.Buffs;
 using PathOfModifiers.UI.Chat;
+using System;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {

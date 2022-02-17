@@ -1,18 +1,11 @@
-﻿using log4net.Util;
-using Microsoft.Xna.Framework;
-using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.Buffs;
+﻿using Microsoft.Xna.Framework;
 using PathOfModifiers.ModNet.PacketHandlers;
-using PathOfModifiers.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Terraria.Net;
 
 namespace PathOfModifiers.Affixes.Items
 {
@@ -447,7 +440,7 @@ namespace PathOfModifiers.Affixes.Items
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
         {
             Item item;
-            
+
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
@@ -651,7 +644,7 @@ namespace PathOfModifiers.Affixes.Items
         public override void OnHitPvp(Item item, Player target, int damage, bool crit)
         {
             Item affixItem;
-            
+
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];

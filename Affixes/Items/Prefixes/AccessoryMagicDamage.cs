@@ -1,14 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Terraria;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System;
-using System.Linq;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.Utilities;
-using System.IO;
-using System.Collections.Generic;
-using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {

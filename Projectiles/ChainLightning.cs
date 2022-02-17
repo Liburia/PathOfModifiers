@@ -1,14 +1,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Dusts;
-using Terraria;
 using System;
+using System.Collections.Generic;
+using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System.Collections.Generic;
-using Terraria.DataStructures;
-using Terraria.Audio;
 
 namespace PathOfModifiers.Projectiles
 {

@@ -1,13 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System;
-using System.Linq;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Utilities;
-using System.IO;
-using System.Collections.Generic;
-using Terraria.ModLoader.IO;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {

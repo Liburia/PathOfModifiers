@@ -1,13 +1,9 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Dusts;
-using Terraria;
 using System;
-using Terraria.ID;
-using Terraria.ModLoader;
-using System.Collections.Generic;
-using Terraria.DataStructures;
 using System.Text.RegularExpressions;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Projectiles
 {

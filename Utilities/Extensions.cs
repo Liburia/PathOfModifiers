@@ -1,7 +1,6 @@
 ﻿
 
 using Microsoft.Xna.Framework;
-using System;
 using System.IO;
 
 namespace PathOfModifiers.Utilities.Extensions

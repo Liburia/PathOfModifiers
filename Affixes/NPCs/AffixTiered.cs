@@ -1,16 +1,7 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System;
-using Terraria.UI.Chat;
+﻿using System;
+using System.IO;
 using Terraria;
 using Terraria.ModLoader.IO;
-using Terraria.ID;
-using System.IO;
-using System.Collections.Generic;
-using Terraria.DataStructures;
-using System.Security.Policy;
-using Terraria.Utilities;
 
 namespace PathOfModifiers.Affixes.NPCs
 {

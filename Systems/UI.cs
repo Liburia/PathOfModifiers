@@ -1,21 +1,17 @@
 using Microsoft.Xna.Framework;
-using PathOfModifiers.UI;
 using PathOfModifiers.UI.Chat;
 using PathOfModifiers.UI.States;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace PathOfModifiers.Systems
 {
-	public class UI : ModSystem
-	{
+    public class UI : ModSystem
+    {
         GameTime _lastUpdateUiGameTime;
 
         static ModKeybind key_toggleDebugMenu;

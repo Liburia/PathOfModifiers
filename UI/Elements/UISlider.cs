@@ -1,18 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace PathOfModifiers.UI.Elements
 {
-	public class UISlider : UIElement
-	{
+    public class UISlider : UIElement
+    {
         public const float lineOffset = 5;
         public const float lineHeight = 2;
 

@@ -1,8 +1,6 @@
 ﻿using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using PathOfModifiers;
 using static Terraria.ModLoader.ModContent;
 
 namespace PathOfModifiers.Items

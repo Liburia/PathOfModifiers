@@ -5,9 +5,9 @@ using static Terraria.ModLoader.ModContent;
 
 namespace PathOfModifiers.Items
 {
-	public class MapDevice : ModItem
-	{
-		public override void SetStaticDefaults()
+    public class MapDevice : ModItem
+    {
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Map Device");
             Tooltip.SetDefault("Used to open other worlds.");
@@ -29,7 +29,7 @@ namespace PathOfModifiers.Items
         }
 
         public override void AddRecipes()
-		{
+        {
             if (GetInstance<PoMConfigServer>().DisableMaps)
                 return;
 
@@ -40,6 +40,6 @@ namespace PathOfModifiers.Items
                 .AddRecipeGroup("PathOfModifiers:GoldBar", 25)
                 .AddTile(TileID.Anvils)
                 .Register();
-		}
+        }
     }
 }

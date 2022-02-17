@@ -1,16 +1,9 @@
-﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.Affixes.NPCs;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ModLoader;
-using System;
-using PathOfModifiers.Buffs;
-using Terraria.ID;
-using PathOfModifiers.Rarities;
-using System.Text;
-using System.IO;
+﻿using PathOfModifiers.Buffs;
 using PathOfModifiers.ModNet.PacketHandlers;
+using System;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers
 {

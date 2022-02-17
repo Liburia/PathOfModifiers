@@ -1,24 +1,19 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
+using PathOfModifiers.Affixes;
+using PathOfModifiers.Affixes.Items;
+using PathOfModifiers.UI.Elements;
+using PathOfModifiers.UI.States.DebugElements;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using Terraria;
-using Terraria.GameContent;
-using Terraria.GameInput;
-using Terraria.UI;
-using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.Affixes;
-using PathOfModifiers.UI.Elements;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using PathOfModifiers.UI.States.DebugElements;
+using Terraria.UI;
 
 namespace PathOfModifiers.UI.States
 {
     public class DebugPanel : UIState
-	{
+    {
         public static void Toggle()
         {
             if (Systems.UI.DebugPanelInterface.CurrentState == null)
@@ -80,12 +75,12 @@ namespace PathOfModifiers.UI.States
         public override void OnInitialize()
         {
             panel = new();
-			panel.Left.Set(200, 0);
-			panel.Top.Set(100, 0);
-			panel.MinWidth.Set(600, 0);
-			panel.MinHeight.Set(400, 0);
-			Append(panel);
-			{
+            panel.Left.Set(200, 0);
+            panel.Top.Set(100, 0);
+            panel.MinWidth.Set(600, 0);
+            panel.MinHeight.Set(400, 0);
+            Append(panel);
+            {
                 Terraria.GameContent.UI.Elements.UIText title = new("PoM Debug", UICommon.textMedium);
                 title.IgnoresMouseInteraction = true;
                 title.Top.Set(0, 0);
@@ -93,10 +88,10 @@ namespace PathOfModifiers.UI.States
                 panel.Append(title);
 
                 UIImageButton closePanelX = new(ModContent.Request<Texture2D>(PoMGlobals.Path.Image.UI.CloseButton, ReLogic.Content.AssetRequestMode.ImmediateLoad));
-				closePanelX.Top.Set(0, 0);
-				closePanelX.Left.Set(550, 0);
-				closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Toggle();
-				panel.Append(closePanelX);
+                closePanelX.Top.Set(0, 0);
+                closePanelX.Left.Set(550, 0);
+                closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Toggle();
+                panel.Append(closePanelX);
 
                 UIElement content = new();
                 content.Top.Set(title.Top.Pixels + title.GetDimensions().Height + UICommon.spacing, 0);
@@ -164,7 +159,7 @@ namespace PathOfModifiers.UI.States
                         }
                     }
                 }
-			}
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -184,7 +179,7 @@ namespace PathOfModifiers.UI.States
 
                 var entry = new AffixListEntry(affix);
 
-                entry.selectToggle.OnClick += delegate(UIMouseEvent evt, UIElement listeningElement)
+                entry.selectToggle.OnClick += delegate (UIMouseEvent evt, UIElement listeningElement)
                 {
                     if (entry.selectToggle.IsOn)
                     {

@@ -1,15 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent.UI.Elements;
+﻿using Terraria.Audio;
 using Terraria.ID;
 using Terraria.UI;
 
 namespace PathOfModifiers.UI.Elements
 {
-	internal class UIButton : UIPanel
-	{
+    internal class UIButton : UIPanel
+    {
         bool _isEnabled = true;
         public bool IsEnabled
         {

@@ -1,19 +1,9 @@
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
-using System;
-using Terraria.UI.Chat;
-using Terraria;
-using Terraria.Utilities;
-using System.IO;
-using System.Linq;
-using System.Collections.Generic;
-using System.Reflection;
-using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.Rarities;
-using Terraria.ID;
 using PathOfModifiers.Utilities;
 using PathOfModifiers.Utilities.Noise;
+using System;
+using System.Collections.Generic;
+using Terraria;
 
 namespace PathOfModifiers.Maps.Generators
 {

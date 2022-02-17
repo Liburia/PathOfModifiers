@@ -1,14 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.UI.Elements;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.Audio;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using PathOfModifiers.UI.Elements;
 using Terraria.UI;
 
 namespace PathOfModifiers.UI.States.ModifierForgeElements

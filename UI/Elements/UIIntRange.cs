@@ -1,21 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using System;
 using Terraria.UI;
-using Terraria.UI.Chat;
 
 namespace PathOfModifiers.UI.Elements
 {
-	internal class UIIntRange : UIRange
-	{
+    internal class UIIntRange : UIRange
+    {
         int _currentValue;
-		public int CurrentValue
+        public int CurrentValue
         {
             get => _currentValue;
             set
@@ -29,7 +20,7 @@ namespace PathOfModifiers.UI.Elements
         int steps;
         float interval;
 
-		public UIIntRange(int steps, int startingValue) : base("0", steps.ToString())
+        public UIIntRange(int steps, int startingValue) : base("0", steps.ToString())
         {
             this.steps = steps;
             interval = 1f / steps;

@@ -1,13 +1,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Dusts;
-using Terraria;
+using ReLogic.Content;
 using System;
+using System.Collections.Generic;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System.Collections.Generic;
-using Terraria.DataStructures;
-using ReLogic.Content;
 
 namespace PathOfModifiers.Projectiles
 {

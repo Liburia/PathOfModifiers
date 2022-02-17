@@ -16,7 +16,9 @@ namespace PathOfModifiers.Tiles
 {
     public class ModifierForge : ModTile
     {
+#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static ModifierForgeTE activeForge;
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 
         static int activeAnimationFirstFrame;
         static int activeAnimationFrameCount;

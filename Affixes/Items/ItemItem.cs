@@ -1,19 +1,17 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PathOfModifiers.Items;
+using PathOfModifiers.Rarities;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using Terraria.ID;
-using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
-using PathOfModifiers.Affixes.Items;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
-using System.IO;
-using Microsoft.Xna.Framework.Graphics;
-using PathOfModifiers.Rarities;
-using Terraria.DataStructures;
-using PathOfModifiers.Items;
 using static Terraria.ModLoader.ModContent;
 
 namespace PathOfModifiers.Affixes.Items

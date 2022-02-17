@@ -1,8 +1,7 @@
-using Terraria;
-using Terraria.ModLoader;
-using PathOfModifiers;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Buffs
 {

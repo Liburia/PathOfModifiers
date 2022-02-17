@@ -12,10 +12,10 @@ using Terraria.ModLoader;
 
 namespace PathOfModifiers
 {
-	public class PathOfModifiers : Mod
-	{
-		public static PathOfModifiers Instance { get; private set; }
-        public PathOfModifiers() {}
+    public class PathOfModifiers : Mod
+    {
+        public static PathOfModifiers Instance { get; private set; }
+        public PathOfModifiers() { }
 
         public static List<Mod> registeredMods = new();
         public static void RegisterMod(Mod mod)
@@ -57,10 +57,10 @@ namespace PathOfModifiers
             Dictionary<Type, int> rarityNPCMap = new();
             List<RarityNPC> rarityNPCList = new();
 
-            Dictionary<Type, int>  generatorMap = new();
+            Dictionary<Type, int> generatorMap = new();
             List<Generator> generatorList = new();
 
-            Dictionary<Type, int>  mapMap = new();
+            Dictionary<Type, int> mapMap = new();
             List<Map> mapList = new();
 
             int affixItemIndex = 0;

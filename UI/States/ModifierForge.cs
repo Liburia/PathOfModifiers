@@ -1,23 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
-using System.Linq;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.GameContent;
-using Terraria.GameInput;
-using Terraria.UI;
 using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.Affixes;
-using PathOfModifiers.UI.Elements;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using PathOfModifiers.UI.States.ModifierForgeElements;
-using PathOfModifiers.UI.Chat;
-using Terraria.ID;
-using Terraria.Audio;
 using PathOfModifiers.Affixes.Items.Constraints;
 using PathOfModifiers.Tiles;
+using PathOfModifiers.UI.Chat;
+using PathOfModifiers.UI.Elements;
+using PathOfModifiers.UI.States.ModifierForgeElements;
+using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace PathOfModifiers.UI.States
 {
@@ -231,17 +224,17 @@ namespace PathOfModifiers.UI.States
             public override int Cost => 1;
             public override Constraint Constraint => new None();
         }
-        public class Highest : SelectableConstraint
+        public class Worst : SelectableConstraint
         {
-            public override string Name => "Highest";
-            public override string Description => "Only affects the affix with the highest relative tier\nTier 2/3 is higher than 3/6. In case of multiple — averages";
+            public override string Name => "Worst";
+            public override string Description => "Only affects the affix with the highest relative tier\nTier 2/3 is higher than 3/6. In case of multiple tiers — averages";
             public override int Cost => 5;
-            public override Constraint Constraint => new LowestTier();  //Opposite because displayed tier is inverse of real tier
+            public override Constraint Constraint => new LowestTier();
         }
-        public class Lowest : SelectableConstraint
+        public class Best : SelectableConstraint
         {
-            public override string Name => "Lowest";
-            public override string Description => "Only affects the affix with the lowest tier\nTier 3/6 is lower than 2/3. In case of multiple — averages";
+            public override string Name => "Best";
+            public override string Description => "Only affects the affix with the lowest tier\nTier 3/6 is lower than 2/3. In case of multiple tiers — averages";
             public override int Cost => 5;
             public override Constraint Constraint => new HighestTier();
         }
@@ -249,7 +242,7 @@ namespace PathOfModifiers.UI.States
 
 
     public class ModifierForge : UIState
-	{
+    {
         public static bool IsOpen => Systems.UI.IsModifierForgeOpen;
 
         public static void Open(ModifierForgeTE forge)
@@ -278,7 +271,8 @@ namespace PathOfModifiers.UI.States
         }
 
         ModifierForgeTE currentForgeTE;
-        public ModifierForgeTE CurrentForgeTE {
+        public ModifierForgeTE CurrentForgeTE
+        {
             get => currentForgeTE;
             set
             {
@@ -314,12 +308,12 @@ namespace PathOfModifiers.UI.States
         public override void OnInitialize()
         {
             panel = new();
-			panel.Left.Set(200f, 0f);
-			panel.Top.Set(100f, 0f);
-			panel.MinWidth.Set(700f, 0f);
-			panel.MinHeight.Set(400f, 0f);
-			Append(panel);
-			{
+            panel.Left.Set(200f, 0f);
+            panel.Top.Set(100f, 0f);
+            panel.MinWidth.Set(700f, 0f);
+            panel.MinHeight.Set(400f, 0f);
+            Append(panel);
+            {
                 UIText title = new("Modifier Forge", UICommon.textMedium);
                 title.IgnoresMouseInteraction = true;
                 title.Top.Set(0, 0);
@@ -327,10 +321,10 @@ namespace PathOfModifiers.UI.States
                 panel.Append(title);
 
                 UIImageButton closePanelX = new(ModContent.Request<Texture2D>(PoMGlobals.Path.Image.UI.CloseButton, ReLogic.Content.AssetRequestMode.ImmediateLoad));
-				closePanelX.Top.Set(0f, 0f);
-				closePanelX.Left.Set(650f, 0f);
-				closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Close();
-				panel.Append(closePanelX);
+                closePanelX.Top.Set(0f, 0f);
+                closePanelX.Left.Set(650f, 0f);
+                closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Close();
+                panel.Append(closePanelX);
 
                 UIElement content = new();
                 content.Top.Set(closePanelX.Top.Pixels + closePanelX.GetDimensions().Height + UICommon.spacing, 0);
@@ -424,10 +418,10 @@ namespace PathOfModifiers.UI.States
                             ConstraintListEntry<SelectableConstraint> any = new("Any", new TierConstraint.Any());
                             tierConstraintList.Add(any);
 
-                            ConstraintListEntry<SelectableConstraint> highest = new("Highest", new TierConstraint.Highest());
+                            ConstraintListEntry<SelectableConstraint> highest = new("Worst", new TierConstraint.Worst());
                             tierConstraintList.Add(highest);
 
-                            ConstraintListEntry<SelectableConstraint> lowest = new("Lowest", new TierConstraint.Lowest());
+                            ConstraintListEntry<SelectableConstraint> lowest = new("Best", new TierConstraint.Best());
                             tierConstraintList.Add(lowest);
                         }
 
@@ -572,7 +566,7 @@ namespace PathOfModifiers.UI.States
                         }
                     }
                 }
-			}
+            }
 
             OnItemChanged(new Item());
         }

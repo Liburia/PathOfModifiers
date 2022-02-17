@@ -1,54 +1,51 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
 
 namespace PathOfModifiers.UI.Elements
 {
-	internal class UIToggle : UIPanel
-	{
-		public bool IsOn
+    internal class UIToggle : UIPanel
+    {
+        public bool IsOn
         {
-			get => _isOn;
-			private set
+            get => _isOn;
+            private set
             {
-				_isOn = value;
-				if (_isOn)
+                _isOn = value;
+                if (_isOn)
                 {
-					BackgroundColor = activeBackgroundColor;
-				}
+                    BackgroundColor = activeBackgroundColor;
+                }
                 else
-				{
-					BackgroundColor = defaultBackgroundColor;
-				}
+                {
+                    BackgroundColor = defaultBackgroundColor;
+                }
             }
         }
         bool _isOn = false;
 
-		public Color defaultBackgroundColor = UICommon.backgroundColor;
-		public Color activeBackgroundColor = UICommon.activeBackgroundColor;
+        public Color defaultBackgroundColor = UICommon.backgroundColor;
+        public Color activeBackgroundColor = UICommon.activeBackgroundColor;
 
 
-		public override void Click(UIMouseEvent evt)
+        public override void Click(UIMouseEvent evt)
         {
-			Toggle();
+            Toggle();
 
-			SoundEngine.PlaySound(SoundID.MenuTick);
+            SoundEngine.PlaySound(SoundID.MenuTick);
 
-			base.Click(evt);
-		}
+            base.Click(evt);
+        }
 
-		public void SetState(bool value)
-		{
-			IsOn = value;
-		}
-
-		public void Toggle()
+        public void SetState(bool value)
         {
-			IsOn = !IsOn;
-		}
-	}
+            IsOn = value;
+        }
+
+        public void Toggle()
+        {
+            IsOn = !IsOn;
+        }
+    }
 }

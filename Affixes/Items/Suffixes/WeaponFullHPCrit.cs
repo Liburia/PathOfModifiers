@@ -1,15 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
+﻿using PathOfModifiers.ModNet.PacketHandlers;
 using System;
-using System.Linq;
 using Terraria;
-using Terraria.Utilities;
-using System.IO;
-using System.Collections.Generic;
-using Terraria.ModLoader.IO;
-using PathOfModifiers.Projectiles;
-using PathOfModifiers.ModNet.PacketHandlers;
 using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes

@@ -1,16 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System;
-using System.Linq;
+﻿using Microsoft.Xna.Framework;
+using PathOfModifiers.Projectiles;
 using Terraria;
 using Terraria.Audio;
-using Terraria.Utilities;
-using System.IO;
-using System.Collections.Generic;
-using Terraria.ModLoader.IO;
-using PathOfModifiers.Projectiles;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -114,7 +107,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 Vector2 velocity = (target.Center - player.Center).SafeNormalize(Vector2.Zero).RotatedBy(Main.rand.NextFloat(-0.4f, 0.4f)) * Main.rand.NextFloat(7f, 20f);
                 int damage = (int)MathHelper.Clamp(hitDamage * Type3.GetValue(), 1, 999999);
                 Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player), 
+                new PoMGlobals.ProjectileSource.PlayerSource(player),
                 player.Center, velocity, ModContent.ProjectileType<Icicle>(), damage, 0, player.whoAmI);
             }
         }

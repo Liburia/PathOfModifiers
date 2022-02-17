@@ -1,19 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
 namespace PathOfModifiers.UI.Elements
 {
-	public class UIRange : UIElement
-	{
+    public class UIRange : UIElement
+    {
         const float inputWidth = 40f;
 
         protected string leftLabel;
@@ -26,8 +21,8 @@ namespace PathOfModifiers.UI.Elements
 
         public UIRange(string leftLabel, string rightLabel, float sliderPosition = 0)
         {
-			this.leftLabel = leftLabel;
-			this.rightLabel = rightLabel;
+            this.leftLabel = leftLabel;
+            this.rightLabel = rightLabel;
 
             slider = new(sliderPosition);
             Append(slider);

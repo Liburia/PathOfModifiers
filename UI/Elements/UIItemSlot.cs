@@ -4,7 +4,6 @@ using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -12,7 +11,7 @@ using Terraria.UI.Chat;
 
 namespace PathOfModifiers.UI.Elements
 {
-	internal class UIItemSlot : UIElement
+    internal class UIItemSlot : UIElement
     {
         public delegate bool CheckDelegate(Item item);
         public delegate void ChangedDelegate(Item item);
@@ -22,7 +21,8 @@ namespace PathOfModifiers.UI.Elements
         protected float _scale = 1f;
 
         Item _item;
-        public Item Item {
+        public Item Item
+        {
             get => _item;
             private set
             {

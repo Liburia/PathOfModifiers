@@ -1,20 +1,13 @@
-﻿using IL.Terraria.Achievements;
-using IL.Terraria.GameContent.UI.Elements;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.ModNet.PacketHandlers;
 using PathOfModifiers.Projectiles;
-using PathOfModifiers.Tiles;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
-using Terraria.Net;
 using static Terraria.ModLoader.ModContent;
 
 namespace PathOfModifiers

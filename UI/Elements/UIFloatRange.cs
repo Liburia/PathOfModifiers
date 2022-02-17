@@ -1,20 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.UI;
-using Terraria.UI.Chat;
 
 namespace PathOfModifiers.UI.Elements
 {
-	internal class UIFloatRange : UIRange
-	{
-		public float CurrentValue
+    internal class UIFloatRange : UIRange
+    {
+        public float CurrentValue
         {
             get => slider.SliderPosition;
             set
@@ -28,7 +20,7 @@ namespace PathOfModifiers.UI.Elements
         float min;
         float max;
 
-		public UIFloatRange(float minLabel = 0f, float maxLabel = 1f, float sliderPosition = 0) : base(MathF.Round(minLabel, 2).ToString(), MathF.Round(maxLabel, 2).ToString(), sliderPosition)
+        public UIFloatRange(float minLabel = 0f, float maxLabel = 1f, float sliderPosition = 0) : base(MathF.Round(minLabel, 2).ToString(), MathF.Round(maxLabel, 2).ToString(), sliderPosition)
         {
             CurrentValue = sliderPosition;
             min = minLabel;

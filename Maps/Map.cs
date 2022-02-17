@@ -1,21 +1,17 @@
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
-using System;
-using Terraria.UI.Chat;
-using Terraria;
-using Terraria.Utilities;
-using System.IO;
-using System.Linq;
-using System.Collections.Generic;
-using System.Reflection;
-using PathOfModifiers.Affixes.Items;
-using PathOfModifiers.Rarities;
+using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Maps.Generators;
-using Terraria.ModLoader.IO;
-using Terraria.ID;
 using PathOfModifiers.ModNet.PacketHandlers;
 using ReLogic.Content;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
+using Terraria.Utilities;
 
 namespace PathOfModifiers.Maps
 {
