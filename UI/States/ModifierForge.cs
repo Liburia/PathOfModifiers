@@ -293,8 +293,8 @@ namespace PathOfModifiers.UI.States
 
         SelectList<ConstraintListEntry<SelectableConstraint>> tierConstraintList;
 
-        UIItemSlot itemSlot;
-        UIItemSlot fragmentSlot;
+        internal UIItemSlot itemSlot;
+        internal UIItemSlot fragmentSlot;
         UIButton forgeButton;
         FragmentCost fragmentCostText;
         int currentCost;
