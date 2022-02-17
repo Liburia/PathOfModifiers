@@ -39,7 +39,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
-            return $"Gain { valueRange1 }% mana when hit";
+            return $"Gain { valueRange1 }% max mana when hit";
         }
 
         public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
