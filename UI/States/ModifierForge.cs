@@ -286,6 +286,7 @@ namespace PathOfModifiers.UI.States
         UIDraggablePanel panel;
 
         SelectList<ActionListEntry> actionList;
+        ActionListEntry addAffix;
         ActionListEntry improveRarity;
 
         SelectList<ConstraintListEntry<SelectableConstraint>> affixConstraintList;
@@ -356,8 +357,8 @@ namespace PathOfModifiers.UI.States
                             ActionListEntry rollRarity = new(new Action.RollRarity());
                             actionList.Add(rollRarity);
 
-                            ActionListEntry add = new(new Action.Add());
-                            actionList.Add(add);
+                            addAffix = new(new Action.Add());
+                            actionList.Add(addAffix);
 
                             ActionListEntry removeAll = new(new Action.RemoveAll());
                             actionList.Add(removeAll);
@@ -441,12 +442,7 @@ namespace PathOfModifiers.UI.States
                             {
                                 sb.Draw(fragmentTexture.Value, position, null, Color.White * 0.3f, 0f, fragmentTexture.Size() / 2f, scale, SpriteEffects.None, 0f);
                             };
-                            fragmentSlot.OnItemChanged += delegate (Item item)
-                            {
-                                UpdateCost();
-                                UpdateForgeButton();
-                                SyncFragmentWithForge();
-                            };
+                            fragmentSlot.OnItemChanged += OnFragmentChanged;
                             actionParent.Append(fragmentSlot);
 
                             itemSlot = new();
@@ -616,14 +612,8 @@ namespace PathOfModifiers.UI.States
                     PopupText.NewText(PopupTextContext.ItemReforge, item, item.stack, true, false);
                     SoundEngine.PlaySound(SoundID.Item37, -1, -1);
 
-                    SyncFragmentWithForge();
-                    SyncItemWithForge();
-
-
-                    UpdateCost();
-                    UpdateForgeButton();
-
-                    UpdateItemText(itemSlot.Item);
+                    OnItemChanged(item);
+                    OnFragmentChanged(fragmentSlot.Item);
                 }
             }
         }
@@ -699,6 +689,7 @@ namespace PathOfModifiers.UI.States
 
             if (isItemValid)
             {
+                addAffix.IsEnabled = modItem.FreeAffixes > 0;
                 improveRarity.IsEnabled = modItem.CanRaiseRarity(item);
 
                 foreach (var action in actionList)
@@ -714,6 +705,12 @@ namespace PathOfModifiers.UI.States
             UpdateForgeButton();
             UpdateItemText(item);
             SyncItemWithForge();
+        }
+        void OnFragmentChanged(Item item)
+        {
+            UpdateCost();
+            UpdateForgeButton();
+            SyncFragmentWithForge();
         }
 
         void UpdateCost()
