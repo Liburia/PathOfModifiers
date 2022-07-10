@@ -153,7 +153,7 @@ namespace PathOfModifiers.Projectiles
                     }
 
                     Projectile.NewProjectile(
-                    new ProjectileSource_ProjectileParent(Projectile),
+                    Projectile.GetSource_FromThis(),
                     projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)Projectile.ai[0], 0, Projectile.owner, 48f);
                 }
             }
@@ -161,12 +161,12 @@ namespace PathOfModifiers.Projectiles
 
         void PlayExplodeSound()
         {
-            SoundEngine.PlaySound(SoundID.Item73.WithVolume(1f).WithPitchVariance(0.3f), Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item73.WithVolumeScale(1f).WithPitchOffset(0.3f), Projectile.Center);
         }
 
         void PlayKillSound()
         {
-            SoundEngine.PlaySound(SoundID.Item89.WithVolume(1f).WithPitchVariance(0.3f), Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item89.WithVolumeScale(1f).WithPitchOffset(0.3f), Projectile.Center);
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
+using Terraria.ID;
 using Terraria.UI;
 
 namespace PathOfModifiers.UI.Elements
@@ -44,7 +45,7 @@ namespace PathOfModifiers.UI.Elements
         public override void MouseOver(UIMouseEvent evt)
         {
             base.MouseOver(evt);
-            SoundEngine.PlaySound(12);
+            SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
         public override void MouseOut(UIMouseEvent evt)

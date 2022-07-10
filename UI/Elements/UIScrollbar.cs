@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
+using Terraria.ID;
 using Terraria.UI;
 
 namespace PathOfModifiers.UI.Elements
@@ -91,7 +92,7 @@ namespace PathOfModifiers.UI.Elements
             bool isHoveringOverHandle = _isHoveringOverHandle;
             _isHoveringOverHandle = handleRectangle.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y));
             if (!isHoveringOverHandle && _isHoveringOverHandle && Main.hasFocus)
-                SoundEngine.PlaySound(12);
+                SoundEngine.PlaySound(SoundID.MenuTick);
 
             DrawBar(spriteBatch, _texture.Value, dimensions.ToRectangle(), Color.White);
             DrawBar(spriteBatch, _innerTexture.Value, handleRectangle, Color.White * ((_isDragging || _isHoveringOverHandle) ? 1f : 0.85f));

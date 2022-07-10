@@ -42,14 +42,14 @@ namespace PathOfModifiers
         /// <summary>
         /// Returns spawned NPC or null if the cap is reached
         /// </summary>
-        public static NPC SpawnNPC(int x, int y, int type, bool rollAffixes = true, bool netSync = true, int start = 0, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, int target = 255)
+        public static NPC SpawnNPC(IEntitySource source, int x, int y, int type, bool rollAffixes = true, bool netSync = true, int start = 0, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, int target = 255)
         {
             if (!rollAffixes)
             {
                 Affixes.NPCs.NPCNPC.dontRollNextNPC = true;
             }
 
-            int npcIndex = NPC.NewNPC(x, y, type, start, ai0, ai1, ai2, ai3, target);
+            int npcIndex = NPC.NewNPC(source, x, y, type, start, ai0, ai1, ai2, ai3, target);
             NPC npc = null;
 
             if (npcIndex != 200)
@@ -65,9 +65,9 @@ namespace PathOfModifiers
             return npc;
         }
 
-        public static void DropItem(Vector2 pos, Item item, int syncWhenNetMode, bool noBroadcast = false, bool noGrabDelay = false)
+        public static void DropItem(IEntitySource source, Vector2 pos, Item item, int syncWhenNetMode, bool noBroadcast = false, bool noGrabDelay = false)
         {
-            int index = Item.NewItem(pos, item.type, item.stack, noBroadcast, item.prefix, noGrabDelay, false);
+            int index = Item.NewItem(source, pos, item.type, item.stack, noBroadcast, item.prefix, noGrabDelay, false);
             Main.item[index] = item.Clone();
             Main.item[index].position = pos;
             if (Main.netMode == syncWhenNetMode)

@@ -47,7 +47,7 @@ namespace PathOfModifiers.Projectiles
             if (Projectile.timeLeft == spawnAirAtTime && Projectile.ai[1] != 0)
             {
                 Projectile.NewProjectile(
-                    new ProjectileSource_ProjectileParent(Projectile),
+                    Projectile.GetSource_FromThis(),
                     Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ChilledAir>(), 0, 0, Projectile.owner, 200f, Projectile.ai[0]);
             }
 

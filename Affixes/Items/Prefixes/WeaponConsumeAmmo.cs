@@ -43,7 +43,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ valueRange1 }% chance to not consume ammo";
         }
 
-        public override bool CanConsumeAmmo(Item item, Player player)
+        public override bool CanConsumeAmmo(Item item, Item ammo, Player player)
         {
             float value = Type1.GetValue();
             return Main.rand.NextFloat(1f) > value;

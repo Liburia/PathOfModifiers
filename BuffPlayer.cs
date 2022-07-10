@@ -207,7 +207,7 @@ namespace PathOfModifiers
                     if (Player.whoAmI == Main.myPlayer)
                     {
                         Projectile.NewProjectile(
-                            new PoMGlobals.ProjectileSource.PlayerSource(Player),
+                            Player.GetSource_FromThis(),
                             position: Player.Center,
                             velocity: Vector2.Zero,
                             Type: ProjectileType<StaticStrike>(),
@@ -253,7 +253,7 @@ namespace PathOfModifiers
                     if (Player.whoAmI == Main.myPlayer)
                     {
                         Projectile.NewProjectile(
-                            new PoMGlobals.ProjectileSource.PlayerSource(Player),
+                            Player.GetSource_FromThis(),
                             Player.Center,
                             Vector2.Zero,
                             ProjectileType<MoltenShellExplosion>(),
@@ -467,15 +467,15 @@ namespace PathOfModifiers
 
         void PlayGainStaticStrikeSound(Player player)
         {
-            SoundEngine.PlaySound(SoundID.Item92.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item92.WithVolumeScale(1f).WithPitchOffset(0.3f), player.Center);
         }
         void PlayGainMoltenShellSound(Player player)
         {
-            SoundEngine.PlaySound(SoundID.Item45.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item45.WithVolumeScale(1f).WithPitchOffset(0.3f), player.Center);
         }
         void PlayMoltenShellExplodeSound(Player player)
         {
-            SoundEngine.PlaySound(SoundID.Item62.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item62.WithVolumeScale(1f).WithPitchOffset(0.3f), player.Center);
         }
     }
 }

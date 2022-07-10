@@ -37,6 +37,12 @@ namespace PathOfModifiers.Affixes.Items
         public int FreePrefixes => Math.Min(FreeAffixes, rarity.maxPrefixes - prefixes.Count);
         public int FreeSuffixes => Math.Min(FreeAffixes, rarity.maxSuffixes - suffixes.Count);
 
+
+        public override void SetDefaults(Item item)
+        {
+            item.StatsModifiedBy.Add(Mod);
+        }
+
         public void PostLoad()
         {
             rarity = DataManager.Item.GetRarityRef(typeof(ItemNone));
@@ -107,32 +113,32 @@ namespace PathOfModifiers.Affixes.Items
         }
         public static bool IsSpear(Item item)
         {
-            return item.DamageType == DamageClass.Melee && item.noMelee && item.shoot > -1 && item.useStyle == 5 && !item.channel;
+            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == 5 && !item.channel;
         }
         public static bool IsFlailOrYoyo(Item item)
         {
-            return item.DamageType == DamageClass.Melee && item.noMelee && item.shoot > -1 && item.useStyle == 5 && item.channel;
+            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == 5 && item.channel;
         }
 
         public static bool IsMelee(Item item)
         {
-            return item.DamageType == DamageClass.Melee;
+            return item.DamageType.CountsAsClass(DamageClass.Melee);
         }
         public static bool IsRanged(Item item)
         {
-            return item.DamageType == DamageClass.Ranged;
+            return item.DamageType.CountsAsClass(DamageClass.Ranged);
         }
         public static bool IsMagic(Item item)
         {
-            return item.DamageType == DamageClass.Magic;
+            return item.DamageType.CountsAsClass(DamageClass.Magic);
         }
         public static bool IsThrowing(Item item)
         {
-            return item.DamageType == DamageClass.Throwing;
+            return item.DamageType.CountsAsClass(DamageClass.Throwing);
         }
         public static bool IsSummon(Item item)
         {
-            return item.DamageType == DamageClass.Summon;
+            return item.DamageType.CountsAsClass(DamageClass.Summon);
         }
 
         public static bool IsAccessory(Item item)
@@ -533,21 +539,21 @@ namespace PathOfModifiers.Affixes.Items
         }
 
         #region Item Hooks
-        public override bool CanConsumeAmmo(Item weapon, Player player)
+        public override bool CanConsumeAmmo(Item weapon, Item ammo, Player player)
         {
             //TODO: Test this when TML fixes the hook, and actually calls this on the item
             bool consume = true;
             foreach (var prefix in prefixes)
             {
-                consume = consume && prefix.CanConsumeAmmo(weapon, player);
+                consume = consume && prefix.CanConsumeAmmo(weapon, ammo, player);
             }
             foreach (var suffix in suffixes)
             {
-                consume = consume && suffix.CanConsumeAmmo(weapon, player);
+                consume = consume && suffix.CanConsumeAmmo(weapon, ammo, player);
             }
             return consume;
         }
-        public override void ModifyWeaponCrit(Item item, Player player, ref int crit)
+        public override void ModifyWeaponCrit(Item item, Player player, ref float crit)
         {
             float multiplier = 1f;
             foreach (var prefix in prefixes)
@@ -558,20 +564,20 @@ namespace PathOfModifiers.Affixes.Items
             {
                 suffix.ModifyWeaponCrit(item, player, ref multiplier);
             }
-            crit = (int)Math.Round(crit * multiplier);
+            crit *= multiplier;
         }
-        public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat)
+        public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ModifyWeaponDamage(item, player, ref damage, ref flat);
+                prefix.ModifyWeaponDamage(item, player, ref damage);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ModifyWeaponDamage(item, player, ref damage, ref flat);
+                suffix.ModifyWeaponDamage(item, player, ref damage);
             }
         }
-        public override void ModifyWeaponKnockback(Item item, Player player, ref StatModifier knockback, ref float flat)
+        public override void ModifyWeaponKnockback(Item item, Player player, ref StatModifier knockback)
         {
             float multiplier = 1f;
             foreach (var prefix in prefixes)
@@ -608,7 +614,7 @@ namespace PathOfModifiers.Affixes.Items
                 suffix.ModifyManaCost(item, player, ref reduce, ref mult);
             }
         }
-        public override bool Shoot(Item item, Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             bool shoot = true;
             foreach (var prefix in prefixes)
@@ -969,7 +975,7 @@ namespace PathOfModifiers.Affixes.Items
             }
         }
 
-        public bool PlayerShoot(Item affixItem, Player player, Item item, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public bool PlayerShoot(Item affixItem, Player player, Item item, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             bool shoot = true;
             foreach (var prefix in prefixes)
@@ -1024,9 +1030,9 @@ namespace PathOfModifiers.Affixes.Items
             {
                 foreach (TooltipLine line in tooltips)
                 {
-                    if (line.mod == "Terraria" && line.Name == "ItemName")
+                    if (line.Mod == "Terraria" && line.Name == "ItemName")
                     {
-                        line.overrideColor = rarity.color;
+                        line.OverrideColor = rarity.color;
                         break;
                     }
                 }

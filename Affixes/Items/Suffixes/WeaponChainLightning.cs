@@ -116,7 +116,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             PlaySound(player);
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player),
+                player.GetSource_FromThis(),
                 position: player.Center,
                 velocity: new Vector2(isNPC ? 1 : 0, target.whoAmI),
                 Type: ModContent.ProjectileType<ChainLightning>(),
@@ -128,7 +128,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void PlaySound(Player player)
         {
-            SoundEngine.PlaySound(SoundID.Item72.WithVolume(0.3f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item72.WithVolumeScale(0.3f).WithPitchOffset(0.3f), player.Center);
         }
     }
 }

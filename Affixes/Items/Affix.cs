@@ -57,20 +57,20 @@ namespace PathOfModifiers.Affixes.Items
         public virtual bool CanRoll(ItemItem pomItem, Item item) { return false; }
         #region Item Hooks
         public virtual void ModifyWeaponCrit(Item item, Player player, ref float multiplier) { }
-        public virtual void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage, ref float flat) { }
+        public virtual void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage) { }
         public virtual void GetWeaponKnockback(Item item, Player player, ref float multiplier) { }
         public virtual void UseSpeedMultiplier(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult) { }
         public virtual void UpdateInventory(Item item, ItemPlayer player) { }
         public virtual void UpdateEquip(Item item, ItemPlayer player) { }
-        public virtual bool CanConsumeAmmo(Item item, Player player) { return true; }
+        public virtual bool CanConsumeAmmo(Item item, Item ammo, Player player) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
         public virtual void UseItem(Item item, Player player) { }
         public virtual void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit) { }
         public virtual void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit) { }
         public virtual void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit) { }
         public virtual void OnHitPvp(Item item, Player player, Player target, int damage, bool crit) { }
-        public virtual bool Shoot(Item item, Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) { return true; }
+        public virtual bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) { return true; }
         #endregion
         #region Projectile Hooks
         public virtual void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection) { }
@@ -90,7 +90,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit) { }
         public virtual void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit) { }
         public virtual void OnHitByProjectile(Item item, Player player, Projectile projectile, int damage, bool crit) { }
-        public virtual bool PlayerShoot(Item affixItem, Player player, Item item, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) { return true; }
+        public virtual bool PlayerShoot(Item affixItem, Player player, Item item, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) { return true; }
 
         public virtual void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit) { }
         public virtual void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit) { }
@@ -103,7 +103,7 @@ namespace PathOfModifiers.Affixes.Items
         {
             TooltipLine line = new TooltipLine(mod, GetType().Name, GetAffixText())
             {
-                overrideColor = Color
+                OverrideColor = Color
             };
             tooltips.Add(line);
         }

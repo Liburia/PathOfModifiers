@@ -122,7 +122,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player),
+                player.GetSource_FromThis(),
                 targetPosition + spawnOffset,
                 targetPosition,
                 ModContent.ProjectileType<Meteor>(),
@@ -134,7 +134,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void PlaySound(Vector2 position)
         {
-            SoundEngine.PlaySound(SoundID.Item45.WithVolume(1f).WithPitchVariance(0.3f), position);
+            SoundEngine.PlaySound(SoundID.Item45.WithVolumeScale(1f).WithPitchOffset(0.3f), position);
         }
     }
 }

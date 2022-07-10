@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -100,7 +101,7 @@ namespace PathOfModifiers.Tiles
             }
         }
 
-        public override bool HasSmartInteract()
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
         {
             return true;
         }
@@ -108,7 +109,7 @@ namespace PathOfModifiers.Tiles
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             if (Main.netMode != 1)
-                Item.NewItem(new Vector2(i * 16, j * 16), ModContent.ItemType<Items.ModifierForge>());
+                Item.NewItem(new EntitySource_TileBreak(i, j), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.ModifierForge>());
 
             ModContent.GetInstance<ModifierForgeTE>().Kill(i, j);
         }
@@ -323,11 +324,11 @@ namespace PathOfModifiers.Tiles
             {
                 if (!ModifiedItem.IsAir)
                 {
-                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), ModifiedItem, 2);
+                    PoMUtil.DropItem(null, new Vector2(Position.X * 16, Position.Y * 16), ModifiedItem, 2);
                 }
                 if (!ModifierItem.IsAir)
                 {
-                    PoMUtil.DropItem(new Vector2(Position.X * 16, Position.Y * 16), ModifierItem, 2);
+                    PoMUtil.DropItem(null, new Vector2(Position.X * 16, Position.Y * 16), ModifierItem, 2);
                 }
             }
 

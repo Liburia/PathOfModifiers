@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
@@ -46,7 +47,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override void UpdateEquip(Item item, ItemPlayer player)
         {
-            player.Player.armorPenetration += Type1.GetValue();
+            player.Player.GetArmorPenetration(DamageClass.Generic) += Type1.GetValue();
         }
     }
 }

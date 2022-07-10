@@ -610,7 +610,7 @@ namespace PathOfModifiers.UI.States
                     action.Execute(item, modItem);
 
                     PopupText.NewText(PopupTextContext.ItemReforge, item, item.stack, true, false);
-                    SoundEngine.PlaySound(SoundID.Item37, -1, -1);
+                    SoundEngine.PlaySound(SoundID.Item37);
 
                     OnItemChanged(item);
                     OnFragmentChanged(fragmentSlot.Item);

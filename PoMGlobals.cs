@@ -68,17 +68,5 @@ namespace PathOfModifiers
                 public const int fromBossPostPlantera = 200;
             }
         }
-        public static class ProjectileSource
-        {
-            public class PlayerSource : IProjectileSource
-            {
-                public readonly Player player;
-
-                public PlayerSource(Player player)
-                {
-                    this.player = player;
-                }
-            }
-        }
     }
 }

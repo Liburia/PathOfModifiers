@@ -127,7 +127,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             {
                 Vector2 velocity = angle.ToRotationVector2() * speed;
                 Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player),
+                player.GetSource_FromThis(),
                     position: player.Center,
                     velocity: velocity,
                     Type: ModContent.ProjectileType<IceBurst>(),
@@ -142,7 +142,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void PlaySound(Player player)
         {
-            SoundEngine.PlaySound(SoundID.Item66.WithVolume(0.5f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item66.WithVolumeScale(0.5f).WithPitchOffset(0.3f), player.Center);
         }
     }
 }

@@ -119,13 +119,13 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player),
+                player.GetSource_FromThis(),
                 position, Vector2.Zero, ModContent.ProjectileType<LightningBolt>(), damage, 0, player.whoAmI, Type3.GetValue(), height);
         }
 
         void PlaySound(Vector2 position)
         {
-            SoundEngine.PlaySound(SoundID.Item94.WithVolume(1f).WithPitchVariance(0.3f), position);
+            SoundEngine.PlaySound(SoundID.Item94.WithVolumeScale(1f).WithPitchOffset(0.3f), position);
         }
     }
 }

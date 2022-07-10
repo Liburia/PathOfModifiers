@@ -254,7 +254,7 @@ namespace PathOfModifiers.Affixes.Items
         {
             return useSpeed;
         }
-        public override void ModifyWeaponCrit(Item heldItem, ref int crit)
+        public override void ModifyWeaponCrit(Item heldItem, ref float crit)
         {
             Item item;
             float multiplier = 1f;
@@ -280,7 +280,7 @@ namespace PathOfModifiers.Affixes.Items
                     modItem.PlayerModifyWeaponCrit(item, heldItem, Player, ref multiplier);
                 }
             }
-            crit = (int)Math.Round(crit * multiplier);
+            crit *= multiplier;
         }
 
         public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
@@ -727,7 +727,7 @@ namespace PathOfModifiers.Affixes.Items
                 }
             }
         }
-        public override bool Shoot(Item item, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Item item, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Item affixItem;
             bool shoot = true;
@@ -787,7 +787,7 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override void PostUpdateEquips()
         {
-            Player.meleeSpeed *= meleeSpeed;
+            Player.GetAttackSpeed(DamageClass.Melee) *= meleeSpeed;
             Player.pickSpeed *= pickSpeed;
 
             Player.potionDelayTime = (int)Math.Round(Player.potionDelayTime * potionDelayTime);

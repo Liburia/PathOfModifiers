@@ -106,7 +106,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 Vector2 projTarget = player.Center + Main.rand.NextVector2Circular(player.width * 1.5f, player.height * 1.5f);
                 int heal = (int)MathHelper.Clamp(damage * Type3.GetValue(), 1, 999999);
                 Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player),
+                player.GetSource_FromThis(),
                 target.Center, velocity, ModContent.ProjectileType<LifeOrb>(), heal, 0, player.whoAmI, projTarget.X, projTarget.Y);
             }
         }

@@ -107,14 +107,14 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 Vector2 velocity = (target.Center - player.Center).SafeNormalize(Vector2.Zero).RotatedBy(Main.rand.NextFloat(-0.4f, 0.4f)) * Main.rand.NextFloat(7f, 20f);
                 int damage = (int)MathHelper.Clamp(hitDamage * Type3.GetValue(), 1, 999999);
                 Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player),
+                player.GetSource_FromThis(),
                 player.Center, velocity, ModContent.ProjectileType<Icicle>(), damage, 0, player.whoAmI);
             }
         }
 
         void PlaySound(Player player)
         {
-            SoundEngine.PlaySound(SoundID.Item101.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item101.WithVolumeScale(1f).WithPitchOffset(0.3f), player.Center);
         }
     }
 }

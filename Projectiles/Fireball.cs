@@ -176,7 +176,7 @@ namespace PathOfModifiers.Projectiles
 
         void PlaySound()
         {
-            SoundEngine.PlaySound(SoundID.Item14.WithVolume(1f).WithPitchVariance(0.3f), Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item14.WithVolumeScale(1f).WithPitchOffset(0.3f), Projectile.Center);
         }
     }
 }

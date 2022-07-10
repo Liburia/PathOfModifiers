@@ -116,7 +116,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             Vector2 velocity = (target.Center - player.Center).SafeNormalize(Vector2.One) * Main.rand.NextFloat(5f, 15f);
             int damage = (int)MathHelper.Clamp(hitDamage * Type2.GetValue(), 1, 999999);
             Projectile.NewProjectile(
-                new PoMGlobals.ProjectileSource.PlayerSource(player),
+                player.GetSource_FromThis(),
                 position: player.Center,
                 velocity: velocity,
                 Type: ModContent.ProjectileType<MagmaOrb>(),
@@ -128,7 +128,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
 
         void PlaySound(Player player)
         {
-            SoundEngine.PlaySound(SoundID.Item69.WithVolume(1f).WithPitchVariance(0.3f), player.Center);
+            SoundEngine.PlaySound(SoundID.Item69.WithVolumeScale(1f).WithPitchOffset(0.3f), player.Center);
         }
     }
 }

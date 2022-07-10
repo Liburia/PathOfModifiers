@@ -103,7 +103,7 @@ namespace PathOfModifiers.Projectiles
 
         void PlayKillSound()
         {
-            SoundEngine.PlaySound(SoundID.Item21.WithVolume(1f).WithPitchVariance(0.3f), Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item21.WithVolumeScale(1f).WithPitchOffset(0.3f), Projectile.Center);
         }
     }
 }
