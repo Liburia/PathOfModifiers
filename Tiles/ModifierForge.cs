@@ -324,11 +324,11 @@ namespace PathOfModifiers.Tiles
             {
                 if (!ModifiedItem.IsAir)
                 {
-                    PoMUtil.DropItem(null, new Vector2(Position.X * 16, Position.Y * 16), ModifiedItem, 2);
+                    PoMUtil.DropItem(new EntitySource_TileEntity(this), new Vector2(Position.X * 16, Position.Y * 16), ModifiedItem, 2);
                 }
                 if (!ModifierItem.IsAir)
                 {
-                    PoMUtil.DropItem(null, new Vector2(Position.X * 16, Position.Y * 16), ModifierItem, 2);
+                    PoMUtil.DropItem(new EntitySource_TileEntity(this), new Vector2(Position.X * 16, Position.Y * 16), ModifierItem, 2);
                 }
             }
 

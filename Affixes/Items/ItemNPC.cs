@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items
                 }
                 if (totalGoldToDrop > 0)
                 {
-                    CommonCode.DropItemFromNPC(info.npc, ItemID.GoldCoin, totalGoldToDrop);
+                    CommonCode.DropItem(info, ItemID.GoldCoin, totalGoldToDrop);
                     result.State = ItemDropAttemptResultState.Success;
                 }
                 else

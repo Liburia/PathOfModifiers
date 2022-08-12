@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -20,7 +21,7 @@ namespace PathOfModifiers.Maps.Generators
             public float minBranchWidth;
             public float maxBranchWidth;
             public float branchWidthMultiplier;
-            public float branchWidthLimitAdd;   
+            public float branchWidthLimitAdd;
             public int[] replaceTiles;
 
             public PatchSettings(int type, int nBranches, float minBranchLength, float maxBranchLength, float minBranchWidth, float maxBranchWidth, float branchWidthMultiplier, float branchWidthLimitAdd, int[] replaceTiles = null)
@@ -208,7 +209,8 @@ namespace PathOfModifiers.Maps.Generators
         protected NPC SpawnNPC(Vector2 pos, int type)
         {
             //TODO: use a custom entity source
-            int newNpcIndex = NPC.NewNPC(null, (int)pos.X, (int)pos.Y, type);
+            //TODO: misc with custom context satisfactory? explore using a custom type
+            int newNpcIndex = NPC.NewNPC(new EntitySource_Misc("PathOfModifiers:Map"), (int)pos.X, (int)pos.Y, type);
             if (newNpcIndex == 200)
                 return null;
             NPC newNPC = Main.npc[newNpcIndex];
