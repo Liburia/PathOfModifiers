@@ -324,7 +324,7 @@ namespace PathOfModifiers.UI.States
                 UIImageButton closePanelX = new(ModContent.Request<Texture2D>(PoMGlobals.Path.Image.UI.CloseButton, ReLogic.Content.AssetRequestMode.ImmediateLoad));
                 closePanelX.Top.Set(0f, 0f);
                 closePanelX.Left.Set(650f, 0f);
-                closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Close();
+                closePanelX.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => Close();
                 panel.Append(closePanelX);
 
                 UIElement content = new();
@@ -463,7 +463,7 @@ namespace PathOfModifiers.UI.States
                             forgeButton.Top.Set(0f, 0.6f);
                             forgeButton.MinHeight.Set(0f, 0.4f);
                             forgeButton.MinWidth.Set(0f, 1f);
-                            forgeButton.OnClick += OnForgeClicked;
+                            forgeButton.OnLeftClick += OnForgeClicked;
                             actionParent.Append(forgeButton);
                             {
                                 UIElement cost = new();

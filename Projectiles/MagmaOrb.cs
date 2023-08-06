@@ -20,7 +20,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("MagmaOrb");
+            //TODO: DisplayName.SetDefault("MagmaOrb");
         }
         public override void SetDefaults()
         {
@@ -133,7 +133,7 @@ namespace PathOfModifiers.Projectiles
                 {
                     if (player.getRect().Intersects(hitRect))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage, player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByProjectile(Projectile.owner, Projectile.whoAmI), Projectile.damage, player.direction, true);
                     }
                 }
 

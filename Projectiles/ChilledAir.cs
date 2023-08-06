@@ -19,13 +19,12 @@ namespace PathOfModifiers.Projectiles
         {
             Terraria.GameContent.TextureAssets.Projectile[Projectile.type] = Terraria.GameContent.TextureAssets.MagicPixel;
             Main.projFrames[Projectile.type] = 1;
-            if (DisplayName.IsDefault())
-                DisplayName.SetDefault(Regex.Replace(Name, "([A-Z])", " $1").Trim());
+                //TODO: DisplayName.SetDefault(Regex.Replace(Name, "([A-Z])", " $1").Trim());
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("ChilledAir");
+            //TODO: DisplayName.SetDefault("ChilledAir");
         }
         public override void SetDefaults()
         {

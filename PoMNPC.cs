@@ -45,12 +45,19 @@ namespace PathOfModifiers
 
             globalLoot.Add(isBoss);
         }
-        public override void SetupShop(int type, Chest shop, ref int nextSlot)
+
+        public override void ModifyActiveShop(NPC npc, string shopName, Item[] items)
         {
-            if (type == NPCID.Wizard)
+            if (npc.type == NPCID.Wizard)
             {
-                shop.item[nextSlot].SetDefaults(ItemType<Items.ModifierFragment>());
-                nextSlot++;
+                foreach (Item item in items)
+                {
+                    // Skip 'air' items and null items.
+                    if (item == null || item.type == ItemID.None)
+                    {
+                        item.SetDefaults(ItemType<Items.ModifierFragment>());
+                    }
+                }
             }
         }
     }

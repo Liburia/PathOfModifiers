@@ -61,7 +61,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"{ gainLose } { valueRange1 } life when hit ({ valueRange2 }s CD)";
         }
 
-        public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        public override void PostHurt(Item item, Player player, Player.HurtInfo info)
         {
             Heal(item, player);
         }
@@ -80,7 +80,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 else
                 {
                     player.immune = false;
-                    player.Hurt(PlayerDeathReason.ByPlayer(player.whoAmI), -amount, 0, false);
+                    player.Hurt(PlayerDeathReason.ByCustomReason("healed too little"), -amount, 0, false);
                 }
             }
         }

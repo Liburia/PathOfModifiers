@@ -8,14 +8,12 @@ namespace PathOfModifiers
     {
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
-        [Label("Disable vanilla prefixes on weapons")]
+        [Label("Try disable vanilla prefixes on weapons")]
         [DefaultValue(true)]
-        [ReloadRequired]
         public bool DisableVanillaPrefixesWeapons;
 
-        [Label("Disable vanilla prefixes on accessories")]
+        [Label("Try disable vanilla prefixes on accessories")]
         [DefaultValue(true)]
-        [ReloadRequired]
         public bool DisableVanillaPrefixesAccessories;
 
         [Label("Disable maps")]

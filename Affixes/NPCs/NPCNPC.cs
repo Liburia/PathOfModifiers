@@ -22,7 +22,7 @@ namespace PathOfModifiers.Affixes.NPCs
 
         public Entity lastDamageDealer;
 
-        public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC npc, NPC target, NPC.HitInfo hit)
         {
             target.GetGlobalNPC<NPCNPC>().lastDamageDealer = npc;
         }

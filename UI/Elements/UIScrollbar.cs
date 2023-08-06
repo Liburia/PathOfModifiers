@@ -98,7 +98,7 @@ namespace PathOfModifiers.UI.Elements
             DrawBar(spriteBatch, _innerTexture.Value, handleRectangle, Color.White * ((_isDragging || _isHoveringOverHandle) ? 1f : 0.85f));
         }
 
-        public override void MouseDown(UIMouseEvent evt)
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
             if (evt.Target == this)
             {
@@ -117,7 +117,7 @@ namespace PathOfModifiers.UI.Elements
             }
         }
 
-        public override void MouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
             _isDragging = false;
         }

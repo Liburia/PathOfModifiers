@@ -78,21 +78,21 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"{ valueRange1 }% chance for lightning to strike for { valueRange2 }% damage and leave Shocked Air({ plusMinus }{ valueRange3 }%)";
         }
 
-        public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+        public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Hit(item, player, target, damage);
+            Hit(item, player, target, damageDone);
         }
-        public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+        public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
         {
-            Hit(item, player, target, damage);
+            Hit(item, player, target, hurtInfo.Damage);
         }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Hit(item, player, target, damage);
+            Hit(item, player, target, damageDone);
         }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
+        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
-            Hit(item, player, target, damage);
+            Hit(item, player, target, damageDone);
         }
 
         void Hit(Item item, Player player, NPC target, int hitDamage)

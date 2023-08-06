@@ -44,39 +44,37 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"Take and deal { plusMinus }{ valueRange1 }% damage";
         }
 
-        public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
-            if (ItemItem.IsArmorEquipped(item, player))
-            {
-                damageMultiplier += Type1.GetValue();
-            }
-            return true;
-        }
-
-        public override void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit)
-        {
-            if (ItemItem.IsArmorEquipped(affixItem, player))
+            if (ItemItem.IsAccessoryEquipped(item, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
         }
-        public override void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
+        public override void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
         {
-            if (ItemItem.IsArmorEquipped(affixItem, player))
+            if (ItemItem.IsAccessoryEquipped(affixItem, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
         }
-        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
+        public override void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers)
         {
-            if (ItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsAccessoryEquipped(affixItem, player))
             {
                 damageMultiplier += Type1.GetValue();
             }
         }
-        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
+        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
         {
-            if (ItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsAccessoryEquipped(item, player))
+            {
+                damageMultiplier += Type1.GetValue();
+            }
+        }
+        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers)
+        {
+            if (ItemItem.IsAccessoryEquipped(item, player))
             {
                 damageMultiplier += Type1.GetValue();
             }

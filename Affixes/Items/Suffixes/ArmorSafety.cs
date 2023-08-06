@@ -37,15 +37,15 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Gain safety buffs when hit for { valueRange1 }s";
         }
 
-        public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
+        public override void OnHitByNPC(Item item, Player player, NPC npc, Player.HurtInfo hurtInfo)
         {
             GainBuffs(item, player);
         }
-        public override void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit)
+        public override void OnHitByPvp(Item item, Player player, Player attacker, Player.HurtInfo info)
         {
             GainBuffs(item, player);
         }
-        public override void OnHitByProjectile(Item item, Player player, Projectile projectile, int damage, bool crit)
+        public override void OnHitByProjectile(Item item, Player player, Projectile projectile, Player.HurtInfo hurtInfo)
         {
             GainBuffs(item, player);
         }

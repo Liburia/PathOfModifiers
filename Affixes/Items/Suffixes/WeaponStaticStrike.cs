@@ -74,21 +74,21 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"On hit gain a buff for { valueRange1 }s that does { valueRange2 }% damage every { valueRange3 }s";
         }
 
-        public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+        public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Hit(item, player, damage);
+            Hit(item, player, damageDone);
         }
-        public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+        public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
         {
-            Hit(item, player, damage);
+            Hit(item, player, hurtInfo.Damage);
         }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Hit(item, player, damage);
+            Hit(item, player, damageDone);
         }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
+        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
-            Hit(item, player, damage);
+            Hit(item, player, damageDone);
         }
 
         void Hit(Item item, Player player, int hitDamage)

@@ -39,37 +39,36 @@ namespace PathOfModifiers
             timedValueInstanceCollection = new TimedValueInstanceCollection();
         }
 
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
+            var damage = modifiers.FinalDamage;
+
+            if (modifiers.PvP)
+            {
+                var source_player_index = modifiers.DamageSource.SourcePlayerIndex;
+                var source_player = Main.player[source_player_index].GetModPlayer<BuffPlayer>();
+                damage = source_player.ChillModifyDamageDealt(damage);
+            }
+
             damage = ShockModifyDamageTaken(damage);
-            return true;
+
+            modifiers.FinalDamage = damage;
         }
-        public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        public override void PostHurt(Player.HurtInfo info)
         {
             if (moltenShellTimeLeft > 0)
             {
-                moltenShellStoredDamage += (int)damage;
+                moltenShellStoredDamage += info.Damage;
             }
         }
         public override void ResetEffects()
         {
             timedValueInstanceCollection.ResetEffects();
         }
-        public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-            damage = ChillModifyDamageDealt(damage);
-        }
-        public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
-        {
-            damage = ChillModifyDamageDealt(damage);
-        }
-        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
-        {
-            damage = ChillModifyDamageDealt(damage);
-        }
-        public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
-        {
-            damage = ChillModifyDamageDealt(damage);
+            var damage = ChillModifyDamageDealt(modifiers.FinalDamage);
+            modifiers.FinalDamage = damage;
         }
         public override void PostUpdateEquips()
         {
@@ -434,7 +433,7 @@ namespace PathOfModifiers
             }
         }
 
-        public int ShockModifyDamageTaken(int damage)
+        public StatModifier ShockModifyDamageTaken(StatModifier damage)
         {
             float totalMultiplier = 1;
 
@@ -447,9 +446,9 @@ namespace PathOfModifiers
                 totalMultiplier += shockedAirs.totalValue;
             }
 
-            return (int)Math.Round(damage * totalMultiplier);
+            return damage * totalMultiplier;
         }
-        public int ChillModifyDamageDealt(int damage)
+        public StatModifier ChillModifyDamageDealt(StatModifier damage)
         {
             float totalMultiplier = 1;
 
@@ -462,7 +461,7 @@ namespace PathOfModifiers
                 totalMultiplier += chilledAirs.totalValue;
             }
 
-            return (int)Math.Round(damage * totalMultiplier);
+            return damage * totalMultiplier;
         }
 
         void PlayGainStaticStrikeSound(Player player)

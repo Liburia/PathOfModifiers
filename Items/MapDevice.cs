@@ -9,8 +9,8 @@ namespace PathOfModifiers.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Map Device");
-            Tooltip.SetDefault("Used to open other worlds.");
+            //TODO: DisplayName.SetDefault("Map Device");
+            // Tooltip.SetDefault("Used to open other worlds.");
         }
         public override void SetDefaults()
         {

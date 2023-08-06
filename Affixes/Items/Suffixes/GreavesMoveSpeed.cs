@@ -75,7 +75,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"{ plusMinus }{ valueRange1 }% move speed for { valueRange2 }s when hit ({ valueRange3 }s CD)";
         }
 
-        public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        public override void PostHurt(Item item, Player player, Player.HurtInfo info)
         {
             if (ItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type3.GetValue() * 60))
             {

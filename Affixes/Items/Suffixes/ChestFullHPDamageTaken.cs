@@ -43,14 +43,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Take { plusMinus }{ valueRange1 }% damage on full HP";
         }
 
-        public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             if (ItemItem.IsArmorEquipped(item, player) && player.statLife == player.statLifeMax2)
             {
                 damageMultiplier += Type1.GetValue();
             }
-
-            return true;
         }
     }
 }

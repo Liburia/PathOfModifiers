@@ -42,7 +42,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Gain { valueRange1 }% max life when hit";
         }
 
-        public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        public override void PostHurt(Item item, Player player, Player.HurtInfo info)
         {
             Heal(item, player);
         }

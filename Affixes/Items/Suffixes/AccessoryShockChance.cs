@@ -58,19 +58,19 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"{ valueRange1 }% chance to { Keyword.GetTextOrTag(KeywordType.Shock, useChatTags) }({ plusMinus }{ valueRange2 }%)";
         }
 
-        public override void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, int damage, float knockback, bool crit)
+        public override void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
         {
             Shock(item, player, target);
         }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             Shock(item, player, target);
         }
-        public override void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, int damage, bool crit)
+        public override void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
             Shock(item, player, target);
         }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
+        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
             Shock(item, player, target);
         }

@@ -52,7 +52,6 @@ namespace PathOfModifiers.Tiles
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
-            ItemDrop = ModContent.ItemType<Items.MapBorder>();
             AddMapEntry(new Color(100, 100, 100));
 
             activeBounds = new List<Rectangle>();

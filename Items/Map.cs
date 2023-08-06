@@ -15,8 +15,8 @@ namespace PathOfModifiers.Items
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Map");
-            Tooltip.SetDefault("Opens a new world.");
+            //TODO: DisplayName.SetDefault("Map");
+            // Tooltip.SetDefault("Opens a new world.");
         }
 
         public override void SetDefaults()

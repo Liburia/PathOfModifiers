@@ -198,29 +198,6 @@ namespace PathOfModifiers
             Instance = null;
         }
 
-        public override void AddRecipeGroups()
-        {
-            RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Copper Bar", new int[]
-            {
-            ItemID.CopperBar,
-            ItemID.TinBar
-            });
-            RecipeGroup.RegisterGroup("PathOfModifiers:CopperBar", group);
-
-            group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bar", new int[]
-            {
-            ItemID.SilverBar,
-            ItemID.TungstenBar
-            });
-            RecipeGroup.RegisterGroup("PathOfModifiers:SilverBar", group);
-
-            group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Gold Bar", new int[]
-            {
-            ItemID.GoldBar,
-            ItemID.PlatinumBar
-            });
-            RecipeGroup.RegisterGroup("PathOfModifiers:GoldBar", group);
-        }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {

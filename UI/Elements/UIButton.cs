@@ -39,11 +39,11 @@ namespace PathOfModifiers.UI.Elements
                 BackgroundColor = UICommon.backgroundColor;
             }
         }
-        public override void Click(UIMouseEvent evt)
+        public override void LeftClick(UIMouseEvent evt)
         {
             if (IsEnabled)
             {
-                base.Click(evt);
+                base.LeftClick(evt);
                 SoundEngine.PlaySound(SoundID.MenuTick);
             }
         }

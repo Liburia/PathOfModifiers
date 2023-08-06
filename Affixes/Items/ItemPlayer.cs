@@ -6,6 +6,7 @@ using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using Terraria.WorldBuilding;
 
 namespace PathOfModifiers.Affixes.Items
 {
@@ -98,13 +99,13 @@ namespace PathOfModifiers.Affixes.Items
             goldDropChances = new GoldDropChanceColletion();
         }
 
-        public override void PlayerConnect(Player player)
+        public override void PlayerConnect()
         {
             ModPacketHandler.CPlayerConnected();
             //var mapBorder = ModContent.GetInstance<MapBorder>();
             //MapBorder.ClearActiveBounds();
         }
-        public override void PlayerDisconnect(Player player)
+        public override void PlayerDisconnect()
         {
             //var mapBorder = ModContent.GetInstance<MapBorder>();
             //MapBorder.ClearActiveBounds();
@@ -138,21 +139,50 @@ namespace PathOfModifiers.Affixes.Items
             }
             return consume;
         }
-
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override bool FreeDodge(Player.HurtInfo info)
         {
-            if (pvp)
+            Item item;
+            bool dodge = false;
+            for (int i = 0; i < Player.inventory.Length; i++)
             {
-                if (damageSource.SourcePlayerIndex >= 0)
+                item = Player.inventory[i];
+                if (item.IsAir)
+                    continue;
+
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    lastAttackingPlayer = Main.player[damageSource.SourcePlayerIndex];
-                    ModifyHitByPvp(lastAttackingPlayer, ref damage, ref crit);
+                    dodge |= modItem.FreeDodge(item, Player, ref info);
+                }
+            }
+            for (int i = 0; i < Player.armor.Length; i++)
+            {
+                item = Player.armor[i];
+                if (item.IsAir)
+                    continue;
+
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    dodge |= modItem.FreeDodge(item, Player, ref info);
+                }
+            }
+
+            return dodge;
+        }
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
+        {
+            if (modifiers.PvP)
+            {
+                if (modifiers.DamageSource.SourcePlayerIndex >= 0)
+                {
+                    lastAttackingPlayer = Main.player[modifiers.DamageSource.SourcePlayerIndex];
+                    var lastAttackingItem = lastAttackingPlayer.HeldItem;
+                    lastAttackingPlayer.GetModPlayer<ItemPlayer>().ModifyHitPvp(lastAttackingItem, Player, ref modifiers);
+                    ModifyHitByPvp(lastAttackingPlayer, ref modifiers);
                 }
             }
 
             Item item;
             float damageMultiplier = damageTaken;
-            bool hurt = true;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
@@ -161,8 +191,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    if (!modItem.PreHurt(item, Player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
-                        hurt = false;
+                    modItem.PreHurt(item, Player, ref damageMultiplier, ref modifiers);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -173,28 +202,17 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    if (!modItem.PreHurt(item, Player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
-                        hurt = false;
+                    modItem.PreHurt(item, Player, ref damageMultiplier, ref modifiers);
                 }
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
+            modifiers.FinalDamage *= damageMultiplier;
 
-            if (hurt)
-            {
-                if (Main.rand.NextFloat(1) < dodgeChance)
-                {
-                    hurt = false;
-                    PoMUtil.MakeImmune(Player, (int)PoMUtil.PlayerImmuneTime.Parry);
-                }
-            }
-
-            return hurt;
         }
-        public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        public override void PostHurt(Player.HurtInfo info)
         {
-            if (pvp)
+            if (info.PvP)
             {
-                OnHitByPvp(lastAttackingPlayer, (int)damage, crit);
+                OnHitByPvp(lastAttackingPlayer, info);
             }
 
             Item item;
@@ -206,7 +224,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PostHurt(item, Player, pvp, quiet, damage, hitDirection, crit);
+                    modItem.PostHurt(item, Player, info);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -217,7 +235,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PostHurt(item, Player, pvp, quiet, damage, hitDirection, crit);
+                    modItem.PostHurt(item, Player, info);
                 }
             }
         }
@@ -283,7 +301,7 @@ namespace PathOfModifiers.Affixes.Items
             crit *= multiplier;
         }
 
-        public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
+        public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
         {
             Item item;
             float damageMultiplier = 1f;
@@ -295,7 +313,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.ModifyHitByNPC(item, Player, npc, ref damageMultiplier, ref crit);
+                    modItem.ModifyHitByNPC(item, Player, npc, ref damageMultiplier, ref modifiers);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -306,12 +324,12 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.ModifyHitByNPC(item, Player, npc, ref damageMultiplier, ref crit);
+                    modItem.ModifyHitByNPC(item, Player, npc, ref damageMultiplier, ref modifiers);
                 }
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
+            modifiers.FinalDamage *= damageMultiplier;
         }
-        public override void OnHitByNPC(NPC npc, int damage, bool crit)
+        public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
         {
             Item item;
             for (int i = 0; i < Player.inventory.Length; i++)
@@ -322,7 +340,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.OnHitByNPC(item, Player, npc, damage, crit);
+                    modItem.OnHitByNPC(item, Player, npc, hurtInfo);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -333,21 +351,22 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.OnHitByNPC(item, Player, npc, damage, crit);
+                    modItem.OnHitByNPC(item, Player, npc, hurtInfo);
                 }
             }
 
             if (reflectMeleeDamage > 0)
             {
-                int reflectDamage = (int)Math.Round(damage * reflectMeleeDamage);
+                int reflectDamage = (int)Math.Round(hurtInfo.Damage * reflectMeleeDamage);
                 float reflectKnockback = 5;
                 int reflectDirection = npc.Center.X > Player.Center.X ? 1 : -1;
-                Player.ApplyDamageToNPC(npc, reflectDamage, reflectKnockback, reflectDirection, crit);
+                Player.ApplyDamageToNPC(npc, reflectDamage, reflectKnockback, reflectDirection);
             }
         }
-        public void ModifyHitByPvp(Player attacker, ref int damage, ref bool crit)
+        public void ModifyHitByPvp(Player attacker, ref Player.HurtModifiers modifiers)
         {
             Item item;
+            var damage = modifiers.FinalDamage;
             float damageMultiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
@@ -357,7 +376,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.ModifyHitByPvp(item, Player, attacker, ref damageMultiplier, ref crit);
+                    modItem.ModifyHitByPvp(item, Player, attacker, ref damageMultiplier, ref modifiers);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -368,13 +387,13 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.ModifyHitByPvp(item, Player, attacker, ref damageMultiplier, ref crit);
+                    modItem.ModifyHitByPvp(item, Player, attacker, ref damageMultiplier, ref modifiers);
                 }
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
-
+            damage *= damageMultiplier;
+            modifiers.FinalDamage = damage;
         }
-        public void OnHitByPvp(Player attacker, int damage, bool crit)
+        public void OnHitByPvp(Player attacker, Player.HurtInfo info)
         {
             Item item;
             for (int i = 0; i < Player.inventory.Length; i++)
@@ -385,7 +404,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.OnHitByPvp(item, Player, attacker, damage, crit);
+                    modItem.OnHitByPvp(item, Player, attacker, info);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -396,20 +415,20 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.OnHitByPvp(item, Player, attacker, damage, crit);
+                    modItem.OnHitByPvp(item, Player, attacker, info);
                 }
             }
 
 
             if (reflectMeleeDamage > 0)
             {
-                int reflectDamage = (int)Math.Round(damage * reflectMeleeDamage);
+                int reflectDamage = (int)Math.Round(info.Damage * reflectMeleeDamage);
                 int reflectDirection = attacker.Center.X > Player.Center.X ? 1 : -1;
-                attacker.Hurt(PlayerDeathReason.ByPlayer(attacker.whoAmI), reflectDamage, reflectDirection, true, false, crit);
+                attacker.Hurt(PlayerDeathReason.ByCustomReason("died to reflect"), reflectDamage, reflectDirection, true, false);
                 attacker.immune = false;
             }
         }
-        public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
+        public override void ModifyHitByProjectile(Projectile proj, ref Player.HurtModifiers modifiers)
         {
             Item item;
             float damageMultiplier = 1f;
@@ -421,7 +440,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.ModifyHitByProjectile(item, Player, proj, ref damageMultiplier, ref crit);
+                    modItem.ModifyHitByProjectile(item, Player, proj, ref damageMultiplier, ref modifiers);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -432,12 +451,12 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.ModifyHitByProjectile(item, Player, proj, ref damageMultiplier, ref crit);
+                    modItem.ModifyHitByProjectile(item, Player, proj, ref damageMultiplier, ref modifiers);
                 }
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
+            modifiers.FinalDamage *= damageMultiplier;
         }
-        public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
         {
             Item item;
 
@@ -449,7 +468,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.OnHitByProjectile(item, Player, proj, damage, crit);
+                    modItem.OnHitByProjectile(item, Player, proj, hurtInfo);
                 }
 
             }
@@ -461,7 +480,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.OnHitByProjectile(item, Player, proj, damage, crit);
+                    modItem.OnHitByProjectile(item, Player, proj, hurtInfo);
                 }
 
             }
@@ -493,11 +512,12 @@ namespace PathOfModifiers.Affixes.Items
                 }
             }
         }
-        public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Item, consider using ModifyHitNPC instead */
         {
             Item affixItem;
             float damageMultiplier = 1f;
             float knockbackMultiplier = 1f;
+            float critDamageMultiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
@@ -506,7 +526,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyHitNPC(affixItem, Player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                    modItem.PlayerModifyHitNPC(affixItem, Player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref critDamageMultiplier, ref modifiers);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -517,16 +537,18 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyHitNPC(affixItem, Player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                    modItem.PlayerModifyHitNPC(affixItem, Player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref critDamageMultiplier, ref modifiers);
                 }
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
-            knockback *= knockbackMultiplier;
+            modifiers.FinalDamage *= damageMultiplier;
+            modifiers.Knockback *= knockbackMultiplier;
+            modifiers.CritDamage *= critDamageMultiplier;
         }
-        public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
+        public void ModifyHitPvp(Item item, Player target, ref Player.HurtModifiers modifiers)/* tModPorter Note: Removed. Use ModifyHurt on the receiving player and check modifiers.PvP. Use modifiers.DamageSource.SourcePlayerIndex to get the attacking player */
         {
             Item affixItem;
             float damageMultiplier = 1f;
+            float critDamageMultiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
@@ -535,7 +557,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyHitPvp(affixItem, Player, item, target, ref damageMultiplier, ref crit);
+                    modItem.PlayerModifyHitPvp(affixItem, Player, item, target, ref damageMultiplier, ref critDamageMultiplier, ref modifiers);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -546,18 +568,19 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyHitPvp(affixItem, Player, item, target, ref damageMultiplier, ref crit);
+                    modItem.PlayerModifyHitPvp(affixItem, Player, item, target, ref damageMultiplier, ref critDamageMultiplier, ref modifiers);
                 }
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
+            modifiers.FinalDamage *= damageMultiplier * critDamageMultiplier;
         }
-        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Projectile, consider using ModifyHitNPC instead */
         {
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
                 float damageMultiplier = 1f;
                 float knockBackMultiplier = 1f;
+                float critDamageMultiplier = 1f;
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
                     item = Player.inventory[i];
@@ -566,7 +589,7 @@ namespace PathOfModifiers.Affixes.Items
 
                     if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
-                        modItem.ProjModifyHitNPC(item, Player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref crit, ref hitDirection);
+                        modItem.ProjModifyHitNPC(item, Player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref critDamageMultiplier, ref modifiers);
                     }
                 }
                 for (int i = 0; i < Player.armor.Length; i++)
@@ -577,19 +600,21 @@ namespace PathOfModifiers.Affixes.Items
 
                     if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
-                        modItem.ProjModifyHitNPC(item, Player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref crit, ref hitDirection);
+                        modItem.ProjModifyHitNPC(item, Player, proj, target, ref damageMultiplier, ref knockBackMultiplier, ref critDamageMultiplier, ref modifiers);
                     }
                 }
-                damage = (int)Math.Round(damage * damageMultiplier);
-                knockback = (int)Math.Round(knockback * knockBackMultiplier);
+                modifiers.FinalDamage *= damageMultiplier;
+                modifiers.Knockback *= knockBackMultiplier;
+                modifiers.CritDamage *= critDamageMultiplier;
             }
         }
-        public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
+        public void ModifyHitPvpWithProj(Projectile proj, Player target, ref Player.HurtModifiers modifiers)/* tModPorter Note: Removed. Use ModifyHurt on the receiving player and check modifiers.PvP. Use modifiers.DamageSource.SourcePlayerIndex to get the attacking player */
         {
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
                 Item item;
                 float damageMultiplier = 1f;
+                float critDamageMultiplier = 1f;
                 for (int i = 0; i < Player.inventory.Length; i++)
                 {
                     item = Player.inventory[i];
@@ -598,7 +623,7 @@ namespace PathOfModifiers.Affixes.Items
 
                     if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
-                        modItem.ProjModifyHitPvp(item, Player, proj, target, ref damageMultiplier, ref crit);
+                        modItem.ProjModifyHitPvp(item, Player, proj, target, ref damageMultiplier, ref critDamageMultiplier, ref modifiers);
                     }
                 }
                 for (int i = 0; i < Player.armor.Length; i++)
@@ -609,13 +634,13 @@ namespace PathOfModifiers.Affixes.Items
 
                     if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
-                        modItem.ProjModifyHitPvp(item, Player, proj, target, ref damageMultiplier, ref crit);
+                        modItem.ProjModifyHitPvp(item, Player, proj, target, ref damageMultiplier, ref critDamageMultiplier, ref modifiers);
                     }
                 }
-                damage = (int)Math.Round(damage * damageMultiplier);
+                modifiers.FinalDamage *= damageMultiplier * critDamageMultiplier;
             }
         }
-        public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)/* tModPorter If you don't need the Item, consider using OnHitNPC instead */
         {
             Item affixItem;
             for (int i = 0; i < Player.inventory.Length; i++)
@@ -626,7 +651,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerOnHitNPC(affixItem, Player, item, target, damage, knockback, crit);
+                    modItem.PlayerOnHitNPC(affixItem, Player, item, target, hit, damageDone);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -637,11 +662,11 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerOnHitNPC(affixItem, Player, item, target, damage, knockback, crit);
+                    modItem.PlayerOnHitNPC(affixItem, Player, item, target, hit, damageDone);
                 }
             }
         }
-        public override void OnHitPvp(Item item, Player target, int damage, bool crit)
+        public void OnHitPvp(Item item, Player target, Player.HurtModifiers modifiers, int damageDone)/* tModPorter Note: Removed. Use OnHurt on the receiving player and check info.PvP. Use info.DamageSource.SourcePlayerIndex to get the attacking player */
         {
             Item affixItem;
 
@@ -653,7 +678,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerOnHitPvp(affixItem, Player, item, target, damage, crit);
+                    modItem.PlayerOnHitPvp(affixItem, Player, item, target, modifiers, damageDone);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -664,11 +689,11 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerOnHitPvp(affixItem, Player, item, target, damage, crit);
+                    modItem.PlayerOnHitPvp(affixItem, Player, item, target, modifiers, damageDone);
                 }
             }
         }
-        public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)/* tModPorter If you don't need the Projectile, consider using OnHitNPC instead */
         {
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
@@ -681,7 +706,7 @@ namespace PathOfModifiers.Affixes.Items
 
                     if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
-                        modItem.ProjOnHitNPC(item, Player, proj, target, damage, knockback, crit);
+                        modItem.ProjOnHitNPC(item, Player, proj, target, hit, damageDone);
                     }
                 }
                 for (int i = 0; i < Player.armor.Length; i++)
@@ -692,12 +717,12 @@ namespace PathOfModifiers.Affixes.Items
 
                     if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
-                        modItem.ProjOnHitNPC(item, Player, proj, target, damage, knockback, crit);
+                        modItem.ProjOnHitNPC(item, Player, proj, target, hit, damageDone);
                     }
                 }
             }
         }
-        public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
+        public void OnHitPvpWithProj(Projectile proj, Player target, Player.HurtModifiers modifiers, int damageDone)/* tModPorter Note: Removed. Use OnHurt on the receiving player and check info.PvP. Use info.DamageSource.SourcePlayerIndex to get the attacking player */
         {
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
@@ -711,7 +736,7 @@ namespace PathOfModifiers.Affixes.Items
 
                     if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
-                        modItem.ProjOnHitPvp(item, Player, proj, target, damage, crit);
+                        modItem.ProjOnHitPvp(item, Player, proj, target, modifiers, damageDone);
                     }
                 }
                 for (int i = 0; i < Player.armor.Length; i++)
@@ -722,7 +747,7 @@ namespace PathOfModifiers.Affixes.Items
 
                     if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
-                        modItem.ProjOnHitPvp(item, Player, proj, target, damage, crit);
+                        modItem.ProjOnHitPvp(item, Player, proj, target, modifiers, damageDone);
                     }
                 }
             }

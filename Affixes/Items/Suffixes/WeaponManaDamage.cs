@@ -58,19 +58,19 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Spend { valueRange1 }% mana to increase damage by { plusMinus }{ valueRange2 }%";
         }
 
-        public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
+        public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers)
         {
             ModifyDamage(item, player, ref damageMultiplier);
         }
-        public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
+        public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             ModifyDamage(item, player, ref damageMultiplier);
         }
-        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
+        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
         {
             ModifyDamage(item, player, ref damageMultiplier);
         }
-        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
+        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers)
         {
             ModifyDamage(item, player, ref damageMultiplier);
         }

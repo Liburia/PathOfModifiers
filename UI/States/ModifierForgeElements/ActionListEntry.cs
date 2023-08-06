@@ -46,11 +46,11 @@ namespace PathOfModifiers.UI.States.ModifierForgeElements
             }
         }
 
-        public override void Click(UIMouseEvent evt)
+        public override void LeftClick(UIMouseEvent evt)
         {
             if (IsEnabled)
             {
-                base.Click(evt);
+                base.LeftClick(evt);
             }
         }
 

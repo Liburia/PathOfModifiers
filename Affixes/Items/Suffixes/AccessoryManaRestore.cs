@@ -58,7 +58,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Restore { valueRange1 }% mana to increase damage taken by { valueRange2 }% when hit";
         }
 
-        public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             if (ItemItem.IsAccessoryEquipped(item, player))
             {
@@ -67,8 +67,6 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 PoMEffectHelper.HealMana(player, manaAmount);
                 damageMultiplier += Type2.GetValue();
             }
-
-            return true;
         }
     }
 }

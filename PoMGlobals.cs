@@ -45,7 +45,7 @@ namespace PathOfModifiers
                     {
                         var min = (int)(amountDroppedMinimum * info.npc.value * multiplyValueBy);
                         var max = (int)(amountDroppedMaximum * info.npc.value * multiplyValueBy);
-                        CommonCode.DropItemFromNPC(info.npc, itemId, info.rng.Next(min, max + 1));
+                        CommonCode.DropItem(info, itemId, info.rng.Next(min, max + 1));
                         result = default(ItemDropAttemptResult);
                         result.State = ItemDropAttemptResultState.Success;
                         return result;

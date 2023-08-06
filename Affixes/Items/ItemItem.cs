@@ -12,6 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
+using Terraria.WorldBuilding;
 using static Terraria.ModLoader.ModContent;
 
 namespace PathOfModifiers.Affixes.Items
@@ -523,6 +524,12 @@ namespace PathOfModifiers.Affixes.Items
             suffixes.Clear();
         }
 
+        public override bool AllowPrefix(Item item, int pre)
+        {
+            return !((GetInstance<PoMConfigServer>().DisableVanillaPrefixesWeapons && IsWeapon(item))
+                || (GetInstance<PoMConfigServer>().DisableVanillaPrefixesAccessories && IsAccessory(item)));
+        }
+
         public override int ChoosePrefix(Item item, UnifiedRandom rand)
         {
             return (GetInstance<PoMConfigServer>().DisableVanillaPrefixesWeapons && IsWeapon(item))
@@ -692,101 +699,115 @@ namespace PathOfModifiers.Affixes.Items
             }
             return null;
         }
-        public override void ModifyHitNPC(Item item, Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
+        public override void ModifyHitNPC(Item item, Player player, NPC target, ref NPC.HitModifiers modifiers)
         {
+            var damage = modifiers.FinalDamage;
+            var knockback = modifiers.Knockback;
+
             float damageMultiplier = 1f;
             float knockbackMultiplier = 1f;
+
             foreach (var prefix in prefixes)
             {
-                prefix.ModifyHitNPC(item, player, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                prefix.ModifyHitNPC(item, player, target, ref damageMultiplier, ref knockbackMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ModifyHitNPC(item, player, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                suffix.ModifyHitNPC(item, player, target, ref damageMultiplier, ref knockbackMultiplier, ref modifiers);
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
-            knockBack *= knockbackMultiplier;
+
+            damage *= damageMultiplier;
+            knockback *= knockbackMultiplier;
+
+            modifiers.FinalDamage = damage;
+            modifiers.Knockback = knockback;
         }
-        public override void ModifyHitPvp(Item item, Player player, Player target, ref int damage, ref bool crit)
+        public override void ModifyHitPvp(Item item, Player player, Player target, ref Player.HurtModifiers modifiers)
         {
+            var damage = modifiers.FinalDamage;
+
             float damageMultiplier = 1f;
+
             foreach (var prefix in prefixes)
             {
-                prefix.ModifyHitPvp(item, player, target, ref damageMultiplier, ref crit);
+                prefix.ModifyHitPvp(item, player, target, ref damageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ModifyHitPvp(item, player, target, ref damageMultiplier, ref crit);
+                suffix.ModifyHitPvp(item, player, target, ref damageMultiplier, ref modifiers);
             }
-            damage = (int)Math.Round(damage * damageMultiplier);
+
+            damage *= damageMultiplier;
+
+            modifiers.FinalDamage = damage;
         }
-        public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+        public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.OnHitNPC(item, player, target, damage, knockBack, crit);
+                prefix.OnHitNPC(item, player, target, hit, damageDone);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.OnHitNPC(item, player, target, damage, knockBack, crit);
+                suffix.OnHitNPC(item, player, target, hit, damageDone);
             }
         }
-        public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+        public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.OnHitPvp(item, player, target, damage, crit);
+                prefix.OnHitPvp(item, player, target, hurtInfo);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.OnHitPvp(item, player, target, damage, crit);
+                suffix.OnHitPvp(item, player, target, hurtInfo);
             }
         }
         #endregion
         #region Projectile hooks
-        public void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
+        public void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ProjModifyHitNPC(item, player, projectile, target, ref damageMultiplier, ref knockbackMultiplier, ref crit, ref hitDirection);
+                prefix.ProjModifyHitNPC(item, player, projectile, target, ref damageMultiplier, ref knockbackMultiplier, ref critDamageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ProjModifyHitNPC(item, player, projectile, target, ref damageMultiplier, ref knockbackMultiplier, ref crit, ref hitDirection);
+                suffix.ProjModifyHitNPC(item, player, projectile, target, ref damageMultiplier, ref knockbackMultiplier, ref critDamageMultiplier, ref modifiers);
             }
         }
-        public void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
+        public void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ProjModifyHitPvp(item, player, projectile, target, ref damageMultiplier, ref crit);
+                prefix.ProjModifyHitPvp(item, player, projectile, target, ref damageMultiplier, ref critDamageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ProjModifyHitPvp(item, player, projectile, target, ref damageMultiplier, ref crit);
+                suffix.ProjModifyHitPvp(item, player, projectile, target, ref damageMultiplier, ref critDamageMultiplier, ref modifiers);
             }
         }
-        public void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ProjOnHitNPC(item, player, projectile, target, damage, knockback, crit);
+                prefix.ProjOnHitNPC(item, player, projectile, target, hit, damageDone);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ProjOnHitNPC(item, player, projectile, target, damage, knockback, crit);
+                suffix.ProjOnHitNPC(item, player, projectile, target, hit, damageDone);
             }
         }
-        public void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
+        public void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ProjOnHitPvp(item, player, projectile, target, damage, crit);
+                prefix.ProjOnHitPvp(item, player, projectile, target, modifiers, damageDone);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ProjOnHitPvp(item, player, projectile, target, damage, crit);
-            }
+                suffix.ProjOnHitPvp(item, player, projectile, target, modifiers, damageDone);
+            }   
         }
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
@@ -804,30 +825,39 @@ namespace PathOfModifiers.Affixes.Items
             }
             return consume;
         }
-        public bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public bool FreeDodge(Item item, Player player, ref Player.HurtInfo info)
         {
-            bool hurt = true;
+            bool dodge = false;
             foreach (var prefix in prefixes)
             {
-                if (!prefix.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
-                    hurt = false;
+                dodge |= prefix.FreeDodge(item, player, ref info);
             }
             foreach (var suffix in suffixes)
             {
-                if (!suffix.PreHurt(item, player, pvp, quiet, ref damageMultiplier, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource))
-                    hurt = false;
+                dodge |= suffix.FreeDodge(item, player, ref info);
             }
-            return hurt;
+            return dodge;
         }
-        public void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        public void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PostHurt(item, player, pvp, quiet, damage, hitDirection, crit);
+                prefix.PreHurt(item, player, ref damageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PostHurt(item, player, pvp, quiet, damage, hitDirection, crit);
+                suffix.PreHurt(item, player, ref damageMultiplier, ref modifiers);
+            }
+        }
+        public void PostHurt(Item item, Player player, Player.HurtInfo info)
+        {
+            foreach (var prefix in prefixes)
+            {
+                prefix.PostHurt(item, player, info);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.PostHurt(item, player, info);
             }
         }
         public void NaturalLifeRegen(Item item, Player player, ref float regenMultiplier)
@@ -852,114 +882,114 @@ namespace PathOfModifiers.Affixes.Items
                 suffix.PlayerModifyWeaponCrit(item, heldItem, player, ref multiplier);
             }
         }
-        public void ModifyHitByNPC(Item item, Player player, NPC npc, ref float damageMultiplier, ref bool crit)
+        public void ModifyHitByNPC(Item item, Player player, NPC npc, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ModifyHitByNPC(item, player, npc, ref damageMultiplier, ref crit);
+                prefix.ModifyHitByNPC(item, player, npc, ref damageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ModifyHitByNPC(item, player, npc, ref damageMultiplier, ref crit);
+                suffix.ModifyHitByNPC(item, player, npc, ref damageMultiplier, ref modifiers);
             }
         }
-        public void ModifyHitByPvp(Item item, Player player, Player attacker, ref float damageMultiplier, ref bool crit)
+        public void ModifyHitByPvp(Item item, Player player, Player attacker, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ModifyHitByPvp(item, player, attacker, ref damageMultiplier, ref crit);
+                prefix.ModifyHitByPvp(item, player, attacker, ref damageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ModifyHitByPvp(item, player, attacker, ref damageMultiplier, ref crit);
+                suffix.ModifyHitByPvp(item, player, attacker, ref damageMultiplier, ref modifiers);
             }
         }
-        public void ModifyHitByProjectile(Item item, Player player, Projectile projectile, ref float damageMultiplier, ref bool crit)
+        public void ModifyHitByProjectile(Item item, Player player, Projectile projectile, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.ModifyHitByProjectile(item, player, projectile, ref damageMultiplier, ref crit);
+                prefix.ModifyHitByProjectile(item, player, projectile, ref damageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ModifyHitByProjectile(item, player, projectile, ref damageMultiplier, ref crit);
+                suffix.ModifyHitByProjectile(item, player, projectile, ref damageMultiplier, ref modifiers);
             }
         }
-        public void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
+        public void OnHitByNPC(Item item, Player player, NPC npc, Player.HurtInfo hurtInfo)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.OnHitByNPC(item, player, npc, damage, crit);
+                prefix.OnHitByNPC(item, player, npc, hurtInfo);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.OnHitByNPC(item, player, npc, damage, crit);
+                suffix.OnHitByNPC(item, player, npc, hurtInfo);
             }
         }
-        public void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit)
+        public void OnHitByPvp(Item item, Player player, Player attacker, Player.HurtInfo info)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.OnHitByPvp(item, player, attacker, damage, crit);
+                prefix.OnHitByPvp(item, player, attacker, info);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.OnHitByPvp(item, player, attacker, damage, crit);
+                suffix.OnHitByPvp(item, player, attacker, info);
             }
         }
-        public void OnHitByProjectile(Item item, Player player, Projectile projectile, int damage, bool crit)
+        public void OnHitByProjectile(Item item, Player player, Projectile projectile, Player.HurtInfo hurtInfo)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.OnHitByProjectile(item, player, projectile, damage, crit);
+                prefix.OnHitByProjectile(item, player, projectile, hurtInfo);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.OnHitByProjectile(item, player, projectile, damage, crit);
+                suffix.OnHitByProjectile(item, player, projectile, hurtInfo);
             }
         }
-        public void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
+        public void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                prefix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref critDamageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref crit);
+                suffix.PlayerModifyHitNPC(affixItem, player, item, target, ref damageMultiplier, ref knockbackMultiplier, ref critDamageMultiplier, ref modifiers);
             }
         }
-        public void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit)
+        public void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
+                prefix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref critDamageMultiplier, ref modifiers);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref crit);
+                suffix.PlayerModifyHitPvp(affixItem, player, item, target, ref damageMultiplier, ref critDamageMultiplier, ref modifiers);
             }
         }
-        public void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, int damage, float knockback, bool crit)
+        public void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
+                prefix.PlayerOnHitNPC(affixItem, player, item, target, hit, damageDone);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerOnHitNPC(affixItem, player, item, target, damage, knockback, crit);
+                suffix.PlayerOnHitNPC(affixItem, player, item, target, hit, damageDone);
             }
         }
-        public void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, int damage, bool crit)
+        public void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
+                prefix.PlayerOnHitPvp(affixItem, player, item, target, modifiers, damageDone);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerOnHitPvp(affixItem, player, item, target, damage, crit);
+                suffix.PlayerOnHitPvp(affixItem, player, item, target, modifiers, damageDone);
             }
         }
 
@@ -1004,7 +1034,7 @@ namespace PathOfModifiers.Affixes.Items
             }
         }
         //On craft
-        public override void OnCreate(Item item, ItemCreationContext context)
+        public override void OnCreated(Item item, ItemCreationContext context)
         {
             try
             {
@@ -1018,6 +1048,12 @@ namespace PathOfModifiers.Affixes.Items
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
+            if (rarity == null)
+            {
+                //Item is in the crafting window
+                return;
+            }
+
             foreach (var prefix in prefixes)
             {
                 prefix.ModifyTooltips(PathOfModifiers.Instance, item, tooltips);

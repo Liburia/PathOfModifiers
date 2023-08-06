@@ -69,11 +69,11 @@ namespace PathOfModifiers.UI.Elements
             sb.Draw(TextureAssets.ColorBlip.Value, position, source, Color.IndianRed, MathHelper.PiOver4, origin, scale, SpriteEffects.None, 0f);
         }
 
-        public override void MouseDown(UIMouseEvent evt)
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
             isDragging = true;
         }
-        public override void MouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
             isDragging = false;
         }

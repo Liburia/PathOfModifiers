@@ -44,19 +44,19 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Deal { valueRange1 }% of enemy HP with the first attack";
         }
 
-        public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit)
+        public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers)
         {
             Hit(item, player, target);
         }
-        public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit)
+        public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             Hit(item, player, target);
         }
-        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection)
+        public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
         {
             Hit(item, player, target);
         }
-        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit)
+        public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers)
         {
             Hit(item, player, target);
         }
@@ -82,7 +82,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             {
                 int critDamage = (int)Math.Round(target.statLifeMax2 * Type1.GetValue());
                 int direction = (target.Center.X - player.Center.X) > 0 ? 1 : -1;
-                target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayer(player.whoAmI), critDamage, direction, true, false, false);
+                target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByPlayerItem(player.whoAmI, item), critDamage, direction, true, false);
                 target.immune = false;
                 PoMEffectHelper.Crit(target.position, target.width, target.height, 100);
                 if (Main.netMode == NetmodeID.MultiplayerClient)

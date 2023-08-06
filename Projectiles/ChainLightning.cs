@@ -38,7 +38,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("ChainLightning");
+            //TODO: DisplayName.SetDefault("ChainLightning");
         }
 
         public override void SetDefaults()
@@ -155,7 +155,7 @@ namespace PathOfModifiers.Projectiles
                         if (player.whoAmI == Main.myPlayer)
                         {
                             PlaySound();
-                            player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage, player.direction, true);
+                            player.Hurt(PlayerDeathReason.ByProjectile(Projectile.owner, Projectile.whoAmI), Projectile.damage, player.direction, true);
                             player.GetModPlayer<BuffPlayer>().AddShockedBuff(player, Projectile.ai[0], PoMGlobals.ailmentDuration, true);
                         }
                         SpawnDebris(targetPosition);

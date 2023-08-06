@@ -7,6 +7,7 @@ using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
+using Terraria.WorldBuilding;
 
 namespace PathOfModifiers.Affixes.Items
 {
@@ -66,36 +67,37 @@ namespace PathOfModifiers.Affixes.Items
         public virtual bool CanConsumeAmmo(Item item, Item ammo, Player player) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
         public virtual void UseItem(Item item, Player player) { }
-        public virtual void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit) { }
-        public virtual void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref bool crit) { }
-        public virtual void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit) { }
-        public virtual void OnHitPvp(Item item, Player player, Player target, int damage, bool crit) { }
+        public virtual void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers) { }
+        public virtual void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
+        public virtual void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone) { }
+        public virtual void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo) { }
         public virtual bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) { return true; }
         #endregion
         #region Projectile Hooks
-        public virtual void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref bool crit, ref int hitDirection) { }
-        public virtual void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref bool crit) { }
-        public virtual void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit) { }
-        public virtual void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit) { }
+        public virtual void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers) { }
+        public virtual void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers) { }
+        public virtual void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone) { }
+        public virtual void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone) { }
         #endregion
         #region Player Hooks
         public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo) { return true; }
-        public virtual bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource) { return true; }
-        public virtual void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit) { }
+        public virtual bool FreeDodge(Item item, Player player, ref Player.HurtInfo info) { return false; }
+        public virtual void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
+        public virtual void PostHurt(Item item, Player player, Player.HurtInfo info) { }
         public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }
         public virtual void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier) { }
-        public virtual void ModifyHitByNPC(Item item, Player player, NPC npc, ref float damageMultiplier, ref bool crit) { }
-        public virtual void ModifyHitByPvp(Item item, Player player, Player attacker, ref float damageMultiplier, ref bool crit) { }
-        public virtual void ModifyHitByProjectile(Item item, Player player, Projectile projectile, ref float damageMultiplier, ref bool crit) { }
-        public virtual void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit) { }
-        public virtual void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit) { }
-        public virtual void OnHitByProjectile(Item item, Player player, Projectile projectile, int damage, bool crit) { }
+        public virtual void ModifyHitByNPC(Item item, Player player, NPC npc, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
+        public virtual void ModifyHitByPvp(Item item, Player player, Player attacker, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
+        public virtual void ModifyHitByProjectile(Item item, Player player, Projectile projectile, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
+        public virtual void OnHitByNPC(Item item, Player player, NPC npc, Player.HurtInfo hurtInfo) { }
+        public virtual void OnHitByPvp(Item item, Player player, Player attacker, Player.HurtInfo info) { }
+        public virtual void OnHitByProjectile(Item item, Player player, Projectile projectile, Player.HurtInfo hurtInfo) { }
         public virtual bool PlayerShoot(Item affixItem, Player player, Item item, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) { return true; }
 
-        public virtual void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackmultiplier, ref bool crit) { }
-        public virtual void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref bool crit) { }
-        public virtual void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, int damage, float knockback, bool crit) { }
-        public virtual void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, int damage, bool crit) { }
+        public virtual void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers) { }
+        public virtual void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers) { }
+        public virtual void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone) { }
+        public virtual void PlayerOnHitPvp(Item affixItem, Player player, Item item, Player target, Player.HurtModifiers modifiers, int damageDone) { }
 
         public virtual void PlayerOnKillNPC(Item item, Player player, NPC target) { }
         #endregion

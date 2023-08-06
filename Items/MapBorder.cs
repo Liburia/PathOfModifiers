@@ -9,7 +9,7 @@ namespace PathOfModifiers.Items
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Outlines the rectangle the map will generate in.");
+            // Tooltip.SetDefault("Outlines the rectangle the map will generate in.");
         }
         public override void SetDefaults()
         {

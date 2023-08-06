@@ -29,13 +29,13 @@ namespace PathOfModifiers.UI.Elements
         public Color activeBackgroundColor = UICommon.activeBackgroundColor;
 
 
-        public override void Click(UIMouseEvent evt)
+        public override void LeftClick(UIMouseEvent evt)
         {
             Toggle();
 
             SoundEngine.PlaySound(SoundID.MenuTick);
 
-            base.Click(evt);
+            base.LeftClick(evt);
         }
 
         public void SetState(bool value)

@@ -1,0 +1,2 @@
+Path Of Modifiers replaces vanilla item prefixes with a wide variety of custom modifiers.
+Over 100 prefixes and suffixes!

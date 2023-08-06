@@ -59,7 +59,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"No mana cost for { valueRange1 }s when hit ({ valueRange2 }s CD)";
         }
 
-        public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        public override void PostHurt(Item item, Player player, Player.HurtInfo info)
         {
             if (ItemItem.IsArmorEquipped(item, player) && (Main.GameUpdateCount - lastProcTime) >= (int)Math.Round(Type2.GetValue() * 60))
             {

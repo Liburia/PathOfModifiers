@@ -76,19 +76,19 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Gain { plusMinus }{ valueRange1 }% move speed on hit for { valueRange2 }s ({ valueRange3 }s CD)";
         }
 
-        public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+        public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
             OnHit(item, player);
         }
-        public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+        public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
         {
             OnHit(item, player);
         }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             OnHit(item, player);
         }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
+        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
             OnHit(item, player);
         }

@@ -15,7 +15,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fireball");
+            //TODO: DisplayName.SetDefault("Fireball");
         }
         public override void SetDefaults()
         {
@@ -142,7 +142,7 @@ namespace PathOfModifiers.Projectiles
                 {
                     if (player.getRect().Intersects(explosionBounds))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage, player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByProjectile(Projectile.owner, Projectile.whoAmI), Projectile.damage, player.direction, true);
                         player.GetModPlayer<BuffPlayer>().AddIgnitedBuff(player, (int)Projectile.ai[0], PoMGlobals.ailmentDuration);
                     }
                 }

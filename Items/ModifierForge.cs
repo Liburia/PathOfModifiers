@@ -8,8 +8,8 @@ namespace PathOfModifiers.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Modifier Forge");
-            Tooltip.SetDefault("Forged in the modifiers. Modifies modifiers.");
+            //TODO: DisplayName.SetDefault("Modifier Forge");
+            // Tooltip.SetDefault("Forged in the modifiers. Modifies modifiers.");
         }
 
         public override void SetDefaults()

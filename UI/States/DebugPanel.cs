@@ -90,7 +90,7 @@ namespace PathOfModifiers.UI.States
                 UIImageButton closePanelX = new(ModContent.Request<Texture2D>(PoMGlobals.Path.Image.UI.CloseButton, ReLogic.Content.AssetRequestMode.ImmediateLoad));
                 closePanelX.Top.Set(0, 0);
                 closePanelX.Left.Set(550, 0);
-                closePanelX.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Toggle();
+                closePanelX.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => Toggle();
                 panel.Append(closePanelX);
 
                 UIElement content = new();
@@ -108,7 +108,7 @@ namespace PathOfModifiers.UI.States
                         onItemFilterToggle.Top.Set(0, 0);
                         onItemFilterToggle.MinWidth.Set(120f, 0f);
                         onItemFilterToggle.MinHeight.Set(30, 0);
-                        onItemFilterToggle.OnClick += (UIMouseEvent evt, UIElement listeningElement) => FilterAffixList();
+                        onItemFilterToggle.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => FilterAffixList();
                         selectionHalf.Append(onItemFilterToggle);
                         {
                             UIText text = new("On item", UICommon.textBig);
@@ -179,7 +179,7 @@ namespace PathOfModifiers.UI.States
 
                 var entry = new AffixListEntry(affix);
 
-                entry.selectToggle.OnClick += delegate (UIMouseEvent evt, UIElement listeningElement)
+                entry.selectToggle.OnLeftClick += delegate (UIMouseEvent evt, UIElement listeningElement)
                 {
                     if (entry.selectToggle.IsOn)
                     {
@@ -201,7 +201,7 @@ namespace PathOfModifiers.UI.States
                         entry.selectToggle.SetState(true);
                     }
                 };
-                entry.removeButton.OnClick += delegate (UIMouseEvent evt, UIElement listeningElement)
+                entry.removeButton.OnLeftClick += delegate (UIMouseEvent evt, UIElement listeningElement)
                 {
                     if (HeldItem.TryGetGlobalItem<ItemItem>(out var modItem))
                     {
@@ -213,7 +213,7 @@ namespace PathOfModifiers.UI.States
                         }
                     }
                 };
-                entry.removeButton.OnMouseUp += (UIMouseEvent evt, UIElement listeningElement) => panel.MouseUp(evt);
+                entry.removeButton.OnLeftMouseUp += (UIMouseEvent evt, UIElement listeningElement) => panel.LeftMouseUp(evt);
 
                 allAffixes[i] = entry;
             }

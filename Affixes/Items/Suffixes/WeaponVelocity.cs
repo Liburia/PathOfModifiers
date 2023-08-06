@@ -44,28 +44,28 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Gain { valueRange1 } velocity { towardsAway } target on hit";
         }
 
-        public override void OnHitNPC(Item item, Player player, NPC target, int damage, float knockBack, bool crit)
+        public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (player.HeldItem == item)
             {
                 GainVelocity(player, target);
             }
         }
-        public override void OnHitPvp(Item item, Player player, Player target, int damage, bool crit)
+        public override void OnHitPvp(Item item, Player player, Player target, Player.HurtInfo hurtInfo)
         {
             if (player.HeldItem == item)
             {
                 GainVelocity(player, target);
             }
         }
-        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        public override void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (player.HeldItem == item)
             {
                 GainVelocity(player, target);
             }
         }
-        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, int damage, bool crit)
+        public override void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
             if (player.HeldItem == item)
             {

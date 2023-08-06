@@ -15,7 +15,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Icicle");
+            //TODO: DisplayName.SetDefault("Icicle");
             Main.projFrames[Projectile.type] = 5;
         }
         public override void SetDefaults()

@@ -115,9 +115,9 @@ namespace PathOfModifiers.UI.Elements
             }
         }
 
-        public override void Click(UIMouseEvent evt)
+        public override void LeftClick(UIMouseEvent evt)
         {
-            base.Click(evt);
+            base.LeftClick(evt);
 
             if (TryInsertItem(Main.mouseItem, true, out var oldItem))
             {

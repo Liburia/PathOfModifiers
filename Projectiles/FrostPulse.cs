@@ -16,7 +16,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("FrostPulse");
+            //TODO: DisplayName.SetDefault("FrostPulse");
         }
         public override void SetDefaults()
         {
@@ -61,17 +61,13 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             Hit(target);
         }
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             Hit(target);
-        }
-        public override void OnHitPvp(Player target, int damage, bool crit)
-        {
-            OnHitPlayer(target, damage, crit);
         }
 
         void Hit(NPC target)

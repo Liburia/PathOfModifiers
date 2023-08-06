@@ -39,7 +39,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Gain { Keyword.GetTextOrTag(KeywordType.Adrenaline, useChatTags) } for { valueRange1 }s when hit to low HP";
         }
 
-        public override void PostHurt(Item item, Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+        public override void PostHurt(Item item, Player player, Player.HurtInfo info)
         {
             if (ItemItem.IsArmorEquipped(item, player) && PoMUtil.IsLowHP(player))
             {

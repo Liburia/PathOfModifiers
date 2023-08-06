@@ -31,10 +31,10 @@ namespace PathOfModifiers.UI.Elements
             spriteBatch.Draw(texture, dims.Position(), color);
         }
 
-        public override void Click(UIMouseEvent evt)
+        public override void LeftClick(UIMouseEvent evt)
         {
             Toggle();
-            base.Click(evt);
+            base.LeftClick(evt);
         }
 
         public void SetState(bool value)

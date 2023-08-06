@@ -31,7 +31,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("LifeOrb");
+            //TODO: DisplayName.SetDefault("LifeOrb");
         }
         public override void SetDefaults()
         {

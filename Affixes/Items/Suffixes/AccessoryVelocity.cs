@@ -43,15 +43,15 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Gain { valueRange1 } velocity { towardsAway } target when hit";
         }
 
-        public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
+        public override void OnHitByNPC(Item item, Player player, NPC npc, Player.HurtInfo hurtInfo)
         {
             GainVelocity(item, player, npc.Center);
         }
-        public override void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit)
+        public override void OnHitByPvp(Item item, Player player, Player attacker, Player.HurtInfo info)
         {
             GainVelocity(item, player, attacker.Center);
         }
-        public override void OnHitByProjectile(Item item, Player player, Projectile projectile, int damage, bool crit)
+        public override void OnHitByProjectile(Item item, Player player, Projectile projectile, Player.HurtInfo hurtInfo)
         {
             GainVelocity(item, player, projectile.Center);
         }

@@ -15,12 +15,12 @@ namespace PathOfModifiers.UI.Elements
         private Vector2 offset;
         public bool dragging;
 
-        public override void MouseDown(UIMouseEvent evt)
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
             DragStart(evt);
         }
 
-        public override void MouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
             DragEnd(evt);
         }

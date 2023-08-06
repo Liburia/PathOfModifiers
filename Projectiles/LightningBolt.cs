@@ -36,7 +36,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("LightningBolt");
+            //TODO: DisplayName.SetDefault("LightningBolt");
         }
         public override void SetDefaults()
         {
@@ -268,7 +268,7 @@ namespace PathOfModifiers.Projectiles
                     Rectangle localRect = player.getRect();
                     if (localRect.Intersects(boltRect) || localRect.Intersects(airRect))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage, player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByProjectile(Projectile.owner, Projectile.whoAmI), Projectile.damage, player.direction, true);
                     }
                 }
 

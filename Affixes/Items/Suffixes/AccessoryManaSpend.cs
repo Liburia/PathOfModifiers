@@ -58,14 +58,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Spend { valueRange1 }% mana to reduce damage taken by { valueRange2 }%";
         }
 
-        public override bool PreHurt(Item item, Player player, bool pvp, bool quiet, ref float damageMultiplier, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             if (ItemItem.IsAccessoryEquipped(item, player) && TryConsumeMana(player))
             {
                 damageMultiplier += Type2.GetValue();
             }
-
-            return true;
         }
 
         bool TryConsumeMana(Player player)

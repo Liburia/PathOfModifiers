@@ -16,7 +16,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Molten Shell Explosion");
+            //TODO: DisplayName.SetDefault("Molten Shell Explosion");
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()
@@ -59,7 +59,7 @@ namespace PathOfModifiers.Projectiles
                     Rectangle localRect = player.getRect();
                     if (localRect.Intersects(Projectile.Hitbox))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage + (int)Math.Round(player.statLife * Projectile.ai[0]), player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByProjectile(Projectile.owner, Projectile.whoAmI), Projectile.damage + (int)Math.Round(player.statLife * Projectile.ai[0]), player.direction, true);
                         hitPlayer = true;
                     }
                 }

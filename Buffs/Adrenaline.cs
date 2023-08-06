@@ -8,8 +8,8 @@ namespace PathOfModifiers.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault(GetType().Name);
-            Description.SetDefault("'+50% damage, +30% attack speed, +30% move speed, -10% damage taken");
+            //TODO: DisplayName.SetDefault(GetType().Name);
+            // Description.SetDefault("'+50% damage, +30% attack speed, +30% move speed, -10% damage taken");
         }
 
         public override void Update(Player player, ref int buffIndex)

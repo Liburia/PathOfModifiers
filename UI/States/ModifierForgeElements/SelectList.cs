@@ -13,7 +13,7 @@ namespace PathOfModifiers.UI.States.ModifierForgeElements
 
         public override void Add(T item)
         {
-            item.OnClick += (UIMouseEvent evt, UIElement listeningElement) => Select((T)listeningElement);
+            item.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => Select((T)listeningElement);
 
             base.Add(item);
         }

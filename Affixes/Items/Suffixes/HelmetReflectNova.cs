@@ -79,17 +79,17 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             return $"Nova for { valueRange1 }% of damage taken + { valueRange2 }% of target's HP as damage when hit ({ valueRange3 }s CD)";
         }
 
-        public override void OnHitByNPC(Item item, Player player, NPC npc, int damage, bool crit)
+        public override void OnHitByNPC(Item item, Player player, NPC npc, Player.HurtInfo hurtInfo)
         {
-            SpawnNova(item, player, damage);
+            SpawnNova(item, player, hurtInfo.Damage);
         }
-        public override void OnHitByProjectile(Item item, Player player, Projectile projectile, int damage, bool crit)
+        public override void OnHitByPvp(Item item, Player player, Player attacker, Player.HurtInfo info)
         {
-            SpawnNova(item, player, damage);
+            SpawnNova(item, player, info.Damage);
         }
-        public override void OnHitByPvp(Item item, Player player, Player attacker, int damage, bool crit)
+        public override void OnHitByProjectile(Item item, Player player, Projectile projectile, Player.HurtInfo hurtInfo)
         {
-            SpawnNova(item, player, damage);
+            SpawnNova(item, player, hurtInfo.Damage);
         }
 
         void SpawnNova(Item item, Player player, int damageTaken)

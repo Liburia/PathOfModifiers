@@ -22,7 +22,7 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Thorn Nova");
+            //TODO: DisplayName.SetDefault("Thorn Nova");
             Main.projFrames[Projectile.type] = 3;
         }
         public override void SetDefaults()
@@ -78,7 +78,7 @@ namespace PathOfModifiers.Projectiles
                     Rectangle localRect = player.getRect();
                     if (localRect.Intersects(Projectile.Hitbox))
                     {
-                        player.Hurt(PlayerDeathReason.ByPlayer(Projectile.owner), Projectile.damage + (int)Math.Round(player.statLife * Projectile.ai[0]), player.direction, true);
+                        player.Hurt(PlayerDeathReason.ByProjectile(Projectile.owner, Projectile.whoAmI), Projectile.damage + (int)Math.Round(player.statLife * Projectile.ai[0]), player.direction, true);
                         hitPlayer = true;
                     }
                 }
