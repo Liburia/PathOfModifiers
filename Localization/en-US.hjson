@@ -121,12 +121,12 @@ Mods: {
 
 				DisableVanillaPrefixesWeapons: {
 					Label: Try disable vanilla prefixes on weapons
-					Tooltip: "Tries its best"
+					Tooltip: Tries its best
 				}
 
 				DisableVanillaPrefixesAccessories: {
 					Label: Try disable vanilla prefixes on accessories
-					Tooltip: "Tries its best"
+					Tooltip: Tries its best
 				}
 
 				DisableMaps: {
