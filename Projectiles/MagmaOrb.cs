@@ -18,10 +18,6 @@ namespace PathOfModifiers.Projectiles
         float addRotation;
         int bouncesLeft;
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("MagmaOrb");
-        }
         public override void SetDefaults()
         {
             Projectile.width = 28;

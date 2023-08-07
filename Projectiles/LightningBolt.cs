@@ -34,10 +34,6 @@ namespace PathOfModifiers.Projectiles
         bool isCloud;
         bool init;
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("LightningBolt");
-        }
         public override void SetDefaults()
         {
             textureGlow = ModContent.Request<Texture2D>("PathOfModifiers/Projectiles/LightningBoltGlow");

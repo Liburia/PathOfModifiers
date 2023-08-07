@@ -29,10 +29,6 @@ namespace PathOfModifiers.Projectiles
 
         bool isHomingOnTarget = true;
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("LifeOrb");
-        }
         public override void SetDefaults()
         {
             Projectile.penetrate = 1;

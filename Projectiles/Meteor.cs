@@ -22,7 +22,6 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            //TODO: DisplayName.SetDefault("Meteor");
             Main.projFrames[Projectile.type] = 2;
         }
         public override void SetDefaults()

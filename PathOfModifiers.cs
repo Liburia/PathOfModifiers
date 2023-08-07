@@ -91,8 +91,7 @@ namespace PathOfModifiers
                         affixItem.mod = mod;
                         affixItemList.Add(affixItem);
                         affixItemMap.Add(t, affixItemIndex);
-                        //TODO:: Wont this log from the other mod. Should be logged from PoM, check all loggers
-                        mod.Logger.Debug($"Added item affix {t.FullName} with index {affixItemIndex} from mod {mod.Name}");
+                        Instance.Logger.Debug($"Added item affix {t.FullName} with index {affixItemIndex} from mod {mod.Name}");
                         affixItemIndex++;
                     }
                     else if (t.IsSubclassOf(typeof(RarityItem)) && t != typeof(RarityItem))
@@ -100,7 +99,7 @@ namespace PathOfModifiers
                         rarityItem = (RarityItem)Activator.CreateInstance(t, mod);
                         rarityItemList.Add(rarityItem);
                         rarityItemMap.Add(t, rarityItemIndex);
-                        mod.Logger.Debug($"Added item rarity {t.FullName} with index {rarityItemIndex} from mod {mod.Name}");
+                        Instance.Logger.Debug($"Added item rarity {t.FullName} with index {rarityItemIndex} from mod {mod.Name}");
                         rarityItemIndex++;
                     }
                     else if (t.IsSubclassOf(typeof(Affixes.NPCs.Affix)) || t == typeof(Affixes.NPCs.Affix))
@@ -109,7 +108,7 @@ namespace PathOfModifiers
                         affixNPC.mod = mod;
                         affixNPCList.Add(affixNPC);
                         affixNPCMap.Add(t, affixNPCIndex);
-                        mod.Logger.Debug($"Added NPC affix {t.FullName} with index {affixNPCIndex} from mod {mod.Name}");
+                        Instance.Logger.Debug($"Added NPC affix {t.FullName} with index {affixNPCIndex} from mod {mod.Name}");
                         affixNPCIndex++;
                     }
                     else if (t.IsSubclassOf(typeof(RarityNPC)) && t != typeof(RarityNPC))
@@ -118,7 +117,7 @@ namespace PathOfModifiers
                         rarityNPC.mod = mod;
                         rarityNPCList.Add(rarityNPC);
                         rarityNPCMap.Add(t, rarityNPCIndex);
-                        mod.Logger.Debug($"Added NPC rarity {t.FullName} with index {rarityNPCIndex} from mod {mod.Name}");
+                        Instance.Logger.Debug($"Added NPC rarity {t.FullName} with index {rarityNPCIndex} from mod {mod.Name}");
                         rarityNPCIndex++;
                     }
                     else if (t.IsSubclassOf(typeof(Generator)) && t != typeof(Generator))
@@ -127,7 +126,7 @@ namespace PathOfModifiers
                         generator.mod = mod;
                         generatorList.Add(generator);
                         generatorMap.Add(t, generatorIndex);
-                        mod.Logger.Debug($"Added generator {t.FullName} with index {generatorIndex} from mod {mod.Name}");
+                        Instance.Logger.Debug($"Added generator {t.FullName} with index {generatorIndex} from mod {mod.Name}");
                         generatorIndex++;
                     }
                     else if (t.IsSubclassOf(typeof(Map)) && t != typeof(Map))
@@ -137,7 +136,7 @@ namespace PathOfModifiers
                         map.Initialize();
                         mapList.Add(map);
                         mapMap.Add(t, mapIndex);
-                        mod.Logger.Debug($"Added map {t.FullName} with index {mapIndex} from mod {mod.Name}");
+                        Instance.Logger.Debug($"Added map {t.FullName} with index {mapIndex} from mod {mod.Name}");
                         mapIndex++;
                     }
                 }

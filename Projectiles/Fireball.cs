@@ -13,10 +13,6 @@ namespace PathOfModifiers.Projectiles
         static readonly Vector2 explosionHalfSize = new Vector2(60f, 60f);
         const int baseTimeLeft = 600;
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("Fireball");
-        }
         public override void SetDefaults()
         {
             Main.projFrames[Projectile.type] = 3;

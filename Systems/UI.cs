@@ -45,8 +45,9 @@ namespace PathOfModifiers.Systems
 
         public override void Load()
         {
-            //TODO: Remove keybinds? Only allow in debug build?
+#if DEBUG
             key_toggleDebugMenu = KeybindLoader.RegisterKeybind(Mod, "Toggle Debug Menu", Microsoft.Xna.Framework.Input.Keys.None);
+#endif
 
             if (Main.netMode != NetmodeID.Server)
             {

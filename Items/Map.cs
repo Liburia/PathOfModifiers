@@ -13,12 +13,6 @@ namespace PathOfModifiers.Items
     {
         public Maps.Map map;
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("Map");
-            // Tooltip.SetDefault("Opens a new world.");
-        }
-
         public override void SetDefaults()
         {
             Item.width = 32;
@@ -33,8 +27,6 @@ namespace PathOfModifiers.Items
             Item.consumable = false;
         }
 
-        //TODO: Remove? Should never be null; just crash.
-        //E: Can't just crash since this is called on save
         void MapNullCheck()
         {
             if (map == null)

@@ -675,7 +675,7 @@ namespace PathOfModifiers.Affixes.Items
                 }
             }
         }
-        public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Item, consider using ModifyHitNPC instead */
+        public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)
         {
             Item affixItem;
             float damageMultiplier = 1f;
@@ -707,7 +707,7 @@ namespace PathOfModifiers.Affixes.Items
             modifiers.Knockback *= knockbackMultiplier;
             modifiers.CritDamage *= critDamageMultiplier;
         }
-        public void ModifyHitPvp(Item item, Player target, ref Player.HurtModifiers modifiers)/* tModPorter Note: Removed. Use ModifyHurt on the receiving player and check modifiers.PvP. Use modifiers.DamageSource.SourcePlayerIndex to get the attacking player */
+        public void ModifyHitPvp(Item item, Player target, ref Player.HurtModifiers modifiers)
         {
             Item affixItem;
             float damageMultiplier = 1f;
@@ -736,7 +736,7 @@ namespace PathOfModifiers.Affixes.Items
             }
             modifiers.FinalDamage *= damageMultiplier * critDamageMultiplier;
         }
-        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)/* tModPorter If you don't need the Projectile, consider using ModifyHitNPC instead */
+        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
         {
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
@@ -771,7 +771,7 @@ namespace PathOfModifiers.Affixes.Items
                 modifiers.CritDamage *= critDamageMultiplier;
             }
         }
-        public void ModifyHitPvpWithProj(Projectile proj, Player target, ref Player.HurtModifiers modifiers)/* tModPorter Note: Removed. Use ModifyHurt on the receiving player and check modifiers.PvP. Use modifiers.DamageSource.SourcePlayerIndex to get the attacking player */
+        public void ModifyHitPvpWithProj(Projectile proj, Player target, ref Player.HurtModifiers modifiers)
         {
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
@@ -803,7 +803,7 @@ namespace PathOfModifiers.Affixes.Items
                 modifiers.FinalDamage *= damageMultiplier * critDamageMultiplier;
             }
         }
-        public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)/* tModPorter If you don't need the Item, consider using OnHitNPC instead */
+        public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)
         {
             Item affixItem;
             for (int i = 0; i < Player.inventory.Length; i++)
@@ -829,7 +829,7 @@ namespace PathOfModifiers.Affixes.Items
                 }
             }
         }
-        public void OnHitPvp(Item item, Player target, Player.HurtModifiers modifiers, int damageDone)/* tModPorter Note: Removed. Use OnHurt on the receiving player and check info.PvP. Use info.DamageSource.SourcePlayerIndex to get the attacking player */
+        public void OnHitPvp(Item item, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
             Item affixItem;
 
@@ -856,7 +856,7 @@ namespace PathOfModifiers.Affixes.Items
                 }
             }
         }
-        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)/* tModPorter If you don't need the Projectile, consider using OnHitNPC instead */
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {
@@ -885,7 +885,7 @@ namespace PathOfModifiers.Affixes.Items
                 }
             }
         }
-        public void OnHitPvpWithProj(Projectile proj, Player target, Player.HurtModifiers modifiers, int damageDone)/* tModPorter Note: Removed. Use OnHurt on the receiving player and check info.PvP. Use info.DamageSource.SourcePlayerIndex to get the attacking player */
+        public void OnHitPvpWithProj(Projectile proj, Player target, Player.HurtModifiers modifiers, int damageDone)
         {
             if (!(proj.ModProjectile is Projectiles.INonTriggerringProjectile))
             {

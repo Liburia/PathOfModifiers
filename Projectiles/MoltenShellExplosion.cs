@@ -16,7 +16,6 @@ namespace PathOfModifiers.Projectiles
 
         public override void SetStaticDefaults()
         {
-            //TODO: DisplayName.SetDefault("Molten Shell Explosion");
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()

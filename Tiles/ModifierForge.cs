@@ -44,7 +44,6 @@ namespace PathOfModifiers.Tiles
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.addTile(Type);
             LocalizedText name = CreateMapEntryName();
-            // name.SetDefault("Modifier Forge");
             AddMapEntry(new Color(192, 120, 0), name);
             AnimationFrameHeight = 38;
 

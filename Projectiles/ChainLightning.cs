@@ -36,11 +36,6 @@ namespace PathOfModifiers.Projectiles
         bool init;
 
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("ChainLightning");
-        }
-
         public override void SetDefaults()
         {
             Projectile.penetrate = 1;

@@ -5,11 +5,6 @@ namespace PathOfModifiers.Items
 {
     public class ModifierFragment : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("Modifier Fragment");
-            // Tooltip.SetDefault("Used to modify modifiers at a modifier forge.");
-        }
         public override void SetDefaults()
         {
             Item.width = 40;

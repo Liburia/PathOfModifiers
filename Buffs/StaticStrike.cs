@@ -10,8 +10,6 @@ namespace PathOfModifiers.Buffs
 
         public override void SetStaticDefaults()
         {
-            //TODO: DisplayName.SetDefault("StaticStrike");
-            // Description.SetDefault("Hitting things around you periodically");
             Main.debuff[Type] = false;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

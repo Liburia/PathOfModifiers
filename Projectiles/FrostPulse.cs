@@ -13,11 +13,6 @@ namespace PathOfModifiers.Projectiles
         const int baseTimeLeft = 600;
         const int timeLeftAfterTileCollide = 5;
 
-
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("FrostPulse");
-        }
         public override void SetDefaults()
         {
             Projectile.width = 38;

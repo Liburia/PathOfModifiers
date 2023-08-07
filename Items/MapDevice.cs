@@ -7,11 +7,6 @@ namespace PathOfModifiers.Items
 {
     public class MapDevice : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("Map Device");
-            // Tooltip.SetDefault("Used to open other worlds.");
-        }
         public override void SetDefaults()
         {
             Item.width = 64;

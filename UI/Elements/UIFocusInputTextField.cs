@@ -56,7 +56,7 @@ namespace PathOfModifiers.UI.Elements
         public override void Update(GameTime gameTime)
         {
             Vector2 MousePosition = new Vector2((float)Main.mouseX, (float)Main.mouseY);
-            if (!ContainsPoint(MousePosition) && Main.mouseLeft) // TODO: && focused maybe?
+            if (!ContainsPoint(MousePosition) && Main.mouseLeft && Focused)
             {
                 Focused = false;
                 OnUnfocus?.Invoke(this, new EventArgs());

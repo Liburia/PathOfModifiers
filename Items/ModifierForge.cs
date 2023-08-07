@@ -6,12 +6,6 @@ namespace PathOfModifiers.Items
 {
     public class ModifierForge : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("Modifier Forge");
-            // Tooltip.SetDefault("Forged in the modifiers. Modifies modifiers.");
-        }
-
         public override void SetDefaults()
         {
             Item.width = 48;

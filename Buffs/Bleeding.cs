@@ -8,8 +8,6 @@ namespace PathOfModifiers.Buffs
     {
         public override void SetStaticDefaults()
         {
-            //TODO: DisplayName.SetDefault(GetType().Name);
-            // Description.SetDefault("Taking damage over time");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

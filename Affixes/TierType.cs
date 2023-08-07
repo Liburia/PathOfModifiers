@@ -121,7 +121,6 @@ namespace PathOfModifiers.Affixes
             Value = wt.min + ((wt.max - wt.min) * TierMultiplier);
         }
 
-        //TODO: Test that these work after changing to min/max weighted tiers
         UIElement IUIDrawable.CreateUI(UIElement parent, Action onChangeCallback)
         {
             UIElement el = new();

@@ -46,7 +46,6 @@
 //            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
 //            TileObjectData.addTile(Type);
 //            ModTranslation name = CreateMapEntryName();
-//            name.SetDefault("Map Device");
 //            AddMapEntry(new Color(107, 66, 130), name);
 //            AnimationFrameHeight = 72;
 

@@ -574,7 +574,6 @@ namespace PathOfModifiers.UI.States
             {
                 Player player = Main.LocalPlayer;
                 Point playerPos = player.MountedCenter.ToTileCoordinates();
-                //TODO: Don't hardcode TE size?
                 if (playerPos.X < Tiles.ModifierForge.activeForge.Position.X - Player.tileRangeX || playerPos.X > Tiles.ModifierForge.activeForge.Position.X + Player.tileRangeX + 2 ||
                     playerPos.Y < Tiles.ModifierForge.activeForge.Position.Y - Player.tileRangeY || playerPos.Y > Tiles.ModifierForge.activeForge.Position.Y + Player.tileRangeY + 1)
                 {

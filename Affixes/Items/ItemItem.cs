@@ -1181,14 +1181,12 @@ namespace PathOfModifiers.Affixes.Items
                     Mod.Logger.Error(e.ToString());
                 }
             }
-            //TODO: Add light/dust?
         }
         public override void PostDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
         }
         public override void MeleeEffects(Item item, Player player, Rectangle hitbox)
         {
-            //TODO: add light/dust?
         }
 
         public override void SaveData(Item item, TagCompound tag)

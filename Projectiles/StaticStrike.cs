@@ -21,10 +21,6 @@ namespace PathOfModifiers.Projectiles
         bool init;
         int[] frameVariants = new int[4];
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("StaticStrike");
-        }
         public override void SetDefaults()
         {
             Projectile.timeLeft = 30;

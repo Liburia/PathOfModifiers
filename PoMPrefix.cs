@@ -12,11 +12,6 @@ namespace PathOfModifiers
 
         }
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("");
-        }
-
         public override bool CanRoll(Item item)
         {
             return false;

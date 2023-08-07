@@ -19,13 +19,8 @@ namespace PathOfModifiers.Projectiles
         {
             Terraria.GameContent.TextureAssets.Projectile[Projectile.type] = Terraria.GameContent.TextureAssets.MagicPixel;
             Main.projFrames[Projectile.type] = 1;
-                //TODO: DisplayName.SetDefault(Regex.Replace(Name, "([A-Z])", " $1").Trim());
         }
 
-        public override void SetStaticDefaults()
-        {
-            //TODO: DisplayName.SetDefault("ChilledAir");
-        }
         public override void SetDefaults()
         {
             Projectile.timeLeft = PoMGlobals.ailmentDuration;
