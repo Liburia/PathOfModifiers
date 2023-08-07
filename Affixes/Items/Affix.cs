@@ -80,6 +80,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone) { }
         #endregion
         #region Player Hooks
+        public virtual void PlayerModifyLuck(Item item, ref float luck) { }
         public virtual void PlayerModifyMaxStats(Item item, ref StatModifier health, ref StatModifier mana) { health = StatModifier.Default; mana = StatModifier.Default; }
         public virtual void PlayerModifyCaughtFish(Item item, Item fish, ref float multiplier) { }
         public virtual bool? PlayerCanConsumeBait(Item bait) { return null; }

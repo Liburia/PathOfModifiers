@@ -811,6 +811,17 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
+        public void PlayerModifyLuck(Item item, ref float luck)
+        {
+            foreach (var prefix in prefixes)
+            {
+                prefix.PlayerModifyLuck(item, ref luck);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.PlayerModifyLuck(item, ref luck);
+            }
+        }
         public void PlayerModifyMaxStats(Item item, ref StatModifier health, ref StatModifier mana)
         {
             foreach (var prefix in prefixes)

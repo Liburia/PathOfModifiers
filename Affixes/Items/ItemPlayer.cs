@@ -297,6 +297,32 @@ namespace PathOfModifiers.Affixes.Items
             health = new_health;
             mana = new_mana;
         }
+        public override void ModifyLuck(ref float luck)
+        {
+            Item affixItem;
+            for (int i = 0; i < Player.inventory.Length; i++)
+            {
+                affixItem = Player.inventory[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyLuck(affixItem, ref luck);
+                }
+            }
+            for (int i = 0; i < Player.armor.Length; i++)
+            {
+                affixItem = Player.armor[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyLuck(affixItem, ref luck);
+                }
+            }
+        }
 
         public override float UseSpeedMultiplier(Item item)
         {
