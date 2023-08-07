@@ -323,6 +323,58 @@ namespace PathOfModifiers.Affixes.Items
                 }
             }
         }
+        public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
+        {
+            Item affixItem;
+            for (int i = 0; i < Player.inventory.Length; i++)
+            {
+                affixItem = Player.inventory[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerGetHealLife(affixItem, item, ref healValue);
+                }
+            }
+            for (int i = 0; i < Player.armor.Length; i++)
+            {
+                affixItem = Player.armor[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerGetHealLife(affixItem, item, ref healValue);
+                }
+            }
+        }
+        public override void GetHealMana(Item item, bool quickHeal, ref int healValue)
+        {
+            Item affixItem;
+            for (int i = 0; i < Player.inventory.Length; i++)
+            {
+                affixItem = Player.inventory[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerGetHealMana(affixItem, item, ref healValue);
+                }
+            }
+            for (int i = 0; i < Player.armor.Length; i++)
+            {
+                affixItem = Player.armor[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerGetHealMana(affixItem, item, ref healValue);
+                }
+            }
+        }
 
         public override float UseSpeedMultiplier(Item item)
         {

@@ -811,6 +811,32 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
+        public void PlayerGetHealLife(Item item, Item healItem, ref int healValue)
+        {
+            float multiplier = 1f;
+            foreach (var prefix in prefixes)
+            {
+                prefix.PlayerGetHealLife(item, healItem, ref multiplier);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.PlayerGetHealLife(item, healItem, ref multiplier);
+            }
+            healValue = (int)Math.Round(healValue * multiplier);
+        }
+        public void PlayerGetHealMana(Item item, Item healItem, ref int healValue)
+        {
+            float multiplier = 1f;
+            foreach (var prefix in prefixes)
+            {
+                prefix.PlayerGetHealMana(item, healItem, ref multiplier);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.PlayerGetHealMana(item, healItem, ref multiplier);
+            }
+            healValue = (int)Math.Round(healValue * multiplier);
+        }
         public void PlayerModifyLuck(Item item, ref float luck)
         {
             foreach (var prefix in prefixes)
