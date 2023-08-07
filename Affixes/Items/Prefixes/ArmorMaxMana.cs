@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
@@ -43,9 +44,9 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueRange1 } max mana";
         }
 
-        public override void UpdateEquip(Item item, ItemPlayer player)
+        public override void PlayerModifyMaxStats(Item item, ref StatModifier health, ref StatModifier mana)
         {
-            player.Player.statManaMax2 += Type1.GetValue();
+            mana.Flat += Type1.GetValue();
         }
     }
 }

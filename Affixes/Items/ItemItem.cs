@@ -14,6 +14,7 @@ using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
 using static Terraria.ModLoader.ModContent;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace PathOfModifiers.Affixes.Items
 {
@@ -810,6 +811,17 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
+        public void PlayerModifyMaxStats(Item item, ref StatModifier health, ref StatModifier mana)
+        {
+            foreach (var prefix in prefixes)
+            {
+                prefix.PlayerModifyMaxStats(item, ref health, ref mana);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.PlayerModifyMaxStats(item, ref health, ref mana);
+            }
+        }
         public void PlayerModifyCaughtFish(Item item, Item fish)
         {
             float multiplier = 1f;

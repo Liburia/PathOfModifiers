@@ -267,6 +267,36 @@ namespace PathOfModifiers.Affixes.Items
             }
             regen = (regen * regenMultiplier) + (Player.lifeRegen * regenMultiplier) - Player.lifeRegen;
         }
+        public override void ModifyMaxStats(out StatModifier health, out StatModifier mana)
+        {
+            Item affixItem;
+            var new_health = StatModifier.Default;
+            var new_mana = StatModifier.Default;
+            for (int i = 0; i < Player.inventory.Length; i++)
+            {
+                affixItem = Player.inventory[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyMaxStats(affixItem, ref new_health, ref new_mana);
+                }
+            }
+            for (int i = 0; i < Player.armor.Length; i++)
+            {
+                affixItem = Player.armor[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyMaxStats(affixItem, ref new_health, ref new_mana);
+                }
+            }
+            health = new_health;
+            mana = new_mana;
+        }
 
         public override float UseSpeedMultiplier(Item item)
         {
@@ -547,7 +577,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -558,7 +588,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 affixItem = Player.armor[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -576,7 +606,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -587,7 +617,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 affixItem = Player.armor[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -607,7 +637,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -618,7 +648,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 affixItem = Player.armor[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -701,7 +731,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -712,7 +742,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 affixItem = Player.armor[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -728,7 +758,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -739,7 +769,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 affixItem = Player.armor[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -814,7 +844,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
@@ -826,7 +856,7 @@ namespace PathOfModifiers.Affixes.Items
             for (int i = 0; i < Player.armor.Length; i++)
             {
                 affixItem = Player.armor[i];
-                if (affixItem.type == 0 || affixItem.stack == 0)
+                if (affixItem.IsAir)
                     continue;
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
