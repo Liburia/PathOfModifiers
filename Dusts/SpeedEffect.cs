@@ -6,13 +6,14 @@ namespace PathOfModifiers.Dusts
 {
     public class SpeedEffect : ModDust
     {
-        const float scaleMultiplier = 0.9f;
+        const float scaleMultiplier = 0.5f;
         const int alphaAdd = 10;
         const float removeAtAlpha = 250;
 
         public override void OnSpawn(Dust dust)
         {
             dust.frame = new Rectangle(0, 0, 18, 3);
+            dust.scale = scaleMultiplier;
             dust.alpha = 70;
         }
 
