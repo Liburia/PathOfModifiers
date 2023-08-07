@@ -21,6 +21,7 @@ namespace PathOfModifiers
         [ReloadRequired]
         [JsonIgnore]
         public bool DisableMaps;
+
         [Label("Disable NPC modifiers")]
         [DefaultValue(true)]
         [ReloadRequired]

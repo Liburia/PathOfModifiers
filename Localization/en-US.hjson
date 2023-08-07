@@ -1,0 +1,144 @@
+Mods: {
+	PathOfModifiers: {
+		Buffs: {
+			Adrenaline: {
+				DisplayName: Adrenaline
+				Description: "'+50% damage, +30% attack speed, +30% move speed, -10% damage taken"
+			}
+
+			Bleeding: {
+				DisplayName: Bleeding
+				Description: Taking damage over time
+			}
+
+			BurningAir: {
+				DisplayName: BurningAir
+				Description: Losing or restoring life over time
+			}
+
+			Chilled: {
+				DisplayName: Chilled
+				Description: Damage dealt is modified
+			}
+
+			ChilledAir: {
+				DisplayName: ChilledAir
+				Description: Damage dealt is modified
+			}
+
+			DamageOverTime: {
+				DisplayName: DamageOverTime
+				Description: Taking damage over time
+			}
+
+			Ignited: {
+				DisplayName: Ignited
+				Description: Losing or restoring life over time
+			}
+
+			MoveSpeed: {
+				DisplayName: DamageDoTDebuff
+				Description: Taking damage over time
+			}
+
+			Poisoned: {
+				DisplayName: Poisoned
+				Description: Taking damage over time
+			}
+
+			Shocked: {
+				DisplayName: Shocked
+				Description: Damage taken is modified
+			}
+
+			ShockedAir: {
+				DisplayName: ShockedAir
+				Description: Damage taken is modified
+			}
+
+			StackingDamageOverTime: {
+				DisplayName: StackingDamageOverTime
+				Description: Taking stacking damage over time
+			}
+
+			StaticStrike: {
+				DisplayName: StaticStrike
+				Description: Hitting things around you periodically
+			}
+		}
+
+		Items: {
+			Map: {
+				DisplayName: Map
+				Tooltip: Opens a new world when activated inside the Map Device.
+			}
+
+			MapBorder: {
+				DisplayName: Map Border
+				Tooltip: Outlines the rectangle the map will generate in.
+			}
+
+			MapDevice: {
+				DisplayName: Map Device
+				Tooltip: Used to open other worlds.
+			}
+
+			ModifierForge: {
+				DisplayName: Modifier Forge
+				Tooltip: Forged in the modifiers. Modifies modifiers.
+			}
+
+			ModifierFragment: {
+				DisplayName: Modifier Fragment
+				Tooltip: Used to modify modifiers at a modifier forge.
+			}
+		}
+
+		Projectiles: {
+			BurningAir.DisplayName: BurningAir
+			ChainLightning.DisplayName: ChainLightning
+			ChilledAir.DisplayName: ChilledAir
+			Fireball.DisplayName: Fireball
+			FrostPulse.DisplayName: FrostPulse
+			IceBurst.DisplayName: IceBurst
+			Icicle.DisplayName: Icicle
+			LifeOrb.DisplayName: LifeOrb
+			LightningBolt.DisplayName: LightningBolt
+			MagmaOrb.DisplayName: MagmaOrb
+			Meteor.DisplayName: Meteor
+			MoltenShellExplosion.DisplayName: Molten Shell Explosion
+			ReflectNova.DisplayName: Thorn Nova
+			StaticStrike.DisplayName: StaticStrike
+		}
+
+		Tiles.ModifierForge.MapEntry: Modifier Forge
+		"Keybinds.Toggle Debug Menu.DisplayName": Toggle Debug Menu
+		Prefixes.PoMPrefix.DisplayName: PoM Prefix
+
+		Configs: {
+			PoMConfigServer: {
+				DisplayName: PoM Config Server
+
+				DisableVanillaPrefixesWeapons: {
+					Label: Try disable vanilla prefixes on weapons
+					Tooltip: "Tries its best"
+				}
+
+				DisableVanillaPrefixesAccessories: {
+					Label: Try disable vanilla prefixes on accessories
+					Tooltip: "Tries its best"
+				}
+
+				DisableMaps: {
+					Label: Disable maps
+					Tooltip: ""
+				}
+
+				DisableNPCModifiers: {
+					Label: Disable NPC modifiers
+					Tooltip: ""
+				}
+			}
+		}
+	}
+}
