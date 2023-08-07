@@ -1,2 +1,10 @@
+[h1] Path Of Modifiers [/h1] 
+
 Path Of Modifiers replaces vanilla item prefixes with a wide variety of custom modifiers.
 Over 100 prefixes and suffixes!
+
+[list]
+    [*]Collect modifier fragments from killed enemies
+    [*]Use fragments in the modifier forge to roll and craft your items
+    [*]Have fun with all the possibilities!
+[/list]
