@@ -548,7 +548,6 @@ namespace PathOfModifiers.Affixes.Items
         #region Item Hooks
         public override bool CanConsumeAmmo(Item weapon, Item ammo, Player player)
         {
-            //TODO: Test this when TML fixes the hook, and actually calls this on the item
             bool consume = true;
             foreach (var prefix in prefixes)
             {
@@ -589,11 +588,11 @@ namespace PathOfModifiers.Affixes.Items
             float multiplier = 1f;
             foreach (var prefix in prefixes)
             {
-                prefix.GetWeaponKnockback(item, player, ref multiplier);
+                prefix.ModifyWeaponKnockback(item, player, ref multiplier);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.GetWeaponKnockback(item, player, ref multiplier);
+                suffix.ModifyWeaponKnockback(item, player, ref multiplier);
             }
             knockback *= multiplier;
         }
@@ -687,17 +686,16 @@ namespace PathOfModifiers.Affixes.Items
                 suffix.HoldItem(item, player);
             }
         }
-        public override bool? UseItem(Item item, Player player)
+        public override void ModifyItemScale(Item item, Player player, ref float scale)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.UseItem(item, player);
+                prefix.ModifyItemScale(item, player, ref scale);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.UseItem(item, player);
+                suffix.ModifyItemScale(item, player, ref scale);
             }
-            return null;
         }
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref NPC.HitModifiers modifiers)
         {
@@ -812,6 +810,38 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
+        public void PlayerModifyCaughtFish(Item item, Item fish)
+        {
+            float multiplier = 1f;
+            foreach (var prefix in prefixes)
+            {
+                prefix.PlayerModifyCaughtFish(item, fish, ref multiplier);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.PlayerModifyCaughtFish(item, fish, ref multiplier);
+            }
+            float fNewAmount = fish.stack * multiplier;
+            int newAmount = (int)Math.Floor(fNewAmount);
+            if (Main.rand.NextFloat() < Math.Truncate(fNewAmount))
+            {
+                newAmount += 1;
+            }
+            fish.stack = newAmount;
+        }
+        public bool? PlayerCanConsumeBait(Item item, Item bait)
+        {
+            bool? consume = null;
+            foreach (var prefix in prefixes)
+            {
+                consume = prefix.PlayerCanConsumeBait(bait) ?? consume;
+            }
+            foreach (var suffix in suffixes)
+            {
+                consume = suffix.PlayerCanConsumeBait(bait) ?? consume;
+            }
+            return consume;
+        }
         public bool PlayerCanConsumeAmmo(Player player, Item item, Item ammo)
         {
             bool consume = true;

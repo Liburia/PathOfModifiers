@@ -300,7 +300,6 @@ namespace PathOfModifiers.Affixes.Items
             }
             crit *= multiplier;
         }
-
         public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
         {
             Item item;
@@ -484,6 +483,62 @@ namespace PathOfModifiers.Affixes.Items
                 }
 
             }
+        }
+
+        public override void ModifyCaughtFish(Item fish)
+        {
+            Item affixItem;
+            for (int i = 0; i < Player.inventory.Length; i++)
+            {
+                affixItem = Player.inventory[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyCaughtFish(affixItem, fish);
+                }
+            }
+            for (int i = 0; i < Player.armor.Length; i++)
+            {
+                affixItem = Player.armor[i];
+                if (affixItem.IsAir)
+                    continue;
+
+                if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerModifyCaughtFish(affixItem, fish);
+                }
+            }
+        }
+        public override bool? CanConsumeBait(Item bait)
+        {
+            bool? consume = null;
+            Item item;
+            for (int i = 0; i < Player.inventory.Length; i++)
+            {
+                item = Player.inventory[i];
+                if (item.IsAir)
+                    continue;
+
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerCanConsumeBait(item, bait);
+                }
+            }
+            for (int i = 0; i < Player.armor.Length; i++)
+            {
+                item = Player.armor[i];
+                if (item.IsAir)
+                    continue;
+
+                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                {
+                    modItem.PlayerCanConsumeBait(item, bait);
+                }
+            }
+
+            return consume;
         }
 
         public void OnKillNPC(NPC target)

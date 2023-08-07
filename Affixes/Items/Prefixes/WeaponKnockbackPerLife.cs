@@ -45,7 +45,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"Up to { plusMinus1 }{ valueRange1 }% knockback above 50% life and up to { plusMinus2 }{ valueRange1 }% below";
         }
 
-        public override void GetWeaponKnockback(Item item, Player player, ref float multiplier)
+        public override void ModifyWeaponKnockback(Item item, Player player, ref float multiplier)
         {
             float value = Type1.GetValue();
             multiplier += value * (((float)player.statLife / player.statLifeMax2) - 0.5f) * 2;

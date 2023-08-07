@@ -59,14 +59,14 @@ namespace PathOfModifiers.Affixes.Items
         #region Item Hooks
         public virtual void ModifyWeaponCrit(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage) { }
-        public virtual void GetWeaponKnockback(Item item, Player player, ref float multiplier) { }
+        public virtual void ModifyWeaponKnockback(Item item, Player player, ref float multiplier) { }
         public virtual void UseSpeedMultiplier(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyManaCost(Item item, Player player, ref float reduce, ref float mult) { }
         public virtual void UpdateInventory(Item item, ItemPlayer player) { }
         public virtual void UpdateEquip(Item item, ItemPlayer player) { }
         public virtual bool CanConsumeAmmo(Item item, Item ammo, Player player) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
-        public virtual void UseItem(Item item, Player player) { }
+        public virtual void ModifyItemScale(Item item, Player player, ref float scale) { }
         public virtual void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers) { }
         public virtual void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
         public virtual void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone) { }
@@ -80,6 +80,8 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone) { }
         #endregion
         #region Player Hooks
+        public virtual void PlayerModifyCaughtFish(Item item, Item fish, ref float multiplier) { }
+        public virtual bool? PlayerCanConsumeBait(Item bait) { return null; }
         public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo) { return true; }
         public virtual bool FreeDodge(Item item, Player player, ref Player.HurtInfo info) { return false; }
         public virtual void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }

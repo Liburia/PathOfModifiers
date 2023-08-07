@@ -47,10 +47,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueRange1 }% size";
         }
 
-        public override void UseItem(Item item, Player player)
+        public override void ModifyItemScale(Item item, Player player, ref float scale)
         {
             float value = Type1.GetValue();
-            item.scale = baseScale * (value + 1);
+            scale = baseScale * (value + 1);
         }
 
         /// <summary>

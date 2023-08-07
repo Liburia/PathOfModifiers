@@ -2,7 +2,7 @@
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
-    public class WeaponKnockback : AffixTiered<TTFloat>, IPrefix
+    public class ArmorFishingYield : AffixTiered<TTFloat>, IPrefix
     {
         public override double Weight { get; } = 1;
 
@@ -21,33 +21,31 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Feeble", 3),
-            new WeightedTierName("Weak", 2),
-            new WeightedTierName("Light", 0.5),
-            new WeightedTierName("Heavy", 0.5),
-            new WeightedTierName("Strong", 2),
-            new WeightedTierName("Forceful", 3),
+            new WeightedTierName("Barren", 3),
+            new WeightedTierName("Catchless", 2),
+            new WeightedTierName("Unbitey", 0.5),
+            new WeightedTierName("Bountiful", 0.5),
+            new WeightedTierName("Abundant", 2),
+            new WeightedTierName("Teeming", 3),
         };
 
 
         public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
-                ItemItem.IsWeapon(item) &&
-                ItemItem.CanKnockback(item);
+                ItemItem.IsAnyArmor(item);
         }
 
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueRange1 }% knockback";
+            return $"{plusMinus}{valueRange1}% fishing yield";
         }
 
-        public override void ModifyWeaponKnockback(Item item, Player player, ref float multiplier)
+        public override void PlayerModifyCaughtFish(Item item, Item fish, ref float multiplier)
         {
-            float value = Type1.GetValue();
-            multiplier += value;
+            multiplier += Type1.GetValue();
         }
     }
 }
