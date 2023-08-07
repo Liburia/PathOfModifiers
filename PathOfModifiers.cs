@@ -17,6 +17,8 @@ namespace PathOfModifiers
         public static PathOfModifiers Instance { get; private set; }
         public PathOfModifiers() { }
 
+        public override uint ExtraPlayerBuffSlots => 15;
+
         public static List<Mod> registeredMods = new();
         public static void RegisterMod(Mod mod)
         {
