@@ -145,7 +145,7 @@ namespace PathOfModifiers
             }
             if (timedValueInstanceCollection.instances.TryGetValue(typeof(TimedValueInstanceCollection.InstanceType.Chill), out var chills))
             {
-                if (chills.totalValue > 0)
+                if (chills.totalValue < 0)
                 {
                     PoMEffectHelper.Chill(npc.position, npc.width, npc.height);
                 }
