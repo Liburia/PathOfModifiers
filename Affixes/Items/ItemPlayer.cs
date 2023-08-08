@@ -535,7 +535,7 @@ namespace PathOfModifiers.Affixes.Items
             {
                 int reflectDamage = (int)Math.Round(info.Damage * reflectMeleeDamage);
                 int reflectDirection = attacker.Center.X > Player.Center.X ? 1 : -1;
-                attacker.Hurt(PlayerDeathReason.ByCustomReason("died to reflect"), reflectDamage, reflectDirection, true, false);
+                attacker.Hurt(PlayerDeathReason.ByCustomReason($"{Player.name} died to reflect"), reflectDamage, reflectDirection, true, false);
                 attacker.immune = false;
             }
         }

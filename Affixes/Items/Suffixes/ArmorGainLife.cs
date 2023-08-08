@@ -80,7 +80,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 else
                 {
                     player.immune = false;
-                    player.Hurt(PlayerDeathReason.ByCustomReason("healed too little"), -amount, 0, false);
+                    player.Hurt(PlayerDeathReason.ByCustomReason($"{Player.nameLen} healed too little"), -amount, 0, false);
                 }
             }
         }
