@@ -87,7 +87,6 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void PlayerModifyCaughtFish(Item item, Player player, Item fish, ref float multiplier) { }
         public virtual bool? PlayerCanConsumeBait(Item item, Player player, Item bait) { return null; }
         public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo) { return true; }
-        public virtual bool FreeDodge(Item item, Player player, ref Player.HurtInfo info) { return false; }
         public virtual void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
         public virtual void PostHurt(Item item, Player player, Player.HurtInfo info) { }
         public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }

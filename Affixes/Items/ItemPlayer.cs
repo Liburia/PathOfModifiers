@@ -141,31 +141,11 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override bool FreeDodge(Player.HurtInfo info)
         {
-            Item item;
             bool dodge = false;
-            for (int i = 0; i < Player.inventory.Length; i++)
+            if (Main.rand.NextFloat() < dodgeChance)
             {
-                item = Player.inventory[i];
-                if (item.IsAir)
-                    continue;
-
-                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
-                {
-                    dodge |= modItem.FreeDodge(item, Player, ref info);
-                }
+                dodge = true;
             }
-            for (int i = 0; i < Player.armor.Length; i++)
-            {
-                item = Player.armor[i];
-                if (item.IsAir)
-                    continue;
-
-                if (item.TryGetGlobalItem<ItemItem>(out var modItem))
-                {
-                    dodge |= modItem.FreeDodge(item, Player, ref info);
-                }
-            }
-
             return dodge;
         }
         public override void ModifyHurt(ref Player.HurtModifiers modifiers)

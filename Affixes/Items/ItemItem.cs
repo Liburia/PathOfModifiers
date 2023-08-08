@@ -892,19 +892,6 @@ namespace PathOfModifiers.Affixes.Items
             }
             return consume;
         }
-        public bool FreeDodge(Item item, Player player, ref Player.HurtInfo info)
-        {
-            bool dodge = false;
-            foreach (var prefix in prefixes)
-            {
-                dodge |= prefix.FreeDodge(item, player, ref info);
-            }
-            foreach (var suffix in suffixes)
-            {
-                dodge |= suffix.FreeDodge(item, player, ref info);
-            }
-            return dodge;
-        }
         public void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             foreach (var prefix in prefixes)
