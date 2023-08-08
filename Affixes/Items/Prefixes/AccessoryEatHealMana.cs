@@ -48,7 +48,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             if (ItemItem.IsAccessoryEquipped(item, player))
             {
-                healMultiplier *= Type1.GetValue();
+                healMultiplier += Type1.GetValue();
             }
         }
     }
