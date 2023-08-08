@@ -280,7 +280,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyMaxStats(affixItem, ref new_health, ref new_mana);
+                    modItem.PlayerModifyMaxStats(affixItem, Player, ref new_health, ref new_mana);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -291,7 +291,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyMaxStats(affixItem, ref new_health, ref new_mana);
+                    modItem.PlayerModifyMaxStats(affixItem, Player, ref new_health, ref new_mana);
                 }
             }
             health = new_health;
@@ -308,7 +308,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyLuck(affixItem, ref luck);
+                    modItem.PlayerModifyLuck(affixItem, Player, ref luck);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -319,7 +319,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyLuck(affixItem, ref luck);
+                    modItem.PlayerModifyLuck(affixItem, Player, ref luck);
                 }
             }
         }
@@ -335,7 +335,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerGetHealLife(affixItem, item, ref multiplier);
+                    modItem.PlayerGetHealLife(affixItem, Player, item, ref multiplier);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -346,7 +346,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerGetHealLife(affixItem, item, ref multiplier);
+                    modItem.PlayerGetHealLife(affixItem, Player, item, ref multiplier);
                 }
             }
             healValue = (int)Math.Round(healValue * multiplier);
@@ -363,7 +363,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerGetHealMana(affixItem, item, ref multiplier);
+                    modItem.PlayerGetHealMana(affixItem, Player, item, ref multiplier);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -374,7 +374,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerGetHealMana(affixItem, item, ref multiplier);
+                    modItem.PlayerGetHealMana(affixItem, Player, item, ref multiplier);
                 }
             }
             healValue = (int)Math.Round(healValue * multiplier);
@@ -609,7 +609,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyCaughtFish(affixItem, fish, ref multiplier);
+                    modItem.PlayerModifyCaughtFish(affixItem, Player, fish, ref multiplier);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -620,7 +620,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyCaughtFish(affixItem, fish, ref multiplier);
+                    modItem.PlayerModifyCaughtFish(affixItem, Player, fish, ref multiplier);
                 }
             }
 
@@ -651,7 +651,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    consume = modItem.PlayerCanConsumeBait(item, bait) ?? consume;
+                    consume = modItem.PlayerCanConsumeBait(item, Player, bait) ?? consume;
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -662,7 +662,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    consume = modItem.PlayerCanConsumeBait(item, bait) ?? consume;
+                    consume = modItem.PlayerCanConsumeBait(item, Player, bait) ?? consume;
                 }
             }
 

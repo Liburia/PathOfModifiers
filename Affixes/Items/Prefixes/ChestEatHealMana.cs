@@ -43,9 +43,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueRange1 }% mana heal from using items";
         }
 
-        public override void PlayerGetHealMana(Item item, Item healItem, ref float healMultiplier)
+        public override void PlayerGetHealMana(Item item, Player player, Item healItem, ref float healMultiplier)
         {
-            healMultiplier *= Type1.GetValue();
+            if (ItemItem.IsArmorEquipped(item, player))
+            {
+                healMultiplier *= Type1.GetValue();
+            }
         }
     }
 }

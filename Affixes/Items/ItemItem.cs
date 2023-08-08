@@ -811,71 +811,71 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
-        public void PlayerGetHealLife(Item item, Item healItem, ref float multiplier)
+        public void PlayerGetHealLife(Item item, Player player, Item healItem, ref float multiplier)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerGetHealLife(item, healItem, ref multiplier);
+                prefix.PlayerGetHealLife(item, player, healItem, ref multiplier);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerGetHealLife(item, healItem, ref multiplier);
+                suffix.PlayerGetHealLife(item, player, healItem, ref multiplier);
             }
         }
-        public void PlayerGetHealMana(Item item, Item healItem, ref float multiplier)
+        public void PlayerGetHealMana(Item item, Player player, Item healItem, ref float multiplier)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerGetHealMana(item, healItem, ref multiplier);
+                prefix.PlayerGetHealMana(item, player, healItem, ref multiplier);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerGetHealMana(item, healItem, ref multiplier);
+                suffix.PlayerGetHealMana(item, player, healItem, ref multiplier);
             }
         }
-        public void PlayerModifyLuck(Item item, ref float luck)
+        public void PlayerModifyLuck(Item item, Player player, ref float luck)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerModifyLuck(item, ref luck);
+                prefix.PlayerModifyLuck(item, player, ref luck);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerModifyLuck(item, ref luck);
+                suffix.PlayerModifyLuck(item, player, ref luck);
             }
         }
-        public void PlayerModifyMaxStats(Item item, ref StatModifier health, ref StatModifier mana)
+        public void PlayerModifyMaxStats(Item item, Player player, ref StatModifier health, ref StatModifier mana)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerModifyMaxStats(item, ref health, ref mana);
+                prefix.PlayerModifyMaxStats(item, player, ref health, ref mana);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerModifyMaxStats(item, ref health, ref mana);
+                suffix.PlayerModifyMaxStats(item, player, ref health, ref mana);
             }
         }
-        public void PlayerModifyCaughtFish(Item item, Item fish, ref float multiplier)
+        public void PlayerModifyCaughtFish(Item item, Player player, Item fish, ref float multiplier)
         {
             foreach (var prefix in prefixes)
             {
-                prefix.PlayerModifyCaughtFish(item, fish, ref multiplier);
+                prefix.PlayerModifyCaughtFish(item, player, fish, ref multiplier);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.PlayerModifyCaughtFish(item, fish, ref multiplier);
+                suffix.PlayerModifyCaughtFish(item, player, fish, ref multiplier);
             }
         }
-        public bool? PlayerCanConsumeBait(Item item, Item bait)
+        public bool? PlayerCanConsumeBait(Item item, Player player, Item bait)
         {
             bool? consume = null;
             foreach (var prefix in prefixes)
             {
-                consume = prefix.PlayerCanConsumeBait(bait) ?? consume;
+                consume = prefix.PlayerCanConsumeBait(item, player, bait) ?? consume;
             }
             foreach (var suffix in suffixes)
             {
-                consume = suffix.PlayerCanConsumeBait(bait) ?? consume;
+                consume = suffix.PlayerCanConsumeBait(item, player, bait) ?? consume;
             }
             return consume;
         }

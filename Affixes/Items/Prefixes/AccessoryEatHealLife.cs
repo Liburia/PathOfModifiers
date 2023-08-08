@@ -44,9 +44,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueRange1 }% life heal from using items";
         }
 
-        public override void PlayerGetHealLife(Item item, Item healItem, ref float healMultiplier)
+        public override void PlayerGetHealLife(Item item, Player player, Item healItem, ref float healMultiplier)
         {
-            healMultiplier *= Type1.GetValue();
+            if (ItemItem.IsAccessoryEquipped(item, player))
+            { 
+                healMultiplier *= Type1.GetValue();
+            }
         }
     }
 }

@@ -44,9 +44,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueRange1 } max mana";
         }
 
-        public override void PlayerModifyMaxStats(Item item, ref StatModifier health, ref StatModifier mana)
+        public override void PlayerModifyMaxStats(Item item, Player player, ref StatModifier health, ref StatModifier mana)
         {
-            mana.Flat += Type1.GetValue();
+            if (ItemItem.IsAccessoryEquipped(item, player))
+            {
+                mana.Flat += Type1.GetValue();
+            }
         }
     }
 }

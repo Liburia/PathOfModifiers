@@ -43,9 +43,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{plusMinus}{valueRange1}% fishing yield";
         }
 
-        public override void PlayerModifyCaughtFish(Item item, Item fish, ref float multiplier)
+        public override void PlayerModifyCaughtFish(Item item, Player player, Item fish, ref float multiplier)
         {
-            multiplier += Type1.GetValue();
+            if (ItemItem.IsArmorEquipped(item, player))
+            {
+                multiplier += Type1.GetValue();
+            }
         }
     }
 }

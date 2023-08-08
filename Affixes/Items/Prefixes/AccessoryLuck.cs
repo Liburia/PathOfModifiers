@@ -44,9 +44,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueRange1 } luck";
         }
 
-        public override void PlayerModifyLuck(Item item, ref float luck)
+        public override void PlayerModifyLuck(Item item, Player player, ref float luck)
         {
-            luck += Type1.GetValue();
+            if (ItemItem.IsAccessoryEquipped(item, player))
+            {
+                luck += Type1.GetValue();
+            }
         }
     }
 }

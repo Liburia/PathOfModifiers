@@ -43,7 +43,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ valueRange1 }% chance to not consume bait";
         }
 
-        public override bool? PlayerCanConsumeBait(Item bait)
+        public override bool? PlayerCanConsumeBait(Item item, Player player, Item bait)
         {
             bool? consume = null;
             if (Main.rand.NextFloat() < Type1.GetValue())
