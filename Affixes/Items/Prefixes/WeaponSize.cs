@@ -30,8 +30,6 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         };
 
 
-        float baseScale = -1;
-
         public override bool CanRoll(ItemItem pomItem, Item item)
         {
             return
@@ -47,33 +45,9 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return $"{ plusMinus }{ valueRange1 }% size";
         }
 
-        public override void ModifyItemScale(Item item, Player player, ref float scale)
+        public override void ModifyItemScale(Item item, Player player, ref float multiplier)
         {
-            float value = Type1.GetValue();
-            scale = baseScale * (value + 1);
-        }
-
-        /// <summary>
-        /// Called when this affix is added to an item
-        /// </summary>
-        public override void AddAffix(Item item, bool clone)
-        {
-            if (!clone)
-                baseScale = item.scale;
-        }
-        /// <summary>
-        /// Called when this affix is removed from an item
-        /// </summary>
-        public override void RemoveAffix(Item item)
-        {
-            item.scale = baseScale;
-        }
-
-        public override Affix Clone()
-        {
-            WeaponSize newAffix = (WeaponSize)base.Clone();
-            newAffix.baseScale = baseScale;
-            return newAffix;
+            multiplier += Type1.GetValue();
         }
     }
 }

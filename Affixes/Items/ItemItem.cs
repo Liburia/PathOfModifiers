@@ -689,14 +689,16 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override void ModifyItemScale(Item item, Player player, ref float scale)
         {
+            float multiplier = 1f;
             foreach (var prefix in prefixes)
             {
-                prefix.ModifyItemScale(item, player, ref scale);
+                prefix.ModifyItemScale(item, player, ref multiplier);
             }
             foreach (var suffix in suffixes)
             {
-                suffix.ModifyItemScale(item, player, ref scale);
+                suffix.ModifyItemScale(item, player, ref multiplier);
             }
+            scale *= multiplier;
         }
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref NPC.HitModifiers modifiers)
         {

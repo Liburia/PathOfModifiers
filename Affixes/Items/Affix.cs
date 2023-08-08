@@ -66,7 +66,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void UpdateEquip(Item item, ItemPlayer player) { }
         public virtual bool CanConsumeAmmo(Item item, Item ammo, Player player) { return true; }
         public virtual void HoldItem(Item item, Player player) { }
-        public virtual void ModifyItemScale(Item item, Player player, ref float scale) { }
+        public virtual void ModifyItemScale(Item item, Player player, ref float multiplier) { }
         public virtual void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers) { }
         public virtual void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
         public virtual void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone) { }
