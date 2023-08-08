@@ -669,6 +669,8 @@ namespace PathOfModifiers.UI.States
 
         void OnItemChanged(Item item)
         {
+            var oldSelectedAction = actionList.SelectedItem;
+
             bool isItemValid = item.TryGetGlobalItem<ItemItem>(out var modItem);
             foreach (var action in actionList)
             {
@@ -691,14 +693,22 @@ namespace PathOfModifiers.UI.States
                 addAffix.IsEnabled = modItem.FreeAffixes > 0;
                 improveRarity.IsEnabled = modItem.CanRaiseRarity(item);
 
-                foreach (var action in actionList)
+                if (oldSelectedAction?.IsEnabled ?? false)
                 {
-                    if (action.IsEnabled)
+                    actionList.Select(oldSelectedAction);
+                }
+                else
+                {
+                    foreach (var action in actionList)
                     {
-                        actionList.Select(action);
-                        break;
+                        if (action.IsEnabled)
+                        {
+                            actionList.Select(action);
+                            break;
+                        }
                     }
                 }
+
             }
             UpdateCost();
             UpdateForgeButton();
