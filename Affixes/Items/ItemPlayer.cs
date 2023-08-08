@@ -326,6 +326,7 @@ namespace PathOfModifiers.Affixes.Items
         public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
         {
             Item affixItem;
+            float multiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
@@ -334,7 +335,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerGetHealLife(affixItem, item, ref healValue);
+                    modItem.PlayerGetHealLife(affixItem, item, ref multiplier);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -345,13 +346,15 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerGetHealLife(affixItem, item, ref healValue);
+                    modItem.PlayerGetHealLife(affixItem, item, ref multiplier);
                 }
             }
+            healValue = (int)Math.Round(healValue * multiplier);
         }
         public override void GetHealMana(Item item, bool quickHeal, ref int healValue)
         {
             Item affixItem;
+            float multiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
@@ -360,7 +363,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerGetHealMana(affixItem, item, ref healValue);
+                    modItem.PlayerGetHealMana(affixItem, item, ref multiplier);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -371,9 +374,10 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerGetHealMana(affixItem, item, ref healValue);
+                    modItem.PlayerGetHealMana(affixItem, item, ref multiplier);
                 }
             }
+            healValue = (int)Math.Round(healValue * multiplier);
         }
 
         public override float UseSpeedMultiplier(Item item)
@@ -596,6 +600,7 @@ namespace PathOfModifiers.Affixes.Items
         public override void ModifyCaughtFish(Item fish)
         {
             Item affixItem;
+            float multiplier = 1f;
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 affixItem = Player.inventory[i];
@@ -604,7 +609,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyCaughtFish(affixItem, fish);
+                    modItem.PlayerModifyCaughtFish(affixItem, fish, ref multiplier);
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -615,8 +620,23 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (affixItem.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerModifyCaughtFish(affixItem, fish);
+                    modItem.PlayerModifyCaughtFish(affixItem, fish, ref multiplier);
                 }
+            }
+
+            float fNewAmount = fish.stack * multiplier;
+            int newAmount = (int)Math.Floor(fNewAmount);
+            if (Main.rand.NextFloat() < fNewAmount - Math.Truncate(fNewAmount))
+            {
+                newAmount += 1;
+            }
+            if (newAmount <= 0)
+            {
+                fish.TurnToAir(true);
+            }
+            else
+            {
+                fish.stack = newAmount;
             }
         }
         public override bool? CanConsumeBait(Item bait)

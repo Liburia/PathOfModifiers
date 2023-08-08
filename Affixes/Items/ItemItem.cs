@@ -811,9 +811,8 @@ namespace PathOfModifiers.Affixes.Items
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
         #region Player Hooks
-        public void PlayerGetHealLife(Item item, Item healItem, ref int healValue)
+        public void PlayerGetHealLife(Item item, Item healItem, ref float multiplier)
         {
-            float multiplier = 1f;
             foreach (var prefix in prefixes)
             {
                 prefix.PlayerGetHealLife(item, healItem, ref multiplier);
@@ -822,11 +821,9 @@ namespace PathOfModifiers.Affixes.Items
             {
                 suffix.PlayerGetHealLife(item, healItem, ref multiplier);
             }
-            healValue = (int)Math.Round(healValue * multiplier);
         }
-        public void PlayerGetHealMana(Item item, Item healItem, ref int healValue)
+        public void PlayerGetHealMana(Item item, Item healItem, ref float multiplier)
         {
-            float multiplier = 1f;
             foreach (var prefix in prefixes)
             {
                 prefix.PlayerGetHealMana(item, healItem, ref multiplier);
@@ -835,7 +832,6 @@ namespace PathOfModifiers.Affixes.Items
             {
                 suffix.PlayerGetHealMana(item, healItem, ref multiplier);
             }
-            healValue = (int)Math.Round(healValue * multiplier);
         }
         public void PlayerModifyLuck(Item item, ref float luck)
         {
@@ -859,9 +855,8 @@ namespace PathOfModifiers.Affixes.Items
                 suffix.PlayerModifyMaxStats(item, ref health, ref mana);
             }
         }
-        public void PlayerModifyCaughtFish(Item item, Item fish)
+        public void PlayerModifyCaughtFish(Item item, Item fish, ref float multiplier)
         {
-            float multiplier = 1f;
             foreach (var prefix in prefixes)
             {
                 prefix.PlayerModifyCaughtFish(item, fish, ref multiplier);
@@ -870,13 +865,6 @@ namespace PathOfModifiers.Affixes.Items
             {
                 suffix.PlayerModifyCaughtFish(item, fish, ref multiplier);
             }
-            float fNewAmount = fish.stack * multiplier;
-            int newAmount = (int)Math.Floor(fNewAmount);
-            if (Main.rand.NextFloat() < Math.Truncate(fNewAmount))
-            {
-                newAmount += 1;
-            }
-            fish.stack = newAmount;
         }
         public bool? PlayerCanConsumeBait(Item item, Item bait)
         {
