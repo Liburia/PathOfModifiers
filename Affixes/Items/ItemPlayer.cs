@@ -631,7 +631,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerCanConsumeBait(item, bait);
+                    consume = modItem.PlayerCanConsumeBait(item, bait) ?? consume;
                 }
             }
             for (int i = 0; i < Player.armor.Length; i++)
@@ -642,7 +642,7 @@ namespace PathOfModifiers.Affixes.Items
 
                 if (item.TryGetGlobalItem<ItemItem>(out var modItem))
                 {
-                    modItem.PlayerCanConsumeBait(item, bait);
+                    consume = modItem.PlayerCanConsumeBait(item, bait) ?? consume;
                 }
             }
 
