@@ -13,12 +13,12 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             IsRange = true,
             Tiers = new TTFloat.WeightedTier[]
             {
-                new TTFloat.WeightedTier(-8f, -6f, 0.5),
-                new TTFloat.WeightedTier(-6f, -4f, 1),
-                new TTFloat.WeightedTier(-4f, -2f, 2),
-                new TTFloat.WeightedTier(2f, 4f, 2),
-                new TTFloat.WeightedTier(4f, 6f, 1),
-                new TTFloat.WeightedTier(6f, 8f, 0.5),
+                new TTFloat.WeightedTier(-10, -6, 0.5),
+                new TTFloat.WeightedTier(-6, -3, 1),
+                new TTFloat.WeightedTier(-3, 0, 2),
+                new TTFloat.WeightedTier(0, 3, 2),
+                new TTFloat.WeightedTier(3, 6, 1),
+                new TTFloat.WeightedTier(6, 10, 0.5),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
