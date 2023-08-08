@@ -38,7 +38,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override string GetAffixText(bool useChatTags = false)
         {
-            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
+            var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
             return $"{plusMinus}{valueRange1} luck";
         }
