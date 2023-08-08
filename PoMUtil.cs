@@ -468,7 +468,7 @@ namespace PathOfModifiers
             if (Main.rand.NextBool(50))
             {
                 Vector2 dustPosition = position + new Vector2(Main.rand.NextFloat(0, width), Main.rand.NextFloat(0, height)) + new Vector2(-14, -14);
-                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.FrostCloud>(), Vector2.Zero, 50, Color.White, Main.rand.NextFloat(0.8f, 1.6f));
+                Dust.NewDustPerfect(dustPosition, ModContent.DustType<Dusts.FrostCloud>(), Vector2.Zero, 150, Color.White, Main.rand.NextFloat(0.8f, 1.6f));
             }
         }
         public static void MoveSpeed(Player player)
