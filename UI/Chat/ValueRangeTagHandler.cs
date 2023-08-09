@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.UI.Chat;
 
@@ -90,7 +91,8 @@ namespace PathOfModifiers.UI.Chat
         }
         public static string GenerateTag(float current, float min, float max)
         {
-            return $"[pomvr/f/{min}/{max}:{current}]";
+            var diplayCurrent = string.Format("{0:0.00}", current);
+            return $"[pomvr/f/{min}/{max}:{diplayCurrent}]";
         }
     }
 }
