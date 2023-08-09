@@ -670,6 +670,8 @@ namespace PathOfModifiers.UI.States
         void OnItemChanged(Item item)
         {
             var oldSelectedAction = actionList.SelectedItem;
+            var oldSelectedAffix = affixConstraintList.SelectedItem;
+            var oldSelectedTier = tierConstraintList.SelectedItem;
 
             bool isItemValid = item.TryGetGlobalItem<ItemItem>(out var modItem);
             foreach (var action in actionList)
@@ -707,6 +709,15 @@ namespace PathOfModifiers.UI.States
                             break;
                         }
                     }
+                }
+
+                if (oldSelectedAffix?.IsEnabled ?? false)
+                {
+                    affixConstraintList.Select(oldSelectedAffix);
+                }
+                if (oldSelectedTier?.IsEnabled ?? false)
+                {
+                    tierConstraintList.Select(oldSelectedTier);
                 }
 
             }
