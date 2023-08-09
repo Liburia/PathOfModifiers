@@ -78,8 +78,10 @@ namespace PathOfModifiers.Systems
         {
             _lastUpdateUiGameTime = gameTime;
 
+#if DEBUG
             if (key_toggleDebugMenu.JustPressed)
                 DebugPanel.Toggle();
+#endif
             DebugPanelInterface?.Update(gameTime);
 
             ModifierForgeInterface?.Update(gameTime);
