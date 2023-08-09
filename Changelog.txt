@@ -1,10 +1,11 @@
 v0.7.0
+Updated to 1.4.4
 Overhauled modifier forge
 Chance to not consume ammo always stacks multiplicatively now
 Adjusted minimum tier values to never approach zero even at their lowest
 Fragments can now stack to 99999
 Low HP threshold increased to 50% from 20%
-Added 10 affixes
+Added a dozen or so affixes
 
 v0.6.4
 Molten Shell now does 6 times less damage based on enemy life(was instakilling bosses in certain situations), flat damage is unchanged.
