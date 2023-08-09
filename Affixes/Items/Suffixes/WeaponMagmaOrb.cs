@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using PathOfModifiers.Projectiles;
+using PathOfModifiers.UI.Chat;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -75,7 +76,8 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
             var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(), Type3.GetMinValueFormat(), Type3.GetMaxValueFormat(), useChatTags);
             string plusMinus = Type3.GetValue() >= 0 ? "+" : "-";
-            return $"{ valueRange1 }% chance to Magma Orb for { valueRange2 }% damage that leaves Burning Air({ plusMinus }{ valueRange3 }%)";
+            var burningAir = Keyword.GetTextOrTag(KeywordType.BurningAir, useChatTags);
+            return $"{valueRange1}% chance to Magma Orb for { valueRange2 }% damage that leaves { burningAir }({ plusMinus }{ valueRange3 }%)";
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)

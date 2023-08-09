@@ -14,6 +14,9 @@ namespace PathOfModifiers.UI.Chat
         Dodge,
         Adrenaline,
         MoltenShell,
+        ShockedAir,
+        ChilledAir,
+        BurningAir,
     }
     public static class Keyword
     {
@@ -27,6 +30,9 @@ namespace PathOfModifiers.UI.Chat
             new Dodge(),
             new Adrenaline(),
             new MoltenShell(),
+            new ShockedAir(),
+            new ChilledAir(),
+            new BurningAir(),
         };
 
         /// <summary>
@@ -68,13 +74,13 @@ namespace PathOfModifiers.UI.Chat
         {
             public override Color Color => new(241, 194, 50);
             public override string Name => "Shock";
-            public override string Description => "Increases damage taken by % over ailment duration(5s)";
+            public override string Description => "Increases damage taken over ailment duration(5s)";
         }
         public class Ignite : KeywordDefinition
         {
             public override Color Color => new(180, 95, 6);
             public override string Name => "Ignite";
-            public override string Description => "Deals % of damage dealt per second over ailment duration(5s), players take up to 1% of max life per second";
+            public override string Description => "Deals % of damage dealt per second over ailment duration(5s)\nplayers take up to 1% of max life per second";
         }
         public class Chill : KeywordDefinition
         {
@@ -99,6 +105,24 @@ namespace PathOfModifiers.UI.Chat
             public override Color Color => Color.LightGray;
             public override string Name => "Molten Shell";
             public override string Description => "-10% damage taken, explodes at the end of the duration for\ntotal damage taken + (total damage taken / player max HP * 0.15)% of enemy HP";
+        }
+        public class ShockedAir : KeywordDefinition
+        {
+            public override Color Color => new(241, 194, 50);
+            public override string Name => "Shocked Air";
+            public override string Description => "Increases damage taken by % when in the area";
+        }
+        public class ChilledAir : KeywordDefinition
+        {
+            public override Color Color => new(61, 133, 198);
+            public override string Name => "Chilled Air";
+            public override string Description => "Reduces damage dealt when in the area";
+        }
+        public class BurningAir : KeywordDefinition
+        {
+            public override Color Color => new(180, 95, 6);
+            public override string Name => "Burning Air";
+            public override string Description => "Deals % of damage dealt per second while in the area\nplayers take up to 1% of max life per second";
         }
     }
 
