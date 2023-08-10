@@ -642,6 +642,18 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override void UpdateEquip(Item item, Player player)
         {
+            if (rarity == null || rarity.GetType() == typeof(ItemNone))
+            {
+                try
+                {
+                    TryRollItem(item);
+                }
+                catch (Exception e)
+                {
+                    Mod.Logger.Error(e.ToString());
+                }
+            }
+
             ItemPlayer pomPlayer = player.GetModPlayer<ItemPlayer>();
             foreach (var prefix in prefixes)
             {
