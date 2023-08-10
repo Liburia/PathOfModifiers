@@ -83,7 +83,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void PlayerGetHealLife(Item item, Player player, Item healItem, ref float healMultiplier) { }
         public virtual void PlayerGetHealMana(Item item, Player player, Item healItem, ref float healMultiplier) { }
         public virtual void PlayerModifyLuck(Item item, Player player, ref float luck) { }
-        public virtual void PlayerModifyMaxStats(Item item, Player player, ref StatModifier health, ref StatModifier mana) { health = StatModifier.Default; mana = StatModifier.Default; }
+        public virtual void PlayerModifyMaxStats(Item item, Player player, ref StatModifier health, ref StatModifier mana) { }
         public virtual void PlayerModifyCaughtFish(Item item, Player player, Item fish, ref float multiplier) { }
         public virtual bool? PlayerCanConsumeBait(Item item, Player player, Item bait) { return null; }
         public virtual bool PlayerConsumeAmmo(Player player, Item item, Item ammo) { return true; }
