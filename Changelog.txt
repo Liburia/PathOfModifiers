@@ -1,1 +1,1 @@
-Fixed items not rolling when equipped, which could lead to a crash
+Fixed max mana and life affixes not working properly

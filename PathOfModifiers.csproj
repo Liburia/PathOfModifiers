@@ -9,5 +9,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="description_workshop.txt" />
+    <None Remove="icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="icon.png.old" />
   </ItemGroup>
 </Project>
