@@ -58,7 +58,7 @@ namespace PathOfModifiers
 
                 if (netSync)
                 {
-                    NetMessage.SendData(23, -1, -1, null, npcIndex);
+                    NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npcIndex);
                 }
             }
 
@@ -444,7 +444,7 @@ namespace PathOfModifiers
         }
         public static void Poison(Vector2 position, int width, int height)
         {
-            int dust = Dust.NewDust(position, width, height, 46, Alpha: 150, Scale: 0.2f);
+            int dust = Dust.NewDust(position, width, height, DustID.Poisoned, Alpha: 150, Scale: 0.2f);
             Main.dust[dust].noGravity = true;
             Main.dust[dust].fadeIn = 1.9f;
         }

@@ -108,7 +108,7 @@ namespace PathOfModifiers.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
                 Item.NewItem(new EntitySource_TileBreak(i, j), new Vector2(i * 16, j * 16), ModContent.ItemType<Items.ModifierForge>());
 
             ModContent.GetInstance<ModifierForgeTE>().Kill(i, j);
@@ -164,7 +164,7 @@ namespace PathOfModifiers.Tiles
             if (player.cursorItemIconText == "")
             {
                 player.cursorItemIconEnabled = false;
-                player.cursorItemIconID = 0;
+                player.cursorItemIconID = ItemID.None;
             }
         }
 

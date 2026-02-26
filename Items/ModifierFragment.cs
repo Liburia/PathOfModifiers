@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace PathOfModifiers.Items
@@ -11,7 +12,7 @@ namespace PathOfModifiers.Items
             Item.height = 40;
             Item.holdStyle = 0;
             Item.value = 200;
-            Item.rare = 2;
+            Item.rare = ItemRarityID.Green;
             Item.maxStack = 99999;
         }
     }

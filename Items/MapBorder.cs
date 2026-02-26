@@ -16,7 +16,7 @@ namespace PathOfModifiers.Items
             Item.autoReuse = true;
             Item.useAnimation = 5;
             Item.useTime = 5;
-            Item.useStyle = 1;
+            Item.useStyle = ItemUseStyleID.Swing;
             Item.consumable = true;
             Item.createTile = ModContent.TileType<Tiles.MapBorder>();
         }

@@ -18,12 +18,12 @@ namespace PathOfModifiers.Items
             Item.width = 32;
             Item.height = 32;
             Item.value = 500000;
-            Item.rare = 2;
+            Item.rare = ItemRarityID.Green;
             Item.maxStack = 1;
             Item.autoReuse = false;
             Item.useAnimation = 15;
             Item.useTime = 15;
-            Item.useStyle = 3;
+            Item.useStyle = ItemUseStyleID.Thrust;
             Item.consumable = false;
         }
 

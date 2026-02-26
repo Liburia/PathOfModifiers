@@ -68,7 +68,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public static bool IsWeapon(Item item)
         {
-            return item.damage > 0 && item.maxStack == 1 && item.useStyle != 2 && item.useStyle != 4;
+            return item.damage > 0 && item.maxStack == 1 && item.useStyle != ItemUseStyleID.EatFood && item.useStyle != ItemUseStyleID.HoldUp;
         }
         public static bool CanCrit(Item item)
         {
@@ -94,11 +94,11 @@ namespace PathOfModifiers.Affixes.Items
         }
         public static bool IsSwinging(Item item)
         {
-            return item.useStyle == 1;
+            return item.useStyle == ItemUseStyleID.Swing;
         }
         public static bool IsStabbing(Item item)
         {
-            return item.useStyle == 3;
+            return item.useStyle == ItemUseStyleID.Thrust;
         }
 
         public static bool IsPickaxe(Item item)
@@ -115,11 +115,11 @@ namespace PathOfModifiers.Affixes.Items
         }
         public static bool IsSpear(Item item)
         {
-            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == 5 && !item.channel;
+            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == ItemUseStyleID.Shoot && !item.channel;
         }
         public static bool IsFlailOrYoyo(Item item)
         {
-            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == 5 && item.channel;
+            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == ItemUseStyleID.Shoot && item.channel;
         }
 
         public static bool IsMelee(Item item)
