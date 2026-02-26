@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.Affixes.Items.Constraints;
@@ -6,6 +7,8 @@ using PathOfModifiers.Tiles;
 using PathOfModifiers.UI.Chat;
 using PathOfModifiers.UI.Elements;
 using PathOfModifiers.UI.States.ModifierForgeElements;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -23,6 +26,35 @@ namespace PathOfModifiers.UI.States
     interface IMFAction : IMFSelectable
     {
         void Execute(Item item, ItemItem modItem);
+
+        void SetConstraints(SelectList<ConstraintListEntry<SelectableConstraint>> affixConstraintList, SelectList<ConstraintListEntry<SelectableConstraint>> tierConstraintList)
+        {
+            var affixConstraint = affixConstraintList.SelectedItem?.constraint;
+            var tierConstraint = tierConstraintList.SelectedItem?.constraint;
+
+            if (this is IMFAffixConstraint affixAction)
+            {
+                affixAction.DataManagerAffixConstraint = affixConstraint?.Constraint;
+                affixAction.ItemAffixConstraint = affixConstraint?.Constraint;
+            }
+            if (this is IMFTierConstraint tierAction)
+            {
+                tierAction.TierConstraint = tierConstraint?.Constraint;
+            }
+        }
+        Constraint GetConstraints()
+        {
+            Constraint constraint = new None();
+            if (this is IMFAffixConstraint affixAction)
+            {
+                constraint = constraint.Then(affixAction.ItemAffixConstraint);
+            }
+            if (this is IMFTierConstraint tierAction)
+            {
+                constraint = constraint.Then(tierAction.TierConstraint);
+            }
+            return constraint;
+        }
     }
     interface IMFAffixConstraint
     {
@@ -47,13 +79,14 @@ namespace PathOfModifiers.UI.States
 
             public void Execute(Item item, ItemItem modItem)
             {
+                var constraints = ((IMFAction)this).GetConstraints();
                 if (TierConstraint is None)
                 {
-                    modItem.RerollAffixes(item, ItemAffixConstraint.Then(TierConstraint), DataManagerAffixConstraint);
+                    modItem.RerollAffixes(item, ItemAffixConstraint, DataManagerAffixConstraint);
                 }
                 else
                 {
-                    modItem.TryRemoveRandomAffix(item, ItemAffixConstraint);
+                    modItem.TryRemoveRandomAffix(item, ItemAffixConstraint.Then(TierConstraint));
                     modItem.TryAddRandomAffix(item, DataManagerAffixConstraint);
                 }
             }
@@ -268,6 +301,7 @@ namespace PathOfModifiers.UI.States
             state.UpdateCost();
             state.UpdateForgeButton();
             state.UpdateItemText(item);
+            state.UpdateAffectedAffixes();
         }
 
         ModifierForgeTE currentForgeTE;
@@ -387,11 +421,7 @@ namespace PathOfModifiers.UI.States
                         affixConstraintList.MinWidth.Set(0f, 0.22f);
                         affixConstraintList.MinHeight.Set(0f, 1f);
                         affixConstraintList.ListPadding = 0f;
-                        affixConstraintList.OnEntrySelected += delegate (ConstraintListEntry<SelectableConstraint> entry)
-                        {
-                            UpdateCost();
-                            UpdateForgeButton();
-                        };
+                        affixConstraintList.OnEntrySelected += OnConstraintSelected;
                         actionSection.Append(affixConstraintList);
                         {
                             ConstraintListEntry<SelectableConstraint> any = new("Any", new AffixConstraint.Any());
@@ -409,11 +439,7 @@ namespace PathOfModifiers.UI.States
                         tierConstraintList.MinWidth.Set(0f, 0.22f);
                         tierConstraintList.MinHeight.Set(0f, 1f);
                         tierConstraintList.ListPadding = 0f;
-                        tierConstraintList.OnEntrySelected += delegate (ConstraintListEntry<SelectableConstraint> entry)
-                        {
-                            UpdateCost();
-                            UpdateForgeButton();
-                        };
+                        tierConstraintList.OnEntrySelected += OnConstraintSelected;
                         actionSection.Append(tierConstraintList);
                         {
                             ConstraintListEntry<SelectableConstraint> any = new("Any", new TierConstraint.Any());
@@ -585,20 +611,10 @@ namespace PathOfModifiers.UI.States
         private void OnForgeClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             var action = actionList.SelectedItem.action;
-            var affixConstraint = affixConstraintList.SelectedItem?.constraint;
-            var tierConstraint = tierConstraintList.SelectedItem?.constraint;
 
             if (action != null)
             {
-                if (action is IMFAffixConstraint affixAction)
-                {
-                    affixAction.DataManagerAffixConstraint = affixConstraint.Constraint;
-                    affixAction.ItemAffixConstraint = affixConstraint.Constraint;
-                }
-                if (action is IMFTierConstraint tierAction)
-                {
-                    tierAction.TierConstraint = tierConstraint.Constraint;
-                }
+                action.SetConstraints(affixConstraintList, tierConstraintList);
 
                 UpdateCost();
                 var item = itemSlot.Item;
@@ -663,6 +679,13 @@ namespace PathOfModifiers.UI.States
                 tierConstraintList.Deselect();
             }
 
+            UpdateAffectedAffixes();
+            UpdateCost();
+            UpdateForgeButton();
+        }
+        void OnConstraintSelected(ConstraintListEntry<SelectableConstraint> entry)
+        {
+            UpdateAffectedAffixes();
             UpdateCost();
             UpdateForgeButton();
         }
@@ -725,6 +748,7 @@ namespace PathOfModifiers.UI.States
             UpdateForgeButton();
             UpdateItemText(item);
             SyncItemWithForge();
+            UpdateAffectedAffixes();
         }
         void OnFragmentChanged(Item item)
         {
@@ -748,6 +772,52 @@ namespace PathOfModifiers.UI.States
 
             forgeButton.IsEnabled = currentCost <= GetCurrentFragmentCount() && (!itemSlot.Item?.IsAir ?? false);
         }
+        void UpdateAffectedAffixes()
+        {
+            foreach (var affix in affixTextList)
+            {
+                affix.StopFlashing();
+            }
+
+
+            var action = actionList.SelectedItem?.action;
+
+            if (action != null)
+            {
+                action.SetConstraints(affixConstraintList, tierConstraintList);
+                var constraints = action.GetConstraints();
+                if (constraints != null && CurrentForgeTE != null)
+                {
+                    var item = CurrentForgeTE.ModifiedItem;
+                    if (item.TryGetGlobalItem<ItemItem>(out var modItem))
+                    {
+                        var constrainedAffixeIdxs = constraints.Process(modItem.affixes).SelectMany(a => {
+                            var empty = new List<int>() ;
+
+                            int idx = modItem.prefixes.IndexOf(a);
+                            if (idx >= 0)
+                            {
+                                empty.Add(idx);
+                            }
+                            idx = modItem.suffixes.IndexOf(a);
+                            if (idx >= 0)
+                            {
+                                empty.Add(modItem.prefixes.Count + idx);
+                            }
+
+                            return empty;
+                        });
+                        foreach (var idx in constrainedAffixeIdxs)
+                        {
+                            var affixText = affixTextList[idx];
+
+                            affixText.StartFlashing();
+                        }
+                    }
+                }
+            }
+        }
+
 
         void UpdateItemText(Item item)
         {

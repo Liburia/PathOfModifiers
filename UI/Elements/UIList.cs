@@ -189,5 +189,10 @@ namespace PathOfModifiers.UI.Elements
 
         public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)_items).GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)_items).GetEnumerator();
+        public T this[int idx]
+        {
+            get { return _items[idx]; }
+        }
     }
+
 }

@@ -1,1 +1,1 @@
-Fixed max mana and life affixes not working properly
+Highlight affected affixes in the forge

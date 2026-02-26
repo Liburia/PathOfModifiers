@@ -1104,13 +1104,16 @@ namespace PathOfModifiers.Affixes.Items
         //On craft
         public override void OnCreated(Item item, ItemCreationContext context)
         {
-            try
+            if (context is BuyItemCreationContext || context is JourneyDuplicationItemCreationContext || context is RecipeItemCreationContext)
             {
-                TryRollItem(item);
-            }
-            catch (Exception e)
-            {
-                Mod.Logger.Error(e.ToString());
+                try
+                {
+                    TryRollItem(item);
+                }
+                catch (Exception e)
+                {
+                    Mod.Logger.Error(e.ToString());
+                }
             }
         }
 
@@ -1272,6 +1275,12 @@ namespace PathOfModifiers.Affixes.Items
         {
             try
             {
+                bool isValid = rarity != null;
+                writer.Write(isValid);
+
+                if (!isValid)
+                    return;
+
                 writer.Write(DataManager.Item.GetRarityIndex(rarity.GetType()));
 
                 writer.Write((byte)affixes.Count);
@@ -1292,6 +1301,12 @@ namespace PathOfModifiers.Affixes.Items
         {
             try
             {
+                bool isValid = reader.ReadBoolean();
+                if (!isValid)
+                {
+                    return;
+                }
+
                 rarity = DataManager.Item.GetRarityRef(reader.ReadInt32());
 
                 int affixCount = reader.ReadByte();

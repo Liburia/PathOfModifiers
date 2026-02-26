@@ -235,7 +235,7 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             if (init)
             {

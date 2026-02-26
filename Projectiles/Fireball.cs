@@ -121,7 +121,7 @@ namespace PathOfModifiers.Projectiles
             return false;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             PlaySound();
             if (Main.netMode != NetmodeID.Server)

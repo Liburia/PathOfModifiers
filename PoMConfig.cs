@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.ComponentModel;
+using Terraria.Localization;
 using Terraria.ModLoader.Config;
 
 namespace PathOfModifiers
@@ -28,7 +29,7 @@ namespace PathOfModifiers
         [JsonIgnore]
         public bool DisableNPCModifiers;
 
-        public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
+        public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref NetworkText message)
         {
             return false;
         }
