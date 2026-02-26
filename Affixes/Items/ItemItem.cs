@@ -68,7 +68,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public static bool IsWeapon(Item item)
         {
-            return item.damage > 0 && item.maxStack == 1 && item.useStyle != ItemUseStyleID.EatFood && item.useStyle != ItemUseStyleID.HoldUp;
+            return !item.accessory && item.damage > 0 && item.maxStack == 1 && item.useStyle != ItemUseStyleID.EatFood && item.useStyle != ItemUseStyleID.HoldUp;
         }
         public static bool CanCrit(Item item)
         {

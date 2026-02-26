@@ -1,1 +1,2 @@
 Highlight affected affixes in the forge
+Fix bugs
