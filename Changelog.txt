@@ -1,2 +1,3 @@
 Highlight affected affixes in the forge
+Reduce burning air duration with subsequent magma orb bounces
 Fix bugs

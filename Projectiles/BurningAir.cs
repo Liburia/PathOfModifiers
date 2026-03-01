@@ -47,6 +47,7 @@ namespace PathOfModifiers.Projectiles
                     (int)(Projectile.position.Y - airRadius),
                     (int)(airDiameter),
                     (int)(airDiameter));
+                Projectile.timeLeft = (int)(Projectile.timeLeft * Projectile.ai[1]);
                 init = true;
             }
 

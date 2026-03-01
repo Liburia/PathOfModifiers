@@ -14,9 +14,11 @@ namespace PathOfModifiers.Projectiles
         const int baseTimeLeft = 600;
         const int bounces = 5;
         const float bounceFriction = 0.8f;
+        const float bounceAirDurationMulti = 0.6f;
 
         float addRotation;
         int bouncesLeft;
+        float airDuration;
 
         public override void SetDefaults()
         {
@@ -30,6 +32,7 @@ namespace PathOfModifiers.Projectiles
             Projectile.usesLocalNPCImmunity = true;
             addRotation = Main.rand.NextFloat(-0.2f, 0.2f);
             bouncesLeft = bounces;
+            airDuration = 1f;
         }
 
         public override void AI()
@@ -92,6 +95,7 @@ namespace PathOfModifiers.Projectiles
                 Explode();
 
                 bouncesLeft--;
+                airDuration *= bounceAirDurationMulti;
             }
 
             return false;
@@ -148,9 +152,13 @@ namespace PathOfModifiers.Projectiles
                         }
                     }
 
-                    Projectile.NewProjectile(
-                    Projectile.GetSource_FromThis(),
-                    projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)Projectile.ai[0], 0, Projectile.owner, 48f);
+
+                    if (airDuration >= 0.1f)
+                    {
+                        Projectile.NewProjectile(
+                            Projectile.GetSource_FromThis(), projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)Projectile.ai[0], 0, Projectile.owner, 48f, airDuration
+                        );
+                    }
                 }
             }
         }
