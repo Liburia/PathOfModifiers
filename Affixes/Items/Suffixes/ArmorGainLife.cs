@@ -74,7 +74,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 int amount = Type1.GetValue();
                 if (amount > 0)
                 {
-                    player.statLife += amount;
+                    PoMUtil.HealNoEffect(player, amount);
                     PoMEffectHelper.Heal(player, amount);
                 }
                 else

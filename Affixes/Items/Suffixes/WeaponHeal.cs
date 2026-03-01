@@ -88,7 +88,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         void HealPlayer(Player player)
         {
             int amount = (int)MathHelper.Clamp(player.statLifeMax2 * Type1.GetValue(), 1, 9999999);
-            player.statLife += amount;
+            PoMUtil.HealNoEffect(player, amount);
             PoMEffectHelper.Heal(player, amount);
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {

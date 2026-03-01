@@ -63,7 +63,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             if (ItemItem.IsAccessoryEquipped(item, player))
             {
                 int manaAmount = (int)Math.Round(player.statManaMax2 * Type1.GetValue());
-                player.statMana += manaAmount;
+                PoMUtil.HealManaNoEffect(player, manaAmount);
                 PoMEffectHelper.HealMana(player, manaAmount);
                 damageMultiplier += Type2.GetValue();
             }

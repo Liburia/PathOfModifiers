@@ -54,7 +54,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
                 int amount = (int)MathHelper.Clamp(player.statManaMax2 * Type1.GetValue(), 1, 9999999);
                 if (amount > 0)
                 {
-                    player.statMana += amount;
+                    PoMUtil.HealManaNoEffect(player, amount);
                     PoMEffectHelper.HealMana(player, amount);
                 }
             }
