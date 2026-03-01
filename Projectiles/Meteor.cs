@@ -196,7 +196,7 @@ namespace PathOfModifiers.Projectiles
 
                     Projectile.NewProjectile(
                     Projectile.GetSource_FromThis(),
-                    projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)Projectile.ai[0], 0, Projectile.owner, 100f);
+                    projectileCenter, Vector2.Zero, ModContent.ProjectileType<BurningAir>(), (int)Projectile.ai[0], 0, Projectile.owner, 100f, 1f);
                 }
             }
         }
