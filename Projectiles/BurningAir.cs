@@ -7,6 +7,10 @@ using Terraria.ModLoader;
 
 namespace PathOfModifiers.Projectiles
 {
+    /// <summary>
+    /// ai[0] = radius <br></br>
+    /// ai[1] = duration multi [0.0, 1.0]
+    /// </summary>
     public class BurningAir : ModProjectile, INonTriggerringProjectile
     {
         static readonly Vector3 emittedLight = new Vector3(1f, 0.611f, 0f);
