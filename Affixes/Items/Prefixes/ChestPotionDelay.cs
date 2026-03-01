@@ -45,8 +45,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override void UpdateEquip(Item item, ItemPlayer player)
         {
-            player.potionDelayTime += Type1.GetValue();
-            player.restorationDelayTime += Type1.GetValue();
+            player.Player.PotionDelayModifier += Type1.GetValue();
         }
     }
 }
