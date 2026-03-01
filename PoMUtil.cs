@@ -404,6 +404,20 @@ namespace PathOfModifiers
             player.immuneTime = timeFrames;
             player.immune = true;
         }
+        public static void HealNoEffect(Player player, int amount)
+        {
+            player.statLife += amount;
+            if (player.statLife > player.statLifeMax2)
+                player.statLife = player.statLifeMax2;
+        }
+
+        public static void HealManaNoEffect(Player player, int amount)
+        {
+            player.statMana += amount;
+            if (player.statMana > player.statManaMax2)
+                player.statMana = player.statManaMax2;
+
+        }
     }
 
     public static class PoMEffectHelper
