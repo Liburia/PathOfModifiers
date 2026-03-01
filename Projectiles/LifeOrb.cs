@@ -50,8 +50,7 @@ namespace PathOfModifiers.Projectiles
                 Player player = Main.LocalPlayer;
                 if (!player.dead && (player.whoAmI == Projectile.owner || (player.team != (int)Team.None && player.team == Main.player[Projectile.owner].team)) && bounds.Intersects(player.getRect()))
                 {
-                    player.statLife += Projectile.damage;
-                    player.HealEffect(Projectile.damage);
+                    player.Heal(Projectile.damage);
                     SpawnDebris(DebrisType.Entity);
                     if (Main.netMode == NetmodeID.SinglePlayer || Projectile.owner == Main.myPlayer)
                     {
