@@ -149,7 +149,7 @@ namespace PathOfModifiers.UI.States
         {
             public string Name => "Improve rarity";
             public string Description => "Raises the rarity once";
-            public int Cost => 100;
+            public int Cost => 500;
 
             public void Execute(Item item, ItemItem modItem)
             {
