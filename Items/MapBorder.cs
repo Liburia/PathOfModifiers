@@ -21,6 +21,11 @@ namespace PathOfModifiers.Items
             Item.createTile = ModContent.TileType<Tiles.MapBorder>();
         }
 
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = Item.maxStack;
+        }
+
         public override void AddRecipes()
         {
             if (GetInstance<PoMConfigServer>().DisableMaps)

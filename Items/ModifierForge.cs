@@ -22,6 +22,11 @@ namespace PathOfModifiers.Items
             Item.createTile = ModContent.TileType<Tiles.ModifierForge>();
         }
 
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 10;
+        }
+
         public override void AddRecipes()
         {
             CreateRecipe(1)

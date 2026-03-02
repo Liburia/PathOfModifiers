@@ -27,6 +27,11 @@ namespace PathOfModifiers.Items
             Item.consumable = false;
         }
 
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 0;
+        }
+
         void MapNullCheck()
         {
             if (map == null)

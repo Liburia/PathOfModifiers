@@ -15,5 +15,10 @@ namespace PathOfModifiers.Items
             Item.rare = ItemRarityID.Green;
             Item.maxStack = 99999;
         }
+
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 9999;
+        }
     }
 }
