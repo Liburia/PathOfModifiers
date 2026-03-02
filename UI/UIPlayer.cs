@@ -2,13 +2,10 @@
 using PathOfModifiers.Affixes.Items;
 using PathOfModifiers.ModNet.PacketHandlers;
 using PathOfModifiers.Projectiles;
-using System;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
+using Terraria.UI;
+using static Terraria.UI.ItemSlot;
 
 namespace PathOfModifiers.UI
 {
@@ -18,15 +15,24 @@ namespace PathOfModifiers.UI
         {
             if (States.ModifierForge.IsOpen)
             {
-                if (Systems.UI.ModifierForgeState.fragmentSlot.TryInsertItem(inventory[slot], true, out var oldItem) || Systems.UI.ModifierForgeState.itemSlot.TryInsertItem(inventory[slot], true, out oldItem))
+                if (
+                    context
+                    is Context.InventoryItem
+                    or Context.InventoryCoin
+                    or Context.InventoryAmmo
+                    or Context.HotbarItem
+                    )
                 {
-                    inventory[slot] = oldItem;
-                }
+                    if (Systems.UI.ModifierForgeState.fragmentSlot.TryInsertItem(inventory[slot], true, out var oldItem) || Systems.UI.ModifierForgeState.itemSlot.TryInsertItem(inventory[slot], true, out oldItem))
+                    {
+                        inventory[slot] = oldItem;
 
-                return true;
+                        return true;
+                    }
+                }
             }
 
-            return false;
+            return base.ShiftClickSlot(inventory, context, slot);
         }
     }
 }
