@@ -13,7 +13,7 @@ namespace PathOfModifiers.Rarities
         public virtual byte maxAffixes => 0;
         public virtual byte maxPrefixes => 0;
         public virtual byte maxSuffixes => 0;
-        public virtual Color color => new Color(1, 1, 1, 1);
+        public virtual Color color => new Color(1, 1, 1, 1);    // Currently unused
         public virtual int vanillaRarity => 0;
         public virtual string name => string.Empty;
         public virtual float chanceToRollAffix => 0;

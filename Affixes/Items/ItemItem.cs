@@ -230,7 +230,9 @@ namespace PathOfModifiers.Affixes.Items
                     }
                 }
                 item.SetNameOverride($"{rarity.name} {addedPrefix}{(addedPrefix != string.Empty ? " " : string.Empty)}{GetBaseName(item)}{(addedSuffix != string.Empty ? " " : string.Empty)}{addedSuffix}");
-                item.rare = rarity.vanillaRarity;
+                if (item.OriginalRarity <= 3) {
+                    item.rare = rarity.vanillaRarity;
+                }
             }
         }
         /// <summary>
@@ -1133,17 +1135,20 @@ namespace PathOfModifiers.Affixes.Items
             {
                 suffix.ModifyTooltips(PathOfModifiers.Instance, item, tooltips);
             }
-            if (rarity.GetType() != typeof(ItemNone) && rarity.GetType() != typeof(NotRollableItem))
-            {
-                foreach (TooltipLine line in tooltips)
-                {
-                    if (line.Mod == "Terraria" && line.Name == "ItemName")
-                    {
-                        line.OverrideColor = rarity.color;
-                        break;
-                    }
-                }
-            }
+            //if (rarity.GetType() != typeof(ItemNone) && rarity.GetType() != typeof(NotRollableItem))
+            //{
+            //    if (item.OriginalRarity <= 3)
+            //    {
+            //        foreach (TooltipLine line in tooltips)
+            //        {
+            //            if (line.Mod == "Terraria" && line.Name == "ItemName")
+            //            {
+            //                line.OverrideColor = rarity.color;
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         public override bool PreDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
