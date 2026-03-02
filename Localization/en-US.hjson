@@ -138,6 +138,30 @@ Mods: {
 					Label: Disable NPC modifiers
 					Tooltip: ""
 				}
+
+				ModifierForgeCostDifficulty: {
+					Label: Modifier Forge cost difficulty
+					Tooltip: ""
+				}
+			}
+
+			Difficulty: {
+				Tooltip: ""
+
+				Easy: {
+					Label: Easy
+					Tooltip: ""
+				}
+
+				Normal: {
+					Label: Normal
+					Tooltip: ""
+				}
+
+				Hard: {
+					Label: Hard
+					Tooltip: ""
+				}
 			}
 		}
 	}

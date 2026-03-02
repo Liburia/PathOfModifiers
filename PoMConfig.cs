@@ -17,6 +17,11 @@ namespace PathOfModifiers
         [DefaultValue(true)]
         public bool DisableVanillaPrefixesAccessories;
 
+        [Label("Modifier Forge cost difficulty")]
+        [DefaultValue(UI.States.ModifierForge.Difficulty.Normal)]
+        public UI.States.ModifierForge.Difficulty ModifierForgeCostDifficulty;
+
+
         [Label("Disable maps")]
         [DefaultValue(true)]
         [ReloadRequired]

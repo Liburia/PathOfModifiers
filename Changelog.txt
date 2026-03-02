@@ -5,4 +5,5 @@ Reenable vanilla item name colors except when inside the forge for rarities high
 Increase journey research costs
 Reduce fragment sell value
 Significantly increase forge cost for higher rarity items
+Add difficulty config to change forge cost
 Fix bugs

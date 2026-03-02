@@ -14,6 +14,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
+using static Terraria.ModLoader.ModContent;
 
 namespace PathOfModifiers.UI.States
 {
@@ -276,6 +277,16 @@ namespace PathOfModifiers.UI.States
 
     public class ModifierForge : UIState
     {
+        /// <summary>
+        /// Prices will be this many percent
+        /// </summary>
+        public enum Difficulty
+        {
+            Easy = 30,
+            Normal = 100,
+            Hard = 200,
+        }
+
         public static bool IsOpen => Systems.UI.IsModifierForgeOpen;
 
         public static void Open(ModifierForgeTE forge)
@@ -761,11 +772,15 @@ namespace PathOfModifiers.UI.States
         {
             ItemItem modItem = null;
             itemSlot.Item?.TryGetGlobalItem(out modItem);
+
+            Difficulty difficulty = GetInstance<PoMConfigServer>().ModifierForgeCostDifficulty;
+
             currentCost = modItem?.rarity.forgeCost ?? 0;
             currentCost *= currentCost;
             currentCost *= actionList.SelectedItem?.action.Cost ?? 0;
             currentCost *= affixConstraintList.SelectedItem?.constraint.Cost ?? 1;
             currentCost *= tierConstraintList.SelectedItem?.constraint.Cost ?? 1;
+            currentCost = (int)(currentCost * ((float)difficulty) / 100f);
         }
         void UpdateForgeButton()
         {
