@@ -66,6 +66,7 @@ Mods: {
 				WeaponRangedDamage: "{0}{1}% ranged damage"
 				WeaponSize: "{0}{1}% size"
 				WeaponSummonDamage: "{0}{1}% summon damage"
+				WeaponProjectileSpeed: "{0}{1}% direct projectile speed"
 			}
 
 			Suffixes: {

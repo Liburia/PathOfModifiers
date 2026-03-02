@@ -644,6 +644,20 @@ namespace PathOfModifiers.Affixes.Items
             }
             return shoot;
         }
+        public override void ModifyShootStats(Item item, Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+            var multiplier = new StatModifier();
+            foreach (var prefix in prefixes)
+            {
+                prefix.ModifyShootVelocity(item, player, ref multiplier);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.ModifyShootVelocity(item, player, ref multiplier);
+            }
+            velocity.X = multiplier.ApplyTo(velocity.X);
+            velocity.Y = multiplier.ApplyTo(velocity.Y);
+        }
         public override void UpdateAccessory(Item item, Player player, bool hideVisual)
         {
             //UpdateEquip covers accessories
