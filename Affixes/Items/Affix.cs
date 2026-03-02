@@ -78,6 +78,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers) { }
         public virtual void ProjOnHitNPC(Item item, Player player, Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone) { }
         public virtual void ProjOnHitPvp(Item item, Player player, Projectile projectile, Player target, Player.HurtModifiers modifiers, int damageDone) { }
+        public virtual void ProjOnSpawn(Item item, Player player, Projectile projectile, IEntitySource source) { }
         #endregion
         #region Player Hooks
         public virtual void PlayerGetHealLife(Item item, Player player, Item healItem, ref float healMultiplier) { }

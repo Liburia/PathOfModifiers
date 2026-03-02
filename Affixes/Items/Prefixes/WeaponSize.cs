@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using System;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
@@ -34,8 +36,10 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             return
                 ItemItem.IsWeapon(item) &&
-                ItemItem.CanMelee(item) &&
-                (ItemItem.IsSwinging(item) || ItemItem.IsStabbing(item));
+                (ItemItem.CanMelee(item) &&
+                (ItemItem.IsSwinging(item) || ItemItem.IsStabbing(item)) || 
+                ItemItem.IsWhip(item) ||
+                ItemItem.IsShooting(item));
         }
 
         public override string GetAffixText(bool useChatTags = false)
@@ -48,6 +52,14 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override void ModifyItemScale(Item item, Player player, ref float multiplier)
         {
             multiplier += Type1.GetValue();
+        }
+
+        public override void ProjOnSpawn(Item item, Player player, Projectile projectile, IEntitySource source)
+        {
+            float value = 1f + Type1.GetValue();
+            projectile.WhipSettings.Segments = Math.Max((int)Math.Round(projectile.WhipSettings.Segments * value), 1);
+            projectile.WhipSettings.RangeMultiplier *= value;
+            projectile.scale *= value;
         }
     }
 }

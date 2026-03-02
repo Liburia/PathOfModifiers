@@ -12,9 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
-using Terraria.WorldBuilding;
 using static Terraria.ModLoader.ModContent;
-using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace PathOfModifiers.Affixes.Items
 {
@@ -120,6 +118,14 @@ namespace PathOfModifiers.Affixes.Items
         public static bool IsFlailOrYoyo(Item item)
         {
             return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == ItemUseStyleID.Shoot && item.channel;
+        }
+        public static bool IsWhip(Item item)
+        {
+            return item.DamageType.CountsAsClass(DamageClass.Summon) && item.noMelee && item.shoot > -1 && item.useStyle == ItemUseStyleID.Swing;
+        }
+        public static bool IsShooting(Item item)
+        {
+            return item.shoot > -1;
         }
 
         public static bool IsMelee(Item item)
@@ -823,6 +829,17 @@ namespace PathOfModifiers.Affixes.Items
             {
                 suffix.ProjOnHitPvp(item, player, projectile, target, modifiers, damageDone);
             }   
+        }
+        public void ProjOnSpawn(Item item, Player player, Projectile projectile, IEntitySource source)
+        {
+            foreach (var prefix in prefixes)
+            {
+                prefix.ProjOnSpawn(item, player, projectile, source);
+            }
+            foreach (var suffix in suffixes)
+            {
+                suffix.ProjOnSpawn(item, player, projectile, source);
+            }
         }
         #endregion
         // Player hooks trigger on the whole inventory and equipped items;
