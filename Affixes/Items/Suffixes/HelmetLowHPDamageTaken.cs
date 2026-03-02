@@ -1,5 +1,5 @@
 ﻿using Terraria;
-using Terraria.DataStructures;
+using Terraria.Localization;using Terraria.DataStructures;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"Take { plusMinus }{ valueRange1 }% damage on low HP";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.HelmetLowHPDamageTaken").Format( plusMinus ,  valueRange1 );
         }
 
         public override void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)

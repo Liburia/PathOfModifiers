@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class ArmorLuck : AffixTiered<TTFloat>, IPrefix
@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{plusMinus}{valueRange1} luck";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.ArmorLuck").Format(plusMinus, valueRange1);
         }
 
         public override void PlayerModifyLuck(Item item, Player player, ref float luck)

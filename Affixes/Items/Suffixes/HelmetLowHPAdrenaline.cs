@@ -1,5 +1,5 @@
 ﻿using PathOfModifiers.Buffs;
-using PathOfModifiers.UI.Chat;
+using Terraria.Localization;using PathOfModifiers.UI.Chat;
 using System;
 using Terraria;
 using Terraria.ModLoader;
@@ -36,7 +36,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
-            return $"Gain { Keyword.GetTextOrTag(KeywordType.Adrenaline, useChatTags) } for { valueRange1 }s when hit to low HP";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.HelmetLowHPAdrenaline").Format( Keyword.GetTextOrTag(KeywordType.Adrenaline, useChatTags) ,  valueRange1 );
         }
 
         public override void PostHurt(Item item, Player player, Player.HurtInfo info)

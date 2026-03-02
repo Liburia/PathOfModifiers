@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class ArmorConsumeBait : AffixTiered<TTFloat>, IPrefix
@@ -39,7 +39,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
-            return $"{ valueRange1 }% chance to not consume bait";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.ArmorConsumeBait").Format( valueRange1 );
         }
 
         public override bool? PlayerCanConsumeBait(Item item, Player player, Item bait)

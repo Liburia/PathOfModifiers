@@ -1,5 +1,5 @@
 ﻿using System;
-using Terraria;
+using Terraria.Localization;using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
@@ -44,7 +44,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             var min = Type1.GetMinValueFormat(1) * Math.Sign(Type1.GetValue()) + 1;
             var max = Type1.GetMaxValueFormat(1) * Math.Sign(Type1.GetValue()) + 1;
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(current, min, max, useChatTags);
-            return $"x{ valueRange1 } critical strike chance";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.WeaponCritChance").Format( valueRange1 );
         }
 
         public override void ModifyWeaponCrit(Item item, Player player, ref float multiplier)

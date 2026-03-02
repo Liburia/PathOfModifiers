@@ -1,5 +1,5 @@
 ﻿using System;
-using Terraria;
+using Terraria.Localization;using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -56,7 +56,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
-            return $"No mana cost for { valueRange1 }s when hit ({ valueRange2 }s CD)";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.GreavesNoManaCost").Format( valueRange1 ,  valueRange2 );
         }
 
         public override void PostHurt(Item item, Player player, Player.HurtInfo info)

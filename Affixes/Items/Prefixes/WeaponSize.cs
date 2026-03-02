@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class WeaponSize : AffixTiered<TTFloat>, IPrefix
@@ -42,7 +42,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueRange1 }% size";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.WeaponSize").Format( plusMinus ,  valueRange1 );
         }
 
         public override void ModifyItemScale(Item item, Player player, ref float multiplier)

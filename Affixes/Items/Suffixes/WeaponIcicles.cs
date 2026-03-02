@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.Projectiles;
+using Terraria.Localization;using PathOfModifiers.Projectiles;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -73,7 +73,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
             var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(), Type3.GetMinValueFormat(), Type3.GetMaxValueFormat(), useChatTags);
-            return $"{ valueRange1 }% chance to fire { valueRange2 } Icycles for { valueRange3 }% damage";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponIcicles").Format( valueRange1 ,  valueRange2 ,  valueRange3 );
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)

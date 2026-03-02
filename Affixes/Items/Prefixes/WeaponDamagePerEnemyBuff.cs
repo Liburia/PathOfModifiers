@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class WeaponDamagePerEnemyBuff : AffixTiered<TTFloat>, IPrefix
@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueRange1 }% damage per enemy buff/debuff";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.WeaponDamagePerEnemyBuff").Format( plusMinus ,  valueRange1 );
         }
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers)

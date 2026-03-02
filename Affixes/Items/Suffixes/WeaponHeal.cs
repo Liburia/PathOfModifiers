@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.ModNet.PacketHandlers;
+using Terraria.Localization;using PathOfModifiers.ModNet.PacketHandlers;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -59,7 +59,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
-            return $"Heal { valueRange1 }% of max life on hit ({ valueRange2 }s CD)";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponHeal").Format( valueRange1 ,  valueRange2 );
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)

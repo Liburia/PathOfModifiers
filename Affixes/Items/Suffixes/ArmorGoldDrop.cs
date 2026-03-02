@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
     public class ArmorGoldDrop : AffixTiered<TTFloat, TTInt>, ISuffix
@@ -53,7 +53,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
-            return $"{ valueRange1 }% chance to drop { valueRange2 } gold on kill";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.ArmorGoldDrop").Format( valueRange1 ,  valueRange2 );
         }
 
         public override void UpdateEquip(Item item, ItemPlayer player)

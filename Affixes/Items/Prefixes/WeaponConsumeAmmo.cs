@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class WeaponConsumeAmmo : AffixTiered<TTFloat>, IPrefix
@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
-            return $"{ valueRange1 }% chance to not consume ammo";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.WeaponConsumeAmmo").Format( valueRange1 );
         }
 
         public override bool CanConsumeAmmo(Item item, Item ammo, Player player)

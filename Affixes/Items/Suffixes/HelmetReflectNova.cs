@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.Projectiles;
+using Terraria.Localization;using PathOfModifiers.Projectiles;
 using System;
 using Terraria;
 using Terraria.Audio;
@@ -76,7 +76,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
             var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(1), Type3.GetMinValueFormat(1), Type3.GetMaxValueFormat(1), useChatTags);
-            return $"Nova for { valueRange1 }% of damage taken + { valueRange2 }% of target's HP as damage when hit ({ valueRange3 }s CD)";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.HelmetReflectNova").Format( valueRange1 ,  valueRange2 ,  valueRange3 );
         }
 
         public override void OnHitByNPC(Item item, Player player, NPC npc, Player.HurtInfo hurtInfo)

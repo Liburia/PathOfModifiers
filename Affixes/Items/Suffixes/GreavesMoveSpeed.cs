@@ -1,5 +1,5 @@
 ﻿using System;
-using Terraria;
+using Terraria.Localization;using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -72,7 +72,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
             var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(1), Type3.GetMinValueFormat(1), Type3.GetMaxValueFormat(1), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueRange1 }% move speed for { valueRange2 }s when hit ({ valueRange3 }s CD)";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.GreavesMoveSpeed").Format( plusMinus ,  valueRange1 ,  valueRange2 ,  valueRange3 );
         }
 
         public override void PostHurt(Item item, Player player, Player.HurtInfo info)

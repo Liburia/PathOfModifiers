@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PathOfModifiers.UI.Chat;
+using Terraria.Localization;using PathOfModifiers.UI.Chat;
 using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
@@ -71,7 +71,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange1 = ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
             var valueRange3 = ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(1), Type3.GetMinValueFormat(1), Type3.GetMaxValueFormat(1), useChatTags);
-            return $"{ valueRange1 }% chance to { Keyword.GetTextOrTag(KeywordType.Poison, useChatTags) }({ valueRange2 }%) for { valueRange3 }s";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponPoison").Format( valueRange1 ,  Keyword.GetTextOrTag(KeywordType.Poison, useChatTags) ,  valueRange2 ,  valueRange3 );
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)

@@ -1,5 +1,5 @@
 ﻿using Terraria;
-using Terraria.ModLoader;
+using Terraria.Localization;using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
@@ -42,7 +42,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueRange1 }% magic damage";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.WeaponMagicDamage").Format( plusMinus ,  valueRange1 );
         }
 
         public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)

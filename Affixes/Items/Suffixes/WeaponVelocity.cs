@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Terraria;
+using Terraria.Localization;using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -41,7 +41,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
             string towardsAway = Type1.GetValue() >= 0 ? "towards" : "away from";
-            return $"Gain { valueRange1 } velocity { towardsAway } target on hit";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponVelocity").Format( valueRange1 ,  towardsAway );
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)

@@ -1,5 +1,5 @@
 ﻿using Terraria;
-using Terraria.DataStructures;
+using Terraria.Localization;using Terraria.DataStructures;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
@@ -41,7 +41,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"Take and deal { plusMinus }{ valueRange1 }% damage";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.ArmorDamageTakenAndDealt").Format( plusMinus ,  valueRange1 );
         }
 
         public override void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)

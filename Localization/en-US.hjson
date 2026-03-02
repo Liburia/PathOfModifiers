@@ -1,5 +1,127 @@
 Mods: {
 	PathOfModifiers: {
+		Affixes: {
+			Prefixes: {
+				AccessoryConsumeAmmo: "{0}% chance to not consume ammo"
+				AccessoryConsumeBait: "{0}% chance to not consume bait"
+				AccessoryCritChance: x{0} critical strike chance
+				AccessoryCritDamage: "{0}{1}% crit damage"
+				AccessoryDamageTakenAndDealt: Take and deal {0}{1}% damage
+				AccessoryDefense: "{0}{1} defense"
+				AccessoryDodgeChance: "{0}% Dodge chance"
+				AccessoryEatHealLife: "{0}{1}% life heal from using items"
+				AccessoryEatHealMana: "{0}{1}% mana heal from using items"
+				AccessoryFishingPower: "{0}{1} fishing power"
+				AccessoryFishingYield: "{0}{1}% fishing yield"
+				AccessoryLifeRegen: "{0}{1}% life regen"
+				AccessoryLuck: "{0}{1} luck"
+				AccessoryMagicDamage: "{0}{1}% magic damage"
+				AccessoryMaxLife: "{0}{1} max life"
+				AccessoryMaxMana: "{0}{1} max mana"
+				AccessoryMeleeAttackSpeed: "{0}{1}% melee attack speed"
+				AccessoryMeleeDamage: "{0}{1}% melee damage"
+				AccessoryMinionCount: "{0}{1} max minions"
+				AccessoryMoveSpeed: "{0}{1}% movement speed"
+				AccessoryRangedDamage: "{0}{1}% ranged damage"
+				AccessoryReflect: "{0}% melee damage reflected"
+				AccessorySummonDamage: "{0}{1}% summon damage"
+				AccessoryToolSpeed: "{0}{1}% pickaxe speed"
+				ArmorConsumeBait: "{0}% chance to not consume bait"
+				ArmorDamageTakenAndDealt: Take and deal {0}{1}% damage
+				ArmorDefense: "{0}{1} defense"
+				ArmorDodgeChance: "{0}% Dodge chance"
+				ArmorFishingPower: "{0}{1} fishing power"
+				ArmorFishingYield: "{0}{1}% fishing yield"
+				ArmorLuck: "{0}{1} luck"
+				ArmorMaxLife: "{0}{1} max life"
+				ArmorMaxMana: "{0}{1} max mana"
+				ArmorMinionCount: "{0}{1} max minions"
+				ChestEatHealLife: "{0}{1}% life heal from using items"
+				ChestEatHealMana: "{0}{1}% mana heal from using items"
+				ChestLifeRegen: "{0}{1}% life regen"
+				ChestPotionDelay: "{0}{1}% potion delay"
+				ChestReceivedDamage: "{0}{1}% received damage"
+				ChestReflect: "{0}% melee damage reflected"
+				GreavesConsumeAmmo: "{0}% chance to not consume ammo"
+				GreavesMeleeAttackSpeed: "{0}{1}% melee attack speed"
+				GreavesMoveSpeed: "{0}{1}% movement speed"
+				HelmetArmorPen: "{0}{1} armor penetration"
+				HelmetCritDamage: "{0}{1}% crit damage"
+				HelmetMagicDamage: "{0}{1}% magic damage"
+				HelmetMeleeDamage: "{0}{1}% melee damage"
+				HelmetRangedDamage: "{0}{1}% ranged damage"
+				HelmetSummonDamage: "{0}{1}% summon damage"
+				WeaponAttackSpeed: "{0}{1}% attack speed"
+				WeaponAttackSpeedPerLife: Up to {0}{1}% attack speed above 50% life and up to {2}{3}% below
+				WeaponConsumeAmmo: "{0}% chance to not consume ammo"
+				WeaponCritChance: x{0} critical strike chance
+				WeaponDamage: "{0}{1}% damage"
+				WeaponDamagePerEnemyBuff: "{0}{1}% damage per enemy buff/debuff"
+				WeaponDamagePerPlayerBuff: "{0}{1}% damage per player buff/debuff"
+				WeaponKnockback: "{0}{1}% knockback"
+				WeaponKnockbackPerLife: Up to {0}{1}% knockback above 50% life and up to {2}{3}% below
+				WeaponMagicDamage: "{0}{1}% magic damage"
+				WeaponManaCost: "{0}{1}% mana cost"
+				WeaponMeleeDamage: "{0}{1}% melee damage"
+				WeaponRangedDamage: "{0}{1}% ranged damage"
+				WeaponSize: "{0}{1}% size"
+				WeaponSummonDamage: "{0}{1}% summon damage"
+			}
+
+			Suffixes: {
+				AccessoryChillChance: "{0}% chance to {1}({2}{3}%)"
+				AccessoryDamageTaken: Take {0}{1}% damage ({2}s CD)
+				AccessoryDodgeChance: Gain {0}% {1} chance for {2}s when hit ({3}s CD)
+				AccessoryGainLife: "{0} {1} life when hit ({2}s CD)"
+				AccessoryGoldDrop: "{0}% chance to drop {1} gold on kill"
+				AccessoryHealLife: Gain {0}% max life when hit
+				AccessoryHealMana: Gain {0}% max mana when hit
+				AccessoryManaRestore: Restore {0}% mana to increase damage taken by {1}% when hit
+				AccessoryManaSpend: Spend {0}% mana to reduce damage taken by {1}%
+				AccessoryShockChance: "{0}% chance to {1}({2}{3}%)"
+				AccessoryVelocity: Gain {0} velocity {1} target when hit
+				ArmorAssistance: Gain assistance buffs when hit for {0}s
+				ArmorDamageTaken: Take {0}{1}% damage ({2}s CD)
+				ArmorDodgeChance: Gain {0}% {1} chance for {2}s when hit ({3}s CD)
+				ArmorGainLife: "{0} {1} life when hit ({2}s CD))"
+				ArmorGoldDrop: "{0}% chance to drop {1} gold on kill"
+				ArmorLiquid: Gain liquid buffs when hit for {0}s
+				ArmorSafety: Gain safety buffs when hit for {0}s
+				ArmorVelocity: Gain {0} velocity {1} target when hit
+				ChestFullHPDamageTaken: Take {0}{1}% damage on full HP
+				ChestKnockbackImmunity: Gain knockback immunity for {0}s when hit ({1}s CD)
+				ChestMoltenShell: Gain {0} for {1}s when hit ({2}s CD)
+				GreavesMoveSpeed: "{0}{1}% move speed for {2}s when hit ({3}s CD)"
+				GreavesNoManaCost: No mana cost for {0}s when hit ({1}s CD)
+				HelmetLowHPAdrenaline: Gain {0} for {1}s when hit to low HP
+				HelmetLowHPDamageTaken: Take {0}{1}% damage on low HP
+				HelmetReflectNova: Nova for {0}% of damage taken + {1}% of target's HP as damage when hit ({2}s CD)
+				WeaponAssistance: Gain assistance buffs on hit for {0}s
+				WeaponBleed: "{0}% chance to {1}({2}%) for {3}s"
+				WeaponChainLightning: "{0}% chance to chain lightning for {1}% damage that {2}s({3}{4}%)"
+				WeaponConfusion: "{0}% chance to confuse enemy for {1}s"
+				WeaponCrit: Deal {0}{1}% damage ({2}s CD)
+				WeaponFireball: "{0}% chance to fireball for {1}% damage that {2}s({3}{4}%)"
+				WeaponFrostPulse: "{0}% chance to Frost Pulse for {1}% damage that {2}s({3}{4}%)"
+				WeaponFullHPCrit: Deal {0}% of enemy HP with the first attack
+				WeaponHeal: Heal {0}% of max life on hit ({1}s CD)
+				WeaponIceBurst: "{0}% chance to Ice Burst for {1}% damage that leaves {2}({3}{4}%)"
+				WeaponIcicles: "{0}% chance to fire {1} Icycles for {2}% damage"
+				WeaponLifeOrbs: "{0}% chance to release {1} life orbs on hit that heal {2}% of damage dealt"
+				WeaponLightningBolt: "{0}% chance for lightning to strike for {1}% damage and leave {2}({3}{4}%)"
+				WeaponLiquid: Gain liquid buffs on hit for {0}s
+				WeaponLowHPCrit: Deal {0}{1}% damage to low HP enemies
+				WeaponMagmaOrb: "{0}% chance to Magma Orb for {1}% damage that leaves {2}({3}{4}%)"
+				WeaponManaDamage: Spend {0}% mana to increase damage by {1}{2}%
+				WeaponMeteor: "{0}% chance to Meteor for {1}% damage that {2}s({3}{4}%) and leaves {5}({6}{7}%)"
+				WeaponMoveSpeed: Gain {0}{1}% move speed on hit for {2}s ({3}s CD)
+				WeaponPoison: "{0}% chance to {1}({2}%) for {3}s"
+				WeaponSafety: Gain safety buffs on hit for {0}s
+				WeaponStaticStrike: On hit gain a buff for {0}s that does {1}% damage every {2}s
+				WeaponVelocity: Gain {0} velocity {1} target on hit
+			}
+		}
+
 		Buffs: {
 			Adrenaline: {
 				DisplayName: Adrenaline
@@ -113,7 +235,7 @@ Mods: {
 
 		Tiles.ModifierForge.MapEntry: Modifier Forge
 		"Keybinds.Toggle Debug Menu.DisplayName": Toggle Debug Menu
-		Prefixes.PoMPrefix.DisplayName: PoM Prefix
+		Prefixes.PoMPrefix.DisplayName: Po M Prefix
 
 		Configs: {
 			PoMConfigServer: {

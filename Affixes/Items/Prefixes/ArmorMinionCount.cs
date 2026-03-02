@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class ArmorMinionCount : AffixTiered<TTInt>, IPrefix
@@ -32,7 +32,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueRange1 } max minions";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.ArmorMinionCount").Format( plusMinus ,  valueRange1 );
         }
 
         public override void UpdateEquip(Item item, ItemPlayer player)

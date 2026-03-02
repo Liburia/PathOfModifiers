@@ -1,5 +1,5 @@
 ﻿using PathOfModifiers.ModNet.PacketHandlers;
-using System;
+using Terraria.Localization;using System;
 using Terraria;
 using Terraria.ID;
 
@@ -59,7 +59,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
             string plusMinus = Type1.GetValue() >= 0 ? "+" : "-";
-            return $"Deal { plusMinus }{ valueRange1 }% damage ({ valueRange2 }s CD)";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponCrit").Format( plusMinus ,  valueRange1 ,  valueRange2 );
         }
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers)

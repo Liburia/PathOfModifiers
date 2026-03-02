@@ -1,5 +1,5 @@
 ﻿using PathOfModifiers.UI.Chat;
-using System;
+using Terraria.Localization;using System;
 using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
@@ -72,7 +72,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(1), Type2.GetMinValueFormat(1), Type2.GetMaxValueFormat(1), useChatTags);
             var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(1), Type3.GetMinValueFormat(1), Type3.GetMaxValueFormat(1), useChatTags);
-            return $"Gain { valueRange1 }% { Keyword.GetTextOrTag(KeywordType.Dodge, useChatTags) } chance for { valueRange2 }s when hit ({ valueRange3 }s CD)";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.ArmorDodgeChance").Format( valueRange1 ,  Keyword.GetTextOrTag(KeywordType.Dodge, useChatTags) ,  valueRange2 ,  valueRange3 );
         }
 
         public override void PostHurt(Item item, Player player, Player.HurtInfo info)

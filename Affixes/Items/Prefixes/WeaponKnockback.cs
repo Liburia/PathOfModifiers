@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class WeaponKnockback : AffixTiered<TTFloat>, IPrefix
@@ -41,7 +41,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueRange1 }% knockback";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.WeaponKnockback").Format( plusMinus ,  valueRange1 );
         }
 
         public override void ModifyWeaponKnockback(Item item, Player player, ref float multiplier)

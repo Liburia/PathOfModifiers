@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Terraria;
+using Terraria.Localization;using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -39,7 +39,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
-            return $"Gain { valueRange1 }% max mana when hit";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.AccessoryHealMana").Format( valueRange1 );
         }
 
         public override void PostHurt(Item item, Player player, Player.HurtInfo info)

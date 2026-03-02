@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
     public class WeaponLowHPCrit : AffixTiered<TTFloat>, ISuffix
@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             string plusMinus = Type1.GetValue() >= 0 ? "+" : "-";
-            return $"Deal { plusMinus }{ valueRange1 }% damage to low HP enemies";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponLowHPCrit").Format( plusMinus ,  valueRange1 );
         }
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers)

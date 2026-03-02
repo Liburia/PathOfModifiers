@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     //Doesn't work with pvp, no hook. alternatively use on hit pvp hook
@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
-            return $"{ valueRange1 }% melee damage reflected";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.AccessoryReflect").Format( valueRange1 );
         }
 
         public override void UpdateEquip(Item item, ItemPlayer player)

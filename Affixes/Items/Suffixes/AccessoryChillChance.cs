@@ -1,5 +1,5 @@
 ﻿using PathOfModifiers.UI.Chat;
-using Terraria;
+using Terraria.Localization;using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
 {
@@ -55,7 +55,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type2.GetValue() < 0 ? '-' : '+';
-            return $"{ valueRange1 }% chance to { Keyword.GetTextOrTag(KeywordType.Chill, useChatTags) }({ plusMinus }{ valueRange2 }%)";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.AccessoryChillChance").Format( valueRange1 ,  Keyword.GetTextOrTag(KeywordType.Chill, useChatTags) ,  plusMinus ,  valueRange2 );
         }
 
         public override void PlayerOnHitNPC(Item affixItem, Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)

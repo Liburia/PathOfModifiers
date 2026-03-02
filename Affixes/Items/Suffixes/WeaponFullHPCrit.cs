@@ -1,5 +1,5 @@
 ﻿using PathOfModifiers.ModNet.PacketHandlers;
-using System;
+using Terraria.Localization;using System;
 using Terraria;
 using Terraria.ID;
 
@@ -41,7 +41,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
-            return $"Deal { valueRange1 }% of enemy HP with the first attack";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponFullHPCrit").Format( valueRange1 );
         }
 
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers)

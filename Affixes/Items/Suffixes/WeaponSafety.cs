@@ -1,5 +1,5 @@
 ﻿using System;
-using Terraria;
+using Terraria.Localization;using Terraria;
 using Terraria.ID;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
@@ -34,7 +34,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
-            return $"Gain safety buffs on hit for { valueRange1 }s";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponSafety").Format( valueRange1 );
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)

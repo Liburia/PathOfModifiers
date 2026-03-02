@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
+using Terraria.Localization;using System;
 using Terraria;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
@@ -71,7 +71,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(1), Type1.GetMinValueFormat(1), Type1.GetMaxValueFormat(1), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
             var valueRange3 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type3.GetCurrentValueFormat(1), Type3.GetMinValueFormat(1), Type3.GetMaxValueFormat(1), useChatTags);
-            return $"On hit gain a buff for { valueRange1 }s that does { valueRange2 }% damage every { valueRange3 }s";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.WeaponStaticStrike").Format( valueRange1 ,  valueRange2 ,  valueRange3 );
         }
 
         public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)

@@ -1,5 +1,5 @@
 ﻿using System;
-using Terraria;
+using Terraria.Localization;using Terraria;
 using Terraria.DataStructures;
 
 namespace PathOfModifiers.Affixes.Items.Suffixes
@@ -55,7 +55,7 @@ namespace PathOfModifiers.Affixes.Items.Suffixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             var valueRange2 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type2.GetCurrentValueFormat(), Type2.GetMinValueFormat(), Type2.GetMaxValueFormat(), useChatTags);
-            return $"Spend { valueRange1 }% mana to reduce damage taken by { valueRange2 }%";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Suffixes.AccessoryManaSpend").Format( valueRange1 ,  valueRange2 );
         }
 
         public override void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers)

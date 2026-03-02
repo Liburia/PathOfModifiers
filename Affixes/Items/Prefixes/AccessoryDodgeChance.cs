@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class AccessoryDodgeChance : AffixTiered<TTFloat>, IPrefix
@@ -39,7 +39,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
-            return $"{ valueRange1 }% Dodge chance";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.AccessoryDodgeChance").Format( valueRange1 );
         }
 
         public override void UpdateEquip(Item item, ItemPlayer player)

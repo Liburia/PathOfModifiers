@@ -1,5 +1,5 @@
 ﻿using Terraria;
-
+using Terraria.Localization;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class ChestEatHealMana : AffixTiered<TTFloat>, IPrefix
@@ -40,7 +40,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
             char plusMinus = Type1.GetValue() < 0 ? '-' : '+';
-            return $"{ plusMinus }{ valueRange1 }% mana heal from using items";
+            return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.ChestEatHealMana").Format( plusMinus ,  valueRange1 );
         }
 
         public override void PlayerGetHealMana(Item item, Player player, Item healItem, ref float healMultiplier)
