@@ -6,4 +6,5 @@ Increase journey research costs
 Reduce fragment sell value
 Significantly increase forge cost for higher rarity items
 Add difficulty config to change forge cost
+Use localization strings for affix text
 Fix bugs
