@@ -762,6 +762,7 @@ namespace PathOfModifiers.UI.States
             ItemItem modItem = null;
             itemSlot.Item?.TryGetGlobalItem(out modItem);
             currentCost = modItem?.rarity.forgeCost ?? 0;
+            currentCost *= currentCost;
             currentCost *= actionList.SelectedItem?.action.Cost ?? 0;
             currentCost *= affixConstraintList.SelectedItem?.constraint.Cost ?? 1;
             currentCost *= tierConstraintList.SelectedItem?.constraint.Cost ?? 1;

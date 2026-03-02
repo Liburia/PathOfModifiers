@@ -4,4 +4,5 @@ Reduce burning air duration with subsequent magma orb bounces
 Reenable vanilla item name colors except when inside the forge for rarities higher than 3 (this may be confusing)
 Increase journey research costs
 Reduce fragment sell value
+Significantly increase forge cost for higher rarity items
 Fix bugs
