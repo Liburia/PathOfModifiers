@@ -367,7 +367,7 @@ namespace PathOfModifiers.Affixes.Items
         public override void ModifyWeaponCrit(Item heldItem, ref float crit)
         {
             Item item;
-            float multiplier = 1f;
+            var multiplier = new StatModifier();
             for (int i = 0; i < Player.inventory.Length; i++)
             {
                 item = Player.inventory[i];
@@ -390,7 +390,7 @@ namespace PathOfModifiers.Affixes.Items
                     modItem.PlayerModifyWeaponCrit(item, heldItem, Player, ref multiplier);
                 }
             }
-            crit *= multiplier;
+            crit = multiplier.ApplyTo(crit);
         }
         public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
         {

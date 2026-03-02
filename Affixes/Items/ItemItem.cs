@@ -570,7 +570,7 @@ namespace PathOfModifiers.Affixes.Items
         }
         public override void ModifyWeaponCrit(Item item, Player player, ref float crit)
         {
-            float multiplier = 1f;
+            var multiplier = new StatModifier();
             foreach (var prefix in prefixes)
             {
                 prefix.ModifyWeaponCrit(item, player, ref multiplier);
@@ -579,7 +579,7 @@ namespace PathOfModifiers.Affixes.Items
             {
                 suffix.ModifyWeaponCrit(item, player, ref multiplier);
             }
-            crit *= multiplier;
+            crit = multiplier.ApplyTo(crit);
         }
         public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
         {
@@ -972,7 +972,7 @@ namespace PathOfModifiers.Affixes.Items
                 suffix.NaturalLifeRegen(item, player, ref regenMultiplier);
             }
         }
-        public void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
+        public void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref StatModifier multiplier)
         {
             foreach (var prefix in prefixes)
             {

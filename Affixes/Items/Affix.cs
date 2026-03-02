@@ -57,7 +57,7 @@ namespace PathOfModifiers.Affixes.Items
 
         public virtual bool CanRoll(ItemItem pomItem, Item item) { return false; }
         #region Item Hooks
-        public virtual void ModifyWeaponCrit(Item item, Player player, ref float multiplier) { }
+        public virtual void ModifyWeaponCrit(Item item, Player player, ref StatModifier multiplier) { }
         public virtual void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage) { }
         public virtual void ModifyWeaponKnockback(Item item, Player player, ref float multiplier) { }
         public virtual void UseSpeedMultiplier(Item item, Player player, ref float multiplier) { }
@@ -92,7 +92,7 @@ namespace PathOfModifiers.Affixes.Items
         public virtual void PreHurt(Item item, Player player, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
         public virtual void PostHurt(Item item, Player player, Player.HurtInfo info) { }
         public virtual void NaturalLifeRegen(Item item, Player player, ref float regen) { }
-        public virtual void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier) { }
+        public virtual void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref StatModifier multiplier) { }
         public virtual void ModifyHitByNPC(Item item, Player player, NPC npc, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
         public virtual void ModifyHitByPvp(Item item, Player player, Player attacker, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }
         public virtual void ModifyHitByProjectile(Item item, Player player, Projectile projectile, ref float damageMultiplier, ref Player.HurtModifiers modifiers) { }

@@ -1,6 +1,7 @@
 ﻿using System;
-using Terraria.Localization;using Terraria;
-
+using Terraria;
+using Terraria.Localization;
+using Terraria.ModLoader;
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
     public class AccessoryCritChance : AffixTiered<TTFloat>, IPrefix
@@ -47,7 +48,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.AccessoryCritChance").Format( valueRange1 );
         }
 
-        public override void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref float multiplier)
+        public override void PlayerModifyWeaponCrit(Item item, Item heldItem, Player player, ref StatModifier multiplier)
         {
             if (ItemItem.IsAccessoryEquipped(item, player))
             {

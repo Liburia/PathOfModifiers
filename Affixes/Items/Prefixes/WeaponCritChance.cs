@@ -1,5 +1,7 @@
 ﻿using System;
-using Terraria.Localization;using Terraria;
+using Terraria.Localization;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace PathOfModifiers.Affixes.Items.Prefixes
 {
@@ -47,7 +49,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.WeaponCritChance").Format( valueRange1 );
         }
 
-        public override void ModifyWeaponCrit(Item item, Player player, ref float multiplier)
+        public override void ModifyWeaponCrit(Item item, Player player, ref StatModifier multiplier)
         {
             float value = Type1.GetValue();
             multiplier += value;
