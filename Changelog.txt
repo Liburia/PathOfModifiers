@@ -3,4 +3,5 @@ Forbid shift-clicking into the forge from anywhere but the player inventory
 Reduce burning air duration with subsequent magma orb bounces
 Reenable vanilla item name colors except when inside the forge for rarities higher than 3 (this may be confusing)
 Increase journey research costs
+Reduce fragment sell value
 Fix bugs

@@ -11,9 +11,10 @@ namespace PathOfModifiers.Items
             Item.width = 40;
             Item.height = 40;
             Item.holdStyle = 0;
-            Item.value = 200;
+            Item.value = 50;
             Item.rare = ItemRarityID.Green;
             Item.maxStack = 99999;
+            Item.shopCustomPrice = 200;
         }
 
         public override void SetStaticDefaults()
