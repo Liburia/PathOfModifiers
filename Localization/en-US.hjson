@@ -71,6 +71,7 @@ Mods: {
 				AccessoryFlatCritChance: "{0}{1}% flat critical strike chance"
 				WeaponTileReach: "{0}{1} tile reach"
 				AcessoryTileReach: "{0}{1} tile reach"
+				HelmetBreathEffectiveness: "{0}% {1} breath effectiveness"
 			}
 
 			Suffixes: {
