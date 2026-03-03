@@ -125,6 +125,7 @@ Mods: {
 				WeaponSafety: Gain safety buffs on hit for {0}s
 				WeaponStaticStrike: On hit gain a buff for {0}s that does {1}% damage every {2}s
 				WeaponVelocity: Gain {0} velocity {1} target on hit
+				GreavesExtraJump: +{0} extra jumps
 			}
 		}
 
