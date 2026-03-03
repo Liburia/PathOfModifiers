@@ -10,7 +10,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override TTInt Type1 { get; } = new TTInt()
         {
             TwoWay = false,
-            IsRange = true,
+            IsRange = false,
             Tiers = new TTInt.WeightedTier[]
             {
                 new TTInt.WeightedTier(-3, -3, 0.5),
