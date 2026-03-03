@@ -22,12 +22,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
-            new WeightedTierName("Steadfast", 0.5),
-            new WeightedTierName("Adamant", 1),
-            new WeightedTierName("Warding", 1.5),
-            new WeightedTierName("Unwavering", 2),
-            new WeightedTierName("Enduring", 2.5),
-            new WeightedTierName("Unyielding", 3),
+            new WeightedTierName("Covering", 0.5),
+            new WeightedTierName("Blocking", 1),
+            new WeightedTierName("Fending", 1.5),
+            new WeightedTierName("Shielded", 2),
+            new WeightedTierName("Secure", 2.5),
+            new WeightedTierName("Walled", 3),
         };
 
 
