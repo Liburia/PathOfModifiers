@@ -90,6 +90,7 @@ namespace PathOfModifiers.Affixes.Items
         public float dodgeChance;
 
         public float reflectMeleeDamage;
+        public float fragmentDropMultiplier;
 
         public GoldDropChanceColletion goldDropChances;
         #endregion
@@ -975,6 +976,7 @@ namespace PathOfModifiers.Affixes.Items
             blockChance = 0;
 
             reflectMeleeDamage = 0;
+            fragmentDropMultiplier = 1;
 
             goldDropChances.ResetEffects();
             if (Main.time == 0)

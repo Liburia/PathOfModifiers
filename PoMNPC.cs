@@ -36,7 +36,7 @@ namespace PathOfModifiers
             var isBoss = new LeadingConditionRule(new Conditions.LegacyHack_IsABoss());
             isBoss.OnSuccess(isPostPlantera);
             isBoss.OnFailedConditions(
-                new PoMGlobals.DropRate.CommonDropScalingWithValue(
+                new PoMGlobals.DropRate.FragmentDropScalingWithValue(
                     ItemType<Items.ModifierFragment>(),
                     PoMGlobals.DropRate.Fragment.chanceDenominator,
                     PoMGlobals.DropRate.Fragment.baseMin,

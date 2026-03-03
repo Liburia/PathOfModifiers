@@ -1,3 +1,5 @@
+using PathOfModifiers.Affixes.Items;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
@@ -28,11 +30,11 @@ namespace PathOfModifiers
 
         public static class DropRate
         {
-            public class CommonDropScalingWithValue : CommonDrop
+            public class FragmentDropScalingWithValue : CommonDrop
             {
                 float multiplyValueBy;
 
-                public CommonDropScalingWithValue(int itemId, int chanceDenominator, int amountDroppedMinimum, int amountDroppedMaximum, float multiplyValueBy = 0.005f)
+                public FragmentDropScalingWithValue(int itemId, int chanceDenominator, int amountDroppedMinimum, int amountDroppedMaximum, float multiplyValueBy = 0.005f)
                     : base(itemId, chanceDenominator, amountDroppedMinimum, amountDroppedMaximum)
                 {
                     this.multiplyValueBy = multiplyValueBy;
@@ -43,9 +45,10 @@ namespace PathOfModifiers
                     ItemDropAttemptResult result;
                     if (info.player.RollLuck(chanceDenominator) < chanceNumerator)
                     {
-                        var min = (int)(amountDroppedMinimum * info.npc.value * multiplyValueBy);
-                        var max = (int)(amountDroppedMaximum * info.npc.value * multiplyValueBy);
-                        CommonCode.DropItem(info, itemId, info.rng.Next(min, max + 1));
+                        var playerMultiplier = info.player.GetModPlayer<ItemPlayer>().fragmentDropMultiplier;
+                        var min = (int)(amountDroppedMinimum * info.npc.value * multiplyValueBy * playerMultiplier);
+                        var max = (int)(amountDroppedMaximum * info.npc.value * multiplyValueBy * playerMultiplier);
+                        CommonCode.DropItem(info, itemId, info.rng.Next(Math.Max(min, 1), max + 1));
                         result = default(ItemDropAttemptResult);
                         result.State = ItemDropAttemptResultState.Success;
                         return result;
