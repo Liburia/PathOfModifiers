@@ -80,6 +80,7 @@ namespace PathOfModifiers.Affixes.Items
         public float pickSpeed;
 
         public float moveSpeed;
+        public float jumpHeight;
 
         public float potionDelayTime;
         public float restorationDelayTime;
@@ -959,6 +960,7 @@ namespace PathOfModifiers.Affixes.Items
             pickSpeed = 1;
 
             moveSpeed = 1;
+            jumpHeight = 1;
 
             potionDelayTime = 1;
             restorationDelayTime = 1;
@@ -986,6 +988,8 @@ namespace PathOfModifiers.Affixes.Items
             Player.runAcceleration *= moveSpeed;
             Player.maxRunSpeed *= moveSpeed;
             Player.accRunSpeed *= moveSpeed;
+            Player.jumpHeight = (int)(Player.jumpHeight * jumpHeight);
+            Player.jumpSpeed *= jumpHeight;
         }
         public override void UpdateBadLifeRegen()
         {

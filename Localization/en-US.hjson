@@ -72,6 +72,7 @@ Mods: {
 				WeaponTileReach: "{0}{1} tile reach"
 				AcessoryTileReach: "{0}{1} tile reach"
 				HelmetBreathEffectiveness: "{0}% {1} breath effectiveness"
+				GreavesJumpHeight: "{0}{1}% jump height"
 			}
 
 			Suffixes: {
