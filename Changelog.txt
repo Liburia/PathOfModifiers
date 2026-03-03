@@ -1,4 +1,4 @@
-Added 8 new affixes
+Added 9 new affixes
 Highlight affected affixes in the forge
 Significantly increase forge cost for higher rarity items
 Add difficulty config to change forge cost

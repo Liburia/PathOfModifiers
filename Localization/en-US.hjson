@@ -73,6 +73,8 @@ Mods: {
 				AcessoryTileReach: "{0}{1} tile reach"
 				HelmetBreathEffectiveness: "{0}% {1} breath effectiveness"
 				GreavesJumpHeight: "{0}{1}% jump height"
+				ArmorBuildSpeed: "{0}{1}% build speed"
+				AccessoryBuildSpeed: "{0}{1}% build speed"
 			}
 
 			Suffixes: {
