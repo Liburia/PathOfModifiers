@@ -69,6 +69,8 @@ Mods: {
 				WeaponProjectileSpeed: "{0}{1}% direct projectile speed"
 				WeaponFlatCritChance: "{0}{1}% flat critical strike chance"
 				AccessoryFlatCritChance: "{0}{1}% flat critical strike chance"
+				WeaponTileReach: "{0}{1} tile reach"
+				AcessoryTileReach: "{0}{1} tile reach"
 			}
 
 			Suffixes: {
