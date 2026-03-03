@@ -75,6 +75,8 @@ Mods: {
 				GreavesJumpHeight: "{0}{1}% jump height"
 				ArmorBuildSpeed: "{0}{1}% build speed"
 				AccessoryBuildSpeed: "{0}{1}% build speed"
+				ArmorBlockChance: +{0}% {1} chance
+				AccessoryBlockChance: +{0}% {1} chance
 			}
 
 			Suffixes: {

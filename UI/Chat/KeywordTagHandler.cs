@@ -12,6 +12,7 @@ namespace PathOfModifiers.UI.Chat
         Ignite,
         Chill,
         Dodge,
+        Block,
         Adrenaline,
         MoltenShell,
         ShockedAir,
@@ -28,6 +29,7 @@ namespace PathOfModifiers.UI.Chat
             new Ignite(),
             new Chill(),
             new Dodge(),
+            new Block(),
             new Adrenaline(),
             new MoltenShell(),
             new ShockedAir(),
@@ -93,6 +95,12 @@ namespace PathOfModifiers.UI.Chat
             public override Color Color => Color.LightGray;
             public override string Name => "Dodge";
             public override string Description => "Chance to avoid damage";
+        }
+        public class Block : KeywordDefinition
+        {
+            public override Color Color => Color.LightGray;
+            public override string Name => "Block";
+            public override string Description => "Chance to reduce damage taken by 50%";
         }
         public class Adrenaline : KeywordDefinition
         {

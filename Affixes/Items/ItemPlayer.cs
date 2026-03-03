@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using static PathOfModifiers.UI.Chat.Keyword;
 
 namespace PathOfModifiers.Affixes.Items
 {
@@ -85,6 +86,7 @@ namespace PathOfModifiers.Affixes.Items
         public float potionDelayTime;
         public float restorationDelayTime;
 
+        public float blockChance;
         public float dodgeChance;
 
         public float reflectMeleeDamage;
@@ -185,6 +187,10 @@ namespace PathOfModifiers.Affixes.Items
                 {
                     modItem.PreHurt(item, Player, ref damageMultiplier, ref modifiers);
                 }
+            }
+            if (Main.rand.NextFloat() < blockChance)
+            {
+                damageMultiplier *= 0.5f;
             }
             modifiers.FinalDamage *= damageMultiplier;
 
@@ -966,6 +972,7 @@ namespace PathOfModifiers.Affixes.Items
             restorationDelayTime = 1;
 
             dodgeChance = 0;
+            blockChance = 0;
 
             reflectMeleeDamage = 0;
 
