@@ -39,7 +39,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override string GetAffixText(bool useChatTags = false)
         {
             var valueRange1 = UI.Chat.ValueRangeTagHandler.GetTextOrTag(Type1.GetCurrentValueFormat(), Type1.GetMinValueFormat(), Type1.GetMaxValueFormat(), useChatTags);
-            char plusMinus = Type1.GetValue() < 0 ? '+' : '-';
+            char plusMinus = Type1.GetValue() > 0 ? '+' : '-';
             return Language.GetText("Mods.PathOfModifiers.Affixes.Prefixes.ArmorBuildSpeed").Format( plusMinus, valueRange1 );
         }
 
