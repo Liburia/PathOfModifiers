@@ -208,7 +208,7 @@ namespace PathOfModifiers.UI.States
                         if (IsAffixOnItem(entry.affix, modItem, out var itemAffix))
                         {
                             modItem.RemoveAffix(itemAffix, HeldItem);
-                            bool selectAfterFilter = entry == SelectedAffix.affixElement;
+                            bool selectAfterFilter = entry == SelectedAffix?.affixElement;
                             FilterAffixList(selectAfterFilter);
                         }
                     }
