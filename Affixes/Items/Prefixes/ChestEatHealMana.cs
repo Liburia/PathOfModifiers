@@ -47,7 +47,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         {
             if (ItemItem.IsArmorEquipped(item, player))
             {
-                healMultiplier *= Type1.GetValue();
+                healMultiplier += Type1.GetValue();
             }
         }
     }
