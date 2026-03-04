@@ -65,10 +65,10 @@ namespace PathOfModifiers
                 public const int chanceDenominator = 7;
                 public const int baseMin = 1;
                 public const int baseMax = 5;
-                public const float multiplyPerValue = 0.005f;
-                public const float multiplyPerValueBoss = 0.001f;
-                public const float multiplyPerValueBossHardmode = 0.002f;
-                public const float multiplyPerValueBossPostPlantera = 0.004f;
+                public const float multiplyPerValue = 0.003f;
+                public const float multiplyPerValueBoss = 0.00025f;
+                public const float multiplyPerValueBossHardmode = 0.0005f;
+                public const float multiplyPerValueBossPostPlantera = 0.001f;
             }
         }
     }
