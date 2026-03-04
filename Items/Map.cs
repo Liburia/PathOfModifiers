@@ -51,13 +51,13 @@ namespace PathOfModifiers.Items
 
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            map.DrawIcon(spriteBatch, position, Terraria.GameContent.TextureAssets.Item[Item.type].Value.Size(), 0, scale);
+            map?.DrawIcon(spriteBatch, position, Terraria.GameContent.TextureAssets.Item[Item.type].Value.Size(), 0, scale);
         }
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
             //World drawing is different so just hardcode this.
             var iconOffset = new Vector2(0, 2);
-            map.DrawIcon(spriteBatch, Item.position - Main.screenPosition + iconOffset, Terraria.GameContent.TextureAssets.Item[Item.type].Value.Size(), rotation, scale);
+            map?.DrawIcon(spriteBatch, Item.position - Main.screenPosition + iconOffset, Terraria.GameContent.TextureAssets.Item[Item.type].Value.Size(), rotation, scale);
         }
 
         public override void SaveData(TagCompound tag)
