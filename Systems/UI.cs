@@ -46,7 +46,7 @@ namespace PathOfModifiers.Systems
         public override void Load()
         {
 #if DEBUG
-            key_toggleDebugMenu = KeybindLoader.RegisterKeybind(Mod, "Toggle Debug Menu", Microsoft.Xna.Framework.Input.Keys.None);
+            key_toggleDebugMenu = KeybindLoader.RegisterKeybind(Mod, "Toggle Debug Menu (enabled in config)", Microsoft.Xna.Framework.Input.Keys.None);
 #endif
 
             if (Main.netMode != NetmodeID.Server)
@@ -79,7 +79,7 @@ namespace PathOfModifiers.Systems
             _lastUpdateUiGameTime = gameTime;
 
 #if DEBUG
-            if (key_toggleDebugMenu.JustPressed)
+            if (key_toggleDebugMenu.JustPressed && ModContent.GetInstance<PoMConfigServer>().EnableDebugPanel)
                 DebugPanel.Toggle();
 #endif
             DebugPanelInterface?.Update(gameTime);

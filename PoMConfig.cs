@@ -21,6 +21,10 @@ namespace PathOfModifiers
         [DefaultValue(UI.States.ModifierForge.Difficulty.Normal)]
         public UI.States.ModifierForge.Difficulty ModifierForgeCostDifficulty;
 
+        [Label("Enable debug panel hotkey")]
+        [DefaultValue(false)]
+        public bool EnableDebugPanel;
+
 
         [Label("Disable maps")]
         [DefaultValue(true)]

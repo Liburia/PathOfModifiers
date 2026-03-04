@@ -249,7 +249,7 @@ Mods: {
 		}
 
 		Tiles.ModifierForge.MapEntry: Modifier Forge
-		"Keybinds.Toggle Debug Menu.DisplayName": Toggle Debug Menu
+		"Keybinds.Toggle Debug Menu (enabled in config).DisplayName": Toggle  Debug  Menu (enabled in config)
 		Prefixes.PoMPrefix.DisplayName: Po M Prefix
 
 		Configs: {
@@ -278,6 +278,11 @@ Mods: {
 
 				ModifierForgeCostDifficulty: {
 					Label: Modifier Forge cost difficulty
+					Tooltip: ""
+				}
+
+				EnableDebugPanel: {
+					Label: Enable debug panel hotkey
 					Tooltip: ""
 				}
 			}
