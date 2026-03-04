@@ -113,19 +113,19 @@ namespace PathOfModifiers.Affixes.Items
         }
         public static bool IsSpear(Item item)
         {
-            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == ItemUseStyleID.Shoot && !item.channel;
+            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > 0 && item.useStyle == ItemUseStyleID.Shoot && !item.channel;
         }
         public static bool IsFlailOrYoyo(Item item)
         {
-            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > -1 && item.useStyle == ItemUseStyleID.Shoot && item.channel;
+            return item.DamageType.CountsAsClass(DamageClass.Melee) && item.noMelee && item.shoot > 0 && item.useStyle == ItemUseStyleID.Shoot && item.channel;
         }
         public static bool IsWhip(Item item)
         {
-            return item.DamageType.CountsAsClass(DamageClass.Summon) && item.noMelee && item.shoot > -1 && item.useStyle == ItemUseStyleID.Swing;
+            return item.DamageType.CountsAsClass(DamageClass.Summon) && item.noMelee && item.shoot > 0 && item.useStyle == ItemUseStyleID.Swing;
         }
         public static bool IsShooting(Item item)
         {
-            return item.shoot > -1;
+            return item.shoot > 0;
         }
 
         public static bool IsMelee(Item item)
