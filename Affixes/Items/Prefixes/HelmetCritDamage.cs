@@ -45,12 +45,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
 
         public override void PlayerModifyHitNPC(Item affixItem, Player player, Item item, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
         {
-            if (ItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsArmorEquipped(affixItem, player))
                 critDamageMultiplier += Type1.GetValue();
         }
         public override void PlayerModifyHitPvp(Item affixItem, Player player, Item item, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers)
         {
-            if (ItemItem.IsArmorEquipped(item, player))
+            if (ItemItem.IsArmorEquipped(affixItem, player))
                 critDamageMultiplier += Type1.GetValue();
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
