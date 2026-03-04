@@ -5,6 +5,7 @@ Add difficulty config to change forge cost
 Adjust modifier fragment drops
 Weapon size now affects whips
 Weapon size can now roll on any weapon that shoots a projectile, and will maybe even affect some of them
+Buff defense affixes
 Reduce fragment sell value
 Reduce burning air duration with subsequent magma orb bounces
 Reenable vanilla item name colors except when inside the forge for rarities higher than 3 (this may be confusing)

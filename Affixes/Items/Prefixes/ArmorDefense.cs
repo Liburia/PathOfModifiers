@@ -12,12 +12,12 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             IsRange = true,
             Tiers = new TTInt.WeightedTier[]
             {
-                new TTInt.WeightedTier(-5, -4, 0.5),
-                new TTInt.WeightedTier(-4, -2, 1),
-                new TTInt.WeightedTier(-2, 0, 2),
-                new TTInt.WeightedTier(1, 3, 2),
-                new TTInt.WeightedTier(3, 5, 1),
-                new TTInt.WeightedTier(5, 6, 0.5),
+                new TTInt.WeightedTier(-15, -10, 0.5),
+                new TTInt.WeightedTier(-10, -5, 1),
+                new TTInt.WeightedTier(-5, 0, 2),
+                new TTInt.WeightedTier(1, 5, 2),
+                new TTInt.WeightedTier(5, 10, 1),
+                new TTInt.WeightedTier(10, 15, 0.5),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {

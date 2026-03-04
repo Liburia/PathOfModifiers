@@ -9,15 +9,15 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override TTInt Type1 { get; } = new TTInt()
         {
             TwoWay = false,
-            IsRange = false,
+            IsRange = true,
             Tiers = new TTInt.WeightedTier[]
             {
-                new TTInt.WeightedTier(-3, -2, 0.5),
-                new TTInt.WeightedTier(-2, -1, 1),
-                new TTInt.WeightedTier(-1, 0, 2),
-                new TTInt.WeightedTier(1, 2, 2),
-                new TTInt.WeightedTier(2, 3, 1),
-                new TTInt.WeightedTier(3, 4, 0.5),
+                new TTInt.WeightedTier(-8, -6, 0.5),
+                new TTInt.WeightedTier(-6, -3, 1),
+                new TTInt.WeightedTier(-3, 0, 2),
+                new TTInt.WeightedTier(1, 3, 2),
+                new TTInt.WeightedTier(3, 6, 1),
+                new TTInt.WeightedTier(6, 8, 0.5),
             },
         };
         public override WeightedTierName[] TierNames { get; } = new WeightedTierName[] {
