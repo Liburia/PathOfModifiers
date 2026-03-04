@@ -207,7 +207,7 @@ namespace PathOfModifiers.Affixes.Items
                     t2 = Math.Abs(t2 - (Type2.MaxTiers / 2f)) * 2;
                 }
 
-                return (int)(t1 + t2) / 2;
+                return (int)Math.Ceiling((t1 + t2) / 2);
             }
         }
         public override int MaxCompoundTier => (Type1.MaxTiers + Type2.MaxTiers) / 2;
@@ -390,7 +390,7 @@ namespace PathOfModifiers.Affixes.Items
                     t3 = Math.Abs(t3 - (Type3.MaxTiers / 2f)) * 2;
                 }
 
-                return (int)(t1 + t2 + t3) / 3;
+                return (int)Math.Ceiling((t1 + t2 + t3) / 3);
             }
         }
         public override int MaxCompoundTier => (Type1.MaxTiers + Type2.MaxTiers + Type3.MaxTiers) / 3;
