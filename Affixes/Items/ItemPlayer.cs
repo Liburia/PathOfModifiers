@@ -459,7 +459,7 @@ namespace PathOfModifiers.Affixes.Items
                 int reflectDamage = (int)Math.Round(hurtInfo.Damage * reflectMeleeDamage);
                 float reflectKnockback = 5;
                 int reflectDirection = npc.Center.X > Player.Center.X ? 1 : -1;
-                Player.ApplyDamageToNPC(npc, reflectDamage, reflectKnockback, reflectDirection);
+                Player.StrikeNPCDirect(npc, new NPC.HitInfo() { SourceDamage = reflectDamage, Damage = reflectDamage, Knockback = reflectKnockback, HitDirection = reflectDirection });
             }
         }
         public void ModifyHitByPvp(Player attacker, ref Player.HurtModifiers modifiers)
