@@ -112,7 +112,7 @@ namespace PathOfModifiers.UI.Chat
         {
             public override Color Color => Color.LightGray;
             public override string Name => "Molten Shell";
-            public override string Description => "-10% damage taken, explodes at the end of the duration for\ntotal damage taken + (total damage taken / player max HP * 0.15)% of enemy HP";
+            public override string Description => "-10% damage taken, explodes at the end of the duration for\ntotal damage taken + (total damage taken / player max HP * 10)% of enemy HP";
         }
         public class ShockedAir : KeywordDefinition
         {
