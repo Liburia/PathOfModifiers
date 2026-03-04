@@ -1,20 +1,18 @@
 ﻿[h1] Path Of Modifiers [/h1] 
 
-Path Of Modifiers replaces vanilla item prefixes with a wide variety of custom modifiers.
-Over 100 prefixes and suffixes!
+Path Of Modifiers replaces vanilla prefixes with a comprehensive modifier and crafting system!
 
 [list]
     [*]Collect modifier fragments from killed enemies
     [*]Use fragments in the modifier forge to roll and craft your items
-    [*]Over 100 modifiers!
-    [*]Have fun with all the possibilities!
+    [*]Have fun with over 100 various modifiers!
 [/list]
 
-Also check out my other mod — [url=store.steampowered.com]Directional Melee[/url]
+Also check out my other mod — [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2563528791]Directional Melee[/url]
 
 Credits:
 [list]
     [*][b]dsteinberg [/b] — Path of Modifiers logo
 [/list]
 
-If you [strike]find the art ugly and[/strike] would like to provide srpitework or artwork for the mod, don't be afraid to message me.
+If you [strike]find the art ugly and[/strike] would like to provide sprite or artwork for the mod — feel free to message me.
