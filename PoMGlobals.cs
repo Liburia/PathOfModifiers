@@ -66,9 +66,9 @@ namespace PathOfModifiers
                 public const int baseMin = 1;
                 public const int baseMax = 5;
                 public const float multiplyPerValue = 0.005f;
-                public const int fromBoss = 50;
-                public const int fromBossHardmode = 100;
-                public const int fromBossPostPlantera = 200;
+                public const float multiplyPerValueBoss = 0.001f;
+                public const float multiplyPerValueBossHardmode = 0.002f;
+                public const float multiplyPerValueBossPostPlantera = 0.004f;
             }
         }
     }

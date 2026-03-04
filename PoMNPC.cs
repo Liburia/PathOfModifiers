@@ -10,38 +10,43 @@ namespace PathOfModifiers
     {
         public override void ModifyGlobalLoot(GlobalLoot globalLoot)
         {
-            var isHardmode = new LeadingConditionRule(new Conditions.IsHardmode());
-            isHardmode.OnSuccess(
-                new CommonDrop(
-                    ItemType<Items.ModifierFragment>(),
-                    1,
-                    PoMGlobals.DropRate.Fragment.fromBossHardmode,
-                    PoMGlobals.DropRate.Fragment.fromBossHardmode));
-            isHardmode.OnFailedConditions(
-                new CommonDrop(
-                    ItemType<Items.ModifierFragment>(),
-                    1,
-                    PoMGlobals.DropRate.Fragment.fromBoss,
-                    PoMGlobals.DropRate.Fragment.fromBoss));
-
-            var isPostPlantera = new LeadingConditionRule(new Conditions.DownedPlantera());
-            isPostPlantera.OnSuccess(
-                new CommonDrop(
-                    ItemType<Items.ModifierFragment>(),
-                    1,
-                    PoMGlobals.DropRate.Fragment.fromBossPostPlantera,
-                    PoMGlobals.DropRate.Fragment.fromBossPostPlantera));
-            isPostPlantera.OnFailedConditions(isHardmode);
-
-            var isBoss = new LeadingConditionRule(new Conditions.LegacyHack_IsABoss());
-            isBoss.OnSuccess(isPostPlantera);
-            isBoss.OnFailedConditions(
-                new PoMGlobals.DropRate.FragmentDropScalingWithValue(
+            var normalDrop = new PoMGlobals.DropRate.FragmentDropScalingWithValue(
                     ItemType<Items.ModifierFragment>(),
                     PoMGlobals.DropRate.Fragment.chanceDenominator,
                     PoMGlobals.DropRate.Fragment.baseMin,
                     PoMGlobals.DropRate.Fragment.baseMax,
-                    PoMGlobals.DropRate.Fragment.multiplyPerValue));
+                    PoMGlobals.DropRate.Fragment.multiplyPerValue);
+            var bossDrop = new PoMGlobals.DropRate.FragmentDropScalingWithValue(
+                    ItemType<Items.ModifierFragment>(),
+                    1,
+                    PoMGlobals.DropRate.Fragment.baseMin,
+                    PoMGlobals.DropRate.Fragment.baseMax,
+                    PoMGlobals.DropRate.Fragment.multiplyPerValueBoss);
+            var bossHardmodeDrop = new PoMGlobals.DropRate.FragmentDropScalingWithValue(
+                    ItemType<Items.ModifierFragment>(),
+                    1,
+                    PoMGlobals.DropRate.Fragment.baseMin,
+                    PoMGlobals.DropRate.Fragment.baseMax,
+                    PoMGlobals.DropRate.Fragment.multiplyPerValueBossHardmode);
+            var bossPostPlanteraDrop = new PoMGlobals.DropRate.FragmentDropScalingWithValue(
+                    ItemType<Items.ModifierFragment>(),
+                    1,
+                    PoMGlobals.DropRate.Fragment.baseMin,
+                    PoMGlobals.DropRate.Fragment.baseMax,
+                    PoMGlobals.DropRate.Fragment.multiplyPerValueBossPostPlantera);
+
+            var isBoss = new LeadingConditionRule(new Conditions.LegacyHack_IsABoss());
+            var isHardmode = new LeadingConditionRule(new Conditions.IsHardmode());
+            var isPostPlantera = new LeadingConditionRule(new Conditions.DownedPlantera());
+
+            isBoss.OnFailedConditions(normalDrop);
+            isPostPlantera.OnFailedConditions(isHardmode);
+            isHardmode.OnFailedConditions(bossDrop);
+
+            isBoss.OnSuccess(isPostPlantera);
+            isPostPlantera.OnSuccess(bossPostPlanteraDrop);
+            isHardmode.OnSuccess(bossHardmodeDrop);
+
 
             globalLoot.Add(isBoss);
         }
