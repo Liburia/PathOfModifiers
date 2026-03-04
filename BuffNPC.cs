@@ -15,6 +15,7 @@ namespace PathOfModifiers
 
         public void AddBleedBuff(NPC npc, int dps, int durationTicks, bool syncMP = true)
         {
+            npc.AddBuff(ModContent.BuffType<Bleeding>(), durationTicks, true);
             timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Bleed), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
@@ -24,6 +25,7 @@ namespace PathOfModifiers
         }
         public void AddPoisonBuff(NPC npc, int dps, int durationTicks, bool syncMP = true)
         {
+            npc.AddBuff(ModContent.BuffType<Poisoned>(), durationTicks, true);
             timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Poison), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
@@ -37,6 +39,7 @@ namespace PathOfModifiers
         }
         public void AddIgnitedBuff(NPC npc, int dps, int durationTicks, bool syncMP = true)
         {
+            npc.AddBuff(ModContent.BuffType<Ignited>(), durationTicks, true);
             timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Ignite), dps, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
@@ -50,6 +53,7 @@ namespace PathOfModifiers
         }
         public void AddShockedBuff(NPC npc, float multiplier, int durationTicks, bool syncMP = true)
         {
+            npc.AddBuff(ModContent.BuffType<Shocked>(), durationTicks, true);
             timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Shock), multiplier, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)
@@ -59,6 +63,7 @@ namespace PathOfModifiers
         }
         public void AddChilledBuff(NPC npc, float multiplier, int durationTicks, bool syncMP = true)
         {
+            npc.AddBuff(ModContent.BuffType<Chilled>(), durationTicks, true);
             timedValueInstanceCollection.AddInstance(typeof(TimedValueInstanceCollection.InstanceType.Chill), multiplier, durationTicks);
 
             if (syncMP && Main.netMode != NetmodeID.SinglePlayer)

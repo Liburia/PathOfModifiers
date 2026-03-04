@@ -46,19 +46,19 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override void ModifyHitNPC(Item item, Player player, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref NPC.HitModifiers modifiers)
         {
             float value = Type1.GetValue();
-            damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
+            damageMultiplier += value * PoMUtil.CountBuffs(target.buffTime);
         }
         public override void ModifyHitPvp(Item item, Player player, Player target, ref float damageMultiplier, ref Player.HurtModifiers modifiers)
         {
             float value = Type1.GetValue();
-            damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
+            damageMultiplier += value * PoMUtil.CountBuffs(target.buffTime);
         }
         public override void ProjModifyHitNPC(Item item, Player player, Projectile projectile, NPC target, ref float damageMultiplier, ref float knockbackMultiplier, ref float critDamageMultiplier, ref NPC.HitModifiers modifiers)
         {
             if (player.HeldItem == item)
             {
                 float value = Type1.GetValue();
-                damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
+                damageMultiplier += value * PoMUtil.CountBuffs(target.buffTime);
             }
         }
         public override void ProjModifyHitPvp(Item item, Player player, Projectile projectile, Player target, ref float damageMultiplier, ref float critDamageMultiplier, ref Player.HurtModifiers modifiers)
@@ -66,7 +66,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
             if (player.HeldItem == item)
             {
                 float value = Type1.GetValue();
-                damageMultiplier += value * PoMUtil.CountBuffs(target.buffType);
+                damageMultiplier += value * PoMUtil.CountBuffs(target.buffTime);
             }
         }
     }

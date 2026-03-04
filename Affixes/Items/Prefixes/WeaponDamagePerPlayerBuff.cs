@@ -47,7 +47,7 @@ namespace PathOfModifiers.Affixes.Items.Prefixes
         public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
         {
             float value = Type1.GetValue();
-            damage += value * PoMUtil.CountBuffs(player.buffType);
+            damage += value * PoMUtil.CountBuffs(player.buffTime);
         }
     }
 }
